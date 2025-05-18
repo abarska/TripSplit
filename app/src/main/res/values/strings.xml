@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TripSplit</string>
+    <string name="menu">Menu</string>
+    <string name="back">Back</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_trips">Trips</string>
+    <string name="title_settings">Settings</string>
+</resources>

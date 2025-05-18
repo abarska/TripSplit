@@ -5,8 +5,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.anabars.tripsplit.navigation.screens.HomeScreen
 import com.anabars.tripsplit.navigation.screens.AppScreens
+import com.anabars.tripsplit.navigation.screens.JoinExistingTripScreen
+import com.anabars.tripsplit.navigation.screens.NewTripScreen
 import com.anabars.tripsplit.navigation.screens.SettingsScreen
 import com.anabars.tripsplit.navigation.screens.TripsScreen
 
@@ -14,18 +15,25 @@ import com.anabars.tripsplit.navigation.screens.TripsScreen
 fun AppNavGraph(navController: NavHostController, modifier: Modifier) {
     NavHost(
         navController = navController,
-        startDestination = AppScreens.ROUTE_HOME,
+        startDestination = AppScreens.ROUTE_TRIPS,
         modifier = modifier
     ) {
-        composable(route = AppScreens.ROUTE_HOME) {
-            HomeScreen(navController = navController, modifier = modifier)
+        composable(route = AppScreens.ROUTE_TRIPS) {
+            TripsScreen(navController = navController, modifier = modifier)
         }
-        composable(route = AppScreens.ROUTE_TRIPS + "/{itemId}") { backStackEntry ->
-            val itemId = backStackEntry.arguments?.getString("itemId")
-            TripsScreen(navController = navController, itemId = itemId, modifier = modifier)
+        composable(route = AppScreens.ROUTE_NEW_TRIP) {
+            NewTripScreen(navController = navController, modifier = modifier)
+        }
+        composable(route = AppScreens.ROUTE_EXISTING_TRIP) {
+            JoinExistingTripScreen(navController = navController, modifier = modifier)
         }
         composable(route = AppScreens.ROUTE_SETTINGS) {
             SettingsScreen(navController = navController, modifier = modifier)
         }
     }
 }
+
+//composable(route = AppScreens.ROUTE_TRIPS + "/{itemId}") { backStackEntry ->
+//    val itemId = backStackEntry.arguments?.getString("itemId")
+//    TripsScreen(navController = navController, itemId = itemId, modifier = modifier)
+//}

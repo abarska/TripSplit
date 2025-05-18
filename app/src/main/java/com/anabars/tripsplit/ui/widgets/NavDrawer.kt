@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -35,47 +37,68 @@ fun DrawerContent(
             .fillMaxHeight()
             .background(color = MaterialTheme.colorScheme.surface)
     ) {
-        NavigationDrawerItem(
-            label = { Text(stringResource(R.string.title_home)) },
-            selected = currentRoute == AppScreens.ROUTE_HOME,
-            onClick = {
-                coroutineScope.launch { drawerState.close() }
-                navController.navigate(AppScreens.ROUTE_HOME) {
-                    popUpTo(navController.graph.startDestinationId) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
+        DrawerNavItem(
+            R.string.title_trips,
+            AppScreens.ROUTE_TRIPS,
+            currentRoute,
+            navController,
+            coroutineScope,
+            drawerState
         )
-        NavigationDrawerItem(
-            label = { Text(stringResource(R.string.title_trips)) },
-            selected = currentRoute?.startsWith(AppScreens.ROUTE_TRIPS) == true,
-            onClick = {
-                coroutineScope.launch { drawerState.close() }
-                navController.navigate(AppScreens.ROUTE_TRIPS + "/someId") {
-                    popUpTo(navController.graph.startDestinationId) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
+        DrawerNavItem(
+            R.string.title_new_trip,
+            AppScreens.ROUTE_NEW_TRIP,
+            currentRoute,
+            navController,
+            coroutineScope,
+            drawerState
         )
-        NavigationDrawerItem(
-            label = { Text(stringResource(R.string.title_settings)) },
-            selected = currentRoute == AppScreens.ROUTE_SETTINGS,
-            onClick = {
-                coroutineScope.launch { drawerState.close() }
-                navController.navigate(AppScreens.ROUTE_SETTINGS) {
-                    popUpTo(navController.graph.startDestinationId) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
+        DrawerNavItem(
+            R.string.title_join_existing_trip,
+            AppScreens.ROUTE_EXISTING_TRIP,
+            currentRoute,
+            navController,
+            coroutineScope,
+            drawerState
+        )
+        DrawerNavItem(
+            R.string.title_settings,
+            AppScreens.ROUTE_SETTINGS,
+            currentRoute,
+            navController,
+            coroutineScope,
+            drawerState
         )
     }
+}
+
+@Composable
+fun DrawerNavItem(
+    labelRes: Int,
+    route: String,
+    currentRoute: String?,
+    navController: NavHostController,
+    coroutineScope: CoroutineScope,
+    drawerState: DrawerState
+) {
+    NavigationDrawerItem(
+        label = { Text(stringResource(labelRes)) },
+        selected = currentRoute == route,
+        colors = NavigationDrawerItemDefaults.colors(
+            selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+            selectedTextColor = MaterialTheme.colorScheme.onSurface,
+            unselectedTextColor = MaterialTheme.colorScheme.onSurface,
+        ),
+        shape = RectangleShape,
+        onClick = {
+            coroutineScope.launch { drawerState.close() }
+            navController.navigate(route) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+    )
 }

@@ -31,17 +31,15 @@ fun Toolbar(
     coroutineScope: CoroutineScope,
     drawerState: DrawerState
 ) {
-    val startDestination = AppScreens.ROUTE_HOME
+    val startDestination = AppScreens.ROUTE_TRIPS
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val currentScreen = AppScreens.fromRoute(currentRoute) ?: AppScreens.HomeScreen
-    Log.d("route", "TsMaterial3Toolbar: $currentRoute")
-
+    val currentScreen = AppScreens.fromRoute(currentRoute) ?: AppScreens.TripsScreen
 
     TopAppBar(
         title = { Text(stringResource(currentScreen.title)) },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
+            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
         ),
         navigationIcon = {
             if (currentRoute == startDestination) {

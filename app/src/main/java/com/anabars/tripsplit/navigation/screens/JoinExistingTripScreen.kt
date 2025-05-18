@@ -8,6 +8,6 @@ import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 
 @Composable
-fun SettingsScreen(navController: NavController, modifier: Modifier = Modifier) {
-    Text(text = stringResource(R.string.title_settings))
+fun JoinExistingTripScreen(navController: NavController, modifier: Modifier = Modifier) {
+    Text(text = stringResource(R.string.title_join_existing_trip))
 }

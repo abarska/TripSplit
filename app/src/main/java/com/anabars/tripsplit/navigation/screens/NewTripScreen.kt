@@ -3,9 +3,11 @@ package com.anabars.tripsplit.navigation.screens
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.anabars.tripsplit.R
 
 @Composable
-fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
-    Text("home")
+fun NewTripScreen(navController: NavController, modifier: Modifier = Modifier) {
+    Text(text = stringResource(R.string.title_new_trip))
 }

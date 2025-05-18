@@ -63,8 +63,8 @@ fun MainScreenWithDrawer(modifier: Modifier = Modifier) {
                     currentRoute = currentRoute,
                     coroutineScope = coroutineScope,
                     modifier = Modifier.padding(paddingValues = paddingValues)
-                    )
-            }
+                )
+            },
         ) {
             AppNavGraph(
                 navController = navController,

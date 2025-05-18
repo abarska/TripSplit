@@ -3,7 +3,8 @@
     <string name="menu">Menu</string>
     <string name="back">Back</string>
 
-    <string name="title_home">Home</string>
     <string name="title_trips">Trips</string>
+    <string name="title_new_trip">New Trip</string>
+    <string name="title_join_existing_trip">Join Existing Trip</string>
     <string name="title_settings">Settings</string>
 </resources>

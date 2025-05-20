@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.navigation.screens.AppScreens
+import com.anabars.tripsplit.ui.screens.AppScreens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

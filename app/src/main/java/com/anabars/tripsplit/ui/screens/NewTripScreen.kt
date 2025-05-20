@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.navigation.screens
+package com.anabars.tripsplit.ui.screens
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -8,6 +8,6 @@ import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 
 @Composable
-fun TripsScreen(navController: NavController, modifier: Modifier = Modifier) {
-    Text(text = stringResource(R.string.title_trips))
+fun NewTripScreen(navController: NavController, modifier: Modifier = Modifier) {
+    Text(text = stringResource(R.string.title_new_trip))
 }

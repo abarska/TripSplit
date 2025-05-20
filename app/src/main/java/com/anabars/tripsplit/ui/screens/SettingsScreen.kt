@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.navigation.screens
+package com.anabars.tripsplit.ui.screens
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

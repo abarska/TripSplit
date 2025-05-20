@@ -1,4 +1,4 @@
-package com.example.marysyatravel.data
+package com.anabars.tripsplit.model
 
 data class User(
     val uid: String = "",

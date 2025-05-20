@@ -5,11 +5,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.anabars.tripsplit.navigation.screens.AppScreens
-import com.anabars.tripsplit.navigation.screens.JoinExistingTripScreen
-import com.anabars.tripsplit.navigation.screens.NewTripScreen
-import com.anabars.tripsplit.navigation.screens.SettingsScreen
-import com.anabars.tripsplit.navigation.screens.TripsScreen
+import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.ui.screens.JoinExistingTripScreen
+import com.anabars.tripsplit.ui.screens.NewTripScreen
+import com.anabars.tripsplit.ui.screens.SettingsScreen
+import com.anabars.tripsplit.ui.screens.TripsScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController, modifier: Modifier) {

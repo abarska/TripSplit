@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.navigation.screens
+package com.anabars.tripsplit.ui.screens
 
 import androidx.annotation.StringRes
 import androidx.navigation.NamedNavArgument

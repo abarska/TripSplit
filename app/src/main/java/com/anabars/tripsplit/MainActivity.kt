@@ -21,7 +21,9 @@ import com.anabars.tripsplit.navigation.AppNavGraph
 import com.anabars.tripsplit.ui.theme.AppTheme
 import com.anabars.tripsplit.ui.widgets.DrawerContent
 import com.anabars.tripsplit.ui.widgets.Toolbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

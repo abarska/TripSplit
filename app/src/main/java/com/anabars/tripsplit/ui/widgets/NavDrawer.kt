@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.navigation.screens.AppScreens
+import com.anabars.tripsplit.ui.screens.AppScreens
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

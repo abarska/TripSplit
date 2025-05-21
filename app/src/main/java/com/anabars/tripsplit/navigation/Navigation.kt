@@ -12,7 +12,7 @@ import com.anabars.tripsplit.ui.screens.SettingsScreen
 import com.anabars.tripsplit.ui.screens.TripsScreen
 
 @Composable
-fun AppNavGraph(navController: NavHostController, modifier: Modifier) {
+fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
         startDestination = AppScreens.ROUTE_TRIPS,

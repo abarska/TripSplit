@@ -3,6 +3,7 @@ package com.anabars.tripsplit.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.Date
 import java.util.UUID
 
 @Entity(tableName = "trip_table")
@@ -14,7 +15,7 @@ data class Trip(
     @ColumnInfo val status: TripStatus = TripStatus.PLANNED,
     @ColumnInfo val ownerId: String = "",
 //    @ColumnInfo val participantIds: List<String> = emptyList(),
-    @ColumnInfo val createdAt: Long = System.currentTimeMillis()
+    @ColumnInfo val createdAt: Date = Date()
 )
 
 enum class TripStatus {

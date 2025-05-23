@@ -13,4 +13,19 @@
     // used for content description
     <string name="action_button">action button</string>
     <string name="add_a_new_trip">Add a new trip</string>
+
+    <string name="new_trip_title_hint">Trip name (e.g. London, May 2025):</string>
+    <string name="new_trip_description_hint">Description:</string>
+    <string name="new_trip_tag_hint">Tag (e.g. business trip):</string>
+
+    <string name="save">Save</string>
+
+    <string name="tag_business_trip">Business Trip</string>
+    <string name="tag_vacation">Vacation</string>
+    <string name="tag_holiday">Holiday</string>
+    <string name="tag_week_end">Week-end</string>
+    <string name="tag_other">Other</string>
+
+    // error messages
+    <string name="error_mandatory_field">This field is mandatory</string>
 </resources>

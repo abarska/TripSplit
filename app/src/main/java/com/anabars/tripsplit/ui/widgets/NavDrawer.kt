@@ -46,14 +46,6 @@ fun DrawerContent(
             drawerState
         )
         DrawerNavItem(
-            R.string.title_new_trip,
-            AppScreens.ROUTE_NEW_TRIP,
-            currentRoute,
-            navController,
-            coroutineScope,
-            drawerState
-        )
-        DrawerNavItem(
             R.string.title_join_existing_trip,
             AppScreens.ROUTE_EXISTING_TRIP,
             currentRoute,

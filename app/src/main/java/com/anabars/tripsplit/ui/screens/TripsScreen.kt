@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,9 +12,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TripSplitFab
+import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable
-fun TripsScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun TripsScreen(
+    navController: NavController,
+    tripViewModel: TripViewModel,
+    modifier: Modifier = Modifier
+) {
     Box(modifier = modifier.fillMaxSize()) {
         TripSplitFab(
             modifier = Modifier
@@ -24,7 +28,13 @@ fun TripsScreen(navController: NavController, modifier: Modifier = Modifier) {
             iconVector = Icons.Outlined.Add,
             contentDescription = R.string.add_a_new_trip,
         ) {
-            Log.d("marusya", "TripsScreen: click FAB")
+            navController.navigate(AppScreens.ROUTE_NEW_TRIP) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
         }
     }
 }

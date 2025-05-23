@@ -17,12 +17,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.anabars.tripsplit.navigation.AppNavGraph
 import com.anabars.tripsplit.ui.theme.AppTheme
 import com.anabars.tripsplit.ui.widgets.DrawerContent
 import com.anabars.tripsplit.ui.widgets.Toolbar
+import com.anabars.tripsplit.viewmodels.TripViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,6 +51,8 @@ fun MainScreenWithDrawer(modifier: Modifier = Modifier) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val tripViewModel: TripViewModel = hiltViewModel()
+
     Scaffold(
         topBar = {
             Toolbar(
@@ -72,6 +76,7 @@ fun MainScreenWithDrawer(modifier: Modifier = Modifier) {
         ) {
             AppNavGraph(
                 navController = navController,
+                tripViewModel = tripViewModel,
                 modifier = Modifier
                     .padding(top = 56.dp)
                     .navigationBarsPadding()

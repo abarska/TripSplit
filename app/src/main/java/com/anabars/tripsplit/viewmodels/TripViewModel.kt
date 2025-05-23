@@ -32,4 +32,6 @@ class TripViewModel @Inject constructor(private val tripRepository: TripReposito
     fun addTrip(trip: Trip) = viewModelScope.launch { tripRepository.addTrip(trip) }
     fun updateTrip(trip: Trip) = viewModelScope.launch { tripRepository.updateTrip(trip) }
     fun deleteTrip(trip: Trip) = viewModelScope.launch { tripRepository.deleteTrip(trip) }
+
+    fun fieldNotEmpty(value: String) = value.isNotEmpty()
 }

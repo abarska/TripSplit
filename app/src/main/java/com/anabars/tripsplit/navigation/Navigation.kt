@@ -10,19 +10,24 @@ import com.anabars.tripsplit.ui.screens.JoinExistingTripScreen
 import com.anabars.tripsplit.ui.screens.NewTripScreen
 import com.anabars.tripsplit.ui.screens.SettingsScreen
 import com.anabars.tripsplit.ui.screens.TripsScreen
+import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable
-fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
+fun AppNavGraph(
+    navController: NavHostController,
+    tripViewModel: TripViewModel,
+    modifier: Modifier = Modifier,
+) {
     NavHost(
         navController = navController,
         startDestination = AppScreens.ROUTE_TRIPS,
         modifier = modifier
     ) {
         composable(route = AppScreens.ROUTE_TRIPS) {
-            TripsScreen(navController = navController, modifier = modifier)
+            TripsScreen(navController = navController, tripViewModel = tripViewModel, modifier = modifier)
         }
         composable(route = AppScreens.ROUTE_NEW_TRIP) {
-            NewTripScreen(navController = navController, modifier = modifier)
+            NewTripScreen(navController = navController, tripViewModel = tripViewModel, modifier = modifier)
         }
         composable(route = AppScreens.ROUTE_EXISTING_TRIP) {
             JoinExistingTripScreen(navController = navController, modifier = modifier)

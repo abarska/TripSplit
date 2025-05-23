@@ -14,6 +14,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -81,6 +82,40 @@ fun MainButton(
         modifier = modifier
             .width(dimensionResource(R.dimen.button_width))
             .padding(16.dp)
+    ) {
+        val value = if (textRes != 0) stringResource(textRes) else text
+        if (value.isNotEmpty()) {
+            ButtonText(text = value)
+        }
+    }
+}
+
+@Composable
+fun SecondaryButton(
+    modifier: Modifier = Modifier,
+    @StringRes textRes: Int = 0,
+    text: String = "",
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier
+            .width(dimensionResource(R.dimen.button_width))
+            .padding(16.dp),
+        enabled = enabled,
+        shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = ButtonDefaults.elevatedButtonElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 0.dp,
+            focusedElevation = 4.dp,
+            hoveredElevation = 4.dp,
+            disabledElevation = 0.dp
+        )
     ) {
         val value = if (textRes != 0) stringResource(textRes) else text
         if (value.isNotEmpty()) {

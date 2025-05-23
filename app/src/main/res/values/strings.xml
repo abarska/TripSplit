@@ -3,6 +3,7 @@
     <string name="menu">Menu</string>
     <string name="back">Back</string>
 
+    // used for screens
     <string name="title_trips">Trips</string>
     <string name="title_new_trip">New Trip</string>
     <string name="title_join_existing_trip">Join Existing Trip</string>
@@ -14,18 +15,28 @@
     <string name="action_button">action button</string>
     <string name="add_a_new_trip">Add a new trip</string>
 
+    // used for hints
     <string name="new_trip_title_hint">Trip name (e.g. London, May 2025):</string>
     <string name="new_trip_description_hint">Description:</string>
     <string name="new_trip_tag_hint">Tag (e.g. business trip):</string>
+    <string name="new_trip_name_hint">Name</string>
 
+    // used for buttons
     <string name="save">Save</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_a_participant">Add a Participant</string>
 
+    // used for tags
     <string name="tag_business_trip">Business Trip</string>
     <string name="tag_vacation">Vacation</string>
     <string name="tag_holiday">Holiday</string>
     <string name="tag_week_end">Week-end</string>
     <string name="tag_other">Other</string>
 
-    // error messages
+    // used for error messages
     <string name="error_mandatory_field">This field is mandatory</string>
+
+    <string name="participants_section_header">Participants:</string>
+
 </resources>

@@ -30,6 +30,18 @@ fun LabelText(modifier: Modifier = Modifier, @StringRes labelRes: Int = 0, label
 }
 
 @Composable
+fun InfoText(modifier: Modifier = Modifier, @StringRes textRes: Int = 0,text: String = "") {
+    val value = if (textRes != 0) stringResource(textRes) else text
+    if (value.isNotEmpty()) {
+        Text(
+            modifier = modifier,
+            text = value,
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
 fun ButtonText(text: String, modifier: Modifier = Modifier) {
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Text(

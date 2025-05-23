@@ -1,7 +1,12 @@
 package com.anabars.tripsplit.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.util.UUID
+
+@Entity(tableName = "participant_table")
 data class Participant(
-    val userId: String = "",
+    @PrimaryKey val userId: UUID = UUID.randomUUID(),
     val name: String = "",
-    val joinedAt: Long = System.currentTimeMillis()
+    val tripId: UUID
 )

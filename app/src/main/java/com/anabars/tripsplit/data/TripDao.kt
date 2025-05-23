@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.anabars.tripsplit.model.Participant
 import com.anabars.tripsplit.model.Trip
 import kotlinx.coroutines.flow.Flow
 
@@ -22,12 +23,18 @@ interface TripDao {
     suspend fun getTripById(id: String): Trip
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(trip: Trip)
+    suspend fun saveTrip(trip: Trip)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(trip: Trip)
 
     @Delete
     suspend fun deleteTrip(trip: Trip)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveParticipant(participant: Participant)
+
+    @Delete
+    suspend fun deleteParticipant(participant: Participant)
 
 }

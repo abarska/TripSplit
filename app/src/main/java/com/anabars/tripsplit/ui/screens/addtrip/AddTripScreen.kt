@@ -3,10 +3,7 @@ package com.anabars.tripsplit.ui.screens.addtrip
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +23,7 @@ import com.anabars.tripsplit.ui.components.MainButton
 import com.anabars.tripsplit.ui.components.SecondaryButton
 import com.anabars.tripsplit.ui.components.ShortInputTextField
 import com.anabars.tripsplit.ui.dialogs.AddParticipantDialog
+import com.anabars.tripsplit.ui.utils.fullScreenModifier
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable
@@ -84,9 +82,7 @@ fun AddTripScreen(
     val participants by tripViewModel.participants.collectAsState()
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = modifier.then(Modifier.fullScreenModifier()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -99,7 +95,6 @@ fun AddTripScreen(
             )
         } else {
             ShortInputTextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = tripName,
                 isError = tripNameError,
                 labelRes = if (tripNameErrorMessage > 0 && tripNameError) tripNameErrorMessage else R.string.new_trip_title_hint,
@@ -109,7 +104,6 @@ fun AddTripScreen(
             Spacer(Modifier.height(16.dp))
 
             ShortInputTextField(
-                modifier = Modifier.fillMaxWidth(),
                 value = tripDescription,
                 labelRes = R.string.new_trip_description_hint,
                 onValueChanged = onTripDescriptionChanged

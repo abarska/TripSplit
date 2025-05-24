@@ -26,6 +26,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun TripSplitFab(
@@ -87,7 +88,7 @@ fun MainButton(
             hoveredElevation = 4.dp,
             disabledElevation = 0.dp
         ),
-        modifier = modifier.width(dimensionResource(R.dimen.button_width))
+        modifier = modifier.then(Modifier.inputWidthModifier()),
     ) {
         InfoText(textRes = textRes, text = text)
     }
@@ -109,7 +110,7 @@ fun SecondaryButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = modifier.width(dimensionResource(R.dimen.button_width)),
+        modifier = modifier.then(Modifier.inputWidthModifier()),
         enabled = enabled,
         shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
         colors = ButtonDefaults.buttonColors(

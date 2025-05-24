@@ -3,4 +3,9 @@
     <dimen name="button_corner_radius">4dp</dimen>
     <dimen name="full_screen_padding">16dp</dimen>
     <dimen name="input_field_max_width">500dp</dimen>
+
+    <dimen name="vertical_spacer_small">8dp</dimen>
+    <dimen name="vertical_spacer_normal">16dp</dimen>
+    <dimen name="vertical_spacer_large">24dp</dimen>
+    <dimen name="vertical_spacer_double">48dp</dimen>
 </resources>

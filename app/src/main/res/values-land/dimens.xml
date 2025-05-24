@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="vertical_spacer_small">4dp</dimen>
+    <dimen name="vertical_spacer_normal">8dp</dimen>
+    <dimen name="vertical_spacer_large">12dp</dimen>
+    <dimen name="vertical_spacer_double">24dp</dimen>
+</resources>

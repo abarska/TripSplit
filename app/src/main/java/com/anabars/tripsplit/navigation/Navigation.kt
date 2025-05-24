@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.screens.JoinExistingTripScreen
-import com.anabars.tripsplit.ui.screens.NewTripScreen
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
 import com.anabars.tripsplit.ui.screens.SettingsScreen
 import com.anabars.tripsplit.ui.screens.TripsScreen
 import com.anabars.tripsplit.viewmodels.TripViewModel
@@ -26,8 +26,8 @@ fun AppNavGraph(
         composable(route = AppScreens.ROUTE_TRIPS) {
             TripsScreen(navController = navController, tripViewModel = tripViewModel, modifier = modifier)
         }
-        composable(route = AppScreens.ROUTE_NEW_TRIP) {
-            NewTripScreen(navController = navController, tripViewModel = tripViewModel, modifier = modifier)
+        composable(route = AppScreens.ROUTE_ADD_TRIP) {
+            AddTripScreen(navController = navController, tripViewModel = tripViewModel, modifier = modifier)
         }
         composable(route = AppScreens.ROUTE_EXISTING_TRIP) {
             JoinExistingTripScreen(navController = navController, modifier = modifier)

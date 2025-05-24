@@ -2,22 +2,18 @@ package com.anabars.tripsplit.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
+import com.anabars.tripsplit.R
 
 @Composable
-fun LabelText(modifier: Modifier = Modifier, @StringRes labelRes: Int = 0, label: String = "") {
-    val value = if (labelRes != 0) stringResource(labelRes) else label
+fun LabelText(modifier: Modifier = Modifier, @StringRes textRes: Int = 0, text: String = "") {
+    val value = if (textRes != 0) stringResource(textRes) else text
     if (value.isNotEmpty()) {
         Text(
             modifier = modifier,
@@ -30,56 +26,27 @@ fun LabelText(modifier: Modifier = Modifier, @StringRes labelRes: Int = 0, label
 }
 
 @Composable
-fun InfoText(modifier: Modifier = Modifier, @StringRes textRes: Int = 0,text: String = "") {
+fun InfoText(modifier: Modifier = Modifier, @StringRes textRes: Int = 0, text: String = "") {
     val value = if (textRes != 0) stringResource(textRes) else text
     if (value.isNotEmpty()) {
-        Text(
-            modifier = modifier,
-            text = value,
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
-
-@Composable
-fun ButtonText(text: String, modifier: Modifier = Modifier) {
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        Text(
-            modifier = modifier,
-            text = text,
-            style = MaterialTheme.typography.bodyLarge
-        )
-    }
-}
-
-@Composable
-fun ShortInputTextField(
-    modifier: Modifier = Modifier,
-    value: String,
-    @StringRes labelRes: Int = 0,
-    label: String = "",
-    isError: Boolean = false,
-    onValueChanged: (String) -> Unit
-) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-    TextField(
-        modifier = modifier.fillMaxWidth(),
-        maxLines = 1,
-        value = value,
-        isError = isError,
-        label = {
-            LabelText(
+        Box(modifier = modifier, contentAlignment = Alignment.Center) {
+            Text(
                 modifier = modifier,
-                labelRes = labelRes,
-                label = label
+                text = value,
+                style = MaterialTheme.typography.bodyLarge
             )
-        },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = { keyboardController?.hide() }
-        ),
-        onValueChange = onValueChanged
-    )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LabelTextPreview() {
+    LabelText(text = stringResource(R.string.placeholder))
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun InfoTextPreview() {
+    InfoText(text = stringResource(R.string.placeholder))
 }

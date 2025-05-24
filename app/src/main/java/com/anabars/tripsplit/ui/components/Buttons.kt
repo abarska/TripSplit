@@ -4,11 +4,12 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 
@@ -60,6 +62,12 @@ fun TripSplitFab(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+private fun TripSplitFabPreview() {
+    TripSplitFab(iconVector = Icons.Outlined.Add) {}
+}
+
 @Composable
 fun MainButton(
     modifier: Modifier = Modifier,
@@ -79,15 +87,16 @@ fun MainButton(
             hoveredElevation = 4.dp,
             disabledElevation = 0.dp
         ),
-        modifier = modifier
-            .width(dimensionResource(R.dimen.button_width))
-            .padding(16.dp)
+        modifier = modifier.width(dimensionResource(R.dimen.button_width))
     ) {
-        val value = if (textRes != 0) stringResource(textRes) else text
-        if (value.isNotEmpty()) {
-            ButtonText(text = value)
-        }
+        InfoText(textRes = textRes, text = text)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MainButtonPreview() {
+    MainButton(textRes = R.string.placeholder) { }
 }
 
 @Composable
@@ -100,9 +109,7 @@ fun SecondaryButton(
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = modifier
-            .width(dimensionResource(R.dimen.button_width))
-            .padding(16.dp),
+        modifier = modifier.width(dimensionResource(R.dimen.button_width)),
         enabled = enabled,
         shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
         colors = ButtonDefaults.buttonColors(
@@ -117,9 +124,12 @@ fun SecondaryButton(
             disabledElevation = 0.dp
         )
     ) {
-        val value = if (textRes != 0) stringResource(textRes) else text
-        if (value.isNotEmpty()) {
-            ButtonText(text = value)
-        }
+        InfoText(textRes = textRes, text = text)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SecondaryButtonPreview() {
+    SecondaryButton(textRes = R.string.placeholder) { }
 }

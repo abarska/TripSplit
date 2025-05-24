@@ -39,4 +39,7 @@
 
     <string name="participants_section_header">Participants:</string>
 
+    // used for previews
+    <string name="placeholder">Placeholder</string>
+
 </resources>

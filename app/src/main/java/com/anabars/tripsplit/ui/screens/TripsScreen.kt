@@ -28,7 +28,7 @@ fun TripsScreen(
             iconVector = Icons.Outlined.Add,
             contentDescription = R.string.add_a_new_trip,
         ) {
-            navController.navigate(AppScreens.ROUTE_NEW_TRIP) {
+            navController.navigate(AppScreens.ROUTE_ADD_TRIP) {
                 popUpTo(navController.graph.startDestinationId) {
                     saveState = true
                 }

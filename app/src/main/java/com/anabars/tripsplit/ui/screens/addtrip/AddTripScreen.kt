@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.screens
+package com.anabars.tripsplit.ui.screens.addtrip
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +29,7 @@ import com.anabars.tripsplit.ui.dialogs.AddParticipantDialog
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable
-fun NewTripScreen(
+fun AddTripScreen(
     navController: NavController,
     tripViewModel: TripViewModel,
     modifier: Modifier = Modifier,

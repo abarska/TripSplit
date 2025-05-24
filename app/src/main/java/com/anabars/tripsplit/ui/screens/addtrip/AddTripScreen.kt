@@ -64,6 +64,9 @@ fun AddTripScreen(
         showDialog = false
         newParticipantName = ""
     }
+    val onDeletedParticipant = { name: String ->
+        tripViewModel.removeParticipant(name)
+    }
 
     val onDismissAddParticipantDialog = {
         showDialog = false
@@ -92,6 +95,7 @@ fun AddTripScreen(
                 onTripDescriptionChanged = onTripDescriptionChanged,
                 participants = participants,
                 onAddParticipantButtonClick = onAddParticipantButtonClick,
+                onDeletedParticipant = onDeletedParticipant,
                 onSaveTrip = onSaveTrip,
                 modifier = modifier
             )
@@ -105,6 +109,7 @@ fun AddTripScreen(
                 onTripDescriptionChanged = onTripDescriptionChanged,
                 participants = participants,
                 onAddParticipantButtonClick = onAddParticipantButtonClick,
+                onDeletedParticipant = onDeletedParticipant,
                 onSaveTrip = onSaveTrip,
                 modifier = modifier
             )

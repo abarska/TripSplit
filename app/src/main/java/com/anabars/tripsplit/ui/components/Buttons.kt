@@ -97,7 +97,7 @@ fun MainButton(
 @Preview(showBackground = true)
 @Composable
 private fun MainButtonPreview() {
-    MainButton(textRes = R.string.placeholder) { }
+    MainButton(text = "Placeholder") { }
 }
 
 @Composable
@@ -132,5 +132,5 @@ fun SecondaryButton(
 @Preview(showBackground = true)
 @Composable
 private fun SecondaryButtonPreview() {
-    SecondaryButton(textRes = R.string.placeholder) { }
+    SecondaryButton(text = "Placeholder") { }
 }

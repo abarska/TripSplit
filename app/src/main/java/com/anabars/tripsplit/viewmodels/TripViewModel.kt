@@ -29,6 +29,7 @@ class TripViewModel @Inject constructor(private val tripRepository: TripReposito
                 if (trips.isNotEmpty()) _tripList.value = trips
             }
         }
+        addParticipant("You")
     }
 
     //    fun getAllTrips() = tripDao.getAllTrips().flowOn(Dispatchers.IO).conflate()
@@ -43,6 +44,7 @@ class TripViewModel @Inject constructor(private val tripRepository: TripReposito
     fun deleteParticipant(participant: Participant) = viewModelScope.launch { tripRepository.deleteParticipant(participant) }
 
     fun addParticipant(name: String) = run { _participants.value += name }
+    fun removeParticipant(name: String) = run { _participants.value -= name }
 
     fun fieldNotEmpty(value: String) = value.isNotEmpty()
 }

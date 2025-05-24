@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.ShortInputTextField
 
 @Composable
@@ -20,7 +22,12 @@ fun InputSection(
     onTripDescriptionChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        InfoText(textRes = R.string.trip_section_header)
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
         ShortInputTextField(
             value = tripName,
             isError = tripNameError,
@@ -29,7 +36,7 @@ fun InputSection(
             modifier = modifier
         )
 
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
 
         ShortInputTextField(
             value = tripDescription,

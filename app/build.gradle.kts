@@ -65,6 +65,9 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
+    // material icons
+    implementation(libs.androidx.material.icons.extended)
+
     // tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

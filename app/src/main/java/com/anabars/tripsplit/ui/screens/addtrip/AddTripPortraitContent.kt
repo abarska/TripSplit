@@ -21,6 +21,7 @@ fun AddTripPortraitContent(
     onTripDescriptionChanged: (String) -> Unit,
     participants: List<String>,
     onAddParticipantButtonClick: () -> Unit,
+    onDeletedParticipant: (String) -> Unit,
     onSaveTrip: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -42,7 +43,8 @@ fun AddTripPortraitContent(
 
         ParticipantsSection(
             participants = participants,
-            onAddParticipantButtonClick = onAddParticipantButtonClick
+            onAddParticipantButtonClick = onAddParticipantButtonClick,
+            onDeletedParticipant = onDeletedParticipant
         )
 
         HorizontalSeparator()
@@ -63,6 +65,7 @@ private fun AddTripPortraitContentPreview() {
         onTripDescriptionChanged = {},
         participants = listOf("adam", "eve", "others"),
         onAddParticipantButtonClick = {},
-        onSaveTrip = {}
+        onSaveTrip = {},
+        onDeletedParticipant = {}
     )
 }

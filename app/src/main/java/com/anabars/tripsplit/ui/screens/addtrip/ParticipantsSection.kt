@@ -8,7 +8,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.SecondaryButton
@@ -17,6 +16,7 @@ import com.anabars.tripsplit.ui.components.SecondaryButton
 fun ParticipantsSection(
     participants: List<String>,
     onAddParticipantButtonClick: () -> Unit,
+    onDeletedParticipant: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -27,9 +27,17 @@ fun ParticipantsSection(
         InfoText(textRes = R.string.participants_section_header)
 
         if (participants.isNotEmpty()) {
-            Spacer(Modifier.height(16.dp))
-            participants.forEach { name ->
-                InfoText(text = name)
+            Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
+            participants.forEachIndexed { index, name ->
+                ParticipantRowItem(
+                    name = name,
+                    onDeleteClick = { onDeletedParticipant(name) },
+                    hideChangeStatusIcon = true,
+                    hideDeleteIcon = index == 0,
+                )
+                if (index < participants.lastIndex) {
+                    Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
+                }
             }
         }
 
@@ -44,6 +52,7 @@ fun ParticipantsSection(
 private fun ParticipantsSectionPreview() {
     ParticipantsSection(
         participants = listOf("adam", "eve", "others"),
-        onAddParticipantButtonClick = {}
+        onAddParticipantButtonClick = {},
+        onDeletedParticipant = {}
     )
 }

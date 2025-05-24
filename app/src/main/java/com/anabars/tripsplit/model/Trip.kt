@@ -16,7 +16,6 @@ data class Trip(
     @ColumnInfo val tag: String = Tag.OTHER.name,
     @ColumnInfo val status: TripStatus = TripStatus.PLANNED,
     @ColumnInfo val ownerId: String = "",
-//    @ColumnInfo val participantIds: List<String> = emptyList(),
     @ColumnInfo val createdAt: Date = Date()
 )
 

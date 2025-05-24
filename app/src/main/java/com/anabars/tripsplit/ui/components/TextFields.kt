@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.anabars.tripsplit.R
 
 @Composable
 fun LabelText(modifier: Modifier = Modifier, @StringRes textRes: Int = 0, text: String = "") {
@@ -42,11 +41,11 @@ fun InfoText(modifier: Modifier = Modifier, @StringRes textRes: Int = 0, text: S
 @Preview(showBackground = true)
 @Composable
 private fun LabelTextPreview() {
-    LabelText(text = stringResource(R.string.placeholder))
+    LabelText(text = "Placeholder")
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun InfoTextPreview() {
-    InfoText(text = stringResource(R.string.placeholder))
+    InfoText(text = "Placeholder")
 }

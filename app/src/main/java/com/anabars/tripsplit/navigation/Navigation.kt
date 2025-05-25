@@ -9,7 +9,7 @@ import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.screens.JoinExistingTripScreen
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
 import com.anabars.tripsplit.ui.screens.SettingsScreen
-import com.anabars.tripsplit.ui.screens.TripsScreen
+import com.anabars.tripsplit.ui.screens.trips.TripsScreen
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable

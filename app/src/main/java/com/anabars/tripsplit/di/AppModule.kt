@@ -2,6 +2,7 @@ package com.anabars.tripsplit.di
 
 import android.content.Context
 import androidx.room.Room
+import com.anabars.tripsplit.data.ParticipantDao
 import com.anabars.tripsplit.data.TripSplitDatabase
 import dagger.Module
 import dagger.Provides
@@ -22,5 +23,9 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideTripDao(tripSplitDatabase: TripSplitDatabase) = tripSplitDatabase.tripDao()
+    fun provideTripDao(db: TripSplitDatabase) = db.tripDao()
+
+    @Singleton
+    @Provides
+    fun provideParticipantDao(db: TripSplitDatabase): ParticipantDao = db.participantDao()
 }

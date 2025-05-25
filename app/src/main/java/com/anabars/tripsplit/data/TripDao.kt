@@ -23,7 +23,7 @@ interface TripDao {
     suspend fun getTripById(id: String): Trip
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveTrip(trip: Trip)
+    suspend fun insertTrip(trip: Trip): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun update(trip: Trip)

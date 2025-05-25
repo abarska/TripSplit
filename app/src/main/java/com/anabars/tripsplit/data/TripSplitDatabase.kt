@@ -10,4 +10,5 @@ import com.anabars.tripsplit.model.Trip
 @TypeConverters(DateConverter::class)
 abstract class TripSplitDatabase : RoomDatabase() {
     abstract fun tripDao(): TripDao
+    abstract fun participantDao(): ParticipantDao
 }

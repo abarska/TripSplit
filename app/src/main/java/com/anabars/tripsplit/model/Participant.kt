@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.util.UUID
 
 @Entity(
     tableName = "participant_table",
@@ -20,10 +19,10 @@ import java.util.UUID
     indices = [Index("tripId")]
 )
 data class Participant(
-    @PrimaryKey val userId: UUID = UUID.randomUUID(),
+    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val name: String = "",
     @ColumnInfo val status: ParticipantStatus = ParticipantStatus.ACTIVE,
-    @ColumnInfo val tripId: UUID
+    @ColumnInfo val tripId: Long
 )
 
 enum class ParticipantStatus {

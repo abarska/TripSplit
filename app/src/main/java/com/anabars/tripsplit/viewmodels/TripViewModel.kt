@@ -2,7 +2,6 @@ package com.anabars.tripsplit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anabars.tripsplit.model.Participant
 import com.anabars.tripsplit.model.Trip
 import com.anabars.tripsplit.repository.TripRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,13 +34,24 @@ class TripViewModel @Inject constructor(private val tripRepository: TripReposito
     //    fun getAllTrips() = tripDao.getAllTrips().flowOn(Dispatchers.IO).conflate()
     fun deleteAllTrips() = viewModelScope.launch { tripRepository.deleteAllTrips() }
 
-    fun getTrip(id: String) = viewModelScope.launch { tripRepository.getTrip(id) }
-    fun saveTrip(trip: Trip) = viewModelScope.launch { tripRepository.saveTrip(trip) }
     fun updateTrip(trip: Trip) = viewModelScope.launch { tripRepository.updateTrip(trip) }
+
     fun deleteTrip(trip: Trip) = viewModelScope.launch { tripRepository.deleteTrip(trip) }
 
-    fun saveParticipant(participant: Participant) = viewModelScope.launch { tripRepository.saveParticipant(participant) }
-    fun deleteParticipant(participant: Participant) = viewModelScope.launch { tripRepository.deleteParticipant(participant) }
+    fun getTrip(id: String) = viewModelScope.launch { tripRepository.getTrip(id) }
+
+    fun saveTrip(tripName: String, tripDescription: String) {
+        viewModelScope.launch {
+            val trip = Trip(title = tripName, description = tripDescription)
+            tripRepository.saveTrip(trip, _participants.value.toList())
+        }
+    }
+
+    fun getParticipantsByTripId(id: Long) =
+        viewModelScope.launch { tripRepository.getParticipantsByTripId(id) }
+
+    fun deleteParticipantsByTripId(id: Long) =
+        viewModelScope.launch { tripRepository.deleteParticipantsByTripId(id) }
 
     fun addParticipant(name: String) = run { _participants.value += name }
     fun removeParticipant(name: String) = run { _participants.value -= name }

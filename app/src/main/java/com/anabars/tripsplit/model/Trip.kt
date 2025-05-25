@@ -6,11 +6,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.anabars.tripsplit.R
 import java.util.Date
-import java.util.UUID
 
 @Entity(tableName = "trip_table")
 data class Trip(
-    @PrimaryKey val id: UUID = UUID.randomUUID(),
+    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val title: String = "",
     @ColumnInfo val description: String = "",
     @ColumnInfo val tag: String = Tag.OTHER.name,

@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.model.Trip
 import com.anabars.tripsplit.ui.dialogs.AddParticipantDialog
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
@@ -42,9 +41,7 @@ fun AddTripScreen(
 
     val onSaveTrip = {
         if (tripViewModel.fieldNotEmpty(value = tripName)) {
-            tripViewModel.saveTrip(
-                Trip(title = tripName, description = tripDescription)
-            )
+            tripViewModel.saveTrip(tripName = tripName, tripDescription = tripDescription)
             tripName = ""
             tripDescription = ""
         } else {

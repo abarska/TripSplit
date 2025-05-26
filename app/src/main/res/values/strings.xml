@@ -39,6 +39,7 @@
     // used for error messages
     <string name="error_mandatory_field">This field is mandatory</string>
 
+    <string name="you">You</string>
     <string name="trip_section_header">Trip:</string>
     <string name="participants_section_header">Participants:</string>
 

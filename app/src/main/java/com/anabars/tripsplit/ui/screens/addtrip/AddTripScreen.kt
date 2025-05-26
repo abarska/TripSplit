@@ -2,6 +2,7 @@ package com.anabars.tripsplit.ui.screens.addtrip
 
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -10,9 +11,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.dialogs.AddParticipantDialog
+import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable
@@ -21,6 +24,10 @@ fun AddTripScreen(
     tripViewModel: TripViewModel,
     modifier: Modifier = Modifier,
 ) {
+    val you = stringResource(R.string.you)
+    LaunchedEffect(Unit) {
+        tripViewModel.addParticipant(you)
+    }
 
     var tripName by rememberSaveable { mutableStateOf("") }
     var tripNameErrorMessage by rememberSaveable { mutableIntStateOf(0) }
@@ -42,8 +49,13 @@ fun AddTripScreen(
     val onSaveTrip = {
         if (tripViewModel.fieldNotEmpty(value = tripName)) {
             tripViewModel.saveTrip(tripName = tripName, tripDescription = tripDescription)
-            tripName = ""
-            tripDescription = ""
+            tripViewModel.clearParticipants()
+            navController.navigate(AppScreens.ROUTE_TRIPS) {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
+                }
+                launchSingleTop = true
+            }
         } else {
             tripNameError = true
             tripNameErrorMessage = R.string.error_mandatory_field

@@ -34,6 +34,10 @@ fun TripRowItem(
             .padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        InfoText(text = String.format("%s (%s)", trip.title, trip.description))
+        InfoText(
+            text =
+                if (trip.description.isEmpty()) trip.title
+                else String.format("%s (%s)", trip.title, trip.description)
+        )
     }
 }

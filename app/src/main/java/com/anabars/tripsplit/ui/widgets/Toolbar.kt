@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.ui.widgets
 
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -12,15 +11,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.viewmodels.TripViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -28,6 +26,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun Toolbar(
     navController: NavController,
+    tripViewModel: TripViewModel,
     coroutineScope: CoroutineScope,
     drawerState: DrawerState
 ) {
@@ -45,6 +44,9 @@ fun Toolbar(
             if (currentRoute == startDestination) {
                 IconButton(onClick = {
                     coroutineScope.launch {
+                        if (!tripViewModel.handleBack()) {
+                            navController.navigateUp()
+                        }
                         if (drawerState.isClosed) {
                             drawerState.open()
                         } else {

@@ -57,6 +57,7 @@ fun MainScreenWithDrawer(modifier: Modifier = Modifier) {
         topBar = {
             Toolbar(
                 navController = navController,
+                tripViewModel = tripViewModel,
                 coroutineScope = coroutineScope,
                 drawerState = drawerState
             )

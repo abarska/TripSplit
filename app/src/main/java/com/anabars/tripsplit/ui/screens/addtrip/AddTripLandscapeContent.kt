@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +24,7 @@ fun AddTripLandscapeContent(
     onTripNameChanged: (String) -> Unit,
     tripDescription: String,
     onTripDescriptionChanged: (String) -> Unit,
-    participants: List<String>,
+    participants: Set<String>,
     onAddParticipantButtonClick: () -> Unit,
     onDeletedParticipant: (String) -> Unit,
     onSaveTrip: () -> Unit,
@@ -79,7 +78,7 @@ private fun AddTripLandscapeContentPreview() {
         onTripNameChanged = {},
         tripDescription = "trip description",
         onTripDescriptionChanged = {},
-        participants = listOf("adam", "eve", "others"),
+        participants = setOf("adam", "eve", "others"),
         onAddParticipantButtonClick = {},
         onSaveTrip = {},
         onDeletedParticipant = {}

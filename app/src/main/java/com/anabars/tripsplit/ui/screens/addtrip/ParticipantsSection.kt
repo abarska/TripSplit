@@ -14,7 +14,7 @@ import com.anabars.tripsplit.ui.components.SecondaryButton
 
 @Composable
 fun ParticipantsSection(
-    participants: List<String>,
+    participants: Set<String>,
     onAddParticipantButtonClick: () -> Unit,
     onDeletedParticipant: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -28,14 +28,14 @@ fun ParticipantsSection(
 
         if (participants.isNotEmpty()) {
             Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
-            participants.forEachIndexed { index, name ->
+            val lastItem = participants.last()
+            participants.forEach { name ->
                 ParticipantRowItem(
                     name = name,
                     onDeleteClick = { onDeletedParticipant(name) },
-                    hideChangeStatusIcon = true,
-                    hideDeleteIcon = index == 0,
+                    hideChangeStatusIcon = true
                 )
-                if (index < participants.lastIndex) {
+                if (name != lastItem) {
                     Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
                 }
             }
@@ -51,7 +51,7 @@ fun ParticipantsSection(
 @Composable
 private fun ParticipantsSectionPreview() {
     ParticipantsSection(
-        participants = listOf("adam", "eve", "others"),
+        participants = setOf("adam", "eve", "others"),
         onAddParticipantButtonClick = {},
         onDeletedParticipant = {}
     )

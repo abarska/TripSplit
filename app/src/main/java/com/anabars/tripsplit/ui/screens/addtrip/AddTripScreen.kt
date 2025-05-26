@@ -1,12 +1,15 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -14,7 +17,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.AddParticipantDialog
+import com.anabars.tripsplit.ui.dialogs.SaveChangesDialog
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
@@ -24,17 +29,12 @@ fun AddTripScreen(
     tripViewModel: TripViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val you = stringResource(R.string.you)
-    LaunchedEffect(Unit) {
-        tripViewModel.addParticipant(you)
-    }
-
     var tripName by rememberSaveable { mutableStateOf("") }
     var tripNameErrorMessage by rememberSaveable { mutableIntStateOf(0) }
     var tripNameError by rememberSaveable { mutableStateOf(false) }
     var tripDescription by rememberSaveable { mutableStateOf("") }
     var newParticipantName by rememberSaveable { mutableStateOf("") }
-    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var activeDialog by rememberSaveable { mutableStateOf(ActiveDialog.NONE) }
 
     val onTripNameChanged = { input: String ->
         tripName = input
@@ -50,27 +50,23 @@ fun AddTripScreen(
         if (tripViewModel.fieldNotEmpty(value = tripName)) {
             tripViewModel.saveTrip(tripName = tripName, tripDescription = tripDescription)
             tripViewModel.clearParticipants()
-            navController.navigate(AppScreens.ROUTE_TRIPS) {
-                popUpTo(navController.graph.startDestinationId) {
-                    inclusive = true
-                }
-                launchSingleTop = true
-            }
+            navigateHome(navController)
         } else {
+            activeDialog = ActiveDialog.NONE
             tripNameError = true
             tripNameErrorMessage = R.string.error_mandatory_field
         }
     }
 
     val onAddParticipantButtonClick = {
-        showDialog = true
+        activeDialog = ActiveDialog.ADD_PARTICIPANT
     }
 
     val onNewParticipant = {
         if (tripViewModel.fieldNotEmpty(value = newParticipantName)) {
             tripViewModel.addParticipant(newParticipantName)
         }
-        showDialog = false
+        activeDialog = ActiveDialog.NONE
         newParticipantName = ""
     }
     val onDeletedParticipant = { name: String ->
@@ -78,49 +74,92 @@ fun AddTripScreen(
     }
 
     val onDismissAddParticipantDialog = {
-        showDialog = false
+        activeDialog = ActiveDialog.NONE
         newParticipantName = ""
+    }
+
+    val onDismissSaveChanges = {
+        tripViewModel.clearParticipants()
+        navigateHome(navController)
     }
 
     val participants by tripViewModel.participants.collectAsState()
 
-    if (showDialog) {
-        AddParticipantDialog(
-            name = newParticipantName,
-            onNameChange = { newName -> newParticipantName = newName },
-            onSave = { onNewParticipant() },
-            onDismiss = { onDismissAddParticipantDialog() },
-        )
-    } else {
-        val isPortrait =
-            LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
-        if (isPortrait)
-            AddTripPortraitContent(
-                tripName = tripName,
-                tripNameError = tripNameError,
-                tripNameErrorMessage = tripNameErrorMessage,
-                onTripNameChanged = onTripNameChanged,
-                tripDescription = tripDescription,
-                onTripDescriptionChanged = onTripDescriptionChanged,
-                participants = participants,
-                onAddParticipantButtonClick = onAddParticipantButtonClick,
-                onDeletedParticipant = onDeletedParticipant,
-                onSaveTrip = onSaveTrip,
-                modifier = modifier
+    val hasUnsavedInput by remember(tripName, tripDescription, participants) {
+        derivedStateOf {
+            tripName.isNotBlank() || tripDescription.isNotBlank() || participants.size > 1
+        }
+    }
+
+    BackHandler(enabled = hasUnsavedInput) {
+        activeDialog = ActiveDialog.SAVE_CHANGES
+    }
+
+    val you = stringResource(R.string.you)
+    LaunchedEffect(Unit) {
+        tripViewModel.addParticipant(you)
+        tripViewModel.setBackHandler {
+            if (hasUnsavedInput) {
+                activeDialog = ActiveDialog.SAVE_CHANGES
+                true
+            } else false
+        }
+    }
+
+    when (activeDialog) {
+        ActiveDialog.ADD_PARTICIPANT -> {
+            AddParticipantDialog(
+                name = newParticipantName,
+                onNameChange = { newName -> newParticipantName = newName },
+                onSave = { onNewParticipant() },
+                onDismiss = { onDismissAddParticipantDialog() },
             )
-        else
-            AddTripLandscapeContent(
-                tripName = tripName,
-                tripNameError = tripNameError,
-                tripNameErrorMessage = tripNameErrorMessage,
-                onTripNameChanged = onTripNameChanged,
-                tripDescription = tripDescription,
-                onTripDescriptionChanged = onTripDescriptionChanged,
-                participants = participants,
-                onAddParticipantButtonClick = onAddParticipantButtonClick,
-                onDeletedParticipant = onDeletedParticipant,
-                onSaveTrip = onSaveTrip,
-                modifier = modifier
-            )
+        }
+
+        ActiveDialog.SAVE_CHANGES -> {
+            SaveChangesDialog(onDismiss = onDismissSaveChanges, onConfirm = onSaveTrip)
+        }
+
+        ActiveDialog.NONE -> {
+            val isPortrait =
+                LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+            if (isPortrait)
+                AddTripPortraitContent(
+                    tripName = tripName,
+                    tripNameError = tripNameError,
+                    tripNameErrorMessage = tripNameErrorMessage,
+                    onTripNameChanged = onTripNameChanged,
+                    tripDescription = tripDescription,
+                    onTripDescriptionChanged = onTripDescriptionChanged,
+                    participants = participants,
+                    onAddParticipantButtonClick = onAddParticipantButtonClick,
+                    onDeletedParticipant = onDeletedParticipant,
+                    onSaveTrip = onSaveTrip,
+                    modifier = modifier
+                )
+            else
+                AddTripLandscapeContent(
+                    tripName = tripName,
+                    tripNameError = tripNameError,
+                    tripNameErrorMessage = tripNameErrorMessage,
+                    onTripNameChanged = onTripNameChanged,
+                    tripDescription = tripDescription,
+                    onTripDescriptionChanged = onTripDescriptionChanged,
+                    participants = participants,
+                    onAddParticipantButtonClick = onAddParticipantButtonClick,
+                    onDeletedParticipant = onDeletedParticipant,
+                    onSaveTrip = onSaveTrip,
+                    modifier = modifier
+                )
+        }
+    }
+}
+
+private fun navigateHome(navController: NavController) {
+    navController.navigate(AppScreens.ROUTE_TRIPS) {
+        popUpTo(navController.graph.startDestinationId) {
+            inclusive = true
+        }
+        launchSingleTop = true
     }
 }

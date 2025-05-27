@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
-import com.anabars.tripsplit.ui.dialogs.AddParticipantDialog
+import com.anabars.tripsplit.ui.dialogs.UserInputDialog
 import com.anabars.tripsplit.ui.dialogs.ConfirmationDialog
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.TripViewModel
@@ -59,7 +59,7 @@ fun AddTripScreen(
     }
 
     val onAddParticipantButtonClick = {
-        activeDialog = ActiveDialog.ADD_PARTICIPANT
+        activeDialog = ActiveDialog.USER_INPUT
     }
 
     val onNewParticipant = {
@@ -107,12 +107,16 @@ fun AddTripScreen(
     }
 
     when (activeDialog) {
-        ActiveDialog.ADD_PARTICIPANT -> {
-            AddParticipantDialog(
-                name = newParticipantName,
-                onNameChange = { newName -> newParticipantName = newName },
+        ActiveDialog.USER_INPUT -> {
+            UserInputDialog(
+                input = newParticipantName,
+                onInputChange = { newInput -> newParticipantName = newInput },
                 onSave = { onNewParticipant() },
                 onDismiss = { onDismissAddParticipantDialog() },
+                titleRes = R.string.add_a_participant,
+                labelRes = R.string.participant_name_hint,
+                positiveTextRes = R.string.add,
+                negativeTextRes = R.string.cancel
             )
         }
 

@@ -21,7 +21,7 @@
     <string name="new_trip_title_hint">Trip name (e.g. London, May 2025):</string>
     <string name="new_trip_description_hint">Description:</string>
     <string name="new_trip_tag_hint">Tag (e.g. business trip):</string>
-    <string name="new_trip_name_hint">Name</string>
+    <string name="participant_name_hint">Name</string>
 
     // used for buttons
     <string name="save">Save</string>

@@ -1,3 +1,3 @@
 package com.anabars.tripsplit.ui.dialogs
 
-enum class ActiveDialog { NONE, ADD_PARTICIPANT, CONFIRMATION }
+enum class ActiveDialog { NONE, USER_INPUT, CONFIRMATION }

@@ -19,7 +19,7 @@ import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.AddParticipantDialog
-import com.anabars.tripsplit.ui.dialogs.SaveChangesDialog
+import com.anabars.tripsplit.ui.dialogs.ConfirmationDialog
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
@@ -92,7 +92,7 @@ fun AddTripScreen(
     }
 
     BackHandler(enabled = hasUnsavedInput) {
-        activeDialog = ActiveDialog.SAVE_CHANGES
+        activeDialog = ActiveDialog.CONFIRMATION
     }
 
     val you = stringResource(R.string.you)
@@ -100,7 +100,7 @@ fun AddTripScreen(
         tripViewModel.addParticipant(you)
         tripViewModel.setBackHandler {
             if (hasUnsavedInput) {
-                activeDialog = ActiveDialog.SAVE_CHANGES
+                activeDialog = ActiveDialog.CONFIRMATION
                 true
             } else false
         }
@@ -116,8 +116,15 @@ fun AddTripScreen(
             )
         }
 
-        ActiveDialog.SAVE_CHANGES -> {
-            SaveChangesDialog(onDismiss = onDismissSaveChanges, onConfirm = onSaveTrip)
+        ActiveDialog.CONFIRMATION -> {
+            ConfirmationDialog(
+                onDismiss = onDismissSaveChanges,
+                onConfirm = onSaveTrip,
+                titleRes = R.string.save_changes_dialog_title,
+                questionRes =R.string.save_changes_dialog_question,
+                positiveTextRes = R.string.save,
+                negativeTextRes = R.string.discard
+            )
         }
 
         ActiveDialog.NONE -> {

@@ -1,12 +1,8 @@
 package com.anabars.tripsplit.ui.dialogs
 
 import androidx.annotation.StringRes
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import com.anabars.tripsplit.ui.components.InfoText
 
 @Composable
@@ -23,32 +19,20 @@ fun ConfirmationDialog(
     @StringRes negativeTextRes: Int = 0,
     negativeText: String = ""
 ) {
-    val titleValue =
-        if (titleRes != 0) stringResource(titleRes) else title
-    val positiveTextValue =
-        if (positiveTextRes != 0) stringResource(positiveTextRes) else positiveText
-    val negativeTextValue =
-        if (negativeTextRes != 0) stringResource(negativeTextRes) else negativeText
-
-    AlertDialog(
+    TripSplitDialog(
         modifier = modifier,
-        onDismissRequest = onDismiss,
-        title = { Text(text = titleValue) },
-        text = {
-            InfoText(
-                textRes = questionRes,
-                text = question
-            )
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(text = positiveTextValue)
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = negativeTextValue)
-            }
-        }
-    )
+        onDismiss = onDismiss,
+        onConfirm = onConfirm,
+        titleRes = titleRes,
+        title = title,
+        positiveTextRes = positiveTextRes,
+        positiveText = positiveText,
+        negativeTextRes = negativeTextRes,
+        negativeText = negativeText,
+    ) {
+        InfoText(
+            textRes = questionRes,
+            text = question
+        )
+    }
 }

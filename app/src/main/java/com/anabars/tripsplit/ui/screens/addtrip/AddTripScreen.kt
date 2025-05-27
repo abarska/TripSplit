@@ -111,7 +111,7 @@ fun AddTripScreen(
             UserInputDialog(
                 input = newParticipantName,
                 onInputChange = { newInput -> newParticipantName = newInput },
-                onSave = { onNewParticipant() },
+                onConfirm = { onNewParticipant() },
                 onDismiss = { onDismissAddParticipantDialog() },
                 titleRes = R.string.add_a_participant,
                 labelRes = R.string.participant_name_hint,

@@ -9,7 +9,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun HorizontalSeparator() {
     Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))

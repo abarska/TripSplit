@@ -17,7 +17,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.model.Trip
 import com.anabars.tripsplit.ui.components.TripSplitFab
+import com.anabars.tripsplit.ui.itemrows.TripItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.utils.fullScreenModifier
 import com.anabars.tripsplit.viewmodels.TripViewModel
@@ -39,10 +41,7 @@ fun TripsScreen(
         ) {
             if (trips.isNotEmpty()) {
                 trips.forEachIndexed { index, trip ->
-                    TripRowItem(
-                        trip = trip,
-                        participants = emptyList()
-                    )
+                    TripItemRow(text = tripText(trip))
                     if (index < trips.lastIndex) {
                         Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
                     }
@@ -66,3 +65,7 @@ fun TripsScreen(
         }
     }
 }
+
+private fun tripText(trip: Trip): String =
+    if (trip.description.isEmpty()) trip.title
+    else String.format("%s (%s)", trip.title, trip.description)

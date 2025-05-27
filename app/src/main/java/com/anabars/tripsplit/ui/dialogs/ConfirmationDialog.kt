@@ -3,6 +3,8 @@ package com.anabars.tripsplit.ui.dialogs
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.InfoText
 
 @Composable
@@ -35,4 +37,15 @@ fun ConfirmationDialog(
             text = question
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ConfirmationDialogPreview() {
+    ConfirmationDialog(
+        titleRes = R.string.save_changes_dialog_title,
+        questionRes = R.string.save_changes_dialog_question,
+        positiveTextRes = R.string.save,
+        negativeTextRes = R.string.discard
+    )
 }

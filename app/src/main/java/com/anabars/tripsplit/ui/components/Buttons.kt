@@ -5,15 +5,17 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
@@ -26,6 +28,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
@@ -133,4 +136,25 @@ fun SecondaryButton(
 @Composable
 private fun SecondaryButtonPreview() {
     SecondaryButton(text = "Placeholder") { }
+}
+
+@Composable
+fun ItemRowActionButton(actionButton: ActionButton) {
+    IconButton(
+        modifier = Modifier.size(actionButton.iconSize),
+        onClick = actionButton.onClick
+    ) {
+        Icon(
+            imageVector = actionButton.icon,
+            contentDescription = stringResource(actionButton.contentDescriptionRes)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ItemRowActionButtonPreview() {
+    ItemRowActionButton(
+        ActionButton(icon = Icons.Default.Pause) {}
+    )
 }

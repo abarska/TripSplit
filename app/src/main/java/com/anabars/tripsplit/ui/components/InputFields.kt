@@ -44,7 +44,7 @@ fun ShortInputTextField(
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ShortInputPreview() {
     ShortInputTextField(

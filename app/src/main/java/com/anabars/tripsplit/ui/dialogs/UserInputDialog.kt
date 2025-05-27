@@ -1,13 +1,13 @@
 package com.anabars.tripsplit.ui.dialogs
 
 import androidx.annotation.StringRes
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.anabars.tripsplit.R
 
 @Composable
 fun UserInputDialog(
@@ -44,4 +44,17 @@ fun UserInputDialog(
             singleLine = true
         )
     }
+}
+
+@Preview (showBackground = true)
+@Composable
+private fun UserInputDialogPreview() {
+    UserInputDialog(
+        input = "Placeholder",
+        onInputChange = {},
+        titleRes = R.string.add_a_participant,
+        labelRes = R.string.participant_name_hint,
+        positiveTextRes = R.string.add,
+        negativeTextRes = R.string.cancel
+    )
 }

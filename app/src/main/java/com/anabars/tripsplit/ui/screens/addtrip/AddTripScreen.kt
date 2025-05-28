@@ -48,7 +48,10 @@ fun AddTripScreen(
 
     val onSaveTrip = {
         if (tripViewModel.fieldNotEmpty(value = tripName)) {
-            tripViewModel.saveTrip(tripName = tripName, tripDescription = tripDescription)
+            tripViewModel.saveTrip(
+                tripName = tripName.trim(),
+                tripDescription = tripDescription.trim()
+            )
             tripViewModel.clearParticipants()
             navigateHome(navController)
         } else {

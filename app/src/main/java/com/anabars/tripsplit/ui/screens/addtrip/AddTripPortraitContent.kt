@@ -19,7 +19,7 @@ fun AddTripPortraitContent(
     onTripNameChanged: (String) -> Unit,
     tripDescription: String,
     onTripDescriptionChanged: (String) -> Unit,
-    participants: Set<String>,
+    participants: List<String>,
     onAddParticipantButtonClick: () -> Unit,
     onDeletedParticipant: (String) -> Unit,
     onSaveTrip: () -> Unit,
@@ -63,7 +63,7 @@ private fun AddTripPortraitContentPreview() {
         onTripNameChanged = {},
         tripDescription = "trip description",
         onTripDescriptionChanged = {},
-        participants = setOf("adam", "eve", "others"),
+        participants = listOf("adam", "eve", "others"),
         onAddParticipantButtonClick = {},
         onSaveTrip = {},
         onDeletedParticipant = {}

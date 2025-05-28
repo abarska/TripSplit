@@ -18,7 +18,7 @@ import com.anabars.tripsplit.ui.itemrows.ParticipantItemRow
 
 @Composable
 fun ParticipantsSection(
-    participants: Set<String>,
+    participants: List<String>,
     onAddParticipantButtonClick: () -> Unit,
     onDeletedParticipant: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -45,7 +45,7 @@ fun ParticipantsSection(
 @Composable
 private fun ShowParticipant(
     name: String,
-    participants: Set<String>,
+    participants: List<String>,
     onDeletedParticipant: (String) -> Unit
 ) {
     val buttons =
@@ -66,7 +66,7 @@ private fun ShowParticipant(
 @Composable
 private fun ParticipantsSectionPreview() {
     ParticipantsSection(
-        participants = setOf("adam", "eve", "others"),
+        participants = listOf("adam", "eve", "others"),
         onAddParticipantButtonClick = {},
         onDeletedParticipant = {}
     )

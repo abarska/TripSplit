@@ -19,8 +19,8 @@ class TripViewModel @Inject constructor(private val tripRepository: TripReposito
     private val _tripList = MutableStateFlow<List<Trip>>(emptyList())
     val tripList = _tripList.asStateFlow()
 
-    private val _participants = MutableStateFlow<Set<String>>(emptySet())
-    val participants: StateFlow<Set<String>> = _participants
+    private val _participants = MutableStateFlow<List<String>>(emptyList())
+    val participants: StateFlow<List<String>> = _participants
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -52,9 +52,11 @@ class TripViewModel @Inject constructor(private val tripRepository: TripReposito
     fun deleteParticipantsByTripId(id: Long) =
         viewModelScope.launch { tripRepository.deleteParticipantsByTripId(id) }
 
-    fun addParticipant(name: String) = run { _participants.value += name }
+    fun addParticipant(name: String) =
+        run { if (!_participants.value.contains(name)) _participants.value += name }
+
     fun removeParticipant(name: String) = run { _participants.value -= name }
-    fun clearParticipants() = run { _participants.value = emptySet() }
+    fun clearParticipants() = run { _participants.value = emptyList() }
 
     fun fieldNotEmpty(value: String) = value.isNotEmpty()
 

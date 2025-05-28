@@ -42,6 +42,7 @@ fun AddTripPortraitContent(
         HorizontalSeparator()
 
         ParticipantsSection(
+            modifier = Modifier.weight(1f),
             participants = participants,
             onAddParticipantButtonClick = onAddParticipantButtonClick,
             onDeletedParticipant = onDeletedParticipant

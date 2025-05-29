@@ -52,9 +52,8 @@ class TripViewModel @Inject constructor(private val tripRepository: TripReposito
     fun deleteParticipantsByTripId(id: Long) =
         viewModelScope.launch { tripRepository.deleteParticipantsByTripId(id) }
 
-    fun addParticipant(name: String) =
-        run { if (!_participants.value.contains(name)) _participants.value += name }
-
+    fun hasParticipant(name: String) = _participants.value.contains(name)
+    fun addParticipant(name: String) = run { _participants.value += name }
     fun removeParticipant(name: String) = run { _participants.value -= name }
     fun clearParticipants() = run { _participants.value = emptyList() }
 

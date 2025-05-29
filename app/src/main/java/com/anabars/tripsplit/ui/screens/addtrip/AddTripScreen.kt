@@ -37,7 +37,7 @@ fun AddTripScreen(
     var activeDialog by rememberSaveable { mutableStateOf(ActiveDialog.NONE) }
 
     val onTripNameChanged = { input: String ->
-        tripName = input
+        tripName = input.trimStart().replaceFirstChar { it.titlecase() }
         tripNameErrorMessage = 0
         tripNameError = false
     }
@@ -47,9 +47,10 @@ fun AddTripScreen(
     }
 
     val onSaveTrip = {
-        if (tripViewModel.fieldNotEmpty(value = tripName)) {
+        val tripNameTrimmed = tripName.trim()
+        if (tripViewModel.fieldNotEmpty(value = tripNameTrimmed)) {
             tripViewModel.saveTrip(
-                tripName = tripName.trim(),
+                tripName = tripNameTrimmed,
                 tripDescription = tripDescription.trim()
             )
             tripViewModel.clearParticipants()
@@ -66,11 +67,17 @@ fun AddTripScreen(
     }
 
     val onNewParticipant = {
-        if (tripViewModel.fieldNotEmpty(value = newParticipantName)) {
-            tripViewModel.addParticipant(newParticipantName)
+        val nameTrimmed = newParticipantName.trim()
+        if (tripViewModel.fieldNotEmpty(value = nameTrimmed)) {
+            val nameCapitalized = nameTrimmed.replaceFirstChar { it.titlecase() }
+            if (tripViewModel.hasParticipant(nameCapitalized)) {
+                activeDialog = ActiveDialog.WARNING
+            } else {
+                tripViewModel.addParticipant(nameCapitalized)
+                activeDialog = ActiveDialog.NONE
+                newParticipantName = ""
+            }
         }
-        activeDialog = ActiveDialog.NONE
-        newParticipantName = ""
     }
     val onDeletedParticipant = { name: String ->
         tripViewModel.removeParticipant(name)
@@ -100,7 +107,7 @@ fun AddTripScreen(
 
     val you = stringResource(R.string.you)
     LaunchedEffect(Unit) {
-        tripViewModel.addParticipant(you)
+        if (!tripViewModel.hasParticipant(you)) tripViewModel.addParticipant(you)
         tripViewModel.setBackHandler {
             if (hasUnsavedInput) {
                 activeDialog = ActiveDialog.CONFIRMATION
@@ -128,9 +135,21 @@ fun AddTripScreen(
                 onDismiss = onDismissSaveChanges,
                 onConfirm = onSaveTrip,
                 titleRes = R.string.save_changes_dialog_title,
-                questionRes =R.string.save_changes_dialog_question,
+                questionRes = R.string.save_changes_dialog_question,
                 positiveTextRes = R.string.save,
                 negativeTextRes = R.string.discard
+            )
+        }
+
+        ActiveDialog.WARNING -> {
+            ConfirmationDialog(
+                onConfirm = {
+                    newParticipantName = ""
+                    activeDialog = ActiveDialog.USER_INPUT
+                },
+                titleRes = R.string.duplicate_name_dialog_title,
+                questionRes = R.string.duplicate_name_dialog_warning,
+                positiveTextRes = R.string.ok,
             )
         }
 

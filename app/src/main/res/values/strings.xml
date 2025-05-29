@@ -24,6 +24,7 @@
     <string name="participant_name_hint">Name</string>
 
     // used for buttons
+    <string name="ok">Ok</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
@@ -43,6 +44,8 @@
     // used for dialogs
     <string name="save_changes_dialog_title">Save Changes</string>
     <string name="save_changes_dialog_question">Do you want to save changes?</string>
+    <string name="duplicate_name_dialog_title">Duplicate name</string>
+    <string name="duplicate_name_dialog_warning">Looks like that name is already in use. Try another one!</string>
 
     <string name="you">You</string>
     <string name="trip_section_header">Trip:</string>

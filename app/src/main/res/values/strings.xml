@@ -24,7 +24,6 @@
     <string name="participant_name_hint">Name</string>
 
     // used for buttons
-    <string name="ok">Ok</string>
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>

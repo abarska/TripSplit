@@ -69,11 +69,10 @@ fun AddTripScreen(
     val onNewParticipant = {
         val nameTrimmed = newParticipantName.trim()
         if (tripViewModel.fieldNotEmpty(value = nameTrimmed)) {
-            val nameCapitalized = nameTrimmed.replaceFirstChar { it.titlecase() }
-            if (tripViewModel.hasParticipant(nameCapitalized)) {
+            if (tripViewModel.hasParticipant(nameTrimmed)) {
                 activeDialog = ActiveDialog.WARNING
             } else {
-                tripViewModel.addParticipant(nameCapitalized)
+                tripViewModel.addParticipant(nameTrimmed)
                 activeDialog = ActiveDialog.NONE
                 newParticipantName = ""
             }
@@ -120,7 +119,9 @@ fun AddTripScreen(
         ActiveDialog.USER_INPUT -> {
             UserInputDialog(
                 input = newParticipantName,
-                onInputChange = { newInput -> newParticipantName = newInput },
+                onInputChange = { newInput ->
+                    newParticipantName = newInput.trimStart().replaceFirstChar { it.titlecase() }
+                },
                 onConfirm = { onNewParticipant() },
                 onDismiss = { onDismissAddParticipantDialog() },
                 titleRes = R.string.add_a_participant,
@@ -149,7 +150,7 @@ fun AddTripScreen(
                 },
                 titleRes = R.string.duplicate_name_dialog_title,
                 questionRes = R.string.duplicate_name_dialog_warning,
-                positiveTextRes = R.string.ok,
+                positiveTextRes = android.R.string.ok,
             )
         }
 

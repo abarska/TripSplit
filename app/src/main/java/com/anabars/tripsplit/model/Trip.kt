@@ -5,9 +5,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.common.TripSplitConstants
 import java.util.Date
 
-@Entity(tableName = "trip_table")
+@Entity(tableName = TripSplitConstants.TRIP_TABLE)
 data class Trip(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val title: String = "",

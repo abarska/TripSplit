@@ -5,9 +5,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.anabars.tripsplit.common.TripSplitConstants
 
 @Entity(
-    tableName = "participant_table",
+    tableName = TripSplitConstants.PARTICIPANT_TABLE,
     foreignKeys = [
         ForeignKey(
             entity = Trip::class,

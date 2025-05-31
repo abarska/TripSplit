@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.data
+package com.anabars.tripsplit.data.room
 
 import androidx.room.Dao
 import androidx.room.Delete

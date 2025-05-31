@@ -94,4 +94,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation (libs.androidx.hilt.navigation.compose.v120)
+
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
 }

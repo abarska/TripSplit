@@ -34,7 +34,7 @@ fun TripsScreen(
     val trips by tripViewModel.tripList.collectAsState()
 
     Box(
-        modifier = modifier.then(Modifier.fullScreenModifier()),
+        modifier = modifier.then(Modifier.fullScreenModifier())
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

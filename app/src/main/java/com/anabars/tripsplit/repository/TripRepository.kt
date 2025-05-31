@@ -1,8 +1,8 @@
 package com.anabars.tripsplit.repository
 
 import androidx.room.Transaction
-import com.anabars.tripsplit.data.ParticipantDao
-import com.anabars.tripsplit.data.TripDao
+import com.anabars.tripsplit.data.room.ParticipantDao
+import com.anabars.tripsplit.data.room.TripDao
 import com.anabars.tripsplit.model.Participant
 import com.anabars.tripsplit.model.Trip
 import kotlinx.coroutines.Dispatchers

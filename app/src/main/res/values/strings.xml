@@ -16,6 +16,7 @@
     <string name="add_a_new_trip">Add a new trip</string>
     <string name="deactivate_participant">Deactivate participant</string>
     <string name="delete_participant">Delete participant</string>
+    <string name="search_currency">Search currency</string>
 
     // used for hints
     <string name="new_trip_title_hint">Trip name (e.g. London, May 2025):</string>
@@ -49,5 +50,11 @@
     <string name="you">You</string>
     <string name="trip_section_header">Trip:</string>
     <string name="participants_section_header">Participants:</string>
+
+    // used for settings
+    <string name="local_currency">Local Currency</string>
+    <string name="local_currency_summary">Home country currency (will be used for conversions)</string>
+    <string name="preferred_currency">Preferred Currency</string>
+    <string name="preferred_currency_summary">Preferred currency to use as default for newly created trips</string>
 
 </resources>

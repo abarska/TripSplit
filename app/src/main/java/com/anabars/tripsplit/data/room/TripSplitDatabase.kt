@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.data
+package com.anabars.tripsplit.data.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

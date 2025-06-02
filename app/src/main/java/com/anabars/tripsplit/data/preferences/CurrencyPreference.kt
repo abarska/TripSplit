@@ -20,18 +20,14 @@ class CurrencyPreference @Inject constructor(
 
     suspend fun saveCurrency(key: String, code: String) {
         dataStore.edit { settings ->
-            val dataStoreKey = stringToKey(key)
-            settings[dataStoreKey] = code
+            settings[stringPreferencesKey(key)] = code
         }
     }
 
     fun getCurrencyFlow(key: String): Flow<String> {
         val default = defaultCurrencyByKey(key)
-        val dataStoreKey = stringToKey(key)
-        return dataStore.data.map { it[dataStoreKey] ?: default }
+        return dataStore.data.map { it[stringPreferencesKey(key)] ?: default }
     }
-
-    private fun stringToKey(key: String) = stringPreferencesKey(key)
 
     private fun defaultCurrencyByKey(key: String): String {
         if (key == TripSplitConstants.PREF_KEY_PREFERRED_CURRENCY) return "EUR"

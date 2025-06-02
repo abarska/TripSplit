@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -12,9 +14,21 @@ hilt {
     enableAggregatingTask = false
 }
 
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+val currencyFreaksApiKey = localProperties.getProperty("CURRENCY_FREAKS_API_KEY")
+    ?: error("CURRENCY_FREAKS_API_KEY not found in local.properties")
+
 android {
     namespace = "com.anabars.tripsplit"
     compileSdk = 35
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.anabars.tripsplit"
@@ -24,6 +38,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "CURRENCY_FREAKS_API_KEY", "\"$currencyFreaksApiKey\"")
+        buildConfigField("String", "BASE_URL", "\"https://api.currencyfreaks.com/\"")
     }
 
     buildTypes {
@@ -93,8 +110,18 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    implementation (libs.androidx.hilt.navigation.compose.v120)
+    implementation(libs.androidx.hilt.navigation.compose.v120)
+    implementation(libs.androidx.hilt.common)
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.moshi)
+
+    // WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
+    kapt(libs.androidx.hilt.compiler)
 }

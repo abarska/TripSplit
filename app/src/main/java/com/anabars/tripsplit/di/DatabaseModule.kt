@@ -3,6 +3,7 @@ package com.anabars.tripsplit.di
 import android.content.Context
 import androidx.room.Room
 import com.anabars.tripsplit.common.TripSplitConstants
+import com.anabars.tripsplit.data.room.ExchangeRateDao
 import com.anabars.tripsplit.data.room.ParticipantDao
 import com.anabars.tripsplit.data.room.TripDao
 import com.anabars.tripsplit.data.room.TripSplitDatabase
@@ -33,4 +34,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideParticipantDao(db: TripSplitDatabase): ParticipantDao = db.participantDao()
+
+    @Provides
+    @Singleton
+    fun provideExchangeRateDao(db: TripSplitDatabase): ExchangeRateDao = db.exchangeRateDao()
 }

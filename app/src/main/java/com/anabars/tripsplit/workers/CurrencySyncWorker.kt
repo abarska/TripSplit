@@ -7,7 +7,8 @@ import androidx.work.WorkerParameters
 import com.anabars.tripsplit.BuildConfig
 import com.anabars.tripsplit.data.network.CurrencyApiService
 import com.anabars.tripsplit.data.network.CurrencyResponse
-import com.anabars.tripsplit.data.preferences.ExchangeRatePreference
+import com.anabars.tripsplit.data.room.ExchangeRateDao
+import com.anabars.tripsplit.model.ExchangeRate
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -16,20 +17,28 @@ class CurrencySyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParams: WorkerParameters,
     private val apiService: CurrencyApiService,
-    private val exchangeRatePreference: ExchangeRatePreference
+    private val exchangeRateDao: ExchangeRateDao
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         return try {
             val response = apiService.getLatestRates(BuildConfig.CURRENCY_FREAKS_API_KEY)
-            saveRates(response)
+            saveRatesToDatabase(response)
             Result.success()
         } catch (e: Exception) {
             Result.retry()
         }
     }
 
-    private suspend fun saveRates(response: CurrencyResponse) {
-        exchangeRatePreference.saveRates(response.rates)
+    private suspend fun saveRatesToDatabase(response: CurrencyResponse) {
+        val entities = response.rates.map { (currency, rate) ->
+            ExchangeRate(
+                currencyCode = currency,
+                baseCurrency = response.base,
+                rate = rate.toDoubleOrNull() ?: 0.0,
+                date = response.date
+            )
+        }
+        exchangeRateDao.replaceAll(entities)
     }
 }

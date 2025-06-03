@@ -12,6 +12,7 @@ object TripSplitConstants {
     const val TRIP_SPLIT_DATABASE = "trip_split_db"
     const val TRIP_TABLE = "trip_table"
     const val PARTICIPANT_TABLE = "participant_table"
+    const val EXCHANGE_RATE_TABLE = "exchange_rate_table"
 
     const val CURRENCY_SYNC_WORK_NAME = "CurrencySync"
 }

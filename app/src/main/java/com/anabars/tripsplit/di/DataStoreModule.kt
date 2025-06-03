@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.preferences.CurrencyPreference
-import com.anabars.tripsplit.data.preferences.ExchangeRatePreference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -31,9 +30,4 @@ object DataStoreModule {
     @Singleton
     fun provideCurrencyPreference(dataStore: DataStore<Preferences>): CurrencyPreference =
         CurrencyPreference(dataStore)
-
-    @Provides
-    @Singleton
-    fun provideExchangeRatesPreference(dataStore: DataStore<Preferences>): ExchangeRatePreference =
-        ExchangeRatePreference(dataStore)
 }

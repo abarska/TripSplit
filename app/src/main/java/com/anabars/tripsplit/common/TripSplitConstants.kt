@@ -14,5 +14,7 @@ object TripSplitConstants {
     const val PARTICIPANT_TABLE = "participant_table"
     const val EXCHANGE_RATE_TABLE = "exchange_rate_table"
 
-    const val CURRENCY_SYNC_WORK_NAME = "CurrencySync"
+    // workers
+    const val CURRENCY_SYNC_IMMEDIATE_WORK_NAME = "immediate_currency_sync"
+    const val CURRENCY_SYNC_PERIODIC_WORK_NAME = "periodic_currency_sync"
 }

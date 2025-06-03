@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.model.Participant
 import com.anabars.tripsplit.model.Trip
 import kotlinx.coroutines.flow.Flow
@@ -13,13 +14,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TripDao {
 
-    @Query("SELECT * FROM trip_table")
+    @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE}")
     fun getAllTrips(): Flow<List<Trip>>
 
-    @Query("DELETE from trip_table")
+    @Query("DELETE from ${TripSplitConstants.TRIP_TABLE}")
     suspend fun deleteAllTrips()
 
-    @Query("SELECT * FROM trip_table WHERE id = :id")
+    @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :id")
     suspend fun getTripById(id: String): Trip
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

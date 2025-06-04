@@ -1,5 +1,6 @@
 package com.anabars.tripsplit.workers
 
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -29,6 +30,7 @@ class CurrencySyncScheduler @Inject constructor(private val workManager: WorkMan
                     .setRequiredNetworkType(NetworkType.CONNECTED)
                     .build()
             )
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.MINUTES)
             .build()
         workManager.enqueueUniqueWork(
             TripSplitConstants.CURRENCY_SYNC_IMMEDIATE_WORK_NAME,
@@ -46,6 +48,7 @@ class CurrencySyncScheduler @Inject constructor(private val workManager: WorkMan
                     .setRequiredNetworkType(NetworkType.CONNECTED)
                     .build()
             )
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.HOURS)
             .build()
 
         workManager.enqueueUniquePeriodicWork(

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.preferences.CurrencyPreference
-import com.anabars.tripsplit.utils.currencyCodeToListItemText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,21 +31,8 @@ class SettingsViewModel @Inject constructor(private val currencyPreference: Curr
 
     init {
         viewModelScope.launch {
-            val currentWorldCurrencies = Locale.getAvailableLocales()
-                .asSequence()
-                .filter { it.country.isNotEmpty() }
-                .mapNotNull { locale ->
-                    try {
-                        Currency.getInstance(locale)
-                    } catch (e: IllegalArgumentException) {
-                        null
-                    }
-                }
-                .toSet() // locales can share the same currency, need unique values
-                .sortedBy { it.currencyCode }
-                .map { currency -> currency.currencyCodeToListItemText() }
-                .toList()
-            _currencies.value = currentWorldCurrencies
+            // TODO: load currencies from DB
+            // _currencies.value = currentWorldCurrencies
         }
     }
 

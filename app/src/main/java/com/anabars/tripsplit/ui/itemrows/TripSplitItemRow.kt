@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.ui.itemrows
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,7 +9,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material3.Surface
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,15 +26,16 @@ import com.anabars.tripsplit.ui.utils.inputWidthModifier
 @Composable
 fun TripSplitItemRow(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onItemClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
-    Surface(
-        modifier = modifier
-            .then(Modifier.inputWidthModifier())
-            .clickable(onClick = onItemClick),
+    ElevatedCard(
+        modifier = modifier.then(Modifier.inputWidthModifier()),
         shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
-        tonalElevation = 4.dp
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+        enabled = enabled,
+        onClick = onItemClick
     ) {
         Row(
             modifier = Modifier

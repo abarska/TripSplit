@@ -18,9 +18,10 @@ import com.anabars.tripsplit.ui.model.ActionButton
 fun ParticipantItemRow(
     name: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     buttons: List<ActionButton>,
 ) {
-    TripSplitItemRow(modifier = modifier) {
+    TripSplitItemRow(modifier = modifier, enabled = enabled) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,

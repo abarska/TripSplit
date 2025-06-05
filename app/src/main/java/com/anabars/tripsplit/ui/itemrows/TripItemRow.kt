@@ -9,10 +9,12 @@ import com.anabars.tripsplit.ui.components.InfoText
 fun TripItemRow(
     text: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onItemClick: () -> Unit = {}
 ) {
     TripSplitItemRow(
         modifier = modifier,
+        enabled = enabled,
         onItemClick = onItemClick
     ) {
         InfoText(text = text)

@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.anabars.tripsplit.TripSplitApplication
-import com.anabars.tripsplit.common.TripSplitConstants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.util.Currency
@@ -25,12 +24,10 @@ class CurrencyPreference @Inject constructor(
     }
 
     fun getCurrencyFlow(key: String): Flow<String> {
-        val default = defaultCurrencyByKey(key)
-        return dataStore.data.map { it[stringPreferencesKey(key)] ?: default }
+        return dataStore.data.map { it[stringPreferencesKey(key)] ?: defaultCurrency() }
     }
 
-    private fun defaultCurrencyByKey(key: String): String {
-        if (key == TripSplitConstants.PREF_KEY_PREFERRED_CURRENCY) return "EUR"
+    private fun defaultCurrency(): String {
         val context = TripSplitApplication.instance.applicationContext
         val simCurrency = getCurrencyFromSim(context)
         return simCurrency ?: "EUR"

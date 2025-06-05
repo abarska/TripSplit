@@ -30,13 +30,6 @@ class SettingsViewModel @Inject constructor(private val currencyPreference: Curr
             Currency.getInstance(Locale.getDefault()).currencyCode
         )
 
-    val preferredCurrencyFlow =
-        currencyPreference.getCurrencyFlow(TripSplitConstants.PREF_KEY_PREFERRED_CURRENCY).stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            Currency.getInstance(Locale.getDefault()).currencyCode
-        )
-
     init {
         viewModelScope.launch {
             val currentWorldCurrencies = Locale.getAvailableLocales()

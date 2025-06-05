@@ -54,7 +54,5 @@
     // used for settings
     <string name="local_currency">Local Currency</string>
     <string name="local_currency_summary">Home country currency (will be used for conversions)</string>
-    <string name="preferred_currency">Preferred Currency</string>
-    <string name="preferred_currency_summary">Preferred currency to use as default for newly created trips</string>
 
 </resources>

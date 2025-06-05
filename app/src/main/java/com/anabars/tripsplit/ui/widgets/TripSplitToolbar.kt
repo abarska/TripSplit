@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Toolbar(
+fun TripSplitToolbar(
     navController: NavController,
     tripViewModel: TripViewModel,
     coroutineScope: CoroutineScope,
@@ -44,9 +44,6 @@ fun Toolbar(
             if (currentRoute == startDestination) {
                 IconButton(onClick = {
                     coroutineScope.launch {
-                        if (!tripViewModel.handleBack()) {
-                            navController.navigateUp()
-                        }
                         if (drawerState.isClosed) {
                             drawerState.open()
                         } else {
@@ -60,7 +57,11 @@ fun Toolbar(
                     )
                 }
             } else {
-                IconButton(onClick = { navController.popBackStack() }) {
+                IconButton(onClick = {
+                    if (!tripViewModel.handleBack()) {
+                        navController.navigateUp()
+                    }
+                }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back)

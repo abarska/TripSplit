@@ -31,7 +31,8 @@ fun ShortInputTextField(
             LabelText(
                 modifier = modifier,
                 textRes = labelRes,
-                text = label
+                text = label,
+                isError = isError
             )
         },
         keyboardOptions = KeyboardOptions.Default.copy(

@@ -11,14 +11,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun LabelText(modifier: Modifier = Modifier, @StringRes textRes: Int = 0, text: String = "") {
+fun LabelText(
+    modifier: Modifier = Modifier,
+    @StringRes textRes: Int = 0,
+    text: String = "",
+    isError: Boolean = false
+) {
     val value = if (textRes != 0) stringResource(textRes) else text
     if (value.isNotEmpty()) {
         Text(
             modifier = modifier,
             text = value,
             style = MaterialTheme.typography.labelLarge.copy(
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                color =
+                    if (isError) MaterialTheme.colorScheme.error
+                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         )
     }
@@ -42,6 +49,12 @@ fun InfoText(modifier: Modifier = Modifier, @StringRes textRes: Int = 0, text: S
 @Composable
 private fun LabelTextPreview() {
     LabelText(text = "Placeholder")
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ErrorLabelTextPreview() {
+    LabelText(text = "Placeholder", isError = true)
 }
 
 @Preview(showBackground = true)

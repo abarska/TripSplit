@@ -1,16 +1,17 @@
 package com.anabars.tripsplit.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.ui.components.HorizontalSeparator
-import com.anabars.tripsplit.ui.utils.fullScreenModifier
 import com.anabars.tripsplit.viewmodels.SettingsViewModel
 
 @Composable
@@ -25,9 +26,7 @@ fun SettingsScreen(
     val onCurrencySelected: (String, String) -> Unit =
         { key, currency -> viewModel.saveCurrency(key, currency) }
 
-    Column(
-        modifier = modifier.then(Modifier.fullScreenModifier())
-    ) {
+    Column(modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))) {
 
         CurrencyPreferenceView(
             key = TripSplitConstants.PREF_KEY_LOCAL_CURRENCY,

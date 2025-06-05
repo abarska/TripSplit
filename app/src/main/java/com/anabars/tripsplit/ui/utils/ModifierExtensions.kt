@@ -1,9 +1,7 @@
 package com.anabars.tripsplit.ui.utils
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,11 +11,6 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
-
-@Composable
-fun Modifier.fullScreenModifier() =
-    fillMaxSize().padding(dimensionResource(R.dimen.full_screen_padding))
-//    .verticalScroll(rememberScrollState())
 
 @Composable
 fun Modifier.inputWidthModifier(): Modifier {

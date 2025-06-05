@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -9,7 +8,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.HorizontalSeparator
 import com.anabars.tripsplit.ui.components.MainButton
-import com.anabars.tripsplit.ui.utils.fullScreenModifier
 
 @Composable
 fun AddTripPortraitContent(
@@ -26,8 +24,7 @@ fun AddTripPortraitContent(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.then(Modifier.fullScreenModifier()),
-        verticalArrangement = Arrangement.Center,
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         InputSection(

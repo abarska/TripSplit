@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.MainButton
-import com.anabars.tripsplit.ui.utils.fullScreenModifier
 
 @Composable
 fun AddTripLandscapeContent(
@@ -30,9 +29,7 @@ fun AddTripLandscapeContent(
     onSaveTrip: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier.then(Modifier.fullScreenModifier()),
-    ) {
+    Row(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxHeight()

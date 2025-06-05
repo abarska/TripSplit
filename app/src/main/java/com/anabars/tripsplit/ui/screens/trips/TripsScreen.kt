@@ -22,7 +22,6 @@ import com.anabars.tripsplit.model.Trip
 import com.anabars.tripsplit.ui.components.TripSplitFab
 import com.anabars.tripsplit.ui.itemrows.TripItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
-import com.anabars.tripsplit.ui.utils.fullScreenModifier
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable
@@ -34,7 +33,7 @@ fun TripsScreen(
     val trips by tripViewModel.tripList.collectAsState()
 
     Box(
-        modifier = modifier.then(Modifier.fullScreenModifier())
+        modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

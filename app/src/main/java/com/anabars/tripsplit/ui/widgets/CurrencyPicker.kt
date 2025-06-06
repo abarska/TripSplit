@@ -30,10 +30,9 @@ import com.anabars.tripsplit.R
 
 @Composable
 fun CurrencyPicker(
-    key: String,
     currencies: List<String>,
     selectedCurrency: String,
-    onCurrencySelected: (String, String) -> Unit,
+    onCurrencySelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
@@ -82,7 +81,7 @@ fun CurrencyPicker(
                     DropdownMenuItem(
                         text = { Text(text = currency) },
                         onClick = {
-                            onCurrencySelected(key, currency)
+                            onCurrencySelected(currency)
                             expanded = false
                             searchQuery = ""
                         }

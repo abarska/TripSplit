@@ -10,7 +10,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.ui.components.HorizontalSeparator
 import com.anabars.tripsplit.viewmodels.SettingsViewModel
 
@@ -22,13 +21,12 @@ fun SettingsScreen(
 ) {
     val localCurrency by viewModel.localCurrencyFlow.collectAsState()
     val currencies by viewModel.currencies.collectAsState()
-    val onCurrencySelected: (String, String) -> Unit =
-        { key, currency -> viewModel.saveCurrency(key, currency) }
+    val onCurrencySelected: (String) -> Unit =
+        { currency -> viewModel.saveCurrency(currency) }
 
     Column(modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))) {
 
         CurrencyPreferenceView(
-            key = TripSplitConstants.PREF_KEY_LOCAL_CURRENCY,
             selectedCurrency = localCurrency.substringBefore('-').trim(),
             labelRes = R.string.local_currency,
             summaryRes = R.string.local_currency_summary,

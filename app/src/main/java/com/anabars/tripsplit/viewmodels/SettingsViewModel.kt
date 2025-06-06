@@ -4,7 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.preferences.CurrencyPreference
+import com.anabars.tripsplit.utils.getCurrencyDisplayList
+import com.anabars.tripsplit.utils.validCurrencyCodes
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -30,15 +33,14 @@ class SettingsViewModel @Inject constructor(private val currencyPreference: Curr
         )
 
     init {
-        viewModelScope.launch {
-            // TODO: load currencies from DB
-            // _currencies.value = currentWorldCurrencies
+        viewModelScope.launch(Dispatchers.Default) {
+            _currencies.value = getCurrencyDisplayList(validCurrencyCodes())
         }
     }
 
-    fun saveCurrency(key: String, code: String) {
+    fun saveCurrency(code: String) {
         viewModelScope.launch {
-            currencyPreference.saveCurrency(key, code)
+            currencyPreference.saveCurrency(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY, code)
         }
     }
 }

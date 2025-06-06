@@ -15,7 +15,6 @@ import com.anabars.tripsplit.ui.widgets.CurrencyPicker
 
 @Composable
 fun CurrencyPreferenceView(
-    key: String,
     currencies: List<String>,
     selectedCurrency: String,
     modifier: Modifier = Modifier,
@@ -23,7 +22,7 @@ fun CurrencyPreferenceView(
     label: String = "",
     @StringRes summaryRes: Int = 0,
     summary: String = "",
-    action: (String, String) -> Unit
+    action: (String) -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
@@ -33,7 +32,6 @@ fun CurrencyPreferenceView(
         ) {
             InfoText(textRes = labelRes, text = label)
             CurrencyPicker(
-                key = key,
                 selectedCurrency = selectedCurrency,
                 onCurrencySelected = action,
                 currencies = currencies
@@ -51,11 +49,10 @@ fun CurrencyPreferenceView(
 @Composable
 private fun CurrencyPreferencePreview() {
     CurrencyPreferenceView(
-        key = "",
         selectedCurrency = "EUR",
         labelRes = R.string.local_currency,
         summaryRes = R.string.local_currency_summary,
         currencies = emptyList(),
-        action = { _, _ -> }
+        action = { _ -> }
     )
 }

@@ -4,9 +4,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
@@ -47,10 +48,7 @@ fun CurrencyPicker(
 
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .heightIn(max = dimensionResource(R.dimen.dropdown_menu_height))
-                .width(dimensionResource(R.dimen.dropdown_menu_width))
+            onDismissRequest = { expanded = false }
         ) {
             OutlinedTextField(
                 value = searchQuery,
@@ -77,15 +75,21 @@ fun CurrencyPicker(
                         .padding(16.dp)
                 )
             } else {
-                filteredCurrencies.forEach { currency ->
-                    DropdownMenuItem(
-                        text = { Text(text = currency) },
-                        onClick = {
-                            onCurrencySelected(currency)
-                            expanded = false
-                            searchQuery = ""
-                        }
-                    )
+                LazyColumn(
+                    modifier = Modifier
+                        .width(dimensionResource(R.dimen.dropdown_menu_width))
+                        .height(dimensionResource(R.dimen.dropdown_menu_height))
+                ) {
+                    items(items = filteredCurrencies) { currency ->
+                        DropdownMenuItem(
+                            text = { Text(text = currency) },
+                            onClick = {
+                                onCurrencySelected(currency)
+                                expanded = false
+                                searchQuery = ""
+                            }
+                        )
+                    }
                 }
             }
         }

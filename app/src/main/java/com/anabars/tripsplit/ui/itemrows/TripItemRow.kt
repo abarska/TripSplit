@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.ui.components.InfoText
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun TripItemRow(
@@ -13,7 +14,7 @@ fun TripItemRow(
     onItemClick: () -> Unit = {}
 ) {
     TripSplitItemRow(
-        modifier = modifier,
+        modifier = modifier.inputWidthModifier(),
         enabled = enabled,
         onItemClick = onItemClick
     ) {

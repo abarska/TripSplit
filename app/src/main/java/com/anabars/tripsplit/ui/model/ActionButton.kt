@@ -8,7 +8,7 @@ import com.anabars.tripsplit.R
 
 data class ActionButton(
     val icon: ImageVector,
-    val iconSize: Dp = 32.dp,
+    val iconSize: Dp = 24.dp,
     @StringRes val contentDescriptionRes: Int = R.string.action_button,
     val onClick: () -> Unit
 )

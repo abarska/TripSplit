@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.ExchangeRateDao
-import com.anabars.tripsplit.data.room.ParticipantDao
+import com.anabars.tripsplit.data.room.TripCurrencyDao
+import com.anabars.tripsplit.data.room.TripParticipantDao
 import com.anabars.tripsplit.data.room.TripDao
 import com.anabars.tripsplit.data.room.TripSplitDatabase
 import dagger.Module
@@ -33,7 +34,11 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideParticipantDao(db: TripSplitDatabase): ParticipantDao = db.participantDao()
+    fun provideTripParticipantDao(db: TripSplitDatabase): TripParticipantDao = db.tripParticipantDao()
+
+    @Provides
+    @Singleton
+    fun provideTripCurrencyDao(db: TripSplitDatabase): TripCurrencyDao = db.tripCurrencyDao()
 
     @Provides
     @Singleton

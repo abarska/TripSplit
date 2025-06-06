@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.anabars.tripsplit.common.TripSplitConstants
-import com.anabars.tripsplit.model.Participant
+import com.anabars.tripsplit.model.TripParticipant
 import com.anabars.tripsplit.model.Trip
 import kotlinx.coroutines.flow.Flow
 
@@ -33,9 +33,9 @@ interface TripDao {
     suspend fun deleteTrip(trip: Trip)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveParticipant(participant: Participant)
+    suspend fun saveParticipant(participant: TripParticipant)
 
     @Delete
-    suspend fun deleteParticipant(participant: Participant)
+    suspend fun deleteParticipant(participant: TripParticipant)
 
 }

@@ -23,6 +23,7 @@ import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.UserInputDialog
 import com.anabars.tripsplit.ui.dialogs.ConfirmationDialog
 import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.ui.widgets.CurrencyPicker
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable
@@ -56,6 +57,7 @@ fun AddTripScreen(
                 tripDescription = tripDescription.trim()
             )
             tripViewModel.clearParticipants()
+            tripViewModel.clearCurrencies()
             navigateHome(navController)
         } else {
             activeDialog = ActiveDialog.NONE
@@ -89,16 +91,43 @@ fun AddTripScreen(
         newParticipantName = ""
     }
 
+    val onAddCurrencyButtonClick = {
+        activeDialog = ActiveDialog.CHOOSER
+    }
+
+    val onNewCurrency = { currency: String ->
+        val code = currency.substringBefore("-").trim()
+        if (!tripViewModel.hasCurrency(code)) {
+            tripViewModel.addCurrency(code)
+        }
+        activeDialog = ActiveDialog.NONE
+    }
+
+    val onDeleteCurrency = { code: String ->
+        tripViewModel.removeCurrency(code)
+    }
+
+    val onDismissAddCurrencyDialog = {
+        activeDialog = ActiveDialog.NONE
+    }
+
     val onDismissSaveChanges = {
         tripViewModel.clearParticipants()
         navigateHome(navController)
     }
 
-    val participants by tripViewModel.participants.collectAsState()
+    val currentTripParticipants by tripViewModel.currentTripParticipants.collectAsState()
+    val currentTripCurrencies by tripViewModel.currentTripCurrencies.collectAsState()
+    val availableCurrencies by tripViewModel.currencies.collectAsState()
 
-    val hasUnsavedInput by remember(tripName, tripDescription, participants) {
+    val hasUnsavedInput by remember(
+        tripName,
+        tripDescription,
+        currentTripParticipants,
+        currentTripCurrencies
+    ) {
         derivedStateOf {
-            tripName.isNotBlank() || tripDescription.isNotBlank() || participants.size > 1
+            tripName.isNotBlank() || tripDescription.isNotBlank() || currentTripParticipants.size > 1 || currentTripCurrencies.size > 1
         }
     }
 
@@ -107,8 +136,10 @@ fun AddTripScreen(
     }
 
     val you = stringResource(R.string.you)
+    val uah = stringResource(R.string.uah)
     LaunchedEffect(Unit) {
         if (!tripViewModel.hasParticipant(you)) tripViewModel.addParticipant(you)
+        if (!tripViewModel.hasCurrency(uah)) tripViewModel.addCurrency(uah)
         tripViewModel.setBackHandler {
             if (hasUnsavedInput) {
                 activeDialog = ActiveDialog.CONFIRMATION
@@ -118,6 +149,16 @@ fun AddTripScreen(
     }
 
     when (activeDialog) {
+        ActiveDialog.CHOOSER -> {
+            val expanded = remember { mutableStateOf(true) }
+            CurrencyPicker(
+                currencies = availableCurrencies,
+                expanded = expanded,
+                onCurrencySelected = onNewCurrency,
+                onDismissAddCurrencyDialog = onDismissAddCurrencyDialog
+            )
+        }
+
         ActiveDialog.USER_INPUT -> {
             UserInputDialog(
                 input = newParticipantName,
@@ -167,9 +208,12 @@ fun AddTripScreen(
                     onTripNameChanged = onTripNameChanged,
                     tripDescription = tripDescription,
                     onTripDescriptionChanged = onTripDescriptionChanged,
-                    participants = participants,
+                    participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
                     onDeletedParticipant = onDeletedParticipant,
+                    currencies = currentTripCurrencies,
+                    onAddCurrencyButtonClick = onAddCurrencyButtonClick,
+                    onDeleteCurrency = onDeleteCurrency,
                     onSaveTrip = onSaveTrip,
                     modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))
                 )
@@ -181,9 +225,12 @@ fun AddTripScreen(
                     onTripNameChanged = onTripNameChanged,
                     tripDescription = tripDescription,
                     onTripDescriptionChanged = onTripDescriptionChanged,
-                    participants = participants,
+                    participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
                     onDeletedParticipant = onDeletedParticipant,
+                    currencies = currentTripCurrencies,
+                    onAddCurrencyButtonClick = onAddCurrencyButtonClick,
+                    onDeleteCurrency = onDeleteCurrency,
                     onSaveTrip = onSaveTrip,
                     modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))
                 )

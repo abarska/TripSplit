@@ -21,7 +21,6 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.ItemRowActionButton
 import com.anabars.tripsplit.ui.model.ActionButton
-import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun TripSplitItemRow(
@@ -31,7 +30,7 @@ fun TripSplitItemRow(
     content: @Composable () -> Unit
 ) {
     ElevatedCard(
-        modifier = modifier.then(Modifier.inputWidthModifier()),
+        modifier = modifier,
         shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         enabled = enabled,

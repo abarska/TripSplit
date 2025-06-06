@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,25 +26,29 @@ fun CurrencyPreferenceView(
     label: String = "",
     @StringRes summaryRes: Int = 0,
     summary: String = "",
-    action: (String) -> Unit
+    onCurrencySelected: (String) -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
+        val expanded = remember { mutableStateOf(false) }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             InfoText(textRes = labelRes, text = label)
-            CurrencyPicker(
-                selectedCurrency = selectedCurrency,
-                onCurrencySelected = action,
-                currencies = currencies
-            )
+            OutlinedButton(onClick = { expanded.value = true }) {
+                Text(text = selectedCurrency)
+            }
         }
         InfoText(
             modifier = Modifier.fillMaxWidth(),
             textRes = summaryRes,
             text = summary
+        )
+        CurrencyPicker(
+            currencies = currencies,
+            expanded = expanded,
+            onCurrencySelected = onCurrencySelected
         )
     }
 }
@@ -53,6 +61,6 @@ private fun CurrencyPreferencePreview() {
         labelRes = R.string.local_currency,
         summaryRes = R.string.local_currency_summary,
         currencies = emptyList(),
-        action = { _ -> }
+        onCurrencySelected = { _ -> }
     )
 }

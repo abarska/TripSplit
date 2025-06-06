@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.ShortInputTextField
 
 @Composable
@@ -26,8 +25,6 @@ fun InputSection(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        InfoText(textRes = R.string.trip_section_header)
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
         ShortInputTextField(
             value = tripName,
             isError = tripNameError,

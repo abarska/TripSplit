@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import com.anabars.tripsplit.common.TripSplitConstants
 
 @Entity(
-    tableName = TripSplitConstants.PARTICIPANT_TABLE,
+    tableName = TripSplitConstants.TRIP_PARTICIPANTS_TABLE,
     foreignKeys = [
         ForeignKey(
             entity = Trip::class,
@@ -19,7 +19,7 @@ import com.anabars.tripsplit.common.TripSplitConstants
     ],
     indices = [Index("tripId")]
 )
-data class Participant(
+data class TripParticipant(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val name: String = "",
     @ColumnInfo val status: ParticipantStatus = ParticipantStatus.ACTIVE,

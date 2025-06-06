@@ -1,6 +1,7 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,8 +21,11 @@ fun AddTripPortraitContent(
     participants: List<String>,
     onAddParticipantButtonClick: () -> Unit,
     onDeletedParticipant: (String) -> Unit,
+    currencies: List<String>,
+    onAddCurrencyButtonClick: () -> Unit,
+    onDeleteCurrency: (String) -> Unit,
     onSaveTrip: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
@@ -34,6 +38,14 @@ fun AddTripPortraitContent(
             onTripNameChanged = onTripNameChanged,
             tripDescription = tripDescription,
             onTripDescriptionChanged = onTripDescriptionChanged
+        )
+
+        HorizontalSeparator()
+
+        CurrenciesSection(
+            currencies = currencies,
+            onAddCurrencyButtonClick = onAddCurrencyButtonClick,
+            onDeleteCurrency = onDeleteCurrency
         )
 
         HorizontalSeparator()
@@ -63,7 +75,10 @@ private fun AddTripPortraitContentPreview() {
         onTripDescriptionChanged = {},
         participants = listOf("adam", "eve", "others"),
         onAddParticipantButtonClick = {},
-        onSaveTrip = {},
-        onDeletedParticipant = {}
+        onDeletedParticipant = {},
+        currencies = listOf("EUR", "BGN", "RON", "UAH"),
+        onAddCurrencyButtonClick = {},
+        onDeleteCurrency = {},
+        onSaveTrip = {}
     )
 }

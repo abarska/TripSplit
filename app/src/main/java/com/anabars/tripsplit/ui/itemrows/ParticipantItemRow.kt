@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.ItemRowActionButton
 import com.anabars.tripsplit.ui.model.ActionButton
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun ParticipantItemRow(
@@ -21,7 +22,7 @@ fun ParticipantItemRow(
     enabled: Boolean = true,
     buttons: List<ActionButton>,
 ) {
-    TripSplitItemRow(modifier = modifier, enabled = enabled) {
+    TripSplitItemRow(modifier = modifier.inputWidthModifier(), enabled = enabled) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,

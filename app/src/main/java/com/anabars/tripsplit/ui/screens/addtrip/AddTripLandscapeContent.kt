@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -26,6 +27,9 @@ fun AddTripLandscapeContent(
     participants: List<String>,
     onAddParticipantButtonClick: () -> Unit,
     onDeletedParticipant: (String) -> Unit,
+    currencies: List<String>,
+    onAddCurrencyButtonClick: () -> Unit,
+    onDeleteCurrency: (String) -> Unit,
     onSaveTrip: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -47,14 +51,26 @@ fun AddTripLandscapeContent(
             Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
             MainButton(textRes = R.string.save) { onSaveTrip() }
         }
+        Spacer(Modifier.width(16.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
+        ) {
+            CurrenciesSection(
+                currencies = currencies,
+                onAddCurrencyButtonClick = onAddCurrencyButtonClick,
+                onDeleteCurrency = onDeleteCurrency
+            )
+        }
 
         Spacer(Modifier.width(16.dp))
 
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .weight(1f)
         ) {
             ParticipantsSection(
                 participants = participants,
@@ -77,7 +93,10 @@ private fun AddTripLandscapeContentPreview() {
         onTripDescriptionChanged = {},
         participants = listOf("adam", "eve", "others"),
         onAddParticipantButtonClick = {},
-        onSaveTrip = {},
-        onDeletedParticipant = {}
+        onDeletedParticipant = {},
+        currencies = listOf("EUR", "BGN", "RON", "UAH"),
+        onAddCurrencyButtonClick = {},
+        onDeleteCurrency = {},
+        onSaveTrip = {}
     )
 }

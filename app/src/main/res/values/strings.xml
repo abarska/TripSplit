@@ -19,7 +19,7 @@
     <string name="search_currency">Search currency</string>
 
     // used for hints
-    <string name="new_trip_title_hint">Trip name (e.g. London, May 2025):</string>
+    <string name="new_trip_title_hint">Trip title:</string>
     <string name="new_trip_description_hint">Description:</string>
     <string name="new_trip_tag_hint">Tag (e.g. business trip):</string>
     <string name="participant_name_hint">Name</string>
@@ -30,6 +30,7 @@
     <string name="cancel">Cancel</string>
     <string name="discard">Discard</string>
     <string name="add_a_participant">Add a Participant</string>
+    <string name="add_a_currency">Add a Currency</string>
 
     // used for tags
     <string name="tag_business_trip">Business Trip</string>
@@ -47,9 +48,10 @@
     <string name="duplicate_name_dialog_title">Duplicate name</string>
     <string name="duplicate_name_dialog_warning">Looks like that name is already in use. Try another one!</string>
 
+    <string name="uah">UAH</string>
     <string name="you">You</string>
-    <string name="trip_section_header">Trip:</string>
     <string name="participants_section_header">Participants:</string>
+    <string name="currencies_section_header">Currencies:</string>
 
     // used for settings
     <string name="local_currency">Local Currency</string>

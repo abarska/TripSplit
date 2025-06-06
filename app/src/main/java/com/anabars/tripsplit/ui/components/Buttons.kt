@@ -146,7 +146,8 @@ fun ItemRowActionButton(actionButton: ActionButton) {
     ) {
         Icon(
             imageVector = actionButton.icon,
-            contentDescription = stringResource(actionButton.contentDescriptionRes)
+            contentDescription = stringResource(actionButton.contentDescriptionRes),
+            modifier = Modifier.fillMaxSize()
         )
     }
 }

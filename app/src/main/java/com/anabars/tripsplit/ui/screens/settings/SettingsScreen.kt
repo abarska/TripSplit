@@ -31,7 +31,7 @@ fun SettingsScreen(
             labelRes = R.string.local_currency,
             summaryRes = R.string.local_currency_summary,
             currencies = currencies,
-            action = onCurrencySelected
+            onCurrencySelected = onCurrencySelected
         )
 
         HorizontalSeparator()

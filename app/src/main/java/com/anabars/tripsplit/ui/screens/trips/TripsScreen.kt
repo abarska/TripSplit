@@ -18,9 +18,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.TripSplitFab
-import com.anabars.tripsplit.ui.itemrows.TripItemRow
+import com.anabars.tripsplit.ui.itemrows.TripSplitItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable
@@ -40,7 +42,12 @@ fun TripsScreen(
         ) {
             if (trips.isNotEmpty()) {
                 items(items = trips) { trip ->
-                    TripItemRow(text = trip.title)
+                    TripSplitItemRow(
+                        modifier = modifier.inputWidthModifier(),
+                        onItemClick = {}
+                    ) {
+                        InfoText(modifier = Modifier.padding(8.dp), text = trip.title)
+                    }
                     if (trip != trips.last()) {
                         Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
                     }

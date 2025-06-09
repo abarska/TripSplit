@@ -37,19 +37,22 @@ fun AddTripPortraitContent(
 
         HorizontalSeparator()
 
-        CurrenciesSection(
-            currencies = currencies,
-            onAddCurrencyButtonClick = onAddCurrencyButtonClick,
-            onDeleteCurrency = onDeleteCurrency
+        ChipsSection(
+            labelRes = R.string.currencies_section_header,
+            addButtonRes = R.string.add_a_currency,
+            items = currencies,
+            onAddItemButtonClick = onAddCurrencyButtonClick,
+            onDeleteItemButtonClick = onDeleteCurrency
         )
 
         HorizontalSeparator()
 
-        ParticipantsSection(
-            modifier = Modifier.weight(1f),
-            participants = participants,
-            onAddParticipantButtonClick = onAddParticipantButtonClick,
-            onDeletedParticipant = onDeletedParticipant
+        ChipsSection(
+            labelRes = R.string.participants_section_header,
+            addButtonRes = R.string.add_a_participant,
+            items = participants,
+            onAddItemButtonClick = onAddParticipantButtonClick,
+            onDeleteItemButtonClick = onDeletedParticipant
         )
 
         HorizontalSeparator()

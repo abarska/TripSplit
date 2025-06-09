@@ -3,12 +3,15 @@ package com.anabars.tripsplit.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.screens.JoinExistingTripScreen
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
 import com.anabars.tripsplit.ui.screens.settings.SettingsScreen
+import com.anabars.tripsplit.ui.screens.tripdetails.TripDetailsScreen
 import com.anabars.tripsplit.ui.screens.trips.TripsScreen
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
@@ -35,10 +38,12 @@ fun AppNavGraph(
         composable(route = AppScreens.ROUTE_SETTINGS) {
             SettingsScreen(navController = navController, modifier = modifier)
         }
+        composable(
+            route = AppScreens.ROUTE_TRIP_DETAILS + "/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val tripId = backStackEntry.arguments?.getLong("id") ?: return@composable
+            TripDetailsScreen(navController, tripId)
+        }
     }
 }
-
-//composable(route = AppScreens.ROUTE_TRIPS + "/{itemId}") { backStackEntry ->
-//    val itemId = backStackEntry.arguments?.getString("itemId")
-//    TripsScreen(navController = navController, itemId = itemId, modifier = modifier)
-//}

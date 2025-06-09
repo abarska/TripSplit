@@ -44,7 +44,7 @@ fun TripsScreen(
                 items(items = trips) { trip ->
                     TripSplitItemRow(
                         modifier = modifier.inputWidthModifier(),
-                        onItemClick = {}
+                        onItemClick = { navController.navigate(AppScreens.ROUTE_TRIP_DETAILS + "/${trip.id}") }
                     ) {
                         InfoText(modifier = Modifier.padding(8.dp), text = trip.title)
                     }

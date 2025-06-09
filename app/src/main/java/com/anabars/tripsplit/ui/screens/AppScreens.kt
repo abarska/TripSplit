@@ -13,18 +13,21 @@ sealed class AppScreens(
     data object AddTripScreen : AppScreens(ROUTE_ADD_TRIP, R.string.title_new_trip)
     data object JoinExistingTripScreen : AppScreens(ROUTE_EXISTING_TRIP, R.string.title_join_existing_trip)
     data object SettingsScreen : AppScreens(ROUTE_SETTINGS, R.string.title_settings)
+    data object TripDetailsScreen : AppScreens(ROUTE_TRIP_DETAILS, R.string.title_trip_details)
 
     companion object {
         const val ROUTE_TRIPS = "trips"
         const val ROUTE_ADD_TRIP = "add_trip"
         const val ROUTE_EXISTING_TRIP = "existing_trip"
         const val ROUTE_SETTINGS = "settings"
+        const val ROUTE_TRIP_DETAILS = "trip_details"
 
         fun fromRoute(route: String?): AppScreens? = when (route) {
             TripsScreen.route -> TripsScreen
             AddTripScreen.route -> AddTripScreen
             JoinExistingTripScreen.route -> JoinExistingTripScreen
             SettingsScreen.route -> SettingsScreen
+            TripDetailsScreen.route -> TripDetailsScreen
             else -> null
         }
     }

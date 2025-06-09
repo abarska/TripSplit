@@ -1,21 +1,21 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.SecondaryButton
-import com.anabars.tripsplit.ui.itemrows.ParticipantItemRow
-import com.anabars.tripsplit.ui.model.ActionButton
+import com.anabars.tripsplit.ui.itemrows.ShowParticipant
 
 @Composable
 fun ParticipantsSection(
@@ -24,42 +24,28 @@ fun ParticipantsSection(
     onDeletedParticipant: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
+    Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item { InfoText(textRes = R.string.participants_section_header) }
+        InfoText(textRes = R.string.participants_section_header)
 
         if (participants.isNotEmpty()) {
-            item { Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small))) }
-            items(items = participants) { name ->
-                ShowParticipant(name, participants, onDeletedParticipant)
+            Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                participants.forEach { participant ->
+                    ShowParticipant(participant, participants, onDeletedParticipant)
+                }
             }
         }
 
-        item { Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal))) }
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
 
-        item { SecondaryButton(textRes = R.string.add_a_participant) { onAddParticipantButtonClick() } }
-    }
-}
-
-@Composable
-private fun ShowParticipant(
-    name: String,
-    participants: List<String>,
-    onDeletedParticipant: (String) -> Unit
-) {
-    val buttons =
-        if (name == participants.first()) emptyList()
-        else listOf(
-            ActionButton(
-                icon = Icons.Default.Delete,
-                contentDescriptionRes = R.string.delete_participant,
-            ) { onDeletedParticipant(name) }
-        )
-    ParticipantItemRow(name = name, buttons = buttons)
-    if (name != participants.last()) {
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
+        SecondaryButton(textRes = R.string.add_a_participant) { onAddParticipantButtonClick() }
     }
 }
 

@@ -1,18 +1,15 @@
 package com.anabars.tripsplit.ui.itemrows
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,21 +27,13 @@ fun TripSplitItemRow(
     content: @Composable () -> Unit
 ) {
     ElevatedCard(
-        modifier = modifier,
-        shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
+        modifier = modifier.padding(4.dp),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.chip_corner_radius)),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         enabled = enabled,
         onClick = onItemClick
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-                .heightIn(dimensionResource(R.dimen.item_row_height)),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            content()
-        }
+        content()
     }
 }
 
@@ -52,20 +41,10 @@ fun TripSplitItemRow(
 @Composable
 private fun TripSplitItemRowPreview() {
     TripSplitItemRow(onItemClick = {}) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
+        Row(modifier = Modifier.padding(8.dp)) {
+            ItemRowActionButton(ActionButton(icon = Icons.Default.Close) {})
+            Spacer(modifier = Modifier.width(8.dp))
             InfoText(text = "placeholder")
-            val buttons = listOf(
-                ActionButton(icon = Icons.Default.Pause) {},
-                ActionButton(icon = Icons.Default.Stop) {})
-            Row {
-                buttons.forEach { button ->
-                    ItemRowActionButton(button)
-                }
-            }
         }
     }
 }

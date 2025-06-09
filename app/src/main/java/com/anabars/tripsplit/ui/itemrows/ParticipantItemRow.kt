@@ -1,61 +1,52 @@
 package com.anabars.tripsplit.ui.itemrows
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.dp
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.ItemRowActionButton
 import com.anabars.tripsplit.ui.model.ActionButton
-import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
-fun ParticipantItemRow(
-    name: String,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    buttons: List<ActionButton>,
-) {
-    TripSplitItemRow(modifier = modifier.inputWidthModifier(), enabled = enabled) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            InfoText(text = name)
-            if (buttons.isNotEmpty()) {
-                Row {
-                    buttons.forEach { button ->
-                        ItemRowActionButton(button)
-                    }
-                }
-            }
+fun CurrencyItemRow(code: String, onDeleteCurrency: (String) -> Unit) {
+    val button = ActionButton(
+        icon = Icons.Default.Close,
+        contentDescriptionRes = R.string.delete_item,
+    ) { onDeleteCurrency(code) }
+    TripSplitItemRow {
+        Row(modifier = Modifier.padding(8.dp)) {
+            ItemRowActionButton(button)
+            Spacer(Modifier.width(dimensionResource(R.dimen.vertical_spacer_small)))
+            InfoText(text = code)
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun ParticipantItemRowPreviewOneButton() {
-    ParticipantItemRow(
-        name = "placeholder",
-        buttons = listOf(ActionButton(icon = Icons.Default.Stop) {})
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ParticipantRowPreviewTwoButtons() {
-    ParticipantItemRow(
-        name = "placeholder",
-        buttons = listOf(
-            ActionButton(icon = Icons.Default.Pause) {},
-            ActionButton(icon = Icons.Default.Stop) {})
-    )
+fun ShowParticipant(
+    name: String,
+    participants: List<String>,
+    onDeleteParticipant: (String) -> Unit
+) {
+    TripSplitItemRow {
+        Row(modifier = Modifier.padding(8.dp)) {
+            if (name != participants.first()) {
+                ItemRowActionButton(
+                    ActionButton(
+                        icon = Icons.Default.Close,
+                        contentDescriptionRes = R.string.delete_item
+                    ) { onDeleteParticipant(name) })
+                Spacer(Modifier.width(8.dp))
+            }
+            InfoText(text = name)
+        }
+    }
 }

@@ -50,9 +50,9 @@ class TripViewModel @Inject constructor(private val tripRepository: TripReposito
 
     fun getTrip(id: String) = viewModelScope.launch { tripRepository.getTrip(id) }
 
-    fun saveTrip(tripName: String, tripDescription: String) {
+    fun saveTrip(tripName: String) {
         viewModelScope.launch {
-            val trip = Trip(title = tripName, description = tripDescription)
+            val trip = Trip(title = tripName)
             tripRepository.saveTrip(trip, _currentTripParticipants.value, _currentTripCurrencies.value)
         }
     }

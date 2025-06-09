@@ -35,7 +35,6 @@ fun AddTripScreen(
     var tripName by rememberSaveable { mutableStateOf("") }
     var tripNameErrorMessage by rememberSaveable { mutableIntStateOf(0) }
     var tripNameError by rememberSaveable { mutableStateOf(false) }
-    var tripDescription by rememberSaveable { mutableStateOf("") }
     var newParticipantName by rememberSaveable { mutableStateOf("") }
     var activeDialog by rememberSaveable { mutableStateOf(ActiveDialog.NONE) }
 
@@ -45,16 +44,11 @@ fun AddTripScreen(
         tripNameError = false
     }
 
-    val onTripDescriptionChanged = { input: String ->
-        tripDescription = input
-    }
-
     val onSaveTrip = {
         val tripNameTrimmed = tripName.trim()
         if (tripViewModel.fieldNotEmpty(value = tripNameTrimmed)) {
             tripViewModel.saveTrip(
-                tripName = tripNameTrimmed,
-                tripDescription = tripDescription.trim()
+                tripName = tripNameTrimmed
             )
             tripViewModel.clearParticipants()
             tripViewModel.clearCurrencies()
@@ -122,12 +116,11 @@ fun AddTripScreen(
 
     val hasUnsavedInput by remember(
         tripName,
-        tripDescription,
         currentTripParticipants,
         currentTripCurrencies
     ) {
         derivedStateOf {
-            tripName.isNotBlank() || tripDescription.isNotBlank() || currentTripParticipants.size > 1 || currentTripCurrencies.size > 1
+            tripName.isNotBlank() || currentTripParticipants.size > 1 || currentTripCurrencies.size > 1
         }
     }
 
@@ -206,8 +199,6 @@ fun AddTripScreen(
                     tripNameError = tripNameError,
                     tripNameErrorMessage = tripNameErrorMessage,
                     onTripNameChanged = onTripNameChanged,
-                    tripDescription = tripDescription,
-                    onTripDescriptionChanged = onTripDescriptionChanged,
                     participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
                     onDeletedParticipant = onDeletedParticipant,
@@ -223,8 +214,6 @@ fun AddTripScreen(
                     tripNameError = tripNameError,
                     tripNameErrorMessage = tripNameErrorMessage,
                     onTripNameChanged = onTripNameChanged,
-                    tripDescription = tripDescription,
-                    onTripDescriptionChanged = onTripDescriptionChanged,
                     participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
                     onDeletedParticipant = onDeletedParticipant,

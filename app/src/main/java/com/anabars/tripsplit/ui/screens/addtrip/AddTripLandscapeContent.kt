@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -22,8 +21,6 @@ fun AddTripLandscapeContent(
     tripNameError: Boolean,
     tripNameErrorMessage: Int,
     onTripNameChanged: (String) -> Unit,
-    tripDescription: String,
-    onTripDescriptionChanged: (String) -> Unit,
     participants: List<String>,
     onAddParticipantButtonClick: () -> Unit,
     onDeletedParticipant: (String) -> Unit,
@@ -44,9 +41,7 @@ fun AddTripLandscapeContent(
                 tripName = tripName,
                 tripNameError = tripNameError,
                 tripNameErrorMessage = tripNameErrorMessage,
-                onTripNameChanged = onTripNameChanged,
-                tripDescription = tripDescription,
-                onTripDescriptionChanged = onTripDescriptionChanged
+                onTripNameChanged = onTripNameChanged
             )
             Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
             MainButton(textRes = R.string.save) { onSaveTrip() }
@@ -89,8 +84,6 @@ private fun AddTripLandscapeContentPreview() {
         tripNameError = false,
         tripNameErrorMessage = 0,
         onTripNameChanged = {},
-        tripDescription = "trip description",
-        onTripDescriptionChanged = {},
         participants = listOf("adam", "eve", "others"),
         onAddParticipantButtonClick = {},
         onDeletedParticipant = {},

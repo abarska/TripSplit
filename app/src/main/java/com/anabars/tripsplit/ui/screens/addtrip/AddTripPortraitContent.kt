@@ -1,7 +1,6 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,8 +15,6 @@ fun AddTripPortraitContent(
     tripNameError: Boolean,
     tripNameErrorMessage: Int,
     onTripNameChanged: (String) -> Unit,
-    tripDescription: String,
-    onTripDescriptionChanged: (String) -> Unit,
     participants: List<String>,
     onAddParticipantButtonClick: () -> Unit,
     onDeletedParticipant: (String) -> Unit,
@@ -35,9 +32,7 @@ fun AddTripPortraitContent(
             tripName = tripName,
             tripNameError = tripNameError,
             tripNameErrorMessage = tripNameErrorMessage,
-            onTripNameChanged = onTripNameChanged,
-            tripDescription = tripDescription,
-            onTripDescriptionChanged = onTripDescriptionChanged
+            onTripNameChanged = onTripNameChanged
         )
 
         HorizontalSeparator()
@@ -71,8 +66,6 @@ private fun AddTripPortraitContentPreview() {
         tripNameError = false,
         tripNameErrorMessage = 0,
         onTripNameChanged = {},
-        tripDescription = "trip description",
-        onTripDescriptionChanged = {},
         participants = listOf("adam", "eve", "others"),
         onAddParticipantButtonClick = {},
         onDeletedParticipant = {},

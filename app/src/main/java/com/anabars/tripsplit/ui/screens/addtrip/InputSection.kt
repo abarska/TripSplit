@@ -1,12 +1,9 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.ShortInputTextField
@@ -17,8 +14,6 @@ fun InputSection(
     tripNameError: Boolean,
     tripNameErrorMessage: Int,
     onTripNameChanged: (String) -> Unit,
-    tripDescription: String,
-    onTripDescriptionChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -32,15 +27,6 @@ fun InputSection(
             onValueChanged = onTripNameChanged,
             modifier = modifier
         )
-
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
-
-        ShortInputTextField(
-            value = tripDescription,
-            labelRes = R.string.new_trip_description_hint,
-            onValueChanged = onTripDescriptionChanged,
-            modifier = modifier
-        )
     }
 }
 
@@ -51,8 +37,6 @@ private fun InputSectionPreview() {
         tripName = "name",
         tripNameError = false,
         tripNameErrorMessage = 0,
-        onTripNameChanged = {},
-        tripDescription = "description",
-        onTripDescriptionChanged = {}
+        onTripNameChanged = {}
     )
 }

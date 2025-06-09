@@ -12,7 +12,6 @@ import java.util.Date
 data class Trip(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val title: String = "",
-    @ColumnInfo val description: String = "",
     @ColumnInfo val tag: String = Tag.OTHER.name,
     @ColumnInfo val status: TripStatus = TripStatus.PLANNED,
     @ColumnInfo val ownerId: String = "",

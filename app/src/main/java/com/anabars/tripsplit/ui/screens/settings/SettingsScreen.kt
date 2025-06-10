@@ -27,7 +27,7 @@ fun SettingsScreen(
     Column(modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))) {
 
         CurrencyPreferenceView(
-            selectedCurrency = localCurrency.substringBefore('-').trim(),
+            selectedCurrency = localCurrency.take(3),
             labelRes = R.string.local_currency,
             summaryRes = R.string.local_currency_summary,
             currencies = currencies,

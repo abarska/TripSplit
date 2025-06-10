@@ -38,9 +38,9 @@ class SettingsViewModel @Inject constructor(private val currencyPreference: Curr
         }
     }
 
-    fun saveCurrency(code: String) {
+    fun saveCurrency(currency: String) {
         viewModelScope.launch {
-            currencyPreference.saveCurrency(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY, code)
+            currencyPreference.saveCurrency(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY, currency.take(3))
         }
     }
 }

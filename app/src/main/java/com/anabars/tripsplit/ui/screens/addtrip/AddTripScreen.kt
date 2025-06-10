@@ -20,8 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
-import com.anabars.tripsplit.ui.dialogs.UserInputDialog
 import com.anabars.tripsplit.ui.dialogs.ConfirmationDialog
+import com.anabars.tripsplit.ui.dialogs.UserInputDialog
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.widgets.CurrencyPicker
 import com.anabars.tripsplit.viewmodels.TripViewModel
@@ -50,9 +50,7 @@ fun AddTripScreen(
             tripViewModel.saveTrip(
                 tripName = tripNameTrimmed
             )
-            tripViewModel.clearParticipants()
-            tripViewModel.clearCurrencies()
-            navigateHome(navController)
+            navigateHome(tripViewModel = tripViewModel, navController = navController)
         } else {
             activeDialog = ActiveDialog.NONE
             tripNameError = true
@@ -90,7 +88,7 @@ fun AddTripScreen(
     }
 
     val onNewCurrency = { currency: String ->
-        val code = currency.substringBefore("-").trim()
+        val code = currency.take(3)
         if (!tripViewModel.hasCurrency(code)) {
             tripViewModel.addCurrency(code)
         }
@@ -106,8 +104,7 @@ fun AddTripScreen(
     }
 
     val onDismissSaveChanges = {
-        tripViewModel.clearParticipants()
-        navigateHome(navController)
+        navigateHome(tripViewModel = tripViewModel, navController = navController)
     }
 
     val currentTripParticipants by tripViewModel.currentTripParticipants.collectAsState()
@@ -124,21 +121,26 @@ fun AddTripScreen(
         }
     }
 
-    BackHandler(enabled = hasUnsavedInput) {
-        activeDialog = ActiveDialog.CONFIRMATION
+    val handleBackNavigation: () -> Boolean = {
+        if (hasUnsavedInput) {
+            activeDialog = ActiveDialog.CONFIRMATION
+            true
+        } else {
+            navigateHome(tripViewModel = tripViewModel, navController = navController)
+            false
+        }
+    }
+
+    BackHandler(enabled = true) {
+        handleBackNavigation()
     }
 
     val you = stringResource(R.string.you)
-    val uah = stringResource(R.string.uah)
+    val localCurrency = tripViewModel.getLocalCurrency()
     LaunchedEffect(Unit) {
         if (!tripViewModel.hasParticipant(you)) tripViewModel.addParticipant(you)
-        if (!tripViewModel.hasCurrency(uah)) tripViewModel.addCurrency(uah)
-        tripViewModel.setBackHandler {
-            if (hasUnsavedInput) {
-                activeDialog = ActiveDialog.CONFIRMATION
-                true
-            } else false
-        }
+        if (!tripViewModel.hasCurrency(localCurrency)) tripViewModel.addCurrency(localCurrency)
+        tripViewModel.setBackHandler { handleBackNavigation() }
     }
 
     when (activeDialog) {
@@ -227,7 +229,8 @@ fun AddTripScreen(
     }
 }
 
-private fun navigateHome(navController: NavController) {
+private fun navigateHome(navController: NavController, tripViewModel: TripViewModel) {
+    tripViewModel.clearTempData()
     navController.navigate(AppScreens.ROUTE_TRIPS) {
         popUpTo(navController.graph.startDestinationId) {
             inclusive = true

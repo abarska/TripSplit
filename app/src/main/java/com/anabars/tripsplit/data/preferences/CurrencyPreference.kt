@@ -1,21 +1,15 @@
 package com.anabars.tripsplit.data.preferences
 
-import android.content.Context
-import android.telephony.TelephonyManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.anabars.tripsplit.TripSplitApplication
+import com.anabars.tripsplit.utils.getDefaultCurrency
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.Currency
-import java.util.Locale
 import javax.inject.Inject
 
-class CurrencyPreference @Inject constructor(
-    private val dataStore: DataStore<Preferences>
-) {
+class CurrencyPreference @Inject constructor(private val dataStore: DataStore<Preferences>) {
 
     suspend fun saveCurrency(key: String, code: String) {
         dataStore.edit { settings ->
@@ -24,22 +18,6 @@ class CurrencyPreference @Inject constructor(
     }
 
     fun getCurrencyFlow(key: String): Flow<String> {
-        return dataStore.data.map { it[stringPreferencesKey(key)] ?: defaultCurrency() }
-    }
-
-    private fun defaultCurrency(): String {
-        val context = TripSplitApplication.instance.applicationContext
-        val simCurrency = getCurrencyFromSim(context)
-        return simCurrency ?: "EUR"
-    }
-
-    private fun getCurrencyFromSim(context: Context): String? {
-        val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        val country = tm.simCountryIso.uppercase(Locale.US)
-        return try {
-            Currency.getInstance(Locale("", country)).currencyCode
-        } catch (e: Exception) {
-            null
-        }
+        return dataStore.data.map { it[stringPreferencesKey(key)] ?: getDefaultCurrency() }
     }
 }

@@ -5,10 +5,12 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.model.TripParticipant
 import com.anabars.tripsplit.model.Trip
+import com.anabars.tripsplit.model.TripWithDetails
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -38,4 +40,7 @@ interface TripDao {
     @Delete
     suspend fun deleteParticipant(participant: TripParticipant)
 
+    @Transaction
+    @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :tripId")
+    fun getTripWithDetails(tripId: Long): Flow<TripWithDetails?>
 }

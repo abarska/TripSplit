@@ -7,7 +7,9 @@ import com.anabars.tripsplit.data.room.TripDao
 import com.anabars.tripsplit.model.TripParticipant
 import com.anabars.tripsplit.model.Trip
 import com.anabars.tripsplit.model.TripCurrency
+import com.anabars.tripsplit.model.TripWithDetails
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -48,4 +50,8 @@ class TripRepository @Inject constructor(
     suspend fun getParticipantsByTripId(id: Long) = participantDao.getParticipantsByTripId(id)
 
     suspend fun deleteParticipantsByTripId(id: Long) = participantDao.deleteParticipantsByTripId(id)
+
+    fun getTripDetailsWithFlow(tripId: Long): Flow<TripWithDetails?> {
+        return tripDao.getTripWithDetails(tripId)
+    }
 }

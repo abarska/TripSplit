@@ -18,7 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,7 +35,7 @@ fun TripDetailsScreen(
     modifier: Modifier = Modifier
 ) {
     val tabs = tripDetailsTabs()
-    var selectedTabIndex by remember { mutableIntStateOf(1) }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(1) }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -69,7 +69,7 @@ fun TripDetailsScreen(
     ) { _ ->
         Column(modifier = Modifier.fillMaxSize()) {
             when (selectedTabIndex) {
-                0 -> TripOverviewTab(tripId)
+                0 -> TripOverviewTab()
                 1 -> TripExpensesTab(tripId)
                 2 -> TripSettlementsTab(tripId)
             }

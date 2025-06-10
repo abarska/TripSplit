@@ -32,14 +32,19 @@ fun LabelText(
 }
 
 @Composable
-fun InfoText(modifier: Modifier = Modifier, @StringRes textRes: Int = 0, text: String = "") {
+fun InfoText(
+    modifier: Modifier = Modifier,
+    @StringRes textRes: Int = 0,
+    text: String = "",
+    isHeader: Boolean = false
+) {
     val value = if (textRes != 0) stringResource(textRes) else text
     if (value.isNotEmpty()) {
         Box(modifier = modifier, contentAlignment = Alignment.Center) {
             Text(
                 modifier = modifier,
                 text = value,
-                style = MaterialTheme.typography.bodyLarge
+                style = if (isHeader) MaterialTheme.typography.headlineLarge else MaterialTheme.typography.bodyLarge
             )
         }
     }
@@ -61,4 +66,10 @@ private fun ErrorLabelTextPreview() {
 @Composable
 private fun InfoTextPreview() {
     InfoText(text = "Placeholder")
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun InfoTextHeaderPreview() {
+    InfoText(text = "Placeholder", isHeader = true)
 }

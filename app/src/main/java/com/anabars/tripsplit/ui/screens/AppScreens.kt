@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.ui.screens
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.navigation.NamedNavArgument
 import com.anabars.tripsplit.R

@@ -14,14 +14,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.model.Expense
+import com.anabars.tripsplit.model.TripExpense
 import com.anabars.tripsplit.model.ExpenseCategory
 import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun ExpenseItemRow(
-    expense: Expense,
+    expense: TripExpense,
     modifier: Modifier = Modifier,
 ) {
     TripSplitItemRow(
@@ -53,9 +53,8 @@ fun ExpenseItemRow(
 @Preview(showBackground = true)
 @Composable
 private fun ExpenseItemRowPreview() {
-    val data = Expense(
+    val data = TripExpense(
         paidBy = "Mommy",
-        sharedWith = listOf("Daddy, Granny, Grandpa"),
         amount = 50.0,
         currency = "EUR",
         category = ExpenseCategory.ACCOMMODATION,

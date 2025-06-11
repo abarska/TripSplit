@@ -43,7 +43,7 @@ fun AppNavGraph(
             arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { backStackEntry ->
             val tripId = backStackEntry.arguments?.getLong("id") ?: return@composable
-            TripDetailsScreen(navController, tripId)
+            TripDetailsScreen(navController = navController, tripId = tripId)
         }
     }
 }

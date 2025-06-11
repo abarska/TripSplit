@@ -19,10 +19,9 @@ import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.viewmodels.TripOverviewViewModel
 
 @Composable
-fun TripOverviewTab(
-    modifier: Modifier = Modifier,
-    viewModel: TripOverviewViewModel = hiltViewModel()
-) {
+fun TripOverviewTab(modifier: Modifier = Modifier) {
+
+    val viewModel: TripOverviewViewModel = hiltViewModel()
     val tripDetails by viewModel.tripDetails.collectAsState()
 
     Box(modifier = modifier.fillMaxSize()) {

@@ -70,8 +70,8 @@ fun TripDetailsScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             when (selectedTabIndex) {
                 0 -> TripOverviewTab()
-                1 -> TripExpensesTab(tripId)
-                2 -> TripSettlementsTab(tripId)
+                1 -> TripExpensesTab()
+                2 -> TripSettlementsTab()
             }
         }
     }

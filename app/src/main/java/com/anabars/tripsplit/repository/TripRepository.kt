@@ -21,9 +21,6 @@ class TripRepository @Inject constructor(
 ) {
 
     fun getAllTrips() = tripDao.getAllTrips().flowOn(Dispatchers.IO).conflate()
-    suspend fun deleteAllTrips() = tripDao.deleteAllTrips()
-
-    suspend fun getTrip(id: String) = tripDao.getTripById(id)
 
     @Transaction
     suspend fun saveTrip(trip: Trip, participantNames: List<String>, currencyCodes: List<String>) {
@@ -37,19 +34,6 @@ class TripRepository @Inject constructor(
         participantDao.insertParticipants(participants)
         currencyDao.insertCurrencies(currencies)
     }
-
-    suspend fun updateTrip(trip: Trip) = tripDao.update(trip)
-
-    suspend fun deleteTrip(trip: Trip) = tripDao.deleteTrip(trip)
-
-    suspend fun saveParticipant(participant: TripParticipant) = tripDao.saveParticipant(participant)
-
-    suspend fun deleteParticipant(participant: TripParticipant) =
-        tripDao.deleteParticipant(participant)
-
-    suspend fun getParticipantsByTripId(id: Long) = participantDao.getParticipantsByTripId(id)
-
-    suspend fun deleteParticipantsByTripId(id: Long) = participantDao.deleteParticipantsByTripId(id)
 
     fun getTripDetailsWithFlow(tripId: Long): Flow<TripWithDetails?> {
         return tripDao.getTripWithDetails(tripId)

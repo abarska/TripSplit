@@ -15,6 +15,7 @@
     // used for content description
     <string name="action_button">action button</string>
     <string name="add_a_new_trip">Add a new trip</string>
+    <string name="add_a_new_expense">Add a new expense</string>
     <string name="deactivate_item">Deactivate item</string>
     <string name="delete_item">Delete item</string>
     <string name="search_currency">Search currency</string>

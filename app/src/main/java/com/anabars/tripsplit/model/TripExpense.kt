@@ -8,6 +8,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.common.TripSplitConstants
 
@@ -23,10 +24,10 @@ import com.anabars.tripsplit.common.TripSplitConstants
     ],
     indices = [Index("tripId")]
 )
-data class Expense(
-    @ColumnInfo val id: String = "",
+data class TripExpense(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val paidBy: String = "",
-    @ColumnInfo val sharedWith: List<String> = emptyList(),
+//    @ColumnInfo val sharedWith: List<String> = emptyList(),
     @ColumnInfo val amount: Double = 0.0,
     @ColumnInfo val currency: String,
     @ColumnInfo val category: ExpenseCategory = ExpenseCategory.OTHER,

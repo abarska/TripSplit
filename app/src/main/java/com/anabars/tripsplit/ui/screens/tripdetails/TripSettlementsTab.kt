@@ -7,6 +7,6 @@ import androidx.compose.ui.res.stringResource
 import com.anabars.tripsplit.R
 
 @Composable
-fun TripSettlementsTab(tripId: Long, modifier: Modifier = Modifier) {
+fun TripSettlementsTab(modifier: Modifier = Modifier) {
     Text(stringResource(R.string.settlements_tab))
 }

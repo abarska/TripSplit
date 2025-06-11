@@ -11,6 +11,7 @@ object TripSplitConstants {
     const val TRIP_TABLE = "trip_table"
     const val TRIP_PARTICIPANTS_TABLE = "trip_participants_table"
     const val TRIP_CURRENCIES_TABLE = "trip_currencies_table"
+    const val TRIP_EXPENSES_TABLE = "trip_expenses_table"
     const val EXCHANGE_RATE_TABLE = "exchange_rate_table"
 
     // workers

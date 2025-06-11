@@ -13,10 +13,11 @@ import com.anabars.tripsplit.model.TripCurrency
     version = 1,
     exportSchema = false
 )
-@TypeConverters(DateConverter::class)
+@TypeConverters(DateConverter::class, ExpenseCategoryConverter::class)
 abstract class TripSplitDatabase : RoomDatabase() {
     abstract fun tripDao(): TripDao
     abstract fun tripParticipantDao(): TripParticipantDao
     abstract fun tripCurrencyDao(): TripCurrencyDao
+    abstract fun tripExpenseDao(): TripExpenseDao
     abstract fun exchangeRateDao(): ExchangeRateDao
 }

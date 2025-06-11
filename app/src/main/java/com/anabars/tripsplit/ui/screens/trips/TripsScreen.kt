@@ -24,7 +24,7 @@ import com.anabars.tripsplit.ui.components.TripSplitFab
 import com.anabars.tripsplit.ui.itemrows.TripSplitItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
-import com.anabars.tripsplit.viewmodels.TripViewModel
+import com.anabars.tripsplit.viewmodels.TripsViewModel
 
 @Composable
 fun TripsScreen(
@@ -32,8 +32,8 @@ fun TripsScreen(
     modifier: Modifier = Modifier
 ) {
 
-    val tripViewModel: TripViewModel = hiltViewModel()
-    val trips by tripViewModel.tripList.collectAsState()
+    val tripsViewModel: TripsViewModel = hiltViewModel()
+    val trips by tripsViewModel.tripList.collectAsState()
 
     Box(
         modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))

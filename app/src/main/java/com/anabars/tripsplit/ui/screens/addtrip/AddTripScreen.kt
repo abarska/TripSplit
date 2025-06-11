@@ -26,8 +26,8 @@ import com.anabars.tripsplit.ui.dialogs.ConfirmationDialog
 import com.anabars.tripsplit.ui.dialogs.UserInputDialog
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.widgets.CurrencyPicker
+import com.anabars.tripsplit.viewmodels.AddTripViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
-import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable
 fun AddTripScreen(
@@ -36,7 +36,7 @@ fun AddTripScreen(
     modifier: Modifier = Modifier,
 ) {
 
-    val tripViewModel: TripViewModel = hiltViewModel()
+    val addTripViewModel: AddTripViewModel = hiltViewModel()
 
     var tripName by rememberSaveable { mutableStateOf("") }
     var tripNameErrorMessage by rememberSaveable { mutableIntStateOf(0) }
@@ -52,11 +52,9 @@ fun AddTripScreen(
 
     val onSaveTrip = {
         val tripNameTrimmed = tripName.trim()
-        if (tripViewModel.fieldNotEmpty(value = tripNameTrimmed)) {
-            tripViewModel.saveTrip(
-                tripName = tripNameTrimmed
-            )
-            navigateHome(tripViewModel = tripViewModel, navController = navController)
+        if (addTripViewModel.fieldNotEmpty(value = tripNameTrimmed)) {
+            addTripViewModel.saveTrip(tripName = tripNameTrimmed)
+            navigateHome(addTripViewModel = addTripViewModel, navController = navController)
         } else {
             activeDialog = ActiveDialog.NONE
             tripNameError = true
@@ -70,18 +68,18 @@ fun AddTripScreen(
 
     val onNewParticipant = {
         val nameTrimmed = newParticipantName.trim()
-        if (tripViewModel.fieldNotEmpty(value = nameTrimmed)) {
-            if (tripViewModel.hasParticipant(nameTrimmed)) {
+        if (addTripViewModel.fieldNotEmpty(value = nameTrimmed)) {
+            if (addTripViewModel.hasParticipant(nameTrimmed)) {
                 activeDialog = ActiveDialog.WARNING
             } else {
-                tripViewModel.addParticipant(nameTrimmed)
+                addTripViewModel.addParticipant(nameTrimmed)
                 activeDialog = ActiveDialog.NONE
                 newParticipantName = ""
             }
         }
     }
     val onDeletedParticipant = { name: String ->
-        tripViewModel.removeParticipant(name)
+        addTripViewModel.removeParticipant(name)
     }
 
     val onDismissAddParticipantDialog = {
@@ -95,14 +93,14 @@ fun AddTripScreen(
 
     val onNewCurrency = { currency: String ->
         val code = currency.take(3)
-        if (!tripViewModel.hasCurrency(code)) {
-            tripViewModel.addCurrency(code)
+        if (!addTripViewModel.hasCurrency(code)) {
+            addTripViewModel.addCurrency(code)
         }
         activeDialog = ActiveDialog.NONE
     }
 
     val onDeleteCurrency = { code: String ->
-        tripViewModel.removeCurrency(code)
+        addTripViewModel.removeCurrency(code)
     }
 
     val onDismissAddCurrencyDialog = {
@@ -110,12 +108,12 @@ fun AddTripScreen(
     }
 
     val onDismissSaveChanges = {
-        navigateHome(tripViewModel = tripViewModel, navController = navController)
+        navigateHome(addTripViewModel = addTripViewModel, navController = navController)
     }
 
-    val currentTripParticipants by tripViewModel.currentTripParticipants.collectAsState()
-    val currentTripCurrencies by tripViewModel.currentTripCurrencies.collectAsState()
-    val availableCurrencies by tripViewModel.currencies.collectAsState()
+    val currentTripParticipants by addTripViewModel.currentTripParticipants.collectAsState()
+    val currentTripCurrencies by addTripViewModel.currentTripCurrencies.collectAsState()
+    val availableCurrencies by addTripViewModel.currencies.collectAsState()
 
     val hasUnsavedInput by remember(
         tripName,
@@ -132,7 +130,7 @@ fun AddTripScreen(
             activeDialog = ActiveDialog.CONFIRMATION
             true
         } else {
-            navigateHome(tripViewModel = tripViewModel, navController = navController)
+            navigateHome(addTripViewModel = addTripViewModel, navController = navController)
             false
         }
     }
@@ -142,18 +140,16 @@ fun AddTripScreen(
     }
 
     val you = stringResource(R.string.you)
-    val localCurrency = tripViewModel.getLocalCurrency()
+    val localCurrency = addTripViewModel.getLocalCurrency()
 
     LaunchedEffect(Unit) {
-        if (!tripViewModel.hasParticipant(you)) tripViewModel.addParticipant(you)
-        if (!tripViewModel.hasCurrency(localCurrency)) tripViewModel.addCurrency(localCurrency)
+        if (!addTripViewModel.hasParticipant(you)) addTripViewModel.addParticipant(you)
+        if (!addTripViewModel.hasCurrency(localCurrency)) addTripViewModel.addCurrency(localCurrency)
         sharedViewModel.setBackHandler { handleBackNavigation() }
     }
 
     DisposableEffect(Unit) {
-        onDispose {
-            sharedViewModel.setBackHandler(null)
-        }
+        onDispose { sharedViewModel.setBackHandler(null) }
     }
 
     when (activeDialog) {
@@ -242,8 +238,8 @@ fun AddTripScreen(
     }
 }
 
-private fun navigateHome(navController: NavController, tripViewModel: TripViewModel) {
-    tripViewModel.clearTempData()
+private fun navigateHome(addTripViewModel: AddTripViewModel, navController: NavController) {
+    addTripViewModel.clearTempData()
     navController.navigate(AppScreens.ROUTE_TRIPS) {
         popUpTo(navController.graph.startDestinationId) {
             inclusive = true

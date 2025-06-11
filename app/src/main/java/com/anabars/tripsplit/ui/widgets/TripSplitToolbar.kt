@@ -18,7 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.screens.AppScreens
-import com.anabars.tripsplit.viewmodels.TripViewModel
+import com.anabars.tripsplit.viewmodels.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TripSplitToolbar(
     navController: NavController,
-    tripViewModel: TripViewModel,
+    sharedViewModel: SharedViewModel,
     coroutineScope: CoroutineScope,
     drawerState: DrawerState
 ) {
@@ -58,7 +58,7 @@ fun TripSplitToolbar(
                 }
             } else {
                 IconButton(onClick = {
-                    if (!tripViewModel.handleBack()) {
+                    if (!sharedViewModel.handleBack()) {
                         navController.navigateUp()
                     }
                 }) {

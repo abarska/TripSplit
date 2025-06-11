@@ -96,14 +96,4 @@ class TripViewModel @Inject constructor(
     private fun clearCurrencies() = run { _currentTripCurrencies.value = emptyList() }
 
     fun fieldNotEmpty(value: String) = value.isNotEmpty()
-
-    private var backHandler: (() -> Boolean)? = null
-
-    fun setBackHandler(handler: (() -> Boolean)?) {
-        backHandler = handler
-    }
-
-    fun handleBack(): Boolean {
-        return backHandler?.invoke() ?: false
-    }
 }

@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.InfoText
@@ -28,9 +29,10 @@ import com.anabars.tripsplit.viewmodels.TripViewModel
 @Composable
 fun TripsScreen(
     navController: NavController,
-    tripViewModel: TripViewModel,
     modifier: Modifier = Modifier
 ) {
+
+    val tripViewModel: TripViewModel = hiltViewModel()
     val trips by tripViewModel.tripList.collectAsState()
 
     Box(

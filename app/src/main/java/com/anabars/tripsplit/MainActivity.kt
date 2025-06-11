@@ -26,7 +26,7 @@ import com.anabars.tripsplit.navigation.AppNavGraph
 import com.anabars.tripsplit.ui.theme.AppTheme
 import com.anabars.tripsplit.ui.widgets.DrawerContent
 import com.anabars.tripsplit.ui.widgets.TripSplitToolbar
-import com.anabars.tripsplit.viewmodels.TripViewModel
+import com.anabars.tripsplit.viewmodels.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,13 +51,13 @@ fun MainScreenWithDrawer() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val tripViewModel: TripViewModel = hiltViewModel()
+    val sharedViewModel: SharedViewModel = hiltViewModel()
 
     Scaffold(
         topBar = {
             TripSplitToolbar(
                 navController = navController,
-                tripViewModel = tripViewModel,
+                sharedViewModel = sharedViewModel,
                 coroutineScope = coroutineScope,
                 drawerState = drawerState
             )
@@ -87,7 +87,7 @@ fun MainScreenWithDrawer() {
             ) {
                 AppNavGraph(
                     navController = navController,
-                    tripViewModel = tripViewModel
+                    sharedViewModel = sharedViewModel
                 )
             }
         }

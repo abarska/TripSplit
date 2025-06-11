@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
@@ -24,14 +26,18 @@ import com.anabars.tripsplit.ui.dialogs.ConfirmationDialog
 import com.anabars.tripsplit.ui.dialogs.UserInputDialog
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.widgets.CurrencyPicker
+import com.anabars.tripsplit.viewmodels.SharedViewModel
 import com.anabars.tripsplit.viewmodels.TripViewModel
 
 @Composable
 fun AddTripScreen(
     navController: NavController,
-    tripViewModel: TripViewModel,
+    sharedViewModel: SharedViewModel,
     modifier: Modifier = Modifier,
 ) {
+
+    val tripViewModel: TripViewModel = hiltViewModel()
+
     var tripName by rememberSaveable { mutableStateOf("") }
     var tripNameErrorMessage by rememberSaveable { mutableIntStateOf(0) }
     var tripNameError by rememberSaveable { mutableStateOf(false) }
@@ -137,10 +143,17 @@ fun AddTripScreen(
 
     val you = stringResource(R.string.you)
     val localCurrency = tripViewModel.getLocalCurrency()
+
     LaunchedEffect(Unit) {
         if (!tripViewModel.hasParticipant(you)) tripViewModel.addParticipant(you)
         if (!tripViewModel.hasCurrency(localCurrency)) tripViewModel.addCurrency(localCurrency)
-        tripViewModel.setBackHandler { handleBackNavigation() }
+        sharedViewModel.setBackHandler { handleBackNavigation() }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            sharedViewModel.setBackHandler(null)
+        }
     }
 
     when (activeDialog) {

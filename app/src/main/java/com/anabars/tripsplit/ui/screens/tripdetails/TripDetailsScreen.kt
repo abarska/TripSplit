@@ -70,7 +70,7 @@ fun TripDetailsScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             when (selectedTabIndex) {
                 0 -> TripOverviewTab()
-                1 -> TripExpensesTab()
+                1 -> TripExpensesTab(navController = navController)
                 2 -> TripSettlementsTab()
             }
         }

@@ -17,7 +17,7 @@ class TripExpensesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val tripId: Long = savedStateHandle.get<Long>("id")
+    val tripId: Long = savedStateHandle.get<Long>("id")
         ?: throw IllegalStateException("Trip ID is required for TripExpensesViewModel")
 
     val tripExpenses: StateFlow<List<TripExpense>> =

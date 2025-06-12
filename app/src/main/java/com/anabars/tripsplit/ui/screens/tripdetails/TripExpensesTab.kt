@@ -13,13 +13,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.TripSplitFab
+import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.TripExpensesViewModel
 
 @Composable
-fun TripExpensesTab(modifier: Modifier = Modifier) {
+fun TripExpensesTab(modifier: Modifier = Modifier, navController: NavController) {
 
     val viewModel: TripExpensesViewModel = hiltViewModel()
     val expenses by viewModel.tripExpenses.collectAsState()
@@ -31,6 +33,7 @@ fun TripExpensesTab(modifier: Modifier = Modifier) {
                 iconVector = Icons.Outlined.Add,
                 contentDescription = R.string.add_a_new_expense,
             ) {
+                navController.navigate("${AppScreens.ROUTE_ADD_EXPENSE}/${viewModel.tripId}")
             }
         }
     ) { paddingValues ->

@@ -3,11 +3,11 @@ package com.anabars.tripsplit.di
 import android.content.Context
 import androidx.room.Room
 import com.anabars.tripsplit.common.TripSplitConstants
-import com.anabars.tripsplit.data.room.ExchangeRateDao
-import com.anabars.tripsplit.data.room.TripCurrencyDao
-import com.anabars.tripsplit.data.room.TripParticipantDao
-import com.anabars.tripsplit.data.room.TripDao
-import com.anabars.tripsplit.data.room.TripExpensesDao
+import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
+import com.anabars.tripsplit.data.room.dao.TripCurrencyDao
+import com.anabars.tripsplit.data.room.dao.TripParticipantDao
+import com.anabars.tripsplit.data.room.dao.TripDao
+import com.anabars.tripsplit.data.room.dao.TripExpensesDao
 import com.anabars.tripsplit.data.room.TripSplitDatabase
 import dagger.Module
 import dagger.Provides

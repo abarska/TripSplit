@@ -1,7 +1,7 @@
 package com.anabars.tripsplit.repository
 
-import com.anabars.tripsplit.data.room.TripExpensesDao
-import com.anabars.tripsplit.model.TripExpense
+import com.anabars.tripsplit.data.room.dao.TripExpensesDao
+import com.anabars.tripsplit.data.room.entity.TripExpense
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

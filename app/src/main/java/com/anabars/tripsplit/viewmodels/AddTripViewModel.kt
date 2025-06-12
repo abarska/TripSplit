@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.preferences.CurrencyPreference
-import com.anabars.tripsplit.model.Trip
+import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.getDefaultCurrency

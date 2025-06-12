@@ -3,12 +3,19 @@ package com.anabars.tripsplit.data.room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.anabars.tripsplit.model.ExchangeRate
-import com.anabars.tripsplit.model.ExpenseParticipantCrossRef
-import com.anabars.tripsplit.model.Trip
-import com.anabars.tripsplit.model.TripCurrency
-import com.anabars.tripsplit.model.TripExpense
-import com.anabars.tripsplit.model.TripParticipant
+import com.anabars.tripsplit.data.room.converters.DateConverter
+import com.anabars.tripsplit.data.room.converters.ExpenseCategoryConverter
+import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
+import com.anabars.tripsplit.data.room.dao.TripCurrencyDao
+import com.anabars.tripsplit.data.room.dao.TripDao
+import com.anabars.tripsplit.data.room.dao.TripExpensesDao
+import com.anabars.tripsplit.data.room.dao.TripParticipantDao
+import com.anabars.tripsplit.data.room.entity.ExchangeRate
+import com.anabars.tripsplit.data.room.entity.ExpenseParticipantCrossRef
+import com.anabars.tripsplit.data.room.entity.Trip
+import com.anabars.tripsplit.data.room.entity.TripCurrency
+import com.anabars.tripsplit.data.room.entity.TripExpense
+import com.anabars.tripsplit.data.room.entity.TripParticipant
 
 @Database(
     entities = [Trip::class, TripParticipant::class, TripCurrency::class, TripExpense::class, ExchangeRate::class, ExpenseParticipantCrossRef::class],

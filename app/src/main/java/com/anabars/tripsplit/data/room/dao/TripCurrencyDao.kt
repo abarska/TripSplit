@@ -1,11 +1,11 @@
-package com.anabars.tripsplit.data.room
+package com.anabars.tripsplit.data.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.anabars.tripsplit.common.TripSplitConstants
-import com.anabars.tripsplit.model.TripCurrency
+import com.anabars.tripsplit.data.room.entity.TripCurrency
 
 @Dao
 interface TripCurrencyDao {

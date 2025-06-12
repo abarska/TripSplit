@@ -1,11 +1,11 @@
-package com.anabars.tripsplit.data.room
+package com.anabars.tripsplit.data.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.anabars.tripsplit.common.TripSplitConstants
-import com.anabars.tripsplit.model.TripParticipant
+import com.anabars.tripsplit.data.room.entity.TripParticipant
 
 @Dao
 interface TripParticipantDao {

@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.model
+package com.anabars.tripsplit.data.room.entity
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

@@ -3,7 +3,7 @@ package com.anabars.tripsplit.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anabars.tripsplit.model.TripWithDetails
+import com.anabars.tripsplit.data.room.model.TripWithDetails
 import com.anabars.tripsplit.repository.TripRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

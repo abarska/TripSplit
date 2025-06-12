@@ -7,8 +7,8 @@ import androidx.work.WorkerParameters
 import com.anabars.tripsplit.BuildConfig
 import com.anabars.tripsplit.data.network.CurrencyApiService
 import com.anabars.tripsplit.data.network.CurrencyResponse
-import com.anabars.tripsplit.data.room.ExchangeRateDao
-import com.anabars.tripsplit.model.ExchangeRate
+import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
+import com.anabars.tripsplit.data.room.entity.ExchangeRate
 import com.anabars.tripsplit.utils.validCurrencyCodes
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject

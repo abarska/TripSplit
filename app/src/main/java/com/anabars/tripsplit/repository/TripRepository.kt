@@ -1,13 +1,13 @@
 package com.anabars.tripsplit.repository
 
 import androidx.room.Transaction
-import com.anabars.tripsplit.data.room.TripCurrencyDao
-import com.anabars.tripsplit.data.room.TripParticipantDao
-import com.anabars.tripsplit.data.room.TripDao
-import com.anabars.tripsplit.model.TripParticipant
-import com.anabars.tripsplit.model.Trip
-import com.anabars.tripsplit.model.TripCurrency
-import com.anabars.tripsplit.model.TripWithDetails
+import com.anabars.tripsplit.data.room.dao.TripCurrencyDao
+import com.anabars.tripsplit.data.room.dao.TripParticipantDao
+import com.anabars.tripsplit.data.room.dao.TripDao
+import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.data.room.entity.Trip
+import com.anabars.tripsplit.data.room.entity.TripCurrency
+import com.anabars.tripsplit.data.room.model.TripWithDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate

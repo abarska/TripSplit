@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.model
+package com.anabars.tripsplit.data.room.entity
 
 data class Settlement(
     val id: String = "",

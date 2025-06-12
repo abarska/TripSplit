@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.data.room
+package com.anabars.tripsplit.data.room.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.anabars.tripsplit.common.TripSplitConstants
-import com.anabars.tripsplit.model.ExchangeRate
+import com.anabars.tripsplit.data.room.entity.ExchangeRate
 
 @Dao
 interface ExchangeRateDao {

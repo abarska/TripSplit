@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.model
+package com.anabars.tripsplit.data.room.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import com.anabars.tripsplit.common.TripSplitConstants
 
 @Entity(
-    tableName = TripSplitConstants.TRIP_CURRENCIES_TABLE,
+    tableName = TripSplitConstants.TRIP_PARTICIPANTS_TABLE,
     foreignKeys = [
         ForeignKey(
             entity = Trip::class,
@@ -19,8 +19,14 @@ import com.anabars.tripsplit.common.TripSplitConstants
     ],
     indices = [Index("tripId")]
 )
-data class TripCurrency(
+data class TripParticipant(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
-    @ColumnInfo val code: String = "",
+    @ColumnInfo val name: String = "",
+    @ColumnInfo val status: ParticipantStatus = ParticipantStatus.ACTIVE,
     @ColumnInfo val tripId: Long
 )
+
+enum class ParticipantStatus {
+    ACTIVE,
+    INACTIVE
+}

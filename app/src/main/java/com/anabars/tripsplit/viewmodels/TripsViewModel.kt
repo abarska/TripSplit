@@ -2,7 +2,7 @@ package com.anabars.tripsplit.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anabars.tripsplit.model.Trip
+import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.repository.TripRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

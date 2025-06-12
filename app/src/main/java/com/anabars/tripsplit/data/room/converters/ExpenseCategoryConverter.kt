@@ -1,17 +1,19 @@
 package com.anabars.tripsplit.data.room.converters
 
 import androidx.room.TypeConverter
-import com.anabars.tripsplit.data.room.entity.ExpenseCategory
+import com.anabars.tripsplit.ui.model.ExpenseCategory
 
 object ExpenseCategoryConverter {
 
     @TypeConverter
-    fun expenseCategoryToString(category: ExpenseCategory): String {
-        return category.name
+    fun fromCategory(category: ExpenseCategory): String {
+        return category.javaClass.simpleName ?: ExpenseCategory.Miscellaneous.javaClass.simpleName
     }
+
     @TypeConverter
-    fun stringToExpenseCategory(name: String): ExpenseCategory {
-        return ExpenseCategory.valueOf(name)
+    fun toCategory(name: String): ExpenseCategory {
+        return ExpenseCategory.allExpenseCategories().find { it.javaClass.simpleName == name }
+            ?: ExpenseCategory.Miscellaneous
     }
 
 }

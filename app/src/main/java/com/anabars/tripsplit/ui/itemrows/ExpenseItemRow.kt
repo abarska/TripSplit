@@ -15,8 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripExpense
-import com.anabars.tripsplit.data.room.entity.ExpenseCategory
 import com.anabars.tripsplit.ui.components.InfoText
+import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
@@ -57,7 +57,7 @@ private fun ExpenseItemRowPreview() {
         paidBy = "Mommy",
         amount = 50.0,
         currency = "EUR",
-        category = ExpenseCategory.ACCOMMODATION,
+        category = ExpenseCategory.Accommodation,
         timestamp = System.currentTimeMillis(),
         tripId = 0
     )

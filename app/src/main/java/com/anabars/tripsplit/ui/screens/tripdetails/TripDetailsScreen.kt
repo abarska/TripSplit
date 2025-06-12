@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.ui.screens.tripdetails
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +26,6 @@ import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.TripSplitTab
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TripDetailsScreen(
     navController: NavController,
@@ -66,11 +64,11 @@ fun TripDetailsScreen(
                 }
             }
         }
-    ) { _ ->
+    ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize()) {
             when (selectedTabIndex) {
                 0 -> TripOverviewTab()
-                1 -> TripExpensesTab(navController = navController)
+                1 -> TripExpensesTab(navController = navController, paddingValues = paddingValues)
                 2 -> TripSettlementsTab()
             }
         }

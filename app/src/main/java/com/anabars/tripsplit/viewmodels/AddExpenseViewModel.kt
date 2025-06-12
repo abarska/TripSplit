@@ -9,6 +9,6 @@ import javax.inject.Inject
 class AddExpenseViewModel @Inject constructor(savedStateHandle: SavedStateHandle) :
     ViewModel() {
 
-    val tripId: Long = savedStateHandle.get<Long>("tripId")
+    private val tripId: Long = savedStateHandle.get<Long>("tripId")
         ?: throw IllegalStateException("Trip ID is required for AddExpenseViewModel")
 }

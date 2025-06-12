@@ -71,11 +71,8 @@
     // used in expense categories
     <string name="expense_category_transportation">Transportation</string>
     <string name="expense_category_accommodation">Accommodation</string>
-    <string name="expense_category_food_and_drinks">Food and Drinks</string>
+    <string name="expense_category_food">Food</string>
     <string name="expense_category_activities">Activities</string>
-    <string name="expense_category_shopping">Shopping</string>
-    <string name="expense_category_communication">Communication</string>
-    <string name="expense_category_service_charges">Service Charges</string>
-    <string name="expense_category_other">Other</string>
+    <string name="expense_category_miscellaneous">Miscellaneous</string>
 
 </resources>

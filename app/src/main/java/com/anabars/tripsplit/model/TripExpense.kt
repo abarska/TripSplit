@@ -27,7 +27,6 @@ import com.anabars.tripsplit.common.TripSplitConstants
 data class TripExpense(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val paidBy: String = "",
-//    @ColumnInfo val sharedWith: List<String> = emptyList(),
     @ColumnInfo val amount: Double = 0.0,
     @ColumnInfo val currency: String,
     @ColumnInfo val category: ExpenseCategory = ExpenseCategory.OTHER,

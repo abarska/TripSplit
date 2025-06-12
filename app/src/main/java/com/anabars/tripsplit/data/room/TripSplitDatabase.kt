@@ -4,13 +4,14 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.anabars.tripsplit.model.ExchangeRate
-import com.anabars.tripsplit.model.TripParticipant
+import com.anabars.tripsplit.model.ExpenseParticipantCrossRef
 import com.anabars.tripsplit.model.Trip
 import com.anabars.tripsplit.model.TripCurrency
 import com.anabars.tripsplit.model.TripExpense
+import com.anabars.tripsplit.model.TripParticipant
 
 @Database(
-    entities = [Trip::class, TripParticipant::class, TripCurrency::class, TripExpense::class, ExchangeRate::class],
+    entities = [Trip::class, TripParticipant::class, TripCurrency::class, TripExpense::class, ExchangeRate::class, ExpenseParticipantCrossRef::class],
     version = 1,
     exportSchema = false
 )

@@ -29,10 +29,11 @@ import com.anabars.tripsplit.ui.model.ExpenseCategory
 @Composable
 fun ExpenseCategoriesRadioGroup(
     selectedCategory: ExpenseCategory,
-    onCategoryChange: (ExpenseCategory) -> Unit
+    onCategoryChange: (ExpenseCategory) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
         val categories = ExpenseCategory.allExpenseCategories()

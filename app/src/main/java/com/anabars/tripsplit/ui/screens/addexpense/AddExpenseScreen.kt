@@ -16,10 +16,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.widgets.DateInputSection
 import com.anabars.tripsplit.utils.getDefaultCurrency
@@ -36,6 +38,7 @@ fun AddExpenseScreen(
 
     val viewModel: AddExpenseViewModel = hiltViewModel()
     val tripCurrencies by viewModel.tripCurrencies.collectAsState()
+    val tripParticipants by viewModel.tripParticipants.collectAsState()
 
     var selectedCategory by rememberSaveable(stateSaver = ExpenseCategory.expenseCategorySaver) {
         mutableStateOf(ExpenseCategory.Miscellaneous)
@@ -47,6 +50,8 @@ fun AddExpenseScreen(
     var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
     var expenseAmount by rememberSaveable { mutableStateOf("") }
     var expenseCurrencyCode by rememberSaveable { mutableStateOf(getDefaultCurrency()) }
+    val you = stringResource(R.string.you)
+    var expensePayer by rememberSaveable { mutableStateOf(you) }
 
     BackHandler {
         if (!sharedViewModel.handleBack()) {
@@ -71,7 +76,8 @@ fun AddExpenseScreen(
 
         ExpenseCategoriesRadioGroup(
             selectedCategory = selectedCategory,
-            onCategoryChange = onCategoryChange
+            onCategoryChange = onCategoryChange,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
         Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
@@ -85,14 +91,37 @@ fun AddExpenseScreen(
 
         Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
 
+        InfoText(textRes = R.string.currency)
+
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
+
         ExpenseCurrenciesRadioGroup(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp),
             currencies = tripCurrencies,
             expenseCurrencyCode = expenseCurrencyCode,
             onCurrencySelected = { expenseCurrencyCode = it },
         )
+
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
+
+        InfoText(textRes = R.string.expense_paid_by)
+
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
+
+        ExpensePayerRadioGroup(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            participants = tripParticipants,
+            paidBy = expensePayer,
+            onPayerSelected = { expensePayer = it },
+        )
+
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
+
+        InfoText(textRes = R.string.expense_paid_for)
+
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
     }
 }
 

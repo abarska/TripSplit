@@ -1,36 +1,36 @@
 package com.anabars.tripsplit.ui.screens.addexpense
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.anabars.tripsplit.data.room.entity.TripCurrency
+import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.listitems.TripSplitRadioButton
 
 @Composable
-fun ExpenseCurrenciesRadioGroup(
+fun ExpensePayerRadioGroup(
+    participants: List<TripParticipant>,
+    paidBy: String,
+    onPayerSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
-    currencies: List<TripCurrency>,
-    expenseCurrencyCode: String,
-    onCurrencySelected: (String) -> Unit
 ) {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-        modifier = modifier.fillMaxWidth()
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
     ) {
-        currencies.forEach { currency ->
+        participants.forEach { participant ->
             TripSplitRadioButton(
-                value = currency.code,
-                isSelected = currency.code == expenseCurrencyCode,
-                onItemClick = { onCurrencySelected(it) },
+                value = participant.name,
+                isSelected = participant.name == paidBy,
+                onItemClick = { onPayerSelected(it) },
             ) {
                 InfoText(
-                    text = currency.code,
+                    text = participant.name,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                 )
             }

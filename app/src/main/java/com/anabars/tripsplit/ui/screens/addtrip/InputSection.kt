@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.ShortInputTextField
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun InputSection(
@@ -25,7 +26,7 @@ fun InputSection(
             isError = tripNameError,
             labelRes = if (tripNameErrorMessage > 0 && tripNameError) tripNameErrorMessage else R.string.new_trip_title_hint,
             onValueChanged = onTripNameChanged,
-            modifier = modifier
+            modifier = modifier.inputWidthModifier(),
         )
     }
 }

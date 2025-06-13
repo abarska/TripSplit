@@ -26,8 +26,9 @@
 
     // used for hints
     <string name="new_trip_title_hint">Trip title:</string>
-    <string name="new_trip_tag_hint">Tag (e.g. business trip):</string>
+    <string name="new_trip_tag_hint">Tag:</string>
     <string name="participant_name_hint">Name</string>
+    <string name="enter_amount_hint">Enter amount:</string>
 
     // used for buttons
     <string name="save">Save</string>

@@ -4,7 +4,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -12,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
@@ -33,16 +33,15 @@ fun AddExpenseScreen(
 
     val viewModel: AddExpenseViewModel = hiltViewModel()
 
-    var selectedDate by rememberSaveable {
-        mutableStateOf(LocalDate.now())
-    }
-
     var selectedCategory by rememberSaveable(stateSaver = ExpenseCategory.expenseCategorySaver) {
         mutableStateOf(ExpenseCategory.Miscellaneous)
     }
     val onCategoryChange: (ExpenseCategory) -> Unit = { newCategory ->
         selectedCategory = newCategory
     }
+
+    var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
+    var expenseAmount by rememberSaveable { mutableStateOf("") }
 
     BackHandler {
         if (!sharedViewModel.handleBack()) {
@@ -53,7 +52,8 @@ fun AddExpenseScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 16.dp)
+            .padding(bottom = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CategorySection(selectedCategory = selectedCategory, onCategoryChange = onCategoryChange)
 
@@ -62,9 +62,15 @@ fun AddExpenseScreen(
         DateInputSection(
             selectedDate = selectedDate,
             onDateSelected = { selectedDate = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
+
+        AmountInputField(
+            value = expenseAmount,
+            onValueChange = { expenseAmount = it },
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
 }

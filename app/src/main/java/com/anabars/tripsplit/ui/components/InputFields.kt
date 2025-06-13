@@ -3,10 +3,12 @@ package com.anabars.tripsplit.ui.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
@@ -19,11 +21,13 @@ fun ShortInputTextField(
     @StringRes labelRes: Int = 0,
     label: String = "",
     isError: Boolean = false,
+    textStyle: TextStyle = LocalTextStyle.current,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
     onValueChanged: (String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     TextField(
-        modifier = modifier.then(modifier.inputWidthModifier()),
+        modifier = modifier,
         maxLines = 1,
         value = value,
         isError = isError,
@@ -35,12 +39,11 @@ fun ShortInputTextField(
                 isError = isError
             )
         },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Done
-        ),
+        keyboardOptions = keyboardOptions,
         keyboardActions = KeyboardActions(
             onDone = { keyboardController?.hide() }
         ),
+        textStyle = textStyle,
         onValueChange = onValueChanged
     )
 }
@@ -49,6 +52,7 @@ fun ShortInputTextField(
 @Composable
 private fun ShortInputPreview() {
     ShortInputTextField(
+        modifier = Modifier.inputWidthModifier(),
         labelRes = R.string.app_name,
         value = "placeholder"
     ) {}

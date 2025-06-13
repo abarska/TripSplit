@@ -4,9 +4,11 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -20,6 +22,7 @@ import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.widgets.DateInputSection
+import com.anabars.tripsplit.utils.getDefaultCurrency
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import java.time.LocalDate
@@ -32,6 +35,7 @@ fun AddExpenseScreen(
 ) {
 
     val viewModel: AddExpenseViewModel = hiltViewModel()
+    val tripCurrencies by viewModel.tripCurrencies.collectAsState()
 
     var selectedCategory by rememberSaveable(stateSaver = ExpenseCategory.expenseCategorySaver) {
         mutableStateOf(ExpenseCategory.Miscellaneous)
@@ -42,6 +46,7 @@ fun AddExpenseScreen(
 
     var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
     var expenseAmount by rememberSaveable { mutableStateOf("") }
+    var expenseCurrency by rememberSaveable { mutableStateOf(getDefaultCurrency()) }
 
     BackHandler {
         if (!sharedViewModel.handleBack()) {
@@ -55,7 +60,10 @@ fun AddExpenseScreen(
             .padding(bottom = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CategorySection(selectedCategory = selectedCategory, onCategoryChange = onCategoryChange)
+        ExpenseCategoriesRadioGroup(
+            selectedCategory = selectedCategory,
+            onCategoryChange = onCategoryChange
+        )
 
         Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
 
@@ -71,6 +79,17 @@ fun AddExpenseScreen(
             value = expenseAmount,
             onValueChange = { expenseAmount = it },
             modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
+
+        ExpenseCurrenciesRadioGroup(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            currencies = tripCurrencies,
+            expenseCurrency = expenseCurrency,
+            onCurrencySelected = { expenseCurrency = it },
         )
     }
 }

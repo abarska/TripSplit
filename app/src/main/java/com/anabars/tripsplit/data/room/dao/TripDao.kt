@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.entity.Trip
+import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.model.TripWithDetails
 import kotlinx.coroutines.flow.Flow
@@ -39,6 +40,9 @@ interface TripDao {
 
     @Delete
     suspend fun deleteParticipant(participant: TripParticipant)
+
+    @Query("SELECT * FROM ${TripSplitConstants.TRIP_CURRENCIES_TABLE} WHERE tripId = :tripId")
+    fun getCurrenciesByTripId(tripId: Long): Flow<List<TripCurrency>>
 
     @Transaction
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :tripId")

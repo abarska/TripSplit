@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.itemrows
+package com.anabars.tripsplit.ui.listitems
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer

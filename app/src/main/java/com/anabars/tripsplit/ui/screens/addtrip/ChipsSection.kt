@@ -21,7 +21,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.ItemRowActionButton
 import com.anabars.tripsplit.ui.components.SecondaryButton
-import com.anabars.tripsplit.ui.itemrows.TripSplitItemRow
+import com.anabars.tripsplit.ui.listitems.TripSplitItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
 
 @Composable

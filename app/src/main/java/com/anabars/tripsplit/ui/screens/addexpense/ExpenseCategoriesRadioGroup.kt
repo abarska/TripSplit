@@ -14,7 +14,7 @@ import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.widgets.ExpenseCategoryItem
 
 @Composable
-fun CategorySection(
+fun ExpenseCategoriesRadioGroup(
     selectedCategory: ExpenseCategory,
     onCategoryChange: (ExpenseCategory) -> Unit
 ) {

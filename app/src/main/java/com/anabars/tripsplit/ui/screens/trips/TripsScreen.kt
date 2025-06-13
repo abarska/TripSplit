@@ -21,7 +21,7 @@ import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.components.TripSplitFab
-import com.anabars.tripsplit.ui.itemrows.TripSplitItemRow
+import com.anabars.tripsplit.ui.listitems.TripSplitItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 import com.anabars.tripsplit.viewmodels.TripsViewModel

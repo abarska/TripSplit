@@ -15,7 +15,7 @@ import com.anabars.tripsplit.ui.listitems.TripSplitRadioButton
 fun ExpenseCurrenciesRadioGroup(
     modifier: Modifier = Modifier,
     currencies: List<TripCurrency>,
-    expenseCurrency: String,
+    expenseCurrencyCode: String,
     onCurrencySelected: (String) -> Unit
 ) {
     FlowRow(
@@ -25,7 +25,7 @@ fun ExpenseCurrenciesRadioGroup(
         currencies.forEach { currency ->
             TripSplitRadioButton(
                 value = currency.code,
-                isSelected = currency.code == expenseCurrency,
+                isSelected = currency.code == expenseCurrencyCode,
                 onItemClick = { onCurrencySelected(it) },
             ) {
                 InfoText(

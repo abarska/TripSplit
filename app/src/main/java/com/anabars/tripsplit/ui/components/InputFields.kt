@@ -23,6 +23,7 @@ fun ShortInputTextField(
     isError: Boolean = false,
     textStyle: TextStyle = LocalTextStyle.current,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+    prefix: @Composable (() -> Unit)? = null,
     onValueChanged: (String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -44,6 +45,7 @@ fun ShortInputTextField(
             onDone = { keyboardController?.hide() }
         ),
         textStyle = textStyle,
+        prefix = prefix,
         onValueChange = onValueChanged
     )
 }

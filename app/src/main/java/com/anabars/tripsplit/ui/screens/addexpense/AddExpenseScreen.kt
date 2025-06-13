@@ -46,7 +46,7 @@ fun AddExpenseScreen(
 
     var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
     var expenseAmount by rememberSaveable { mutableStateOf("") }
-    var expenseCurrency by rememberSaveable { mutableStateOf(getDefaultCurrency()) }
+    var expenseCurrencyCode by rememberSaveable { mutableStateOf(getDefaultCurrency()) }
 
     BackHandler {
         if (!sharedViewModel.handleBack()) {
@@ -75,9 +75,10 @@ fun AddExpenseScreen(
 
         Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
 
-        AmountInputField(
+        ExpenseAmountInputField(
             value = expenseAmount,
             onValueChange = { expenseAmount = it },
+            currencyPrefix = expenseCurrencyCode,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
 
@@ -88,8 +89,8 @@ fun AddExpenseScreen(
                 .fillMaxWidth()
                 .padding(16.dp),
             currencies = tripCurrencies,
-            expenseCurrency = expenseCurrency,
-            onCurrencySelected = { expenseCurrency = it },
+            expenseCurrencyCode = expenseCurrencyCode,
+            onCurrencySelected = { expenseCurrencyCode = it },
         )
     }
 }

@@ -11,11 +11,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.components.LabelText
 import com.anabars.tripsplit.ui.components.ShortInputTextField
 
 @Composable
-fun AmountInputField(
+fun ExpenseAmountInputField(
     value: String,
+    currencyPrefix: String,
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit
 ) {
@@ -36,6 +38,7 @@ fun AmountInputField(
             imeAction = ImeAction.Done
         ),
         textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.End),
+        prefix = { LabelText(text = currencyPrefix) },
         modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally)
     )
 }

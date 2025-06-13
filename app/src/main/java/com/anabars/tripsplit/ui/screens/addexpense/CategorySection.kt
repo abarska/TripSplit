@@ -34,7 +34,7 @@ fun CategorySection(
 
             if (categories != categories.last()) {
                 VerticalDivider(
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .fillMaxHeight()
                         .width(1.dp)

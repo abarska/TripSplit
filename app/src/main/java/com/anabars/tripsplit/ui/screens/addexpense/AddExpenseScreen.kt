@@ -2,7 +2,10 @@ package com.anabars.tripsplit.ui.screens.addexpense
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,12 +13,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.ui.widgets.DateInputSection
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
+import java.time.LocalDate
 
 @Composable
 fun AddExpenseScreen(
@@ -25,6 +32,11 @@ fun AddExpenseScreen(
 ) {
 
     val viewModel: AddExpenseViewModel = hiltViewModel()
+
+    var selectedDate by rememberSaveable {
+        mutableStateOf(LocalDate.now())
+    }
+
     var selectedCategory by rememberSaveable(stateSaver = ExpenseCategory.expenseCategorySaver) {
         mutableStateOf(ExpenseCategory.Miscellaneous)
     }
@@ -44,5 +56,16 @@ fun AddExpenseScreen(
             .padding(bottom = 16.dp)
     ) {
         CategorySection(selectedCategory = selectedCategory, onCategoryChange = onCategoryChange)
+
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
+
+        DateInputSection(
+            selectedDate = selectedDate,
+            onDateSelected = { selectedDate = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
     }
 }
+

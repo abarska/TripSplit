@@ -75,4 +75,6 @@
     <string name="expense_category_activities">Activities</string>
     <string name="expense_category_miscellaneous">Miscellaneous</string>
 
+    <string name="datepicker_format">dd.MM.yyyy</string>
+
 </resources>

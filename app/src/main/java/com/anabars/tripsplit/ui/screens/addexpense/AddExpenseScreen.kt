@@ -57,20 +57,21 @@ fun AddExpenseScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 16.dp),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ExpenseCategoriesRadioGroup(
-            selectedCategory = selectedCategory,
-            onCategoryChange = onCategoryChange
-        )
-
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
 
         DateInputSection(
             selectedDate = selectedDate,
             onDateSelected = { selectedDate = it },
             modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
+
+        ExpenseCategoriesRadioGroup(
+            selectedCategory = selectedCategory,
+            onCategoryChange = onCategoryChange
         )
 
         Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))

@@ -13,11 +13,11 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 
 @Composable
-fun TripSplitRadioButton(
-    value: String,
+fun <T> TripSplitRadioButton(
+    value: T,
     isSelected: Boolean,
     modifier: Modifier = Modifier,
-    onItemClick: (String) -> Unit,
+    onItemClick: (T) -> Unit,
     content: @Composable () -> Unit
 ) {
 

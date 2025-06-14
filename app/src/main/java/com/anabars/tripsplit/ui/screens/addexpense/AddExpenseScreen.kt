@@ -1,11 +1,9 @@
 package com.anabars.tripsplit.ui.screens.addexpense
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,9 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.InfoText
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.ui.widgets.DateInputSection
 import com.anabars.tripsplit.utils.getDefaultCurrency
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
@@ -48,10 +44,17 @@ fun AddExpenseScreen(
     }
 
     var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
+    val onDateSelected: (LocalDate) -> Unit = { selectedDate = it }
+
     var expenseAmount by rememberSaveable { mutableStateOf("") }
-    var expenseCurrencyCode by rememberSaveable { mutableStateOf(getDefaultCurrency()) }
+    val onExpenseAmountChanged: (String) -> Unit = { expenseAmount = it }
+
+    val expenseCurrencyCode by rememberSaveable { mutableStateOf(getDefaultCurrency()) }
+    val onCurrencySelected: (String) -> Unit = { expenseAmount = it }
+
     val you = stringResource(R.string.you)
     var expensePayer by rememberSaveable { mutableStateOf(you) }
+    val onPayerSelected: (String) -> Unit = { expensePayer = it }
 
     BackHandler {
         if (!sharedViewModel.handleBack()) {
@@ -63,65 +66,30 @@ fun AddExpenseScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
 
-        DateInputSection(
+        ExpenseDateAndCategoryCard(
             selectedDate = selectedDate,
-            onDateSelected = { selectedDate = it },
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
-
-        ExpenseCategoriesRadioGroup(
+            onDateSelected = onDateSelected,
             selectedCategory = selectedCategory,
-            onCategoryChange = onCategoryChange,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            onCategoryChange = onCategoryChange
         )
 
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
-
-        ExpenseAmountInputField(
-            value = expenseAmount,
-            onValueChange = { expenseAmount = it },
-            currencyPrefix = expenseCurrencyCode,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
-
-        InfoText(textRes = R.string.currency)
-
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
-
-        ExpenseCurrenciesRadioGroup(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            currencies = tripCurrencies,
+        ExpenseAmountAndCurrencyCard(
+            expenseAmount = expenseAmount,
             expenseCurrencyCode = expenseCurrencyCode,
-            onCurrencySelected = { expenseCurrencyCode = it },
+            tripCurrencies = tripCurrencies,
+            onExpenseAmountChanged = onExpenseAmountChanged,
+            onCurrencySelected = onCurrencySelected
         )
 
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
-
-        InfoText(textRes = R.string.expense_paid_by)
-
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
-
-        ExpensePayerRadioGroup(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            participants = tripParticipants,
-            paidBy = expensePayer,
-            onPayerSelected = { expensePayer = it },
+        ExpensePaidByAndPaidForCard(
+            tripParticipants = tripParticipants,
+            expensePayer = expensePayer,
+            onPayerSelected = onPayerSelected
         )
-
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
-
-        InfoText(textRes = R.string.expense_paid_for)
-
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
     }
 }
 

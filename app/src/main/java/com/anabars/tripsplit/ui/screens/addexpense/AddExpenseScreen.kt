@@ -45,8 +45,8 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
     var expenseAmount by rememberSaveable { mutableStateOf("") }
     val onExpenseAmountChanged: (String) -> Unit = { expenseAmount = it }
 
-    val expenseCurrencyCode by rememberSaveable { mutableStateOf(getDefaultCurrency()) }
-    val onCurrencySelected: (String) -> Unit = { expenseAmount = it }
+    var expenseCurrencyCode by rememberSaveable { mutableStateOf(getDefaultCurrency()) }
+    val onCurrencySelected: (String) -> Unit = { expenseCurrencyCode = it }
 
     val you = stringResource(R.string.you)
     var expensePayer by rememberSaveable { mutableStateOf(you) }

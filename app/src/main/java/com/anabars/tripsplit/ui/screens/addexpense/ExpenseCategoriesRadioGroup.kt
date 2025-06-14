@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,8 +22,9 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.listitems.TripSplitRadioButton
 import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.ui.widgets.LayoutType
+import com.anabars.tripsplit.ui.widgets.TripSplitRadioGroup
 
 @Composable
 fun ExpenseCategoriesRadioGroup(
@@ -55,34 +55,30 @@ fun ExpenseCategoriesRadioGroup(
             longestTextWidth.toDp().times(1.4f)
         }
 
-        categories.forEach { category ->
-            TripSplitRadioButton(
+        TripSplitRadioGroup(
+            modifier = modifier,
+            items = categories,
+            selectedItem = selectedCategory,
+            onItemSelected = onCategoryChange,
+            layout = LayoutType.Row,
+            itemWidth = if (enoughSpace) equalItemWidth else 48.dp
+        ) { category ->
+            Column(
                 modifier = Modifier
-                    .then(
-                        if (enoughSpace) Modifier.width(equalItemWidth)
-                        else Modifier.width(56.dp)
-                    ),
-                value = category,
-                isSelected = category == selectedCategory,
-                onItemClick = { onCategoryChange(category) }
+                    .fillMaxWidth()
+                    .padding(4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        modifier = Modifier.size(dimensionResource(R.dimen.icon_button_size)),
-                        imageVector = category.icon,
-                        contentDescription = stringResource(category.titleRes),
+                Icon(
+                    modifier = Modifier.size(dimensionResource(R.dimen.icon_button_size)),
+                    imageVector = category.icon,
+                    contentDescription = stringResource(category.titleRes),
+                )
+                if (enoughSpace) {
+                    Text(
+                        text = stringResource(category.titleRes),
+                        style = MaterialTheme.typography.labelLarge,
                     )
-                    if (enoughSpace) {
-                        Text(
-                            text = stringResource(category.titleRes),
-                            style = MaterialTheme.typography.labelLarge,
-                        )
-                    }
                 }
             }
         }

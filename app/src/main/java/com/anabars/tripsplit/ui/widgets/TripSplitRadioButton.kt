@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.listitems
+package com.anabars.tripsplit.ui.widgets
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding

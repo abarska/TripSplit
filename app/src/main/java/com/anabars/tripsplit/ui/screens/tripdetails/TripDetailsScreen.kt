@@ -27,11 +27,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.TripSplitTab
 
 @Composable
-fun TripDetailsScreen(
-    navController: NavController,
-    tripId: Long,
-    modifier: Modifier = Modifier
-) {
+fun TripDetailsScreen(navController: NavController, modifier: Modifier = Modifier) {
     val tabs = tripDetailsTabs()
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(1) }
 

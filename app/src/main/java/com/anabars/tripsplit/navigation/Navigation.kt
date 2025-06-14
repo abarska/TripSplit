@@ -40,11 +40,10 @@ fun AppNavGraph(
             route = AppScreens.ROUTE_ADD_EXPENSE + "/{tripId}",
             arguments = listOf(navArgument("tripId") { type = NavType.LongType })
         ) { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getLong("tripId") ?: return@composable
+            backStackEntry.arguments?.getLong("tripId") ?: return@composable
             AddExpenseScreen(
                 navController = navController,
-                sharedViewModel = sharedViewModel,
-                tripId = tripId
+                sharedViewModel = sharedViewModel
             )
         }
         composable(route = AppScreens.ROUTE_SETTINGS) {
@@ -54,8 +53,8 @@ fun AppNavGraph(
             route = AppScreens.ROUTE_TRIP_DETAILS + "/{id}",
             arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getLong("id") ?: return@composable
-            TripDetailsScreen(navController = navController, tripId = tripId)
+            backStackEntry.arguments?.getLong("id") ?: return@composable
+            TripDetailsScreen(navController = navController)
         }
     }
 }

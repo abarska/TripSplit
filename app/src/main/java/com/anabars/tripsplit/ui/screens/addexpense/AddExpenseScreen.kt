@@ -26,11 +26,7 @@ import com.anabars.tripsplit.viewmodels.SharedViewModel
 import java.time.LocalDate
 
 @Composable
-fun AddExpenseScreen(
-    tripId: Long,
-    navController: NavHostController,
-    sharedViewModel: SharedViewModel
-) {
+fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedViewModel) {
 
     val viewModel: AddExpenseViewModel = hiltViewModel()
     val tripCurrencies by viewModel.tripCurrencies.collectAsState()

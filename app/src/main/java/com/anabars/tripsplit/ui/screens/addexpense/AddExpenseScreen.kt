@@ -1,11 +1,13 @@
 package com.anabars.tripsplit.ui.screens.addexpense
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.ui.components.MainButton
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.utils.getDefaultCurrency
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
@@ -52,6 +56,21 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
     var expensePayer by rememberSaveable { mutableStateOf(you) }
     val onPayerSelected: (String) -> Unit = { expensePayer = it }
 
+    var selectedParticipants by rememberSaveable {
+        mutableStateOf(setOf<TripParticipant>())
+    }
+    val onParticipantsSelected: (Set<TripParticipant>) -> Unit = { selectedParticipants = it }
+
+    val onSaveExpense = {
+        Log.d("marysya", "AddExpenseScreen: save")
+    }
+
+    LaunchedEffect(tripParticipants) {
+        if (selectedParticipants.isEmpty() && tripParticipants.isNotEmpty()) {
+            selectedParticipants = tripParticipants.toSet()
+        }
+    }
+
     BackHandler {
         if (!sharedViewModel.handleBack()) {
             navController.popBackStack()
@@ -84,8 +103,12 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         ExpensePaidByAndPaidForCard(
             tripParticipants = tripParticipants,
             expensePayer = expensePayer,
-            onPayerSelected = onPayerSelected
+            onPayerSelected = onPayerSelected,
+            selectedParticipants = selectedParticipants,
+            onSelectionChanged = onParticipantsSelected
         )
+
+        MainButton(textRes = R.string.save) { onSaveExpense() }
     }
 }
 

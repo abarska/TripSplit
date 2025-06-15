@@ -21,11 +21,9 @@ fun <T> TripSplitRadioButton(
     content: @Composable () -> Unit
 ) {
 
-    val backgroundColor = if (isSelected) {
-        MaterialTheme.colorScheme.secondaryContainer
-    } else {
-        MaterialTheme.colorScheme.surface
-    }
+    val backgroundColor =
+        if (isSelected) MaterialTheme.colorScheme.secondaryContainer
+        else MaterialTheme.colorScheme.surface
 
     ElevatedCard(
         modifier = modifier

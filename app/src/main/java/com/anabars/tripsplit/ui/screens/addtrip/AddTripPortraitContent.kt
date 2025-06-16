@@ -1,12 +1,14 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.TsHorizontalSeparator
+import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsMainButton
 
 @Composable
@@ -25,8 +27,8 @@ fun AddTripPortraitContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
         InputSection(
             tripName = tripName,
@@ -35,27 +37,25 @@ fun AddTripPortraitContent(
             onTripNameChanged = onTripNameChanged
         )
 
-        TsHorizontalSeparator()
+        TsContentCard {
+            ChipsSection(
+                labelRes = R.string.currencies_section_header,
+                addButtonRes = R.string.add_a_currency,
+                items = currencies,
+                onAddItemButtonClick = onAddCurrencyButtonClick,
+                onDeleteItemButtonClick = onDeleteCurrency
+            )
+        }
 
-        ChipsSection(
-            labelRes = R.string.currencies_section_header,
-            addButtonRes = R.string.add_a_currency,
-            items = currencies,
-            onAddItemButtonClick = onAddCurrencyButtonClick,
-            onDeleteItemButtonClick = onDeleteCurrency
-        )
-
-        TsHorizontalSeparator()
-
-        ChipsSection(
-            labelRes = R.string.participants_section_header,
-            addButtonRes = R.string.add_a_participant,
-            items = participants,
-            onAddItemButtonClick = onAddParticipantButtonClick,
-            onDeleteItemButtonClick = onDeletedParticipant
-        )
-
-        TsHorizontalSeparator()
+        TsContentCard {
+            ChipsSection(
+                labelRes = R.string.participants_section_header,
+                addButtonRes = R.string.add_a_participant,
+                items = participants,
+                onAddItemButtonClick = onAddParticipantButtonClick,
+                onDeleteItemButtonClick = onDeletedParticipant
+            )
+        }
 
         TsMainButton(textRes = R.string.save) { onSaveTrip() }
     }

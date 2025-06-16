@@ -1,11 +1,9 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,7 +11,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsMainButton
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun AddTripLandscapeContent(
@@ -30,53 +30,47 @@ fun AddTripLandscapeContent(
     onSaveTrip: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(modifier = modifier) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            InputSection(
-                tripName = tripName,
-                tripNameError = tripNameError,
-                tripNameErrorMessage = tripNameErrorMessage,
-                onTripNameChanged = onTripNameChanged
-            )
-            Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
-            TsMainButton(textRes = R.string.save) { onSaveTrip() }
-        }
-        Spacer(Modifier.width(16.dp))
+    Column(
+        modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal)),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        InputSection(
+            modifier = modifier.inputWidthModifier(),
+            tripName = tripName,
+            tripNameError = tripNameError,
+            tripNameErrorMessage = tripNameErrorMessage,
+            onTripNameChanged = onTripNameChanged
+        )
 
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
-            ChipsSection(
-                labelRes = R.string.currencies_section_header,
-                addButtonRes = R.string.add_a_currency,
-                items = currencies,
-                onAddItemButtonClick = onAddCurrencyButtonClick,
-                onDeleteItemButtonClick = onDeleteCurrency
-            )
+            TsContentCard(modifier = Modifier.weight(1f)) {
+                ChipsSection(
+                    labelRes = R.string.currencies_section_header,
+                    addButtonRes = R.string.add_a_currency,
+                    items = currencies,
+                    onAddItemButtonClick = onAddCurrencyButtonClick,
+                    onDeleteItemButtonClick = onDeleteCurrency
+                )
+            }
+            TsContentCard(modifier = Modifier.weight(1f)) {
+                ChipsSection(
+                    labelRes = R.string.participants_section_header,
+                    addButtonRes = R.string.add_a_participant,
+                    items = participants,
+                    onAddItemButtonClick = onAddParticipantButtonClick,
+                    onDeleteItemButtonClick = onDeletedParticipant
+                )
+            }
         }
 
-        Spacer(Modifier.width(16.dp))
-
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f)
-        ) {
-            ChipsSection(
-                labelRes = R.string.participants_section_header,
-                addButtonRes = R.string.add_a_participant,
-                items = participants,
-                onAddItemButtonClick = onAddParticipantButtonClick,
-                onDeleteItemButtonClick = onDeletedParticipant
-            )
-        }
+        TsMainButton(
+            modifier = modifier.inputWidthModifier(),
+            textRes = R.string.save
+        ) { onSaveTrip() }
     }
 }
 
@@ -88,7 +82,7 @@ private fun AddTripLandscapeContentPreview() {
         tripNameError = false,
         tripNameErrorMessage = 0,
         onTripNameChanged = {},
-        participants = listOf("adam", "eve", "others"),
+        participants = listOf("harry", "hermione", "ron", "draco"),
         onAddParticipantButtonClick = {},
         onDeletedParticipant = {},
         currencies = listOf("EUR", "BGN", "RON", "UAH"),

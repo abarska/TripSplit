@@ -2,7 +2,6 @@ package com.anabars.tripsplit.ui.screens.addtrip
 
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -16,16 +15,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
 import com.anabars.tripsplit.ui.dialogs.TsUserInputDialog
 import com.anabars.tripsplit.ui.screens.AppScreens
-import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.viewmodels.AddTripViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 
@@ -216,8 +214,7 @@ fun AddTripScreen(
                     currencies = currentTripCurrencies,
                     onAddCurrencyButtonClick = onAddCurrencyButtonClick,
                     onDeleteCurrency = onDeleteCurrency,
-                    onSaveTrip = onSaveTrip,
-                    modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))
+                    onSaveTrip = onSaveTrip
                 )
             else
                 AddTripLandscapeContent(
@@ -231,8 +228,7 @@ fun AddTripScreen(
                     currencies = currentTripCurrencies,
                     onAddCurrencyButtonClick = onAddCurrencyButtonClick,
                     onDeleteCurrency = onDeleteCurrency,
-                    onSaveTrip = onSaveTrip,
-                    modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))
+                    onSaveTrip = onSaveTrip
                 )
         }
     }

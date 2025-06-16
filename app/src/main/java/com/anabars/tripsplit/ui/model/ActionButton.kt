@@ -10,5 +10,6 @@ data class ActionButton(
     val icon: ImageVector,
     val iconSize: Dp = 24.dp,
     @StringRes val contentDescriptionRes: Int = R.string.action_button,
-    val onClick: () -> Unit
+    val enabled: Boolean = true,
+    val onClick: () -> Unit = {}
 )

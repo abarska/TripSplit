@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -23,15 +24,20 @@ import com.anabars.tripsplit.ui.model.ActionButton
 fun TsItemRow(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    highlighted: Boolean = false,
     onItemClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     ElevatedCard(
-        modifier = modifier.padding(4.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(dimensionResource(R.dimen.chip_corner_radius)),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         enabled = enabled,
-        onClick = onItemClick
+        onClick = onItemClick,
+        colors =
+            if (highlighted) CardDefaults.elevatedCardColors()
+                .copy(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            else CardDefaults.elevatedCardColors()
     ) {
         content()
     }

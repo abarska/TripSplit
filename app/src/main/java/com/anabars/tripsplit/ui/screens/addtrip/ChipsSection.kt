@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,14 +18,12 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsItemRowActionButton
-import com.anabars.tripsplit.ui.components.TsSecondaryButton
 import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
 
 @Composable
 fun ChipsSection(
     @StringRes labelRes: Int,
-    @StringRes addButtonRes: Int,
     items: List<String>,
     onAddItemButtonClick: () -> Unit,
     onDeleteItemButtonClick: (String) -> Unit,
@@ -35,12 +31,12 @@ fun ChipsSection(
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_small))
     ) {
         TsInfoText(textRes = labelRes)
 
         if (items.isNotEmpty()) {
-            Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_small)),
@@ -52,20 +48,31 @@ fun ChipsSection(
                         contentDescriptionRes = R.string.delete_item,
                     ) { onDeleteItemButtonClick(value) }
                     TsItemRow {
-                        Row(modifier = Modifier.padding(8.dp)) {
+                        Row(
+                            modifier = Modifier.padding(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
                             if (items.first() != value) {
                                 TsItemRowActionButton(button)
-                                Spacer(Modifier.width(dimensionResource(R.dimen.vertical_spacer_small)))
                             }
                             TsInfoText(text = value)
                         }
                     }
                 }
+                TsItemRow(highlighted = true, onItemClick = onAddItemButtonClick) {
+                    val button = ActionButton(
+                        icon = Icons.Default.Add,
+                        contentDescriptionRes = R.string.add_item,
+                    )
+                    Row(
+                        modifier = Modifier.padding(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TsItemRowActionButton(button)
+                        TsInfoText(textRes = R.string.add)
+                    }
+                }
             }
         }
-
-        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
-
-        TsSecondaryButton(textRes = addButtonRes) { onAddItemButtonClick() }
     }
 }

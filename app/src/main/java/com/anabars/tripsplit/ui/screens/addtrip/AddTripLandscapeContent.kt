@@ -50,7 +50,6 @@ fun AddTripLandscapeContent(
             TsContentCard(modifier = Modifier.weight(1f)) {
                 ChipsSection(
                     labelRes = R.string.currencies_section_header,
-                    addButtonRes = R.string.add_a_currency,
                     items = currencies,
                     onAddItemButtonClick = onAddCurrencyButtonClick,
                     onDeleteItemButtonClick = onDeleteCurrency
@@ -59,7 +58,6 @@ fun AddTripLandscapeContent(
             TsContentCard(modifier = Modifier.weight(1f)) {
                 ChipsSection(
                     labelRes = R.string.participants_section_header,
-                    addButtonRes = R.string.add_a_participant,
                     items = participants,
                     onAddItemButtonClick = onAddParticipantButtonClick,
                     onDeleteItemButtonClick = onDeletedParticipant

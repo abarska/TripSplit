@@ -23,6 +23,7 @@
     <string name="expenses_tab_content_description">Trip Expenses</string>
     <string name="settlements_tab_content_description">Trip Settlements</string>
     <string name="expense_category_icon">Expense Category Icon</string>
+    <string name="add_item">Add item</string>
 
     // used for hints
     <string name="new_trip_title_hint">Trip title:</string>
@@ -36,7 +37,6 @@
     <string name="cancel">Cancel</string>
     <string name="discard">Discard</string>
     <string name="add_a_participant">Add a Participant</string>
-    <string name="add_a_currency">Add a Currency</string>
 
     // used for tags
     <string name="tag_business_trip">Business Trip</string>

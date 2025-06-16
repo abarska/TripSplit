@@ -32,8 +32,7 @@ fun AppNavGraph(
         composable(route = AppScreens.ROUTE_ADD_TRIP) {
             AddTripScreen(
                 navController = navController,
-                sharedViewModel = sharedViewModel,
-                modifier = modifier
+                sharedViewModel = sharedViewModel
             )
         }
         composable(

@@ -40,7 +40,6 @@ fun AddTripPortraitContent(
         TsContentCard {
             ChipsSection(
                 labelRes = R.string.currencies_section_header,
-                addButtonRes = R.string.add_a_currency,
                 items = currencies,
                 onAddItemButtonClick = onAddCurrencyButtonClick,
                 onDeleteItemButtonClick = onDeleteCurrency
@@ -50,7 +49,6 @@ fun AddTripPortraitContent(
         TsContentCard {
             ChipsSection(
                 labelRes = R.string.participants_section_header,
-                addButtonRes = R.string.add_a_participant,
                 items = participants,
                 onAddItemButtonClick = onAddParticipantButtonClick,
                 onDeleteItemButtonClick = onDeletedParticipant
@@ -69,7 +67,7 @@ private fun AddTripPortraitContentPreview() {
         tripNameError = false,
         tripNameErrorMessage = 0,
         onTripNameChanged = {},
-        participants = listOf("adam", "eve", "others"),
+        participants = listOf("harry", "hermione", "ron", "draco"),
         onAddParticipantButtonClick = {},
         onDeletedParticipant = {},
         currencies = listOf("EUR", "BGN", "RON", "UAH"),

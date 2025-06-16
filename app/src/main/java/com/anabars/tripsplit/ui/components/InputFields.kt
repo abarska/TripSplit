@@ -15,7 +15,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
-fun ShortInputTextField(
+fun TsShortInput(
     modifier: Modifier = Modifier,
     value: String,
     @StringRes labelRes: Int = 0,
@@ -33,7 +33,7 @@ fun ShortInputTextField(
         value = value,
         isError = isError,
         label = {
-            LabelText(
+            TsLabelText(
                 modifier = modifier,
                 textRes = labelRes,
                 text = label,
@@ -52,8 +52,8 @@ fun ShortInputTextField(
 
 @Preview(showBackground = true)
 @Composable
-private fun ShortInputPreview() {
-    ShortInputTextField(
+private fun TsShortInputPreview() {
+    TsShortInput(
         modifier = Modifier.inputWidthModifier(),
         labelRes = R.string.app_name,
         value = "placeholder"

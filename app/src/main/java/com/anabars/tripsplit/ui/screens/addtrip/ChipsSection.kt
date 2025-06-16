@@ -18,10 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.InfoText
-import com.anabars.tripsplit.ui.components.ItemRowActionButton
-import com.anabars.tripsplit.ui.components.SecondaryButton
-import com.anabars.tripsplit.ui.listitems.TripSplitItemRow
+import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsItemRowActionButton
+import com.anabars.tripsplit.ui.components.TsSecondaryButton
+import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
 
 @Composable
@@ -37,7 +37,7 @@ fun ChipsSection(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        InfoText(textRes = labelRes)
+        TsInfoText(textRes = labelRes)
 
         if (items.isNotEmpty()) {
             Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
@@ -51,13 +51,13 @@ fun ChipsSection(
                         icon = Icons.Default.Close,
                         contentDescriptionRes = R.string.delete_item,
                     ) { onDeleteItemButtonClick(value) }
-                    TripSplitItemRow {
+                    TsItemRow {
                         Row(modifier = Modifier.padding(8.dp)) {
                             if (items.first() != value) {
-                                ItemRowActionButton(button)
+                                TsItemRowActionButton(button)
                                 Spacer(Modifier.width(dimensionResource(R.dimen.vertical_spacer_small)))
                             }
-                            InfoText(text = value)
+                            TsInfoText(text = value)
                         }
                     }
                 }
@@ -66,6 +66,6 @@ fun ChipsSection(
 
         Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
 
-        SecondaryButton(textRes = addButtonRes) { onAddItemButtonClick() }
+        TsSecondaryButton(textRes = addButtonRes) { onAddItemButtonClick() }
     }
 }

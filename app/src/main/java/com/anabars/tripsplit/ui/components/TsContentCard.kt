@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.widgets
+package com.anabars.tripsplit.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 
 @Composable
-fun TripSplitContentCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+fun TsContentCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     OutlinedCard(
         modifier = modifier,
         shape = RoundedCornerShape(dimensionResource(R.dimen.chip_corner_radius)),

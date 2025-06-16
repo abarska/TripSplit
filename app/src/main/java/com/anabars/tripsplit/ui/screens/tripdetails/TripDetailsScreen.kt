@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.model.TripSplitTab
+import com.anabars.tripsplit.ui.model.TsTab
 
 @Composable
 fun TripDetailsScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -72,17 +72,17 @@ fun TripDetailsScreen(navController: NavController, modifier: Modifier = Modifie
 }
 
 fun tripDetailsTabs() = listOf(
-    TripSplitTab(
+    TsTab(
         icon = Icons.Outlined.Home,
         titleRes = R.string.overview_tab,
         contentDescriptionRes = R.string.overview_tab_content_description,
     ),
-    TripSplitTab(
+    TsTab(
         icon = Icons.Outlined.AttachMoney,
         titleRes = R.string.expenses_tab,
         contentDescriptionRes = R.string.expenses_tab_content_description,
     ),
-    TripSplitTab(
+    TsTab(
         icon = Icons.AutoMirrored.Outlined.CompareArrows,
         titleRes = R.string.settlements_tab,
         contentDescriptionRes = R.string.settlements_tab_content_description,

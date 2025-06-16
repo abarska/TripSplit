@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.widgets
+package com.anabars.tripsplit.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 
 @Composable
-fun <T> TripSplitCheckboxPill(
+fun <T> TsCheckboxPill(
     value: T,
     isSelected: Boolean,
     modifier: Modifier = Modifier,

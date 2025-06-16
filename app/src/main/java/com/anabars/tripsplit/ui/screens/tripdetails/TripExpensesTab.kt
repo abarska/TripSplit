@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.InfoText
-import com.anabars.tripsplit.ui.components.TripSplitFab
+import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsFab
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.TripExpensesViewModel
 
@@ -40,13 +40,13 @@ fun TripExpensesTab(
     ) {
         LazyColumn(modifier = modifier.fillMaxSize()) {
             items(expenses) { expense ->
-                InfoText(
+                TsInfoText(
                     text = "${stringResource(expense.category.titleRes)}: ${expense.amount} ${expense.currency}",
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
                 )
             }
         }
-        TripSplitFab(
+        TsFab(
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.BottomEnd),

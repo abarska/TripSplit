@@ -6,7 +6,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.ShortInputTextField
+import com.anabars.tripsplit.ui.components.TsShortInput
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
@@ -21,7 +21,7 @@ fun InputSection(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ShortInputTextField(
+        TsShortInput(
             value = tripName,
             isError = tripNameError,
             labelRes = if (tripNameErrorMessage > 0 && tripNameError) tripNameErrorMessage else R.string.new_trip_title_hint,

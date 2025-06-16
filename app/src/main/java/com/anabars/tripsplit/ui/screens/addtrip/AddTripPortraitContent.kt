@@ -6,8 +6,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.HorizontalSeparator
-import com.anabars.tripsplit.ui.components.MainButton
+import com.anabars.tripsplit.ui.components.TsHorizontalSeparator
+import com.anabars.tripsplit.ui.components.TsMainButton
 
 @Composable
 fun AddTripPortraitContent(
@@ -35,7 +35,7 @@ fun AddTripPortraitContent(
             onTripNameChanged = onTripNameChanged
         )
 
-        HorizontalSeparator()
+        TsHorizontalSeparator()
 
         ChipsSection(
             labelRes = R.string.currencies_section_header,
@@ -45,7 +45,7 @@ fun AddTripPortraitContent(
             onDeleteItemButtonClick = onDeleteCurrency
         )
 
-        HorizontalSeparator()
+        TsHorizontalSeparator()
 
         ChipsSection(
             labelRes = R.string.participants_section_header,
@@ -55,9 +55,9 @@ fun AddTripPortraitContent(
             onDeleteItemButtonClick = onDeletedParticipant
         )
 
-        HorizontalSeparator()
+        TsHorizontalSeparator()
 
-        MainButton(textRes = R.string.save) { onSaveTrip() }
+        TsMainButton(textRes = R.string.save) { onSaveTrip() }
     }
 }
 

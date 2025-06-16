@@ -11,7 +11,7 @@ import com.anabars.tripsplit.R
 
 @Preview(showBackground = true)
 @Composable
-fun HorizontalSeparator() {
+fun TsHorizontalSeparator() {
     Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
     HorizontalDivider()
     Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))

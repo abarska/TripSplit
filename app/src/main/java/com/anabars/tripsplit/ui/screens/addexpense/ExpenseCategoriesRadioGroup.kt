@@ -23,8 +23,8 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.ui.widgets.LayoutType
-import com.anabars.tripsplit.ui.widgets.TripSplitRadioGroup
+import com.anabars.tripsplit.ui.components.LayoutType
+import com.anabars.tripsplit.ui.components.TsRadioGroup
 
 @Composable
 fun ExpenseCategoriesRadioGroup(
@@ -55,7 +55,7 @@ fun ExpenseCategoriesRadioGroup(
             longestTextWidth.toDp().times(1.4f)
         }
 
-        TripSplitRadioGroup(
+        TsRadioGroup(
             modifier = modifier,
             items = categories,
             selectedItem = selectedCategory,

@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.ui.components.MainButton
+import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.utils.getDefaultCurrency
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
@@ -108,7 +108,7 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
             onSelectionChanged = onParticipantsSelected
         )
 
-        MainButton(textRes = R.string.save) { onSaveExpense() }
+        TsMainButton(textRes = R.string.save) { onSaveExpense() }
     }
 }
 

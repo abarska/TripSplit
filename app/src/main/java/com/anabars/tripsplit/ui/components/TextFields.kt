@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun LabelText(
+fun TsLabelText(
     modifier: Modifier = Modifier,
     @StringRes textRes: Int = 0,
     text: String = "",
@@ -32,7 +32,7 @@ fun LabelText(
 }
 
 @Composable
-fun InfoText(
+fun TsInfoText(
     modifier: Modifier = Modifier,
     @StringRes textRes: Int = 0,
     text: String = "",
@@ -52,24 +52,24 @@ fun InfoText(
 
 @Preview(showBackground = true)
 @Composable
-private fun LabelTextPreview() {
-    LabelText(text = "Placeholder")
+private fun TsLabelTextPreview() {
+    TsLabelText(text = "Placeholder")
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ErrorLabelTextPreview() {
-    LabelText(text = "Placeholder", isError = true)
+private fun TsErrorLabelTextPreview() {
+    TsLabelText(text = "Placeholder", isError = true)
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun InfoTextPreview() {
-    InfoText(text = "Placeholder")
+private fun TsInfoTextPreview() {
+    TsInfoText(text = "Placeholder")
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun InfoTextHeaderPreview() {
-    InfoText(text = "Placeholder", isHeader = true)
+private fun TsInfoTextHeaderPreview() {
+    TsInfoText(text = "Placeholder", isHeader = true)
 }

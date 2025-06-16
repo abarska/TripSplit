@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.MainButton
+import com.anabars.tripsplit.ui.components.TsMainButton
 
 @Composable
 fun AddTripLandscapeContent(
@@ -44,7 +44,7 @@ fun AddTripLandscapeContent(
                 onTripNameChanged = onTripNameChanged
             )
             Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_normal)))
-            MainButton(textRes = R.string.save) { onSaveTrip() }
+            TsMainButton(textRes = R.string.save) { onSaveTrip() }
         }
         Spacer(Modifier.width(16.dp))
 

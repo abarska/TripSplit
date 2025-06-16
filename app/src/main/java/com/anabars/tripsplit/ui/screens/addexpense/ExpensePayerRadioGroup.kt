@@ -5,9 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.ui.components.InfoText
-import com.anabars.tripsplit.ui.widgets.LayoutType
-import com.anabars.tripsplit.ui.widgets.TripSplitRadioGroup
+import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.LayoutType
+import com.anabars.tripsplit.ui.components.TsRadioGroup
 
 @Composable
 fun ExpensePayerRadioGroup(
@@ -18,14 +18,14 @@ fun ExpensePayerRadioGroup(
 ) {
     if (participants.isEmpty()) return
 
-    TripSplitRadioGroup(
+    TsRadioGroup(
         modifier = modifier,
         items = participants,
         selectedItem = participants.find { it.name == paidBy } ?: participants.first(),
         onItemSelected = { onPayerSelected(it.name) },
         layout = LayoutType.Flow
     ) { participant ->
-        InfoText(
+        TsInfoText(
             text = participant.name,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         )

@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.InfoText
-import com.anabars.tripsplit.ui.components.TripSplitFab
-import com.anabars.tripsplit.ui.listitems.TripSplitItemRow
+import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsFab
+import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 import com.anabars.tripsplit.viewmodels.TripsViewModel
@@ -44,11 +44,11 @@ fun TripsScreen(
         ) {
             if (trips.isNotEmpty()) {
                 items(items = trips) { trip ->
-                    TripSplitItemRow(
+                    TsItemRow(
                         modifier = modifier.inputWidthModifier(),
                         onItemClick = { navController.navigate(AppScreens.ROUTE_TRIP_DETAILS + "/${trip.id}") }
                     ) {
-                        InfoText(modifier = Modifier.padding(8.dp), text = trip.title)
+                        TsInfoText(modifier = Modifier.padding(8.dp), text = trip.title)
                     }
                     if (trip != trips.last()) {
                         Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
@@ -56,7 +56,7 @@ fun TripsScreen(
                 }
             }
         }
-        TripSplitFab(
+        TsFab(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp),

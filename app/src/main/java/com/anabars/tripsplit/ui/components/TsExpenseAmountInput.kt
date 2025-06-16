@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.widgets
+package com.anabars.tripsplit.ui.components
 
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,11 +11,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.LabelText
-import com.anabars.tripsplit.ui.components.ShortInputTextField
 
 @Composable
-fun ExpenseAmountInputField(
+fun TsExpenseAmountInput(
     value: String,
     currencyPrefix: String,
     modifier: Modifier = Modifier,
@@ -25,7 +23,7 @@ fun ExpenseAmountInputField(
     // prevent negative numbers or multiple dots, allow 1 dot and 2 digits after dot
     val regex = remember { Regex("^\\d*(\\.\\d{0,2})?\$") }
 
-    ShortInputTextField(
+    TsShortInput(
         value = value,
         labelRes = R.string.enter_amount_hint,
         onValueChanged = { newValue ->
@@ -38,7 +36,7 @@ fun ExpenseAmountInputField(
             imeAction = ImeAction.Done
         ),
         textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.End),
-        prefix = { LabelText(text = currencyPrefix) },
+        prefix = { TsLabelText(text = currencyPrefix) },
         modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally)
     )
 }

@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.widgets
+package com.anabars.tripsplit.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,7 +33,7 @@ import androidx.compose.ui.window.Dialog
 import com.anabars.tripsplit.R
 
 @Composable
-fun CurrencyPicker(
+fun TsCurrencyPicker(
     currencies: List<String>,
     expanded: MutableState<Boolean>,
     onCurrencySelected: (String) -> Unit,

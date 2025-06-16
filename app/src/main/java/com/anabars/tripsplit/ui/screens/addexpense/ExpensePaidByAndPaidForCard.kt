@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.ui.components.InfoText
-import com.anabars.tripsplit.ui.widgets.TripSplitContentCard
+import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsContentCard
 
 @Composable
 fun ExpensePaidByAndPaidForCard(
@@ -19,9 +19,9 @@ fun ExpensePaidByAndPaidForCard(
     selectedParticipants: Set<TripParticipant>,
     onSelectionChanged: (Set<TripParticipant>) -> Unit,
 ) {
-    TripSplitContentCard(modifier = modifier) {
+    TsContentCard(modifier = modifier) {
 
-        InfoText(textRes = R.string.expense_paid_by)
+        TsInfoText(textRes = R.string.expense_paid_by)
 
         ExpensePayerRadioGroup(
             modifier = Modifier
@@ -32,7 +32,7 @@ fun ExpensePaidByAndPaidForCard(
             onPayerSelected = onPayerSelected
         )
 
-        InfoText(textRes = R.string.expense_paid_for)
+        TsInfoText(textRes = R.string.expense_paid_for)
 
         ExpenseParticipantsCheckBoxGroup(
             modifier = Modifier

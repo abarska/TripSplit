@@ -22,10 +22,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
-import com.anabars.tripsplit.ui.dialogs.ConfirmationDialog
-import com.anabars.tripsplit.ui.dialogs.UserInputDialog
+import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
+import com.anabars.tripsplit.ui.dialogs.TsUserInputDialog
 import com.anabars.tripsplit.ui.screens.AppScreens
-import com.anabars.tripsplit.ui.widgets.CurrencyPicker
+import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.viewmodels.AddTripViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 
@@ -155,7 +155,7 @@ fun AddTripScreen(
     when (activeDialog) {
         ActiveDialog.CHOOSER -> {
             val expanded = remember { mutableStateOf(true) }
-            CurrencyPicker(
+            TsCurrencyPicker(
                 currencies = availableCurrencies,
                 expanded = expanded,
                 onCurrencySelected = onNewCurrency,
@@ -164,7 +164,7 @@ fun AddTripScreen(
         }
 
         ActiveDialog.USER_INPUT -> {
-            UserInputDialog(
+            TsUserInputDialog(
                 input = newParticipantName,
                 onInputChange = { newInput ->
                     newParticipantName = newInput.trimStart().replaceFirstChar { it.titlecase() }
@@ -179,7 +179,7 @@ fun AddTripScreen(
         }
 
         ActiveDialog.CONFIRMATION -> {
-            ConfirmationDialog(
+            TsConfirmationDialog(
                 onDismiss = onDismissSaveChanges,
                 onConfirm = onSaveTrip,
                 titleRes = R.string.save_changes_dialog_title,
@@ -190,7 +190,7 @@ fun AddTripScreen(
         }
 
         ActiveDialog.WARNING -> {
-            ConfirmationDialog(
+            TsConfirmationDialog(
                 onConfirm = {
                     newParticipantName = ""
                     activeDialog = ActiveDialog.USER_INPUT

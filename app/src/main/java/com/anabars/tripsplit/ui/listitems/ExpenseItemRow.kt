@@ -15,16 +15,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripExpense
-import com.anabars.tripsplit.ui.components.InfoText
+import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
-fun ExpenseItemRow(
+fun TsExpenseItemRow(
     expense: TripExpense,
     modifier: Modifier = Modifier,
 ) {
-    TripSplitItemRow(
+    TsItemRow(
         modifier = modifier.inputWidthModifier(),
         onItemClick = {}) {
         Row(
@@ -38,11 +38,11 @@ fun ExpenseItemRow(
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
-                InfoText(textRes = expense.category.titleRes)
-                InfoText(text = "${stringResource(R.string.expense_paid_by)} ${expense.paidBy}")
+                TsInfoText(textRes = expense.category.titleRes)
+                TsInfoText(text = "${stringResource(R.string.expense_paid_by)} ${expense.paidBy}")
             }
             Spacer(modifier = Modifier.width(16.dp))
-            InfoText(
+            TsInfoText(
                 text = "${expense.currency} ${expense.amount}",
                 isHeader = true
             )
@@ -52,7 +52,7 @@ fun ExpenseItemRow(
 
 @Preview(showBackground = true)
 @Composable
-private fun ExpenseItemRowPreview() {
+private fun TsExpenseItemRowPreview() {
     val data = TripExpense(
         paidBy = "Mommy",
         amount = 50.0,
@@ -61,5 +61,5 @@ private fun ExpenseItemRowPreview() {
         timestamp = System.currentTimeMillis(),
         tripId = 0
     )
-    ExpenseItemRow(expense = data)
+    TsExpenseItemRow(expense = data)
 }

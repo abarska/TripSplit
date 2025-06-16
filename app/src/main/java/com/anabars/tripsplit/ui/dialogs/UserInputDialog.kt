@@ -10,7 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
 
 @Composable
-fun UserInputDialog(
+fun TsUserInputDialog(
     input: String,
     onInputChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -26,7 +26,7 @@ fun UserInputDialog(
     negativeText: String = ""
 ) {
     val labelValue = if (labelRes != 0) stringResource(labelRes) else label
-    TripSplitDialog(
+    TsDialog(
         modifier = modifier,
         onDismiss = onDismiss,
         onConfirm = onConfirm,
@@ -48,8 +48,8 @@ fun UserInputDialog(
 
 @Preview (showBackground = true)
 @Composable
-private fun UserInputDialogPreview() {
-    UserInputDialog(
+private fun TsUserInputDialogPreview() {
+    TsUserInputDialog(
         input = "Placeholder",
         onInputChange = {},
         titleRes = R.string.add_a_participant,

@@ -15,12 +15,12 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.InfoText
-import com.anabars.tripsplit.ui.components.ItemRowActionButton
+import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsItemRowActionButton
 import com.anabars.tripsplit.ui.model.ActionButton
 
 @Composable
-fun TripSplitItemRow(
+fun TsItemRow(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onItemClick: () -> Unit = {},
@@ -39,12 +39,12 @@ fun TripSplitItemRow(
 
 @Preview(showBackground = true)
 @Composable
-private fun TripSplitItemRowPreview() {
-    TripSplitItemRow(onItemClick = {}) {
+private fun TsItemRowPreview() {
+    TsItemRow(onItemClick = {}) {
         Row(modifier = Modifier.padding(8.dp)) {
-            ItemRowActionButton(ActionButton(icon = Icons.Default.Close) {})
+            TsItemRowActionButton(ActionButton(icon = Icons.Default.Close) {})
             Spacer(modifier = Modifier.width(8.dp))
-            InfoText(text = "placeholder")
+            TsInfoText(text = "placeholder")
         }
     }
 }

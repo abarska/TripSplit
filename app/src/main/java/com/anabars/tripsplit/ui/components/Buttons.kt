@@ -32,7 +32,7 @@ import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
-fun TripSplitFab(
+fun TsFab(
     modifier: Modifier = Modifier,
     iconVector: ImageVector? = null,
     @DrawableRes iconRes: Int = 0,
@@ -68,12 +68,12 @@ fun TripSplitFab(
 
 @Preview(showBackground = true)
 @Composable
-private fun TripSplitFabPreview() {
-    TripSplitFab(iconVector = Icons.Outlined.Add) {}
+private fun TsFabPreview() {
+    TsFab(iconVector = Icons.Outlined.Add) {}
 }
 
 @Composable
-fun MainButton(
+fun TsMainButton(
     modifier: Modifier = Modifier,
     @StringRes textRes: Int = 0,
     text: String = "",
@@ -93,18 +93,18 @@ fun MainButton(
         ),
         modifier = modifier.then(Modifier.inputWidthModifier()),
     ) {
-        InfoText(textRes = textRes, text = text)
+        TsInfoText(textRes = textRes, text = text)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun MainButtonPreview() {
-    MainButton(text = "Placeholder") { }
+private fun TsMainButtonPreview() {
+    TsMainButton(text = "Placeholder") { }
 }
 
 @Composable
-fun SecondaryButton(
+fun TsSecondaryButton(
     modifier: Modifier = Modifier,
     @StringRes textRes: Int = 0,
     text: String = "",
@@ -128,18 +128,18 @@ fun SecondaryButton(
             disabledElevation = 0.dp
         )
     ) {
-        InfoText(textRes = textRes, text = text)
+        TsInfoText(textRes = textRes, text = text)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SecondaryButtonPreview() {
-    SecondaryButton(text = "Placeholder") { }
+private fun TsSecondaryButtonPreview() {
+    TsSecondaryButton(text = "Placeholder") { }
 }
 
 @Composable
-fun ItemRowActionButton(actionButton: ActionButton) {
+fun TsItemRowActionButton(actionButton: ActionButton) {
     IconButton(
         modifier = Modifier.size(actionButton.iconSize),
         onClick = actionButton.onClick
@@ -154,8 +154,8 @@ fun ItemRowActionButton(actionButton: ActionButton) {
 
 @Preview(showBackground = true)
 @Composable
-private fun ItemRowActionButtonPreview() {
-    ItemRowActionButton(
+private fun TsItemRowActionButtonPreview() {
+    TsItemRowActionButton(
         ActionButton(icon = Icons.Default.Pause) {}
     )
 }

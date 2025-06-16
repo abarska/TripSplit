@@ -6,9 +6,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripCurrency
-import com.anabars.tripsplit.ui.components.InfoText
-import com.anabars.tripsplit.ui.widgets.TripSplitContentCard
-import com.anabars.tripsplit.ui.widgets.ExpenseAmountInputField
+import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsContentCard
+import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
 
 @Composable
 fun ExpenseAmountAndCurrencyCard(
@@ -19,14 +19,14 @@ fun ExpenseAmountAndCurrencyCard(
     onExpenseAmountChanged: (String) -> Unit,
     onCurrencySelected: (String) -> Unit
 ) {
-    TripSplitContentCard(modifier = modifier) {
-        ExpenseAmountInputField(
+    TsContentCard(modifier = modifier) {
+        TsExpenseAmountInput(
             modifier = Modifier.padding(horizontal = 16.dp),
             value = expenseAmount,
             currencyPrefix = expenseCurrencyCode,
             onValueChange = onExpenseAmountChanged
         )
-        InfoText(textRes = R.string.currency)
+        TsInfoText(textRes = R.string.currency)
         ExpenseCurrenciesRadioGroup(
             modifier = Modifier.padding(horizontal = 16.dp),
             currencies = tripCurrencies,

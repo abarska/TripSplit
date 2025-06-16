@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.ui.widgets.TripSplitContentCard
-import com.anabars.tripsplit.ui.widgets.DateInputSection
+import com.anabars.tripsplit.ui.components.TsContentCard
+import com.anabars.tripsplit.ui.components.DateInputSection
 import java.time.LocalDate
 
 @Composable
@@ -17,7 +17,7 @@ fun ExpenseDateAndCategoryCard(
     selectedCategory: ExpenseCategory,
     onCategoryChange: (ExpenseCategory) -> Unit
 ) {
-    TripSplitContentCard(modifier = modifier) {
+    TsContentCard(modifier = modifier) {
         DateInputSection(
             modifier = Modifier.padding(horizontal = 16.dp),
             selectedDate = selectedDate,

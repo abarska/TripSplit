@@ -10,7 +10,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.HorizontalSeparator
+import com.anabars.tripsplit.ui.components.TsHorizontalSeparator
 import com.anabars.tripsplit.viewmodels.SettingsViewModel
 
 @Composable
@@ -34,6 +34,6 @@ fun SettingsScreen(
             onCurrencySelected = onCurrencySelected
         )
 
-        HorizontalSeparator()
+        TsHorizontalSeparator()
     }
 }

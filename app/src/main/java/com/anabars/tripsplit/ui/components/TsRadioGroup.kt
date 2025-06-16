@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.widgets
+package com.anabars.tripsplit.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.Dp
 import com.anabars.tripsplit.R
 
 @Composable
-fun <T> TripSplitRadioGroup(
+fun <T> TsRadioGroup(
     modifier: Modifier = Modifier,
     items: List<T>,
     selectedItem: T,

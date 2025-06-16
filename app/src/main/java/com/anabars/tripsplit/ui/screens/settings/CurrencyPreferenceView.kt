@@ -14,8 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.InfoText
-import com.anabars.tripsplit.ui.widgets.CurrencyPicker
+import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 
 @Composable
 fun CurrencyPreferenceView(
@@ -35,17 +35,17 @@ fun CurrencyPreferenceView(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            InfoText(textRes = labelRes, text = label)
+            TsInfoText(textRes = labelRes, text = label)
             OutlinedButton(onClick = { expanded.value = true }) {
                 Text(text = selectedCurrency)
             }
         }
-        InfoText(
+        TsInfoText(
             modifier = Modifier.fillMaxWidth(),
             textRes = summaryRes,
             text = summary
         )
-        CurrencyPicker(
+        TsCurrencyPicker(
             currencies = currencies,
             expanded = expanded,
             onCurrencySelected = onCurrencySelected

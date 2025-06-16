@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.ui.components.InfoText
-import com.anabars.tripsplit.ui.widgets.TripSplitCheckboxPill
+import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsCheckboxPill
 
 @Composable
 fun ExpenseParticipantsCheckBoxGroup(
@@ -33,12 +33,12 @@ fun ExpenseParticipantsCheckBoxGroup(
         )
     ) {
         participants.forEach { participant ->
-            TripSplitCheckboxPill(
+            TsCheckboxPill(
                 value = participant,
                 isSelected = selectedParticipants.contains(participant),
                 onItemClick = { toggleItem(participant) },
                 content = {
-                    InfoText(text = participant.name)
+                    TsInfoText(text = participant.name)
                 }
             )
         }

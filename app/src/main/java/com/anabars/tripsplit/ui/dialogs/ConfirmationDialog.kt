@@ -5,10 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.InfoText
+import com.anabars.tripsplit.ui.components.TsInfoText
 
 @Composable
-fun ConfirmationDialog(
+fun TsConfirmationDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit = {},
     onConfirm: () -> Unit = {},
@@ -21,7 +21,7 @@ fun ConfirmationDialog(
     @StringRes negativeTextRes: Int = 0,
     negativeText: String = ""
 ) {
-    TripSplitDialog(
+    TsDialog(
         modifier = modifier,
         onDismiss = onDismiss,
         onConfirm = onConfirm,
@@ -32,7 +32,7 @@ fun ConfirmationDialog(
         negativeTextRes = negativeTextRes,
         negativeText = negativeText,
     ) {
-        InfoText(
+        TsInfoText(
             textRes = questionRes,
             text = question
         )
@@ -41,8 +41,8 @@ fun ConfirmationDialog(
 
 @Preview(showBackground = true)
 @Composable
-private fun ConfirmationDialogPreview() {
-    ConfirmationDialog(
+private fun TsConfirmationDialogPreview() {
+    TsConfirmationDialog(
         titleRes = R.string.save_changes_dialog_title,
         questionRes = R.string.save_changes_dialog_question,
         positiveTextRes = R.string.save,

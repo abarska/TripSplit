@@ -7,7 +7,6 @@ import com.anabars.tripsplit.data.preferences.CurrencyPreference
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
-import com.anabars.tripsplit.utils.getDefaultCurrency
 import com.anabars.tripsplit.utils.validCurrencyCodes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +22,8 @@ class AddTripViewModel @Inject constructor(
     private val currencyPreference: CurrencyPreference
 ) : ViewModel() {
 
-    private val _localCurrency = MutableStateFlow(getDefaultCurrency())
+    private val _localCurrency = MutableStateFlow("")
+    val localCurrency: StateFlow<String> = _localCurrency.asStateFlow()
 
     private val _currencies = MutableStateFlow<List<String>>(emptyList())
     val currencies: StateFlow<List<String>> = _currencies.asStateFlow()
@@ -43,8 +43,6 @@ class AddTripViewModel @Inject constructor(
                 }
         }
     }
-
-    fun getLocalCurrency() = _localCurrency.value
 
     fun hasParticipant(name: String) = _currentTripParticipants.value.contains(name)
     fun addParticipant(name: String) = run { _currentTripParticipants.value += name }

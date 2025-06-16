@@ -136,11 +136,13 @@ fun AddTripScreen(
     }
 
     val you = stringResource(R.string.you)
-    val localCurrency = addTripViewModel.getLocalCurrency()
+    val localCurrency by addTripViewModel.localCurrency.collectAsState()
 
     LaunchedEffect(Unit) {
         if (!addTripViewModel.hasParticipant(you)) addTripViewModel.addParticipant(you)
-        if (!addTripViewModel.hasCurrency(localCurrency)) addTripViewModel.addCurrency(localCurrency)
+        if (localCurrency.isNotBlank() && !addTripViewModel.hasCurrency(localCurrency)) {
+            addTripViewModel.addCurrency(localCurrency)
+        }
         sharedViewModel.setBackHandler { handleBackNavigation() }
     }
 

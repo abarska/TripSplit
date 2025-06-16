@@ -24,7 +24,6 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.utils.getDefaultCurrency
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import java.time.LocalDate
@@ -36,6 +35,9 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
     val tripCurrencies by viewModel.tripCurrencies.collectAsState()
     val tripParticipants by viewModel.tripParticipants.collectAsState()
 
+    var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
+    val onDateSelected: (LocalDate) -> Unit = { selectedDate = it }
+
     var selectedCategory by rememberSaveable(stateSaver = ExpenseCategory.expenseCategorySaver) {
         mutableStateOf(ExpenseCategory.Miscellaneous)
     }
@@ -43,13 +45,10 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         selectedCategory = newCategory
     }
 
-    var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
-    val onDateSelected: (LocalDate) -> Unit = { selectedDate = it }
-
     var expenseAmount by rememberSaveable { mutableStateOf("") }
     val onExpenseAmountChanged: (String) -> Unit = { expenseAmount = it }
 
-    var expenseCurrencyCode by rememberSaveable { mutableStateOf(getDefaultCurrency()) }
+    var expenseCurrencyCode by rememberSaveable { mutableStateOf("") }
     val onCurrencySelected: (String) -> Unit = { expenseCurrencyCode = it }
 
     val you = stringResource(R.string.you)
@@ -68,6 +67,9 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
     LaunchedEffect(tripParticipants) {
         if (selectedParticipants.isEmpty() && tripParticipants.isNotEmpty()) {
             selectedParticipants = tripParticipants.toSet()
+        }
+        if (expenseCurrencyCode.isEmpty() && tripCurrencies.isNotEmpty()) {
+            expenseCurrencyCode = tripCurrencies.first().code
         }
     }
 

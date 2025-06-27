@@ -1,6 +1,6 @@
 [versions]
-agp = "8.9.3"
-converterMoshi = "2.9.0"
+agp = "8.11.0"
+converterMoshi = "3.0.0"
 datastorePreferences = "1.1.7"
 desugar_jdk_libs = "2.1.5"
 hiltAndroid = "2.56.2"
@@ -10,26 +10,26 @@ coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-kotlinxCoroutinesCore = "1.7.3"
-kotlinxCoroutinesAndroid = "1.7.3"
-kotlinxCoroutinesPlayServices = "1.7.3"
+kotlinxCoroutinesCore = "1.10.2"
+kotlinxCoroutinesAndroid = "1.10.2"
+kotlinxCoroutinesPlayServices = "1.10.2"
 lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
-composeBom = "2025.06.00"
+composeBom = "2025.06.01"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.9.0"
-retrofit = "2.11.0"
-roomRuntime = "2.7.1"
-uiTextGoogleFonts = "1.8.2"
+retrofit = "3.0.0"
+roomRuntime = "2.7.2"
+uiTextGoogleFonts = "1.8.3"
 ksp = "2.0.21-1.0.28"
-workRuntimeKtx = "2.10.1"
+workRuntimeKtx = "2.10.2"
 hiltCommon = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
-androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltNavigationCompose" }
-androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltNavigationCompose" }
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCommon" }
+androidx-hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hiltCommon" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
@@ -68,7 +68,7 @@ androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
+google-services = { id = "com.google.gms.google-services", version = "4.4.3" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }

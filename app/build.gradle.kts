@@ -26,10 +26,6 @@ android {
     namespace = "com.anabars.tripsplit"
     compileSdk = 35
 
-    buildFeatures {
-        buildConfig = true
-    }
-
     defaultConfig {
         applicationId = "com.anabars.tripsplit"
         minSdk = 24
@@ -61,6 +57,7 @@ android {
         jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }

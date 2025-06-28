@@ -64,7 +64,7 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         Log.d("marysya", "AddExpenseScreen: save")
     }
 
-    LaunchedEffect(tripParticipants) {
+    LaunchedEffect(tripParticipants, tripCurrencies) {
         if (selectedParticipants.isEmpty() && tripParticipants.isNotEmpty()) {
             selectedParticipants = tripParticipants.toSet()
         }

@@ -36,41 +36,39 @@ fun ChipsSection(
     ) {
         TsInfoText(textRes = labelRes)
 
-        if (items.isNotEmpty()) {
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_small)),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items.forEach { value ->
-                    val button = ActionButton(
-                        icon = Icons.Default.Close,
-                        contentDescriptionRes = R.string.delete_item,
-                    ) { onDeleteItemButtonClick(value) }
-                    TsItemRow {
-                        Row(
-                            modifier = Modifier.padding(8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            if (items.first() != value) {
-                                TsItemRowActionButton(button)
-                            }
-                            TsInfoText(text = value)
-                        }
-                    }
-                }
-                TsItemRow(highlighted = true, onItemClick = onAddItemButtonClick) {
-                    val button = ActionButton(
-                        icon = Icons.Default.Add,
-                        contentDescriptionRes = R.string.add_item,
-                    )
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_small)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            items.forEach { value ->
+                val button = ActionButton(
+                    icon = Icons.Default.Close,
+                    contentDescriptionRes = R.string.delete_item,
+                ) { onDeleteItemButtonClick(value) }
+                TsItemRow {
                     Row(
                         modifier = Modifier.padding(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        TsItemRowActionButton(button)
-                        TsInfoText(textRes = R.string.add)
+                        if (items.first() != value) {
+                            TsItemRowActionButton(button)
+                        }
+                        TsInfoText(text = value)
                     }
+                }
+            }
+            TsItemRow(highlighted = true, onItemClick = onAddItemButtonClick) {
+                val button = ActionButton(
+                    icon = Icons.Default.Add,
+                    contentDescriptionRes = R.string.add_item,
+                )
+                Row(
+                    modifier = Modifier.padding(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    TsItemRowActionButton(button)
+                    TsInfoText(textRes = R.string.add)
                 }
             }
         }

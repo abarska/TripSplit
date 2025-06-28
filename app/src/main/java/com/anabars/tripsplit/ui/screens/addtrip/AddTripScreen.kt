@@ -138,7 +138,7 @@ fun AddTripScreen(
     val you = stringResource(R.string.you)
     val localCurrency by addTripViewModel.localCurrency.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(localCurrency) {
         if (!addTripViewModel.hasParticipant(you)) addTripViewModel.addParticipant(you)
         if (localCurrency.isNotBlank() && !addTripViewModel.hasCurrency(localCurrency)) {
             addTripViewModel.addCurrency(localCurrency)

@@ -38,6 +38,7 @@ fun AddTripScreen(
     var tripNameErrorMessage by rememberSaveable { mutableIntStateOf(0) }
     var tripNameError by rememberSaveable { mutableStateOf(false) }
     var newParticipantName by rememberSaveable { mutableStateOf("") }
+    var newParticipantShare by rememberSaveable { mutableIntStateOf(1) }
     var activeDialog by rememberSaveable { mutableStateOf(ActiveDialog.NONE) }
 
     val onTripNameChanged = { input: String ->
@@ -71,6 +72,7 @@ fun AddTripScreen(
                 addTripViewModel.addParticipant(nameTrimmed)
                 activeDialog = ActiveDialog.NONE
                 newParticipantName = ""
+                newParticipantShare = 1
             }
         }
     }
@@ -81,6 +83,7 @@ fun AddTripScreen(
     val onDismissAddParticipantDialog = {
         activeDialog = ActiveDialog.NONE
         newParticipantName = ""
+        newParticipantShare = 1
     }
 
     val onAddCurrencyButtonClick = {
@@ -166,6 +169,10 @@ fun AddTripScreen(
                 input = newParticipantName,
                 onInputChange = { newInput ->
                     newParticipantName = newInput.trimStart().replaceFirstChar { it.titlecase() }
+                },
+                share = newParticipantShare,
+                onShareChange = { newShare ->
+                    newParticipantShare = newShare
                 },
                 onConfirm = { onNewParticipant() },
                 onDismiss = { onDismissAddParticipantDialog() },

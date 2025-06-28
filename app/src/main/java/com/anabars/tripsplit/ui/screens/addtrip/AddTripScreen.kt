@@ -71,8 +71,7 @@ fun AddTripScreen(
             } else {
                 addTripViewModel.addParticipant(nameTrimmed)
                 activeDialog = ActiveDialog.NONE
-                newParticipantName = ""
-                newParticipantShare = 1
+                resetNewParticipant()
             }
         }
     }
@@ -82,8 +81,7 @@ fun AddTripScreen(
 
     val onDismissAddParticipantDialog = {
         activeDialog = ActiveDialog.NONE
-        newParticipantName = ""
-        newParticipantShare = 1
+        resetNewParticipant()
     }
 
     val onAddCurrencyButtonClick = {
@@ -197,7 +195,7 @@ fun AddTripScreen(
         ActiveDialog.WARNING -> {
             TsConfirmationDialog(
                 onConfirm = {
-                    newParticipantName = ""
+                    resetNewParticipant()
                     activeDialog = ActiveDialog.USER_INPUT
                 },
                 titleRes = R.string.duplicate_name_dialog_title,
@@ -249,4 +247,9 @@ private fun navigateHome(addTripViewModel: AddTripViewModel, navController: NavC
         }
         launchSingleTop = true
     }
+}
+
+private fun resetNewParticipant() {
+    newParticipantName = ""
+    newParticipantShare = 1
 }

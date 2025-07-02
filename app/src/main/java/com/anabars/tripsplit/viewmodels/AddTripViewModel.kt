@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.preferences.CurrencyPreference
 import com.anabars.tripsplit.data.room.entity.Trip
+import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.validCurrencyCodes
@@ -28,8 +29,8 @@ class AddTripViewModel @Inject constructor(
     private val _currencies = MutableStateFlow<List<String>>(emptyList())
     val currencies: StateFlow<List<String>> = _currencies.asStateFlow()
 
-    private val _currentTripParticipants = MutableStateFlow<List<String>>(emptyList())
-    val currentTripParticipants: StateFlow<List<String>> = _currentTripParticipants
+    private val _currentTripParticipants = MutableStateFlow<List<TripParticipant>>(emptyList())
+    val currentTripParticipants: StateFlow<List<TripParticipant>> = _currentTripParticipants
 
     private val _currentTripCurrencies = MutableStateFlow<List<String>>(emptyList())
     val currentTripCurrencies: StateFlow<List<String>> = _currentTripCurrencies
@@ -44,9 +45,15 @@ class AddTripViewModel @Inject constructor(
         }
     }
 
-    fun hasParticipant(name: String) = _currentTripParticipants.value.contains(name)
-    fun addParticipant(name: String) = run { _currentTripParticipants.value += name }
-    fun removeParticipant(name: String) = run { _currentTripParticipants.value -= name }
+    fun nameAlreadyInUse(participant: TripParticipant) =
+        _currentTripParticipants.value.map { it.name }.contains(participant.name)
+
+    fun addParticipant(participant: TripParticipant) =
+        run { _currentTripParticipants.value += participant }
+
+    fun removeParticipant(participant: TripParticipant) =
+        run { _currentTripParticipants.value -= participant }
+
     private fun clearParticipants() = run { _currentTripParticipants.value = emptyList() }
 
     fun hasCurrency(code: String) = _currentTripCurrencies.value.contains(code)
@@ -54,7 +61,7 @@ class AddTripViewModel @Inject constructor(
     fun removeCurrency(code: String) = run { _currentTripCurrencies.value -= code }
     private fun clearCurrencies() = run { _currentTripCurrencies.value = emptyList() }
 
-    fun clearTempData(){
+    fun clearTempData() {
         clearParticipants()
         clearCurrencies()
     }

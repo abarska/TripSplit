@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
@@ -38,8 +39,13 @@ fun AddTripScreen(
     var tripNameErrorMessage by rememberSaveable { mutableIntStateOf(0) }
     var tripNameError by rememberSaveable { mutableStateOf(false) }
     var newParticipantName by rememberSaveable { mutableStateOf("") }
-    var newParticipantShare by rememberSaveable { mutableIntStateOf(1) }
+    var newParticipantMultiplicator by rememberSaveable { mutableIntStateOf(1) }
     var activeDialog by rememberSaveable { mutableStateOf(ActiveDialog.NONE) }
+
+    val resetNewParticipant = {
+        newParticipantName = ""
+        newParticipantMultiplicator = 1
+    }
 
     val onTripNameChanged = { input: String ->
         tripName = input.trimStart().replaceFirstChar { it.titlecase() }
@@ -66,24 +72,24 @@ fun AddTripScreen(
     val onNewParticipant = {
         val nameTrimmed = newParticipantName.trim()
         if (addTripViewModel.fieldNotEmpty(value = nameTrimmed)) {
-            if (addTripViewModel.hasParticipant(nameTrimmed)) {
+            val newParticipant =
+                TripParticipant(name = nameTrimmed, multiplicator = newParticipantMultiplicator)
+            if (addTripViewModel.nameAlreadyInUse(newParticipant)) {
                 activeDialog = ActiveDialog.WARNING
             } else {
-                addTripViewModel.addParticipant(nameTrimmed)
+                addTripViewModel.addParticipant(newParticipant)
                 activeDialog = ActiveDialog.NONE
-                newParticipantName = ""
-                newParticipantShare = 1
+                resetNewParticipant()
             }
         }
     }
-    val onDeletedParticipant = { name: String ->
-        addTripViewModel.removeParticipant(name)
+    val onDeletedParticipant = { participant: TripParticipant ->
+        addTripViewModel.removeParticipant(participant)
     }
 
     val onDismissAddParticipantDialog = {
         activeDialog = ActiveDialog.NONE
-        newParticipantName = ""
-        newParticipantShare = 1
+        resetNewParticipant()
     }
 
     val onAddCurrencyButtonClick = {
@@ -142,7 +148,8 @@ fun AddTripScreen(
     val localCurrency by addTripViewModel.localCurrency.collectAsState()
 
     LaunchedEffect(localCurrency) {
-        if (!addTripViewModel.hasParticipant(you)) addTripViewModel.addParticipant(you)
+        val mainUser = TripParticipant(name = you, multiplicator = 1)
+        if (!addTripViewModel.nameAlreadyInUse(mainUser)) addTripViewModel.addParticipant(mainUser)
         if (localCurrency.isNotBlank() && !addTripViewModel.hasCurrency(localCurrency)) {
             addTripViewModel.addCurrency(localCurrency)
         }
@@ -170,9 +177,9 @@ fun AddTripScreen(
                 onInputChange = { newInput ->
                     newParticipantName = newInput.trimStart().replaceFirstChar { it.titlecase() }
                 },
-                share = newParticipantShare,
-                onShareChange = { newShare ->
-                    newParticipantShare = newShare
+                multiplicator = newParticipantMultiplicator,
+                onMultiplicatorChange = { newMultiplicator ->
+                    newParticipantMultiplicator = newMultiplicator
                 },
                 onConfirm = { onNewParticipant() },
                 onDismiss = { onDismissAddParticipantDialog() },
@@ -197,7 +204,7 @@ fun AddTripScreen(
         ActiveDialog.WARNING -> {
             TsConfirmationDialog(
                 onConfirm = {
-                    newParticipantName = ""
+                    resetNewParticipant()
                     activeDialog = ActiveDialog.USER_INPUT
                 },
                 titleRes = R.string.duplicate_name_dialog_title,
@@ -217,7 +224,7 @@ fun AddTripScreen(
                     onTripNameChanged = onTripNameChanged,
                     participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
-                    onDeletedParticipant = onDeletedParticipant,
+                    onDeleteParticipant = onDeletedParticipant,
                     currencies = currentTripCurrencies,
                     onAddCurrencyButtonClick = onAddCurrencyButtonClick,
                     onDeleteCurrency = onDeleteCurrency,
@@ -231,7 +238,7 @@ fun AddTripScreen(
                     onTripNameChanged = onTripNameChanged,
                     participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
-                    onDeletedParticipant = onDeletedParticipant,
+                    onDeleteParticipant = onDeletedParticipant,
                     currencies = currentTripCurrencies,
                     onAddCurrencyButtonClick = onAddCurrencyButtonClick,
                     onDeleteCurrency = onDeleteCurrency,
@@ -242,11 +249,11 @@ fun AddTripScreen(
 }
 
 private fun navigateHome(addTripViewModel: AddTripViewModel, navController: NavController) {
-    addTripViewModel.clearTempData()
     navController.navigate(AppScreens.ROUTE_TRIPS) {
         popUpTo(navController.graph.startDestinationId) {
             inclusive = true
         }
         launchSingleTop = true
     }
+    addTripViewModel.clearTempData()
 }

@@ -23,15 +23,13 @@ class TripRepository @Inject constructor(
     fun getAllTrips() = tripDao.getAllTrips().flowOn(Dispatchers.IO).conflate()
 
     @Transaction
-    suspend fun saveTrip(trip: Trip, participantNames: List<String>, currencyCodes: List<String>) {
+    suspend fun saveTrip(trip: Trip, participants: List<TripParticipant>, currencyCodes: List<String>) {
         val tripId = tripDao.insertTrip(trip)
-        val participants = participantNames.map { name ->
-            TripParticipant(name = name, tripId = tripId)
-        }
+        val participantsWithTripId = participants.map { it.withTripId(tripId) }
         val currencies = currencyCodes.map { code ->
             TripCurrency(code = code, tripId = tripId)
         }
-        participantDao.insertParticipants(participants)
+        participantDao.insertParticipants(participantsWithTripId)
         currencyDao.insertCurrencies(currencies)
     }
 

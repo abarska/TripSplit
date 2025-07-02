@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsMainButton
 
@@ -17,9 +18,9 @@ fun AddTripPortraitContent(
     tripNameError: Boolean,
     tripNameErrorMessage: Int,
     onTripNameChanged: (String) -> Unit,
-    participants: List<String>,
+    participants: List<TripParticipant>,
     onAddParticipantButtonClick: () -> Unit,
-    onDeletedParticipant: (String) -> Unit,
+    onDeleteParticipant: (TripParticipant) -> Unit,
     currencies: List<String>,
     onAddCurrencyButtonClick: () -> Unit,
     onDeleteCurrency: (String) -> Unit,
@@ -42,7 +43,8 @@ fun AddTripPortraitContent(
                 labelRes = R.string.currencies_section_header,
                 items = currencies,
                 onAddItemButtonClick = onAddCurrencyButtonClick,
-                onDeleteItemButtonClick = onDeleteCurrency
+                onDeleteItemButtonClick = onDeleteCurrency,
+                itemLabel = { it }
             )
         }
 
@@ -51,7 +53,8 @@ fun AddTripPortraitContent(
                 labelRes = R.string.participants_section_header,
                 items = participants,
                 onAddItemButtonClick = onAddParticipantButtonClick,
-                onDeleteItemButtonClick = onDeletedParticipant
+                onDeleteItemButtonClick = onDeleteParticipant,
+                itemLabel = { it.chipDisplayLabel() }
             )
         }
 
@@ -67,9 +70,14 @@ private fun AddTripPortraitContentPreview() {
         tripNameError = false,
         tripNameErrorMessage = 0,
         onTripNameChanged = {},
-        participants = listOf("harry", "hermione", "ron", "draco"),
+        participants = listOf(
+            TripParticipant(name = "Harry", multiplicator = 1),
+            TripParticipant(name = "Hermione", multiplicator = 2),
+            TripParticipant(name = "Ron", multiplicator = 3),
+            TripParticipant(name = "Draco", multiplicator = 1)
+        ),
         onAddParticipantButtonClick = {},
-        onDeletedParticipant = {},
+        onDeleteParticipant = {},
         currencies = listOf("EUR", "BGN", "RON", "UAH"),
         onAddCurrencyButtonClick = {},
         onDeleteCurrency = {},

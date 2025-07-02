@@ -23,8 +23,14 @@ data class TripParticipant(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val name: String = "",
     @ColumnInfo val status: ParticipantStatus = ParticipantStatus.ACTIVE,
-    @ColumnInfo val tripId: Long
-)
+    @ColumnInfo val multiplicator: Int = 1,
+    @ColumnInfo val tripId: Long = 0L
+) {
+    fun withTripId(id: Long): TripParticipant {
+        return copy(tripId = id)
+    }
+    fun chipDisplayLabel() = "$name ($multiplicator)"
+}
 
 enum class ParticipantStatus {
     ACTIVE,

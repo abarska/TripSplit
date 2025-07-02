@@ -25,8 +25,8 @@ fun TsUserInputDialog(
     input: String,
     onInputChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    share: Int = 1,
-    onShareChange: (Int) -> Unit = {},
+    multiplicator: Int = 1,
+    onMultiplicatorChange: (Int) -> Unit = {},
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit = {},
     @StringRes titleRes: Int = 0,
@@ -70,9 +70,9 @@ fun TsUserInputDialog(
                 )
             ) {
                 TsItemRow(
-                    highlighted = share > 1,
-                    enabled = share > 1,
-                    onItemClick = { onShareChange(share - 1) }
+                    highlighted = multiplicator > 1,
+                    enabled = multiplicator > 1,
+                    onItemClick = { onMultiplicatorChange(multiplicator - 1) }
                 ) {
                     Row(
                         modifier = Modifier
@@ -84,12 +84,12 @@ fun TsUserInputDialog(
                     }
                 }
                 Text(
-                    text = stringResource(R.string.pays_for_format, share),
+                    text = stringResource(R.string.pays_for_format, multiplicator),
                     style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
                 )
                 TsItemRow(
                     highlighted = true,
-                    onItemClick = { onShareChange(share + 1) }
+                    onItemClick = { onMultiplicatorChange(multiplicator + 1) }
                 ) {
                     Row(
                         modifier = Modifier

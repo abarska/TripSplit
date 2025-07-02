@@ -22,11 +22,12 @@ import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
 
 @Composable
-fun ChipsSection(
+fun <T> ChipsSection(
     @StringRes labelRes: Int,
-    items: List<String>,
+    items: List<T>,
     onAddItemButtonClick: () -> Unit,
-    onDeleteItemButtonClick: (String) -> Unit,
+    onDeleteItemButtonClick: (T) -> Unit,
+    itemLabel: (T) -> String,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -54,7 +55,7 @@ fun ChipsSection(
                         if (items.first() != value) {
                             TsItemRowActionButton(button)
                         }
-                        TsInfoText(text = value)
+                        TsInfoText(text = itemLabel(value))
                     }
                 }
             }

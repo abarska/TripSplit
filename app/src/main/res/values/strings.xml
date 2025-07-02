@@ -38,7 +38,8 @@
     <string name="minus_one">-1</string>
     <string name="cancel">Cancel</string>
     <string name="discard">Discard</string>
-    <string name="add_a_participant">Add a Participant</string>
+    <string name="add_participant">Add Participant</string>
+    <string name="edit_participant">Edit Participant</string>
 
     // used for tags
     <string name="tag_business_trip">Business Trip</string>

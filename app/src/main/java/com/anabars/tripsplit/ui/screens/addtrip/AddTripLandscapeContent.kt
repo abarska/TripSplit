@@ -24,6 +24,7 @@ fun AddTripLandscapeContent(
     onTripNameChanged: (String) -> Unit,
     participants: List<TripParticipant>,
     onAddParticipantButtonClick: () -> Unit,
+    onEditParticipantButtonClick: (TripParticipant) -> Unit,
     onDeleteParticipant: (TripParticipant) -> Unit,
     currencies: List<String>,
     onAddCurrencyButtonClick: () -> Unit,
@@ -62,6 +63,7 @@ fun AddTripLandscapeContent(
                     labelRes = R.string.participants_section_header,
                     items = participants,
                     onAddItemButtonClick = onAddParticipantButtonClick,
+                    onItemClick = onEditParticipantButtonClick,
                     onDeleteItemButtonClick = onDeleteParticipant,
                     itemLabel = { it.chipDisplayLabel() }
                 )
@@ -90,6 +92,7 @@ private fun AddTripLandscapeContentPreview() {
             TripParticipant(name = "Draco", multiplicator = 1)
         ),
         onAddParticipantButtonClick = {},
+        onEditParticipantButtonClick = {},
         onDeleteParticipant = {},
         currencies = listOf("EUR", "BGN", "RON", "UAH"),
         onAddCurrencyButtonClick = {},

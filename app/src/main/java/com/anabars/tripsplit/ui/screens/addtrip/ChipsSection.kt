@@ -28,7 +28,8 @@ fun <T> ChipsSection(
     onAddItemButtonClick: () -> Unit,
     onDeleteItemButtonClick: (T) -> Unit,
     itemLabel: (T) -> String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onItemClick: (T) -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -47,7 +48,7 @@ fun <T> ChipsSection(
                     icon = Icons.Default.Close,
                     contentDescriptionRes = R.string.delete_item,
                 ) { onDeleteItemButtonClick(value) }
-                TsItemRow {
+                TsItemRow(onItemClick = { onItemClick(value) }) {
                     Row(
                         modifier = Modifier.padding(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)

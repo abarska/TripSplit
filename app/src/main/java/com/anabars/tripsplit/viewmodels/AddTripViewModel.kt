@@ -54,6 +54,13 @@ class AddTripViewModel @Inject constructor(
     fun removeParticipant(participant: TripParticipant) =
         run { _currentTripParticipants.value -= participant }
 
+    fun updateParticipant(index: Int, participant: TripParticipant) = run {
+        val updatedList = _currentTripParticipants.value.toMutableList().apply {
+            this[index] = participant
+        }
+        _currentTripParticipants.value = updatedList
+    }
+
     private fun clearParticipants() = run { _currentTripParticipants.value = emptyList() }
 
     fun hasCurrency(code: String) = _currentTripCurrencies.value.contains(code)

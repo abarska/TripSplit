@@ -35,16 +35,22 @@ fun AddTripScreen(
 
     val addTripViewModel: AddTripViewModel = hiltViewModel()
 
+    val currentTripParticipants by addTripViewModel.currentTripParticipants.collectAsState()
+    val currentTripCurrencies by addTripViewModel.currentTripCurrencies.collectAsState()
+    val availableCurrencies by addTripViewModel.currencies.collectAsState()
+
     var tripName by rememberSaveable { mutableStateOf("") }
     var tripNameErrorMessage by rememberSaveable { mutableIntStateOf(0) }
     var tripNameError by rememberSaveable { mutableStateOf(false) }
     var newParticipantName by rememberSaveable { mutableStateOf("") }
     var newParticipantMultiplicator by rememberSaveable { mutableIntStateOf(1) }
+    var updatedParticipantIndex by rememberSaveable { mutableIntStateOf(-1) }
     var activeDialog by rememberSaveable { mutableStateOf(ActiveDialog.NONE) }
 
-    val resetNewParticipant = {
+    val resetParticipant = {
         newParticipantName = ""
         newParticipantMultiplicator = 1
+        updatedParticipantIndex = -1
     }
 
     val onTripNameChanged = { input: String ->
@@ -69,6 +75,13 @@ fun AddTripScreen(
         activeDialog = ActiveDialog.USER_INPUT
     }
 
+    val onEditParticipantButtonClick: (TripParticipant) -> Unit = {
+        newParticipantName = it.name
+        newParticipantMultiplicator = it.multiplicator
+        updatedParticipantIndex = currentTripParticipants.indexOf(it)
+        activeDialog = ActiveDialog.USER_INPUT
+    }
+
     val onNewParticipant = {
         val nameTrimmed = newParticipantName.trim()
         if (addTripViewModel.fieldNotEmpty(value = nameTrimmed)) {
@@ -79,17 +92,29 @@ fun AddTripScreen(
             } else {
                 addTripViewModel.addParticipant(newParticipant)
                 activeDialog = ActiveDialog.NONE
-                resetNewParticipant()
+                resetParticipant()
             }
         }
     }
+
+    val onEditParticipant = {
+        val nameTrimmed = newParticipantName.trim()
+        if (addTripViewModel.fieldNotEmpty(nameTrimmed) && updatedParticipantIndex >= 0) {
+            val updatedParticipant =
+                TripParticipant(name = nameTrimmed, multiplicator = newParticipantMultiplicator)
+            addTripViewModel.updateParticipant(updatedParticipantIndex, updatedParticipant)
+            activeDialog = ActiveDialog.NONE
+            resetParticipant()
+        }
+    }
+
     val onDeletedParticipant = { participant: TripParticipant ->
         addTripViewModel.removeParticipant(participant)
     }
 
     val onDismissAddParticipantDialog = {
         activeDialog = ActiveDialog.NONE
-        resetNewParticipant()
+        resetParticipant()
     }
 
     val onAddCurrencyButtonClick = {
@@ -115,10 +140,6 @@ fun AddTripScreen(
     val onDismissSaveChanges = {
         navigateHome(addTripViewModel = addTripViewModel, navController = navController)
     }
-
-    val currentTripParticipants by addTripViewModel.currentTripParticipants.collectAsState()
-    val currentTripCurrencies by addTripViewModel.currentTripCurrencies.collectAsState()
-    val availableCurrencies by addTripViewModel.currencies.collectAsState()
 
     val hasUnsavedInput by remember(
         tripName,
@@ -181,11 +202,14 @@ fun AddTripScreen(
                 onMultiplicatorChange = { newMultiplicator ->
                     newParticipantMultiplicator = newMultiplicator
                 },
-                onConfirm = { onNewParticipant() },
+                onConfirm = {
+                    if (updatedParticipantIndex >= 0) onEditParticipant()
+                    else onNewParticipant()
+                },
                 onDismiss = { onDismissAddParticipantDialog() },
-                titleRes = R.string.add_a_participant,
+                titleRes = if (updatedParticipantIndex >= 0) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
-                positiveTextRes = R.string.add,
+                positiveTextRes = if (updatedParticipantIndex >= 0) R.string.save else R.string.add,
                 negativeTextRes = R.string.cancel
             )
         }
@@ -204,7 +228,7 @@ fun AddTripScreen(
         ActiveDialog.WARNING -> {
             TsConfirmationDialog(
                 onConfirm = {
-                    resetNewParticipant()
+                    resetParticipant()
                     activeDialog = ActiveDialog.USER_INPUT
                 },
                 titleRes = R.string.duplicate_name_dialog_title,
@@ -224,6 +248,7 @@ fun AddTripScreen(
                     onTripNameChanged = onTripNameChanged,
                     participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
+                    onEditParticipantButtonClick = onEditParticipantButtonClick,
                     onDeleteParticipant = onDeletedParticipant,
                     currencies = currentTripCurrencies,
                     onAddCurrencyButtonClick = onAddCurrencyButtonClick,
@@ -238,6 +263,7 @@ fun AddTripScreen(
                     onTripNameChanged = onTripNameChanged,
                     participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
+                    onEditParticipantButtonClick = onEditParticipantButtonClick,
                     onDeleteParticipant = onDeletedParticipant,
                     currencies = currentTripCurrencies,
                     onAddCurrencyButtonClick = onAddCurrencyButtonClick,

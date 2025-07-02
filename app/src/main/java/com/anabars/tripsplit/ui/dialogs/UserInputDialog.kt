@@ -111,7 +111,7 @@ private fun TsUserInputDialogPreview() {
     TsUserInputDialog(
         input = "Placeholder",
         onInputChange = {},
-        titleRes = R.string.add_a_participant,
+        titleRes = R.string.add_participant,
         labelRes = R.string.participant_name_hint,
         positiveTextRes = R.string.add,
         negativeTextRes = R.string.cancel

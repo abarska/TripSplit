@@ -88,6 +88,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.google.truth)
+    androidTestImplementation(libs.google.truth)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)

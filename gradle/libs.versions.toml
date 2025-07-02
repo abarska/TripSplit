@@ -20,6 +20,7 @@ materialIconsExtended = "1.7.8"
 navigationCompose = "2.9.0"
 retrofit = "3.0.0"
 roomRuntime = "2.7.2"
+truth = "1.4.4"
 uiTextGoogleFonts = "1.8.3"
 ksp = "2.0.21-1.0.28"
 workRuntimeKtx = "2.10.2"
@@ -38,6 +39,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+google-truth = { module = "com.google.truth:truth", version.ref = "truth" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
 androidx-hilt-navigation-compose-v120 = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }

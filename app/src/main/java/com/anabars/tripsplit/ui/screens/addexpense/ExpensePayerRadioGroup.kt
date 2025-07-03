@@ -12,21 +12,22 @@ import com.anabars.tripsplit.ui.components.TsRadioGroup
 @Composable
 fun ExpensePayerRadioGroup(
     participants: List<TripParticipant>,
-    paidBy: String,
-    onPayerSelected: (String) -> Unit,
+    paidBy: Long,
+    onPayerSelected: (Long) -> Unit,
     modifier: Modifier = Modifier,
+    itemLabel: (TripParticipant) -> String,
 ) {
     if (participants.isEmpty()) return
 
     TsRadioGroup(
         modifier = modifier,
         items = participants,
-        selectedItem = participants.find { it.name == paidBy } ?: participants.first(),
-        onItemSelected = { onPayerSelected(it.name) },
+        selectedItem = participants.find { it.id == paidBy } ?: participants.first(),
+        onItemSelected = { onPayerSelected(it.id) },
         layout = LayoutType.Flow
     ) { participant ->
         TsInfoText(
-            text = participant.name,
+            text = itemLabel(participant),
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         )
     }

@@ -7,15 +7,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsContentCard
+import com.anabars.tripsplit.ui.components.TsInfoText
 
 @Composable
 fun ExpensePaidByAndPaidForCard(
     modifier: Modifier = Modifier,
     tripParticipants: List<TripParticipant>,
-    expensePayer: String,
-    onPayerSelected: (String) -> Unit,
+    expensePayerId: Long,
+    onPayerSelected: (Long) -> Unit,
     selectedParticipants: Set<TripParticipant>,
     onSelectionChanged: (Set<TripParticipant>) -> Unit,
 ) {
@@ -28,8 +28,9 @@ fun ExpensePaidByAndPaidForCard(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             participants = tripParticipants,
-            paidBy = expensePayer,
-            onPayerSelected = onPayerSelected
+            paidBy = expensePayerId,
+            onPayerSelected = onPayerSelected,
+            itemLabel = { it.chipDisplayLabel() }
         )
 
         TsInfoText(textRes = R.string.expense_paid_for)

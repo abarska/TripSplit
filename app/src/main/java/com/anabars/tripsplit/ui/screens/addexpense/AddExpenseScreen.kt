@@ -10,13 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -51,9 +51,8 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
     var expenseCurrencyCode by rememberSaveable { mutableStateOf("") }
     val onCurrencySelected: (String) -> Unit = { expenseCurrencyCode = it }
 
-    val you = stringResource(R.string.you)
-    var expensePayer by rememberSaveable { mutableStateOf(you) }
-    val onPayerSelected: (String) -> Unit = { expensePayer = it }
+    var expensePayerId by rememberSaveable { mutableLongStateOf(-1L) }
+    val onPayerSelected: (Long) -> Unit = { expensePayerId = it }
 
     var selectedParticipants by rememberSaveable {
         mutableStateOf(setOf<TripParticipant>())
@@ -61,14 +60,19 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
     val onParticipantsSelected: (Set<TripParticipant>) -> Unit = { selectedParticipants = it }
 
     val onSaveExpense = {
-        Log.d("marysya", "AddExpenseScreen: save")
+        Log.d("marysya", "save paidBy = $expensePayerId")
     }
 
     LaunchedEffect(tripParticipants, tripCurrencies) {
-        if (selectedParticipants.isEmpty() && tripParticipants.isNotEmpty()) {
-            selectedParticipants = tripParticipants.toSet()
+        if (tripParticipants.isNotEmpty()) {
+            if (selectedParticipants.isEmpty()) {
+                selectedParticipants = tripParticipants.toSet()
+            }
+            if (expensePayerId == -1L) {
+                expensePayerId = tripParticipants.first().id
+            }
         }
-        if (expenseCurrencyCode.isEmpty() && tripCurrencies.isNotEmpty()) {
+        if (tripCurrencies.isNotEmpty() && expenseCurrencyCode.isEmpty()) {
             expenseCurrencyCode = tripCurrencies.first().code
         }
     }
@@ -104,7 +108,7 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
 
         ExpensePaidByAndPaidForCard(
             tripParticipants = tripParticipants,
-            expensePayer = expensePayer,
+            expensePayerId = expensePayerId,
             onPayerSelected = onPayerSelected,
             selectedParticipants = selectedParticipants,
             onSelectionChanged = onParticipantsSelected

@@ -1,7 +1,6 @@
 package com.anabars.tripsplit.ui.screens.addexpense
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -58,7 +57,14 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
     val onParticipantsSelected: (Set<TripParticipant>) -> Unit = { selectedParticipants = it }
 
     val onSaveExpense = {
-        Log.d("marysya", "save paidBy = $expensePayerId")
+        viewModel.saveExpense(
+            expenseAmount = expenseAmount,
+            expenseCurrencyCode = expenseCurrencyCode,
+            selectedCategory = selectedCategory,
+            selectedDate = selectedDate,
+            expensePayerId = expensePayerId
+        )
+        navController.popBackStack()
     }
 
     LaunchedEffect(tripParticipants, tripCurrencies) {

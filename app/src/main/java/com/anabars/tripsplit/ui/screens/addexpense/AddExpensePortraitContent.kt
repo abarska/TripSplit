@@ -32,7 +32,7 @@ fun AddExpensePortraitContent(
     onPayerSelected: (Long) -> Unit,
     selectedParticipants: Set<TripParticipant>,
     onParticipantsSelected: (Set<TripParticipant>) -> Unit,
-    onSaveExpense: () -> Int,
+    onSaveExpense: () -> Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -86,6 +86,6 @@ private fun AddExpensePortraitContentPreview() {
         onPayerSelected = {},
         selectedParticipants = getFakeTripParticipants().take(2).toSet(),
         onParticipantsSelected = {},
-        onSaveExpense = { 0 }
+        onSaveExpense = { true }
     )
 }

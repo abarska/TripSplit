@@ -39,7 +39,7 @@ fun TsExpenseItemRow(
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 TsInfoText(textRes = expense.category.titleRes)
-                TsInfoText(text = "${stringResource(R.string.expense_paid_by)} ${expense.paidBy}")
+                TsInfoText(text = "${stringResource(R.string.expense_paid_by)} placeholder")
             }
             Spacer(modifier = Modifier.width(16.dp))
             TsInfoText(
@@ -54,7 +54,7 @@ fun TsExpenseItemRow(
 @Composable
 private fun TsExpenseItemRowPreview() {
     val data = TripExpense(
-        paidBy = "Mommy",
+        paidById = 0,
         amount = 50.0,
         currency = "EUR",
         category = ExpenseCategory.Accommodation,

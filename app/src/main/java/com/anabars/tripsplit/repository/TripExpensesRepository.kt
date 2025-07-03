@@ -25,4 +25,8 @@ class TripExpensesRepository @Inject constructor(
         return tripDao.getParticipantsByTripId(tripId)
     }
 
+    suspend fun saveExpense(expense: TripExpense) {
+        return tripExpensesDao.saveExpense(expense)
+    }
+
 }

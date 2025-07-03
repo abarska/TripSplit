@@ -1,11 +1,12 @@
 package com.anabars.tripsplit.ui.screens.addexpense
 
+import android.content.res.Configuration
 import android.util.Log
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -14,15 +15,12 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
@@ -83,38 +81,51 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
-    ) {
+    val isPortrait =
+        LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+    val scrollState = rememberScrollState()
+    val modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(scrollState)
+        .padding(16.dp)
 
-        ExpenseDateAndCategoryCard(
+    if (isPortrait) {
+        AddExpensePortraitContent(
             selectedDate = selectedDate,
             onDateSelected = onDateSelected,
             selectedCategory = selectedCategory,
-            onCategoryChange = onCategoryChange
-        )
-
-        ExpenseAmountAndCurrencyCard(
+            onCategoryChange = onCategoryChange,
             expenseAmount = expenseAmount,
             expenseCurrencyCode = expenseCurrencyCode,
             tripCurrencies = tripCurrencies,
             onExpenseAmountChanged = onExpenseAmountChanged,
-            onCurrencySelected = onCurrencySelected
-        )
-
-        ExpensePaidByAndPaidForCard(
+            onCurrencySelected = onCurrencySelected,
             tripParticipants = tripParticipants,
             expensePayerId = expensePayerId,
             onPayerSelected = onPayerSelected,
             selectedParticipants = selectedParticipants,
-            onSelectionChanged = onParticipantsSelected
+            onParticipantsSelected = onParticipantsSelected,
+            onSaveExpense = onSaveExpense,
+            modifier = modifier
         )
-
-        TsMainButton(textRes = R.string.save) { onSaveExpense() }
+    } else {
+        AddExpenseLandscapeContent(
+            selectedDate = selectedDate,
+            onDateSelected = onDateSelected,
+            selectedCategory = selectedCategory,
+            onCategoryChange = onCategoryChange,
+            expenseAmount = expenseAmount,
+            expenseCurrencyCode = expenseCurrencyCode,
+            tripCurrencies = tripCurrencies,
+            onExpenseAmountChanged = onExpenseAmountChanged,
+            onCurrencySelected = onCurrencySelected,
+            tripParticipants = tripParticipants,
+            expensePayerId = expensePayerId,
+            onPayerSelected = onPayerSelected,
+            selectedParticipants = selectedParticipants,
+            onParticipantsSelected = onParticipantsSelected,
+            onSaveExpense = onSaveExpense,
+            modifier = modifier
+        )
     }
 }
-

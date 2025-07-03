@@ -14,6 +14,8 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsMainButton
+import com.anabars.tripsplit.ui.utils.getFakeTripCurrencies
+import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
@@ -81,20 +83,15 @@ fun AddTripLandscapeContent(
 @Composable
 private fun AddTripLandscapeContentPreview() {
     AddTripLandscapeContent(
-        tripName = "trip name",
+        tripName = "placeholder",
         tripNameError = false,
         tripNameErrorMessage = 0,
         onTripNameChanged = {},
-        participants = listOf(
-            TripParticipant(name = "Harry", multiplicator = 1),
-            TripParticipant(name = "Hermione", multiplicator = 2),
-            TripParticipant(name = "Ron", multiplicator = 3),
-            TripParticipant(name = "Draco", multiplicator = 1)
-        ),
+        participants = getFakeTripParticipants(),
         onAddParticipantButtonClick = {},
         onEditParticipantButtonClick = {},
         onDeleteParticipant = {},
-        currencies = listOf("EUR", "BGN", "RON", "UAH"),
+        currencies = getFakeTripCurrencies().map{it.code},
         onAddCurrencyButtonClick = {},
         onDeleteCurrency = {},
         onSaveTrip = {}

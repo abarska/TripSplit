@@ -9,15 +9,14 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.model.AddExpenseUiState
 
 @Composable
 fun ExpensePaidByAndPaidForCard(
-    modifier: Modifier = Modifier,
-    tripParticipants: List<TripParticipant>,
-    expensePayerId: Long,
+    uiState: AddExpenseUiState,
     onPayerSelected: (Long) -> Unit,
-    selectedParticipants: Set<TripParticipant>,
     onSelectionChanged: (Set<TripParticipant>) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     TsContentCard(modifier = modifier) {
 
@@ -27,8 +26,8 @@ fun ExpensePaidByAndPaidForCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            participants = tripParticipants,
-            paidBy = expensePayerId,
+            participants = uiState.tripParticipants,
+            paidBy = uiState.expensePayerId,
             onPayerSelected = onPayerSelected,
             itemLabel = { it.chipDisplayLabel() }
         )
@@ -39,8 +38,8 @@ fun ExpensePaidByAndPaidForCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            participants = tripParticipants,
-            selectedParticipants = selectedParticipants,
+            participants = uiState.tripParticipants,
+            selectedParticipants = uiState.selectedParticipants,
             onSelectionChanged = onSelectionChanged
         )
     }

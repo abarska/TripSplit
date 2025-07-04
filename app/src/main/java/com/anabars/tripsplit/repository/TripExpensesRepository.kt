@@ -17,11 +17,11 @@ class TripExpensesRepository @Inject constructor(
         return tripExpensesDao.getExpensesByTripId(tripId)
     }
 
-    fun getCurrenciesByTrip(tripId: Long): Flow<List<TripCurrency>> {
+    fun getCurrenciesByTripId(tripId: Long): Flow<List<TripCurrency>> {
         return tripDao.getCurrenciesByTripId(tripId)
     }
 
-    fun getParticipantsByTrip(tripId: Long): Flow<List<TripParticipant>> {
+    fun getParticipantsByTripId(tripId: Long): Flow<List<TripParticipant>> {
         return tripDao.getParticipantsByTripId(tripId)
     }
 

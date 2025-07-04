@@ -29,7 +29,7 @@ import com.anabars.tripsplit.ui.components.TsRadioGroup
 @Composable
 fun ExpenseCategoriesRadioGroup(
     selectedCategory: ExpenseCategory,
-    onCategoryChange: (ExpenseCategory) -> Unit,
+    onCategoryChanged: (ExpenseCategory) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -59,7 +59,7 @@ fun ExpenseCategoriesRadioGroup(
             modifier = modifier,
             items = categories,
             selectedItem = selectedCategory,
-            onItemSelected = onCategoryChange,
+            onItemSelected = onCategoryChanged,
             layout = LayoutType.Row,
             itemWidth = if (enoughSpace) equalItemWidth else 48.dp
         ) { category ->

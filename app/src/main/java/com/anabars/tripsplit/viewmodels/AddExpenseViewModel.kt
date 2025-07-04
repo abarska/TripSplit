@@ -1,20 +1,22 @@
 package com.anabars.tripsplit.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripExpensesRepository
+import com.anabars.tripsplit.ui.model.AddExpenseUiState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,44 +25,51 @@ class AddExpenseViewModel @Inject constructor(
     val tripExpensesRepository: TripExpensesRepository
 ) :
     ViewModel() {
-    fun saveExpense(
-        expenseAmount: String,
-        expenseCurrencyCode: String,
-        selectedCategory: ExpenseCategory,
-        selectedDate: LocalDate,
-        expensePayerId: Long
-    ) {
-        viewModelScope.launch {
-            val timestamp = selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
-                .toEpochMilli()
-            val expense = TripExpense(
-                paidById = expensePayerId,
-                amount = expenseAmount.toDouble(),
-                currency = expenseCurrencyCode,
-                category = selectedCategory,
-                timestamp = timestamp,
-                tripId = tripId
-            )
-            tripExpensesRepository.saveExpense(expense)
-        }
-    }
 
     private val tripId: Long = savedStateHandle.get<Long>("tripId")
         ?: throw IllegalStateException("Trip ID is required for AddExpenseViewModel")
 
-    val tripCurrencies: StateFlow<List<TripCurrency>> =
-        tripExpensesRepository.getCurrenciesByTrip(tripId)
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5000),
-                emptyList()
-            )
+    private val _uiState = MutableStateFlow(AddExpenseUiState())
+    val uiState: StateFlow<AddExpenseUiState> = _uiState.asStateFlow()
 
-    val tripParticipants: StateFlow<List<TripParticipant>> =
-        tripExpensesRepository.getParticipantsByTrip(tripId)
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5000),
-                emptyList()
-            )
+    init {
+        viewModelScope.launch {
+            try {
+                val participants = tripExpensesRepository.getParticipantsByTripId(tripId).first()
+                val currencies = tripExpensesRepository.getCurrenciesByTripId(tripId).first()
+
+                val initialSelectedParticipants = participants.toSet()
+                val initialPayerId = participants.firstOrNull()?.id
+                val initialCurrencyCode = currencies.firstOrNull()?.code
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        tripParticipants = participants,
+                        tripCurrencies = currencies,
+                        selectedParticipants = initialSelectedParticipants,
+                        expensePayerId = initialPayerId ?: currentState.expensePayerId,
+                        expenseCurrencyCode = initialCurrencyCode
+                            ?: currentState.expenseCurrencyCode
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("marysya", "Error loading initial data: $e")
+            }
+        }
+    }
+
+
+    fun updateDate(date: LocalDate) = _uiState.update { it.copy(selectedDate = date) }
+    fun updateCategory(cat: ExpenseCategory) = _uiState.update { it.copy(selectedCategory = cat) }
+    fun updateExpenseAmount(amount: String) = _uiState.update { it.copy(expenseAmount = amount) }
+    fun updateCurrencyCode(code: String) = _uiState.update { it.copy(expenseCurrencyCode = code) }
+    fun updatePayerId(id: Long) = _uiState.update { it.copy(expensePayerId = id) }
+    fun updateSelectedParticipants(participants: Set<TripParticipant>) =
+        _uiState.update { it.copy(selectedParticipants = participants) }
+
+    fun saveExpense() {
+        viewModelScope.launch {
+            tripExpensesRepository.saveExpense(TripExpense.fromUiState(uiState.value, tripId))
+        }
+    }
 }

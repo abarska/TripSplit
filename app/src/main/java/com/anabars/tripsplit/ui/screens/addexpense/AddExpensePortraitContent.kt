@@ -8,29 +8,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
+import com.anabars.tripsplit.ui.model.AddExpenseUiState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.ui.utils.getFakeTripCurrencies
-import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
+import com.anabars.tripsplit.ui.utils.getFakeAddExpenseUiState
 import java.time.LocalDate
 
 @Composable
 fun AddExpensePortraitContent(
-    selectedDate: LocalDate,
+    uiState: AddExpenseUiState,
     onDateSelected: (LocalDate) -> Unit,
-    selectedCategory: ExpenseCategory,
     onCategoryChange: (ExpenseCategory) -> Unit,
-    expenseAmount: String,
-    expenseCurrencyCode: String,
-    tripCurrencies: List<TripCurrency>,
     onExpenseAmountChanged: (String) -> Unit,
     onCurrencySelected: (String) -> Unit,
-    tripParticipants: List<TripParticipant>,
-    expensePayerId: Long,
     onPayerSelected: (Long) -> Unit,
-    selectedParticipants: Set<TripParticipant>,
     onParticipantsSelected: (Set<TripParticipant>) -> Unit,
     onSaveExpense: () -> Boolean,
     modifier: Modifier = Modifier
@@ -42,25 +34,20 @@ fun AddExpensePortraitContent(
     ) {
 
         ExpenseDateAndCategoryCard(
-            selectedDate = selectedDate,
+            uiState = uiState,
             onDateSelected = onDateSelected,
-            selectedCategory = selectedCategory,
-            onCategoryChange = onCategoryChange
+            onCategoryChanged = onCategoryChange
         )
 
         ExpenseAmountAndCurrencyCard(
-            expenseAmount = expenseAmount,
-            expenseCurrencyCode = expenseCurrencyCode,
-            tripCurrencies = tripCurrencies,
+            uiState = uiState,
             onExpenseAmountChanged = onExpenseAmountChanged,
             onCurrencySelected = onCurrencySelected
         )
 
         ExpensePaidByAndPaidForCard(
-            tripParticipants = tripParticipants,
-            expensePayerId = expensePayerId,
+            uiState = uiState,
             onPayerSelected = onPayerSelected,
-            selectedParticipants = selectedParticipants,
             onSelectionChanged = onParticipantsSelected
         )
 
@@ -72,19 +59,12 @@ fun AddExpensePortraitContent(
 @Composable
 private fun AddExpensePortraitContentPreview() {
     AddExpensePortraitContent(
-        selectedDate = LocalDate.now(),
+        uiState = getFakeAddExpenseUiState(),
         onDateSelected = {},
-        selectedCategory = ExpenseCategory.Miscellaneous,
         onCategoryChange = {},
-        expenseAmount = "100.00",
-        expenseCurrencyCode = getFakeTripCurrencies().first().code,
-        tripCurrencies = getFakeTripCurrencies(),
         onExpenseAmountChanged = {},
         onCurrencySelected = {},
-        tripParticipants = getFakeTripParticipants(),
-        expensePayerId = -1,
         onPayerSelected = {},
-        selectedParticipants = getFakeTripParticipants().take(2).toSet(),
         onParticipantsSelected = {},
         onSaveExpense = { true }
     )

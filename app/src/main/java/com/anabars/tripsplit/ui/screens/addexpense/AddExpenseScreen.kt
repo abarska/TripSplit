@@ -7,13 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -29,56 +24,19 @@ import java.time.LocalDate
 fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedViewModel) {
 
     val viewModel: AddExpenseViewModel = hiltViewModel()
-    val tripCurrencies by viewModel.tripCurrencies.collectAsState()
-    val tripParticipants by viewModel.tripParticipants.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
-    val onDateSelected: (LocalDate) -> Unit = { selectedDate = it }
-
-    var selectedCategory by rememberSaveable(stateSaver = ExpenseCategory.expenseCategorySaver) {
-        mutableStateOf(ExpenseCategory.Miscellaneous)
+    val onDateSelected: (LocalDate) -> Unit = { viewModel.updateDate(it) }
+    val onCategoryChanged: (ExpenseCategory) -> Unit = { viewModel.updateCategory(it) }
+    val onExpenseAmountChanged: (String) -> Unit = { viewModel.updateExpenseAmount(it) }
+    val onCurrencySelected: (String) -> Unit = { viewModel.updateCurrencyCode(it) }
+    val onPayerSelected: (Long) -> Unit = { viewModel.updatePayerId(it) }
+    val onParticipantsSelected: (Set<TripParticipant>) -> Unit = {
+        viewModel.updateSelectedParticipants(it)
     }
-    val onCategoryChange: (ExpenseCategory) -> Unit = { newCategory ->
-        selectedCategory = newCategory
-    }
-
-    var expenseAmount by rememberSaveable { mutableStateOf("") }
-    val onExpenseAmountChanged: (String) -> Unit = { expenseAmount = it }
-
-    var expenseCurrencyCode by rememberSaveable { mutableStateOf("") }
-    val onCurrencySelected: (String) -> Unit = { expenseCurrencyCode = it }
-
-    var expensePayerId by rememberSaveable { mutableLongStateOf(-1L) }
-    val onPayerSelected: (Long) -> Unit = { expensePayerId = it }
-
-    var selectedParticipants by rememberSaveable {
-        mutableStateOf(setOf<TripParticipant>())
-    }
-    val onParticipantsSelected: (Set<TripParticipant>) -> Unit = { selectedParticipants = it }
-
     val onSaveExpense = {
-        viewModel.saveExpense(
-            expenseAmount = expenseAmount,
-            expenseCurrencyCode = expenseCurrencyCode,
-            selectedCategory = selectedCategory,
-            selectedDate = selectedDate,
-            expensePayerId = expensePayerId
-        )
+        viewModel.saveExpense()
         navController.popBackStack()
-    }
-
-    LaunchedEffect(tripParticipants, tripCurrencies) {
-        if (tripParticipants.isNotEmpty()) {
-            if (selectedParticipants.isEmpty()) {
-                selectedParticipants = tripParticipants.toSet()
-            }
-            if (expensePayerId == -1L) {
-                expensePayerId = tripParticipants.first().id
-            }
-        }
-        if (tripCurrencies.isNotEmpty() && expenseCurrencyCode.isEmpty()) {
-            expenseCurrencyCode = tripCurrencies.first().code
-        }
     }
 
     BackHandler {
@@ -97,38 +55,24 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
 
     if (isPortrait) {
         AddExpensePortraitContent(
-            selectedDate = selectedDate,
+            uiState = uiState,
             onDateSelected = onDateSelected,
-            selectedCategory = selectedCategory,
-            onCategoryChange = onCategoryChange,
-            expenseAmount = expenseAmount,
-            expenseCurrencyCode = expenseCurrencyCode,
-            tripCurrencies = tripCurrencies,
+            onCategoryChange = onCategoryChanged,
             onExpenseAmountChanged = onExpenseAmountChanged,
             onCurrencySelected = onCurrencySelected,
-            tripParticipants = tripParticipants,
-            expensePayerId = expensePayerId,
             onPayerSelected = onPayerSelected,
-            selectedParticipants = selectedParticipants,
             onParticipantsSelected = onParticipantsSelected,
             onSaveExpense = onSaveExpense,
             modifier = modifier
         )
     } else {
         AddExpenseLandscapeContent(
-            selectedDate = selectedDate,
+            uiState = uiState,
             onDateSelected = onDateSelected,
-            selectedCategory = selectedCategory,
-            onCategoryChange = onCategoryChange,
-            expenseAmount = expenseAmount,
-            expenseCurrencyCode = expenseCurrencyCode,
-            tripCurrencies = tripCurrencies,
+            onCategoryChange = onCategoryChanged,
             onExpenseAmountChanged = onExpenseAmountChanged,
             onCurrencySelected = onCurrencySelected,
-            tripParticipants = tripParticipants,
-            expensePayerId = expensePayerId,
             onPayerSelected = onPayerSelected,
-            selectedParticipants = selectedParticipants,
             onParticipantsSelected = onParticipantsSelected,
             onSaveExpense = onSaveExpense,
             modifier = modifier

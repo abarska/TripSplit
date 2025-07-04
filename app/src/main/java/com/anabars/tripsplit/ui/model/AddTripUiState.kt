@@ -1,5 +1,6 @@
 package com.anabars.tripsplit.ui.model
 
+import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 
 data class AddTripUiState(
@@ -11,3 +12,22 @@ data class AddTripUiState(
     val updatedParticipantIndex: Int = -1,
     val activeDialog: ActiveDialog = ActiveDialog.NONE,
 )
+
+sealed class AddTripEvent {
+    data class TripNameChanged(val name: String) : AddTripEvent()
+    data class NewParticipantNameChanged(val name: String) : AddTripEvent()
+    data class NewParticipantMultiplicatorChanged(val multiplicator: Int) : AddTripEvent()
+    data class ParticipantEditRequested(val participant: TripParticipant) : AddTripEvent()
+    data class ParticipantDeleted(val participant: TripParticipant) : AddTripEvent()
+    data class CurrencyAdded(val code: String) : AddTripEvent()
+    data class CurrencyDeleted(val code: String) : AddTripEvent()
+    object AddCurrencyClicked : AddTripEvent()
+    object DismissCurrencyDialog : AddTripEvent()
+    object SaveChangesDismissed : AddTripEvent()
+    object WarningDialogConfirmed : AddTripEvent()
+    object AddParticipantClicked : AddTripEvent()
+    object DismissAddParticipantDialog : AddTripEvent()
+    object SaveTripClicked : AddTripEvent()
+    object NewParticipantSaved : AddTripEvent()
+    object ExistingParticipantEdited : AddTripEvent()
+}

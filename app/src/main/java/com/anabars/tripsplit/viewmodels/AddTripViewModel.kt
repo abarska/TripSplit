@@ -8,6 +8,7 @@ import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
+import com.anabars.tripsplit.ui.model.AddTripEvent
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.validCurrencyCodes
@@ -109,15 +110,36 @@ class AddTripViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(newParticipantName = newParticipantName)
     }
 
-    fun updateNewParticipantMultiplicator(multiplicator: Int){
+    fun updateNewParticipantMultiplicator(multiplicator: Int) {
         _uiState.value = _uiState.value.copy(newParticipantMultiplicator = multiplicator)
     }
 
-    fun updateParticipantIndex(index: Int){
+    fun updateParticipantIndex(index: Int) {
         _uiState.value = _uiState.value.copy(updatedParticipantIndex = index)
     }
 
-    fun updateActiveDialog(dialog: ActiveDialog){
+    fun updateActiveDialog(dialog: ActiveDialog) {
         _uiState.value = _uiState.value.copy(activeDialog = dialog)
+    }
+
+    fun onEvent(event: AddTripEvent) {
+        when (event) {
+            is AddTripEvent.AddParticipantClicked -> TODO()
+            is AddTripEvent.CurrencyAdded -> TODO()
+            is AddTripEvent.CurrencyDeleted -> TODO()
+            is AddTripEvent.NewParticipantMultiplicatorChanged -> TODO()
+            is AddTripEvent.NewParticipantNameChanged -> TODO()
+            is AddTripEvent.ParticipantDeleted -> TODO()
+            is AddTripEvent.ParticipantEditRequested -> TODO()
+            is AddTripEvent.TripNameChanged -> TODO()
+            AddTripEvent.AddCurrencyClicked -> TODO()
+            AddTripEvent.DismissAddParticipantDialog -> TODO()
+            AddTripEvent.DismissCurrencyDialog -> TODO()
+            AddTripEvent.ExistingParticipantEdited -> TODO()
+            AddTripEvent.NewParticipantSaved -> TODO()
+            AddTripEvent.SaveChangesDismissed -> TODO()
+            AddTripEvent.SaveTripClicked -> TODO()
+            AddTripEvent.WarningDialogConfirmed -> TODO()
+        }
     }
 }

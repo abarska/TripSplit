@@ -130,15 +130,16 @@ class AddTripViewModel @Inject constructor(
                 updateTripNameError(false)
             }
 
+            is AddTripEvent.NewParticipantNameChanged -> {
+                updateNewParticipantName(event.name)
+            }
+
             is AddTripEvent.AddParticipantClicked -> TODO()
             is AddTripEvent.CurrencyAdded -> TODO()
             is AddTripEvent.CurrencyDeleted -> TODO()
             is AddTripEvent.NewParticipantMultiplicatorChanged -> TODO()
-            is AddTripEvent.NewParticipantNameChanged -> TODO()
             is AddTripEvent.ParticipantDeleted -> TODO()
             is AddTripEvent.ParticipantEditRequested -> TODO()
-
-
             AddTripEvent.AddCurrencyClicked -> TODO()
             AddTripEvent.DismissAddParticipantDialog -> TODO()
             AddTripEvent.DismissCurrencyDialog -> TODO()

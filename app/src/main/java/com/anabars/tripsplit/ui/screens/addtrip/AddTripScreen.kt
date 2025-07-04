@@ -189,7 +189,7 @@ fun AddTripScreen(
         ActiveDialog.USER_INPUT -> {
             TsUserInputDialog(
                 uiState = uiState,
-                onInputChange = { newInput -> viewModel.updateNewParticipantName(newInput) },
+                onInputChange = { viewModel.onEvent(AddTripEvent.NewParticipantNameChanged(it)) },
                 onMultiplicatorChange = { newMultiplicator ->
                     viewModel.updateNewParticipantMultiplicator(newMultiplicator)
                 },

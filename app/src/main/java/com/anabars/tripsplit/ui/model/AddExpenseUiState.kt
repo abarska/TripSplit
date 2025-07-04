@@ -14,3 +14,12 @@ data class AddExpenseUiState (
     val expensePayerId: Long = -1L,
     val selectedParticipants: Set<TripParticipant> = emptySet()
 )
+
+sealed class AddExpenseEvent {
+    data class DateSelected(val date: LocalDate) : AddExpenseEvent()
+    data class CategoryChanged(val category: ExpenseCategory) : AddExpenseEvent()
+    data class AmountChanged(val amount: String) : AddExpenseEvent()
+    data class CurrencySelected(val code: String) : AddExpenseEvent()
+    data class PayerSelected(val id: Long) : AddExpenseEvent()
+    data class ParticipantsSelected(val participants: Set<TripParticipant>) : AddExpenseEvent()
+}

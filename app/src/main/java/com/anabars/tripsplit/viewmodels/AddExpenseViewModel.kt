@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripExpensesRepository
+import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.ui.model.AddExpenseUiState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,13 +59,33 @@ class AddExpenseViewModel @Inject constructor(
         }
     }
 
+    fun onEvent(event: AddExpenseEvent) {
+        when (event) {
+            is AddExpenseEvent.DateSelected -> updateDate(event.date)
+            is AddExpenseEvent.CategoryChanged -> updateCategory(event.category)
+            is AddExpenseEvent.AmountChanged -> updateExpenseAmount(event.amount)
+            is AddExpenseEvent.CurrencySelected -> updateCurrencyCode(event.code)
+            is AddExpenseEvent.PayerSelected -> updatePayerId(event.id)
+            is AddExpenseEvent.ParticipantsSelected -> updateSelectedParticipants(event.participants)
+        }
+    }
 
-    fun updateDate(date: LocalDate) = _uiState.update { it.copy(selectedDate = date) }
-    fun updateCategory(cat: ExpenseCategory) = _uiState.update { it.copy(selectedCategory = cat) }
-    fun updateExpenseAmount(amount: String) = _uiState.update { it.copy(expenseAmount = amount) }
-    fun updateCurrencyCode(code: String) = _uiState.update { it.copy(expenseCurrencyCode = code) }
-    fun updatePayerId(id: Long) = _uiState.update { it.copy(expensePayerId = id) }
-    fun updateSelectedParticipants(participants: Set<TripParticipant>) =
+    private fun updateDate(date: LocalDate) =
+        _uiState.update { it.copy(selectedDate = date) }
+
+    private fun updateCategory(cat: ExpenseCategory) =
+        _uiState.update { it.copy(selectedCategory = cat) }
+
+    private fun updateExpenseAmount(amount: String) =
+        _uiState.update { it.copy(expenseAmount = amount) }
+
+    private fun updateCurrencyCode(code: String) =
+        _uiState.update { it.copy(expenseCurrencyCode = code) }
+
+    private fun updatePayerId(id: Long) =
+        _uiState.update { it.copy(expensePayerId = id) }
+
+    private fun updateSelectedParticipants(participants: Set<TripParticipant>) =
         _uiState.update { it.copy(selectedParticipants = participants) }
 
     fun saveExpense() {

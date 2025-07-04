@@ -8,11 +8,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,76 +31,78 @@ fun AddTripScreen(
 ) {
 
     val addTripViewModel: AddTripViewModel = hiltViewModel()
+    val uiState by addTripViewModel.uiState.collectAsState()
 
     val currentTripParticipants by addTripViewModel.currentTripParticipants.collectAsState()
     val currentTripCurrencies by addTripViewModel.currentTripCurrencies.collectAsState()
     val availableCurrencies by addTripViewModel.currencies.collectAsState()
 
-    var tripName by rememberSaveable { mutableStateOf("") }
-    var tripNameErrorMessage by rememberSaveable { mutableIntStateOf(0) }
-    var tripNameError by rememberSaveable { mutableStateOf(false) }
-    var newParticipantName by rememberSaveable { mutableStateOf("") }
-    var newParticipantMultiplicator by rememberSaveable { mutableIntStateOf(1) }
-    var updatedParticipantIndex by rememberSaveable { mutableIntStateOf(-1) }
-    var activeDialog by rememberSaveable { mutableStateOf(ActiveDialog.NONE) }
-
     val resetParticipant = {
-        newParticipantName = ""
-        newParticipantMultiplicator = 1
-        updatedParticipantIndex = -1
+        addTripViewModel.updateNewParticipantName("")
+        addTripViewModel.updateNewParticipantMultiplicator(1)
+        addTripViewModel.updateParticipantIndex(-1)
     }
 
     val onTripNameChanged = { input: String ->
-        tripName = input.trimStart().replaceFirstChar { it.titlecase() }
-        tripNameErrorMessage = 0
-        tripNameError = false
+        addTripViewModel.updateTripName(input)
+        addTripViewModel.updateTripNameErrorMessage(0)
+        addTripViewModel.updateTripNameError(false)
     }
 
     val onSaveTrip = {
-        val tripNameTrimmed = tripName.trim()
+        val tripNameTrimmed = uiState.tripName.trim()
         if (addTripViewModel.fieldNotEmpty(value = tripNameTrimmed)) {
             addTripViewModel.saveTrip(tripName = tripNameTrimmed)
             navigateHome(addTripViewModel = addTripViewModel, navController = navController)
         } else {
-            activeDialog = ActiveDialog.NONE
-            tripNameError = true
-            tripNameErrorMessage = R.string.error_mandatory_field
+            addTripViewModel.updateActiveDialog(ActiveDialog.NONE)
+            addTripViewModel.updateTripNameError(true)
+            addTripViewModel.updateTripNameErrorMessage(R.string.error_mandatory_field)
         }
     }
 
     val onAddParticipantButtonClick = {
-        activeDialog = ActiveDialog.USER_INPUT
+        addTripViewModel.updateActiveDialog(ActiveDialog.USER_INPUT)
     }
 
     val onEditParticipantButtonClick: (TripParticipant) -> Unit = {
-        newParticipantName = it.name
-        newParticipantMultiplicator = it.multiplicator
-        updatedParticipantIndex = currentTripParticipants.indexOf(it)
-        activeDialog = ActiveDialog.USER_INPUT
+        addTripViewModel.updateNewParticipantName(it.name)
+        addTripViewModel.updateNewParticipantMultiplicator(it.multiplicator)
+        addTripViewModel.updateParticipantIndex(currentTripParticipants.indexOf(it))
+        addTripViewModel.updateActiveDialog(ActiveDialog.USER_INPUT)
     }
 
     val onNewParticipant = {
-        val nameTrimmed = newParticipantName.trim()
+        val nameTrimmed = uiState.newParticipantName.trim()
         if (addTripViewModel.fieldNotEmpty(value = nameTrimmed)) {
             val newParticipant =
-                TripParticipant(name = nameTrimmed, multiplicator = newParticipantMultiplicator)
+                TripParticipant(
+                    name = nameTrimmed,
+                    multiplicator = uiState.newParticipantMultiplicator
+                )
             if (addTripViewModel.nameAlreadyInUse(newParticipant)) {
-                activeDialog = ActiveDialog.WARNING
+                addTripViewModel.updateActiveDialog(ActiveDialog.WARNING)
             } else {
                 addTripViewModel.addParticipant(newParticipant)
-                activeDialog = ActiveDialog.NONE
+                addTripViewModel.updateActiveDialog(ActiveDialog.NONE)
                 resetParticipant()
             }
         }
     }
 
     val onEditParticipant = {
-        val nameTrimmed = newParticipantName.trim()
-        if (addTripViewModel.fieldNotEmpty(nameTrimmed) && updatedParticipantIndex >= 0) {
+        val nameTrimmed = uiState.newParticipantName.trim()
+        if (addTripViewModel.fieldNotEmpty(nameTrimmed) && uiState.updatedParticipantIndex >= 0) {
             val updatedParticipant =
-                TripParticipant(name = nameTrimmed, multiplicator = newParticipantMultiplicator)
-            addTripViewModel.updateParticipant(updatedParticipantIndex, updatedParticipant)
-            activeDialog = ActiveDialog.NONE
+                TripParticipant(
+                    name = nameTrimmed,
+                    multiplicator = uiState.newParticipantMultiplicator
+                )
+            addTripViewModel.updateParticipant(
+                uiState.updatedParticipantIndex,
+                updatedParticipant
+            )
+            addTripViewModel.updateActiveDialog(ActiveDialog.NONE)
             resetParticipant()
         }
     }
@@ -113,12 +112,12 @@ fun AddTripScreen(
     }
 
     val onDismissAddParticipantDialog = {
-        activeDialog = ActiveDialog.NONE
+        addTripViewModel.updateActiveDialog(ActiveDialog.NONE)
         resetParticipant()
     }
 
     val onAddCurrencyButtonClick = {
-        activeDialog = ActiveDialog.CHOOSER
+        addTripViewModel.updateActiveDialog(ActiveDialog.CHOOSER)
     }
 
     val onNewCurrency = { currency: String ->
@@ -126,7 +125,7 @@ fun AddTripScreen(
         if (!addTripViewModel.hasCurrency(code)) {
             addTripViewModel.addCurrency(code)
         }
-        activeDialog = ActiveDialog.NONE
+        addTripViewModel.updateActiveDialog(ActiveDialog.NONE)
     }
 
     val onDeleteCurrency = { code: String ->
@@ -134,7 +133,7 @@ fun AddTripScreen(
     }
 
     val onDismissAddCurrencyDialog = {
-        activeDialog = ActiveDialog.NONE
+        addTripViewModel.updateActiveDialog(ActiveDialog.NONE)
     }
 
     val onDismissSaveChanges = {
@@ -142,18 +141,18 @@ fun AddTripScreen(
     }
 
     val hasUnsavedInput by remember(
-        tripName,
+        uiState.tripName,
         currentTripParticipants,
         currentTripCurrencies
     ) {
         derivedStateOf {
-            tripName.isNotBlank() || currentTripParticipants.size > 1 || currentTripCurrencies.size > 1
+            uiState.tripName.isNotBlank() || currentTripParticipants.size > 1 || currentTripCurrencies.size > 1
         }
     }
 
     val handleBackNavigation: () -> Boolean = {
         if (hasUnsavedInput) {
-            activeDialog = ActiveDialog.CONFIRMATION
+            addTripViewModel.updateActiveDialog(ActiveDialog.CONFIRMATION)
             true
         } else {
             navigateHome(addTripViewModel = addTripViewModel, navController = navController)
@@ -181,7 +180,7 @@ fun AddTripScreen(
         onDispose { sharedViewModel.setBackHandler(null) }
     }
 
-    when (activeDialog) {
+    when (uiState.activeDialog) {
         ActiveDialog.CHOOSER -> {
             val expanded = remember { mutableStateOf(true) }
             TsCurrencyPicker(
@@ -194,22 +193,19 @@ fun AddTripScreen(
 
         ActiveDialog.USER_INPUT -> {
             TsUserInputDialog(
-                input = newParticipantName,
-                onInputChange = { newInput ->
-                    newParticipantName = newInput.trimStart().replaceFirstChar { it.titlecase() }
-                },
-                multiplicator = newParticipantMultiplicator,
+                uiState = uiState,
+                onInputChange = { newInput -> addTripViewModel.updateNewParticipantName(newInput) },
                 onMultiplicatorChange = { newMultiplicator ->
-                    newParticipantMultiplicator = newMultiplicator
+                    addTripViewModel.updateNewParticipantMultiplicator(newMultiplicator)
                 },
                 onConfirm = {
-                    if (updatedParticipantIndex >= 0) onEditParticipant()
+                    if (uiState.updatedParticipantIndex >= 0) onEditParticipant()
                     else onNewParticipant()
                 },
                 onDismiss = { onDismissAddParticipantDialog() },
-                titleRes = if (updatedParticipantIndex >= 0) R.string.edit_participant else R.string.add_participant,
+                titleRes = if (uiState.updatedParticipantIndex >= 0) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
-                positiveTextRes = if (updatedParticipantIndex >= 0) R.string.save else R.string.add,
+                positiveTextRes = if (uiState.updatedParticipantIndex >= 0) R.string.save else R.string.add,
                 negativeTextRes = R.string.cancel
             )
         }
@@ -229,7 +225,7 @@ fun AddTripScreen(
             TsConfirmationDialog(
                 onConfirm = {
                     resetParticipant()
-                    activeDialog = ActiveDialog.USER_INPUT
+                    addTripViewModel.updateActiveDialog(ActiveDialog.USER_INPUT)
                 },
                 titleRes = R.string.duplicate_name_dialog_title,
                 questionRes = R.string.duplicate_name_dialog_warning,
@@ -242,9 +238,7 @@ fun AddTripScreen(
                 LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
             if (isPortrait)
                 AddTripPortraitContent(
-                    tripName = tripName,
-                    tripNameError = tripNameError,
-                    tripNameErrorMessage = tripNameErrorMessage,
+                    uiState = uiState,
                     onTripNameChanged = onTripNameChanged,
                     participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
@@ -257,9 +251,7 @@ fun AddTripScreen(
                 )
             else
                 AddTripLandscapeContent(
-                    tripName = tripName,
-                    tripNameError = tripNameError,
-                    tripNameErrorMessage = tripNameErrorMessage,
+                    uiState = uiState,
                     onTripNameChanged = onTripNameChanged,
                     participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,

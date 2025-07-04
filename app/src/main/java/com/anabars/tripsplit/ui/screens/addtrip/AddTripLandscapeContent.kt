@@ -14,15 +14,15 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsMainButton
+import com.anabars.tripsplit.ui.model.AddTripUiState
+import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
 import com.anabars.tripsplit.ui.utils.getFakeTripCurrencies
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun AddTripLandscapeContent(
-    tripName: String,
-    tripNameError: Boolean,
-    tripNameErrorMessage: Int,
+    uiState: AddTripUiState,
     onTripNameChanged: (String) -> Unit,
     participants: List<TripParticipant>,
     onAddParticipantButtonClick: () -> Unit,
@@ -41,9 +41,7 @@ fun AddTripLandscapeContent(
     ) {
         InputSection(
             modifier = modifier.inputWidthModifier(),
-            tripName = tripName,
-            tripNameError = tripNameError,
-            tripNameErrorMessage = tripNameErrorMessage,
+            uiState = uiState,
             onTripNameChanged = onTripNameChanged
         )
 
@@ -83,15 +81,13 @@ fun AddTripLandscapeContent(
 @Composable
 private fun AddTripLandscapeContentPreview() {
     AddTripLandscapeContent(
-        tripName = "placeholder",
-        tripNameError = false,
-        tripNameErrorMessage = 0,
+        uiState = getFakeAddTripUiState(),
         onTripNameChanged = {},
         participants = getFakeTripParticipants(),
         onAddParticipantButtonClick = {},
         onEditParticipantButtonClick = {},
         onDeleteParticipant = {},
-        currencies = getFakeTripCurrencies().map{it.code},
+        currencies = getFakeTripCurrencies().map { it.code },
         onAddCurrencyButtonClick = {},
         onDeleteCurrency = {},
         onSaveTrip = {}

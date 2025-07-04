@@ -7,6 +7,8 @@ import com.anabars.tripsplit.data.preferences.CurrencyPreference
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripRepository
+import com.anabars.tripsplit.ui.dialogs.ActiveDialog
+import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.validCurrencyCodes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,6 +36,9 @@ class AddTripViewModel @Inject constructor(
 
     private val _currentTripCurrencies = MutableStateFlow<List<String>>(emptyList())
     val currentTripCurrencies: StateFlow<List<String>> = _currentTripCurrencies
+
+    private val _uiState = MutableStateFlow(AddTripUiState())
+    val uiState: StateFlow<AddTripUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -84,5 +89,35 @@ class AddTripViewModel @Inject constructor(
                 _currentTripCurrencies.value
             )
         }
+    }
+
+    fun updateTripName(input: String) {
+        val newTripName = input.trimStart().replaceFirstChar { it.titlecase() }
+        _uiState.value = _uiState.value.copy(tripName = newTripName)
+    }
+
+    fun updateTripNameErrorMessage(resId: Int) {
+        _uiState.value = _uiState.value.copy(tripNameErrorMessage = resId)
+    }
+
+    fun updateTripNameError(isError: Boolean) {
+        _uiState.value = _uiState.value.copy(tripNameError = isError)
+    }
+
+    fun updateNewParticipantName(input: String) {
+        val newParticipantName = input.trimStart().replaceFirstChar { it.titlecase() }
+        _uiState.value = _uiState.value.copy(newParticipantName = newParticipantName)
+    }
+
+    fun updateNewParticipantMultiplicator(multiplicator: Int){
+        _uiState.value = _uiState.value.copy(newParticipantMultiplicator = multiplicator)
+    }
+
+    fun updateParticipantIndex(index: Int){
+        _uiState.value = _uiState.value.copy(updatedParticipantIndex = index)
+    }
+
+    fun updateActiveDialog(dialog: ActiveDialog){
+        _uiState.value = _uiState.value.copy(activeDialog = dialog)
     }
 }

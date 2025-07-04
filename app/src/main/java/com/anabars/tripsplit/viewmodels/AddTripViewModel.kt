@@ -124,6 +124,12 @@ class AddTripViewModel @Inject constructor(
 
     fun onEvent(event: AddTripEvent) {
         when (event) {
+            is AddTripEvent.TripNameChanged -> {
+                updateTripName(event.name)
+                updateTripNameErrorMessage(0)
+                updateTripNameError(false)
+            }
+
             is AddTripEvent.AddParticipantClicked -> TODO()
             is AddTripEvent.CurrencyAdded -> TODO()
             is AddTripEvent.CurrencyDeleted -> TODO()
@@ -131,7 +137,8 @@ class AddTripViewModel @Inject constructor(
             is AddTripEvent.NewParticipantNameChanged -> TODO()
             is AddTripEvent.ParticipantDeleted -> TODO()
             is AddTripEvent.ParticipantEditRequested -> TODO()
-            is AddTripEvent.TripNameChanged -> TODO()
+
+
             AddTripEvent.AddCurrencyClicked -> TODO()
             AddTripEvent.DismissAddParticipantDialog -> TODO()
             AddTripEvent.DismissCurrencyDialog -> TODO()

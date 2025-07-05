@@ -1,5 +1,6 @@
 package com.anabars.tripsplit.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.common.TripSplitConstants
@@ -144,11 +145,14 @@ class AddTripViewModel @Inject constructor(
                 updateParticipantIndex(_currentTripParticipants.value.indexOf(event.participant))
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
+            is AddTripEvent.ParticipantDeleted -> {
+                Log.d("marysya", "ParticipantDeleted")
+                removeParticipant(event.participant)
+            }
 
             is AddTripEvent.AddParticipantClicked -> TODO()
             is AddTripEvent.CurrencyAdded -> TODO()
             is AddTripEvent.CurrencyDeleted -> TODO()
-            is AddTripEvent.ParticipantDeleted -> TODO()
             AddTripEvent.AddCurrencyClicked -> TODO()
             AddTripEvent.DismissAddParticipantDialog -> TODO()
             AddTripEvent.DismissCurrencyDialog -> TODO()

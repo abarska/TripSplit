@@ -20,7 +20,7 @@ import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
 import com.anabars.tripsplit.ui.dialogs.TsUserInputDialog
-import com.anabars.tripsplit.ui.model.AddTripEvent
+import com.anabars.tripsplit.ui.model.AddTripEvent.*
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.AddTripViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
@@ -189,9 +189,11 @@ fun AddTripScreen(
         ActiveDialog.USER_INPUT -> {
             TsUserInputDialog(
                 uiState = uiState,
-                onInputChange = { viewModel.onEvent(AddTripEvent.NewParticipantNameChanged(it)) },
-                onMultiplicatorChange = { newMultiplicator ->
-                    viewModel.updateNewParticipantMultiplicator(newMultiplicator)
+                onInputChange = {
+                    viewModel.onEvent(NewParticipantNameChanged(it))
+                },
+                onMultiplicatorChange = {
+                    viewModel.onEvent(NewParticipantMultiplicatorChanged(it))
                 },
                 onConfirm = {
                     if (uiState.updatedParticipantIndex >= 0) onEditParticipant()
@@ -234,7 +236,7 @@ fun AddTripScreen(
             if (isPortrait)
                 AddTripPortraitContent(
                     uiState = uiState,
-                    onTripNameChanged = { viewModel.onEvent(AddTripEvent.TripNameChanged(it)) },
+                    onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
                     participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
                     onEditParticipantButtonClick = onEditParticipantButtonClick,
@@ -247,7 +249,7 @@ fun AddTripScreen(
             else
                 AddTripLandscapeContent(
                     uiState = uiState,
-                    onTripNameChanged = { viewModel.onEvent(AddTripEvent.TripNameChanged(it)) },
+                    onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
                     participants = currentTripParticipants,
                     onAddParticipantButtonClick = onAddParticipantButtonClick,
                     onEditParticipantButtonClick = onEditParticipantButtonClick,

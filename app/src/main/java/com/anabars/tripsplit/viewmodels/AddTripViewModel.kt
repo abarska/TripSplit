@@ -220,7 +220,7 @@ class AddTripViewModel @Inject constructor(
                     val newParticipant =
                         TripParticipant(
                             name = nameTrimmed,
-                            multiplicator = uiState.value.newParticipantMultiplicator
+                            multiplicator = _uiState.value.newParticipantMultiplicator
                         )
                     if (nameAlreadyInUse(newParticipant)) {
                         updateActiveDialog(ActiveDialog.WARNING)
@@ -233,22 +233,21 @@ class AddTripViewModel @Inject constructor(
             }
 
             is ExistingParticipantEdited -> {
-                val nameTrimmed = uiState.value.newParticipantName.trim()
-                if (fieldNotEmpty(nameTrimmed) && uiState.value.updatedParticipantIndex >= 0) {
+                val nameTrimmed = _uiState.value.newParticipantName.trim()
+                if (fieldNotEmpty(nameTrimmed) && _uiState.value.updatedParticipantIndex >= 0) {
                     val updatedParticipant =
                         TripParticipant(
                             name = nameTrimmed,
-                            multiplicator = uiState.value.newParticipantMultiplicator
+                            multiplicator = _uiState.value.newParticipantMultiplicator
                         )
                     updateParticipant(
-                        uiState.value.updatedParticipantIndex,
+                        _uiState.value.updatedParticipantIndex,
                         updatedParticipant
                     )
                     updateActiveDialog(ActiveDialog.NONE)
                     resetParticipant()
                 }
             }
-
         }
     }
 

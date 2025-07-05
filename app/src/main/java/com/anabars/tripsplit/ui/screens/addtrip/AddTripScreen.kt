@@ -47,8 +47,6 @@ fun AddTripScreen(
     val viewModel: AddTripViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
-
-    val currentTripParticipants by viewModel.currentTripParticipants.collectAsState()
     val availableCurrencies by viewModel.currencies.collectAsState()
 
     val handleBackNavigation: () -> Boolean = {
@@ -144,7 +142,6 @@ fun AddTripScreen(
                 AddTripPortraitContent(
                     uiState = uiState,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
-                    participants = currentTripParticipants,
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
                     onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },
@@ -156,7 +153,6 @@ fun AddTripScreen(
                 AddTripLandscapeContent(
                     uiState = uiState,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
-                    participants = currentTripParticipants,
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
                     onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },

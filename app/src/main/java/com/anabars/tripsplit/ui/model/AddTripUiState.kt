@@ -5,6 +5,7 @@ import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 
 data class AddTripUiState(
     val tripCurrencies: List<String> = emptyList(),
+    val tripParticipants: List<TripParticipant> = emptyList(),
     val tripName: String = "",
     val tripNameErrorMessage: Int = 0,
     val tripNameError: Boolean = false,

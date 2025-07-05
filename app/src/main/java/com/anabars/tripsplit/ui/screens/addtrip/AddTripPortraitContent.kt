@@ -13,13 +13,11 @@ import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
-import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 
 @Composable
 fun AddTripPortraitContent(
     uiState: AddTripUiState,
     onTripNameChanged: (String) -> Unit,
-    participants: List<TripParticipant>,
     onAddParticipantButtonClick: () -> Unit,
     onEditParticipantButtonClick: (TripParticipant) -> Unit,
     onDeleteParticipant: (TripParticipant) -> Unit,
@@ -50,7 +48,7 @@ fun AddTripPortraitContent(
         TsContentCard {
             ChipsSection(
                 labelRes = R.string.participants_section_header,
-                items = participants,
+                items = uiState.tripParticipants,
                 onAddItemButtonClick = onAddParticipantButtonClick,
                 onItemClick = onEditParticipantButtonClick,
                 onDeleteItemButtonClick = onDeleteParticipant,
@@ -68,7 +66,6 @@ private fun AddTripPortraitContentPreview() {
     AddTripPortraitContent(
         uiState = getFakeAddTripUiState(),
         onTripNameChanged = {},
-        participants = getFakeTripParticipants(),
         onAddParticipantButtonClick = {},
         onEditParticipantButtonClick = {},
         onDeleteParticipant = {},

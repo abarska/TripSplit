@@ -48,10 +48,6 @@ class AddTripViewModel @Inject constructor(
 
     private val _currencies = MutableStateFlow<List<String>>(emptyList())
     val currencies: StateFlow<List<String>> = _currencies.asStateFlow()
-
-    private val _currentTripParticipants = MutableStateFlow<List<TripParticipant>>(emptyList())
-    val currentTripParticipants: StateFlow<List<TripParticipant>> = _currentTripParticipants
-
     private val _uiState = MutableStateFlow(AddTripUiState())
     val uiState: StateFlow<AddTripUiState> = _uiState.asStateFlow()
 
@@ -69,22 +65,23 @@ class AddTripViewModel @Inject constructor(
     }
 
     fun nameAlreadyInUse(participant: TripParticipant) =
-        _currentTripParticipants.value.map { it.name }.contains(participant.name)
+        _uiState.value.tripParticipants.any { it.name == participant.name }
 
     fun addParticipant(participant: TripParticipant) =
-        run { _currentTripParticipants.value += participant }
+        _uiState.update { it.copy(tripParticipants = it.tripParticipants + participant) }
 
     fun removeParticipant(participant: TripParticipant) =
-        run { _currentTripParticipants.value -= participant }
+        _uiState.update { it.copy(tripParticipants = it.tripParticipants - participant) }
 
-    fun updateParticipant(index: Int, participant: TripParticipant) = run {
-        val updatedList = _currentTripParticipants.value.toMutableList().apply {
-            this[index] = participant
+    fun updateParticipant(index: Int, participant: TripParticipant) = {
+        _uiState.update {
+            val updatedList = it.tripParticipants.toMutableList()
+            if (index in updatedList.indices) updatedList[index] = participant
+            it.copy(tripParticipants = updatedList)
         }
-        _currentTripParticipants.value = updatedList
     }
 
-    private fun clearParticipants() = run { _currentTripParticipants.value = emptyList() }
+    private fun clearParticipants() = _uiState.update { it.copy(tripParticipants = emptyList()) }
 
     fun hasCurrency(code: String) = _uiState.value.tripCurrencies.contains(code)
 
@@ -112,7 +109,7 @@ class AddTripViewModel @Inject constructor(
             val trip = Trip(title = tripName)
             tripRepository.saveTrip(
                 trip,
-                _currentTripParticipants.value,
+                _uiState.value.tripParticipants,
                 _uiState.value.tripCurrencies
             )
         }
@@ -167,7 +164,7 @@ class AddTripViewModel @Inject constructor(
             is ParticipantEditRequested -> {
                 updateNewParticipantName(event.participant.name)
                 updateNewParticipantMultiplicator(event.participant.multiplicator)
-                updateParticipantIndex(_currentTripParticipants.value.indexOf(event.participant))
+                updateParticipantIndex(_uiState.value.tripParticipants.indexOf(event.participant))
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
 
@@ -265,6 +262,6 @@ class AddTripViewModel @Inject constructor(
     }
 
     fun hasUnsavedInput() = _uiState.value.tripName.isNotBlank()
-            || _currentTripParticipants.value.size > 1
+            || _uiState.value.tripParticipants.size > 1
             || _uiState.value.tripCurrencies.size > 1
 }

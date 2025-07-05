@@ -33,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,9 +51,6 @@ class AddTripViewModel @Inject constructor(
 
     private val _currentTripParticipants = MutableStateFlow<List<TripParticipant>>(emptyList())
     val currentTripParticipants: StateFlow<List<TripParticipant>> = _currentTripParticipants
-
-    private val _currentTripCurrencies = MutableStateFlow<List<String>>(emptyList())
-    val currentTripCurrencies: StateFlow<List<String>> = _currentTripCurrencies
 
     private val _uiState = MutableStateFlow(AddTripUiState())
     val uiState: StateFlow<AddTripUiState> = _uiState.asStateFlow()
@@ -88,10 +86,19 @@ class AddTripViewModel @Inject constructor(
 
     private fun clearParticipants() = run { _currentTripParticipants.value = emptyList() }
 
-    fun hasCurrency(code: String) = _currentTripCurrencies.value.contains(code)
-    fun addCurrency(code: String) = run { _currentTripCurrencies.value += code }
-    fun removeCurrency(code: String) = run { _currentTripCurrencies.value -= code }
-    private fun clearCurrencies() = run { _currentTripCurrencies.value = emptyList() }
+    fun hasCurrency(code: String) = _uiState.value.tripCurrencies.contains(code)
+
+    fun addCurrency(code: String) = _uiState.update {
+        it.copy(tripCurrencies = it.tripCurrencies + code)
+    }
+
+    fun removeCurrency(code: String) = _uiState.update {
+        it.copy(tripCurrencies = it.tripCurrencies - code)
+    }
+
+    private fun clearCurrencies() = _uiState.update {
+        it.copy(tripCurrencies = emptyList())
+    }
 
     fun clearTempData() {
         clearParticipants()
@@ -106,7 +113,7 @@ class AddTripViewModel @Inject constructor(
             tripRepository.saveTrip(
                 trip,
                 _currentTripParticipants.value,
-                _currentTripCurrencies.value
+                _uiState.value.tripCurrencies
             )
         }
     }
@@ -259,5 +266,5 @@ class AddTripViewModel @Inject constructor(
 
     fun hasUnsavedInput() = _uiState.value.tripName.isNotBlank()
             || _currentTripParticipants.value.size > 1
-            || _currentTripCurrencies.value.size > 1
+            || _uiState.value.tripCurrencies.size > 1
 }

@@ -16,7 +16,6 @@ import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
-import com.anabars.tripsplit.ui.utils.getFakeTripCurrencies
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
@@ -28,7 +27,6 @@ fun AddTripLandscapeContent(
     onAddParticipantButtonClick: () -> Unit,
     onEditParticipantButtonClick: (TripParticipant) -> Unit,
     onDeleteParticipant: (TripParticipant) -> Unit,
-    currencies: List<String>,
     onAddCurrencyButtonClick: () -> Unit,
     onDeleteCurrency: (String) -> Unit,
     onSaveTrip: () -> Unit,
@@ -52,7 +50,7 @@ fun AddTripLandscapeContent(
             TsContentCard(modifier = Modifier.weight(1f)) {
                 ChipsSection(
                     labelRes = R.string.currencies_section_header,
-                    items = currencies,
+                    items = uiState.tripCurrencies,
                     onAddItemButtonClick = onAddCurrencyButtonClick,
                     onDeleteItemButtonClick = onDeleteCurrency,
                     itemLabel = { it }
@@ -87,7 +85,6 @@ private fun AddTripLandscapeContentPreview() {
         onAddParticipantButtonClick = {},
         onEditParticipantButtonClick = {},
         onDeleteParticipant = {},
-        currencies = getFakeTripCurrencies().map { it.code },
         onAddCurrencyButtonClick = {},
         onDeleteCurrency = {},
         onSaveTrip = {}

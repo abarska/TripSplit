@@ -4,6 +4,7 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 
 data class AddTripUiState(
+    val tripCurrencies: List<String> = emptyList(),
     val tripName: String = "",
     val tripNameErrorMessage: Int = 0,
     val tripNameError: Boolean = false,

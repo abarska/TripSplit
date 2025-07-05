@@ -27,5 +27,6 @@ fun getFakeAddExpenseUiState() = AddExpenseUiState(
 )
 
 fun getFakeAddTripUiState() = AddTripUiState(
-    tripName = "Placeholder"
+    tripName = "Placeholder",
+    tripCurrencies = getFakeTripCurrencies().map { it.code }
 )

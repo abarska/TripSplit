@@ -49,7 +49,6 @@ fun AddTripScreen(
     val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
 
     val currentTripParticipants by viewModel.currentTripParticipants.collectAsState()
-    val currentTripCurrencies by viewModel.currentTripCurrencies.collectAsState()
     val availableCurrencies by viewModel.currencies.collectAsState()
 
     val handleBackNavigation: () -> Boolean = {
@@ -149,7 +148,6 @@ fun AddTripScreen(
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
                     onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },
-                    currencies = currentTripCurrencies,
                     onAddCurrencyButtonClick = { viewModel.onEvent(AddCurrencyClicked) },
                     onDeleteCurrency = { viewModel.onEvent(CurrencyDeleted(it)) },
                     onSaveTrip = { viewModel.onEvent(SaveTripClicked) }
@@ -162,7 +160,6 @@ fun AddTripScreen(
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
                     onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },
-                    currencies = currentTripCurrencies,
                     onAddCurrencyButtonClick = { viewModel.onEvent(AddCurrencyClicked) },
                     onDeleteCurrency = { viewModel.onEvent(CurrencyDeleted(it)) },
                     onSaveTrip = { viewModel.onEvent(SaveTripClicked) }

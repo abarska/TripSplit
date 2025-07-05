@@ -138,11 +138,17 @@ class AddTripViewModel @Inject constructor(
                 updateNewParticipantMultiplicator(event.multiplicator)
             }
 
+            is AddTripEvent.ParticipantEditRequested -> {
+                updateNewParticipantName(event.participant.name)
+                updateNewParticipantMultiplicator(event.participant.multiplicator)
+                updateParticipantIndex(_currentTripParticipants.value.indexOf(event.participant))
+                updateActiveDialog(ActiveDialog.USER_INPUT)
+            }
+
             is AddTripEvent.AddParticipantClicked -> TODO()
             is AddTripEvent.CurrencyAdded -> TODO()
             is AddTripEvent.CurrencyDeleted -> TODO()
             is AddTripEvent.ParticipantDeleted -> TODO()
-            is AddTripEvent.ParticipantEditRequested -> TODO()
             AddTripEvent.AddCurrencyClicked -> TODO()
             AddTripEvent.DismissAddParticipantDialog -> TODO()
             AddTripEvent.DismissCurrencyDialog -> TODO()

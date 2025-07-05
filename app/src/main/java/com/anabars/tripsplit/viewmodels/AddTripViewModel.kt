@@ -3,6 +3,7 @@ package com.anabars.tripsplit.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.preferences.CurrencyPreference
 import com.anabars.tripsplit.data.room.entity.Trip
@@ -41,6 +42,9 @@ class AddTripViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AddTripUiState())
     val uiState: StateFlow<AddTripUiState> = _uiState.asStateFlow()
+
+    private val _shouldNavigateHome = MutableStateFlow(false)
+    val shouldNavigateHome: StateFlow<Boolean> = _shouldNavigateHome.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -180,14 +184,25 @@ class AddTripViewModel @Inject constructor(
             }
 
             AddTripEvent.DismissAddParticipantDialog -> {
-                Log.d("marysya", "DismissAddParticipantDialog")
                 updateActiveDialog(ActiveDialog.NONE)
                 resetParticipant()
             }
 
+            AddTripEvent.SaveTripClicked -> {
+                Log.d("marysya", "SaveTripClicked")
+                val tripNameTrimmed = _uiState.value.tripName.trim()
+                if (fieldNotEmpty(value = tripNameTrimmed)) {
+                    saveTrip(tripName = tripNameTrimmed)
+                    _shouldNavigateHome.value = true
+                } else {
+                    updateActiveDialog(ActiveDialog.NONE)
+                    updateTripNameError(true)
+                    updateTripNameErrorMessage(R.string.error_mandatory_field)
+                }
+            }
+
             AddTripEvent.ExistingParticipantEdited -> TODO()
             AddTripEvent.NewParticipantSaved -> TODO()
-            AddTripEvent.SaveTripClicked -> TODO()
 
         }
     }

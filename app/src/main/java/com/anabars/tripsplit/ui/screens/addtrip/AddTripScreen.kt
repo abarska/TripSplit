@@ -33,22 +33,11 @@ fun AddTripScreen(
 
     val viewModel: AddTripViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
+    val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
 
     val currentTripParticipants by viewModel.currentTripParticipants.collectAsState()
     val currentTripCurrencies by viewModel.currentTripCurrencies.collectAsState()
     val availableCurrencies by viewModel.currencies.collectAsState()
-
-    val onSaveTrip = {
-        val tripNameTrimmed = uiState.tripName.trim()
-        if (viewModel.fieldNotEmpty(value = tripNameTrimmed)) {
-            viewModel.saveTrip(tripName = tripNameTrimmed)
-            navigateHome(addTripViewModel = viewModel, navController = navController)
-        } else {
-            viewModel.updateActiveDialog(ActiveDialog.NONE)
-            viewModel.updateTripNameError(true)
-            viewModel.updateTripNameErrorMessage(R.string.error_mandatory_field)
-        }
-    }
 
     val onNewParticipant = {
         val nameTrimmed = uiState.newParticipantName.trim()
@@ -112,13 +101,16 @@ fun AddTripScreen(
     val you = stringResource(R.string.you)
     val localCurrency by viewModel.localCurrency.collectAsState()
 
-    LaunchedEffect(localCurrency) {
+    LaunchedEffect(localCurrency, shouldNavigateHome) {
         val mainUser = TripParticipant(name = you, multiplicator = 1)
         if (!viewModel.nameAlreadyInUse(mainUser)) viewModel.addParticipant(mainUser)
         if (localCurrency.isNotBlank() && !viewModel.hasCurrency(localCurrency)) {
             viewModel.addCurrency(localCurrency)
         }
         sharedViewModel.setBackHandler { handleBackNavigation() }
+        if (shouldNavigateHome) {
+            navigateHome(addTripViewModel = viewModel, navController = navController)
+        }
     }
 
     DisposableEffect(Unit) {
@@ -161,7 +153,7 @@ fun AddTripScreen(
                         navController = navController
                     )
                 },
-                onConfirm = onSaveTrip,
+                onConfirm = { viewModel.onEvent(SaveTripClicked) },
                 titleRes = R.string.save_changes_dialog_title,
                 questionRes = R.string.save_changes_dialog_question,
                 positiveTextRes = R.string.save,
@@ -192,7 +184,7 @@ fun AddTripScreen(
                     currencies = currentTripCurrencies,
                     onAddCurrencyButtonClick = { viewModel.onEvent(AddCurrencyClicked) },
                     onDeleteCurrency = { viewModel.onEvent(CurrencyDeleted(it)) },
-                    onSaveTrip = onSaveTrip
+                    onSaveTrip = { viewModel.onEvent(SaveTripClicked) }
                 )
             else
                 AddTripLandscapeContent(
@@ -205,7 +197,7 @@ fun AddTripScreen(
                     currencies = currentTripCurrencies,
                     onAddCurrencyButtonClick = { viewModel.onEvent(AddCurrencyClicked) },
                     onDeleteCurrency = { viewModel.onEvent(CurrencyDeleted(it)) },
-                    onSaveTrip = onSaveTrip
+                    onSaveTrip = { viewModel.onEvent(SaveTripClicked) }
                 )
         }
     }

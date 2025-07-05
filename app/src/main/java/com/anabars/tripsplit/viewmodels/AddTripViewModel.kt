@@ -176,11 +176,15 @@ class AddTripViewModel @Inject constructor(
             }
 
             is AddTripEvent.AddParticipantClicked -> {
-                Log.d("marysya", "AddParticipantClicked")
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
 
-            AddTripEvent.DismissAddParticipantDialog -> TODO()
+            AddTripEvent.DismissAddParticipantDialog -> {
+                Log.d("marysya", "DismissAddParticipantDialog")
+                updateActiveDialog(ActiveDialog.NONE)
+                resetParticipant()
+            }
+
             AddTripEvent.ExistingParticipantEdited -> TODO()
             AddTripEvent.NewParticipantSaved -> TODO()
             AddTripEvent.SaveTripClicked -> TODO()

@@ -85,11 +85,6 @@ fun AddTripScreen(
         }
     }
 
-    val onDismissAddParticipantDialog = {
-        viewModel.updateActiveDialog(ActiveDialog.NONE)
-        viewModel.resetParticipant()
-    }
-
     val hasUnsavedInput by remember(
         uiState.tripName,
         currentTripParticipants,
@@ -144,17 +139,13 @@ fun AddTripScreen(
         ActiveDialog.USER_INPUT -> {
             TsUserInputDialog(
                 uiState = uiState,
-                onInputChange = {
-                    viewModel.onEvent(NewParticipantNameChanged(it))
-                },
-                onMultiplicatorChange = {
-                    viewModel.onEvent(NewParticipantMultiplicatorChanged(it))
-                },
+                onInputChange = { viewModel.onEvent(NewParticipantNameChanged(it)) },
+                onMultiplicatorChange = { viewModel.onEvent(NewParticipantMultiplicatorChanged(it)) },
                 onConfirm = {
                     if (uiState.updatedParticipantIndex >= 0) onEditParticipant()
                     else onNewParticipant()
                 },
-                onDismiss = { onDismissAddParticipantDialog() },
+                onDismiss = { viewModel.onEvent(DismissAddParticipantDialog) },
                 titleRes = if (uiState.updatedParticipantIndex >= 0) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
                 positiveTextRes = if (uiState.updatedParticipantIndex >= 0) R.string.save else R.string.add,

@@ -27,6 +27,6 @@ sealed class AddTripEvent {
     object AddParticipantClicked : AddTripEvent()
     object DismissAddParticipantDialog : AddTripEvent()
     object SaveTripClicked : AddTripEvent()
-    object NewParticipantSaved : AddTripEvent()
+    object NewParticipantSaveClicked : AddTripEvent()
     object ExistingParticipantEdited : AddTripEvent()
 }

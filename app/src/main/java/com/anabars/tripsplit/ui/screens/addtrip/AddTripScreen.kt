@@ -39,24 +39,6 @@ fun AddTripScreen(
     val currentTripCurrencies by viewModel.currentTripCurrencies.collectAsState()
     val availableCurrencies by viewModel.currencies.collectAsState()
 
-    val onNewParticipant = {
-        val nameTrimmed = uiState.newParticipantName.trim()
-        if (viewModel.fieldNotEmpty(value = nameTrimmed)) {
-            val newParticipant =
-                TripParticipant(
-                    name = nameTrimmed,
-                    multiplicator = uiState.newParticipantMultiplicator
-                )
-            if (viewModel.nameAlreadyInUse(newParticipant)) {
-                viewModel.updateActiveDialog(ActiveDialog.WARNING)
-            } else {
-                viewModel.addParticipant(newParticipant)
-                viewModel.updateActiveDialog(ActiveDialog.NONE)
-                viewModel.resetParticipant()
-            }
-        }
-    }
-
     val onEditParticipant = {
         val nameTrimmed = uiState.newParticipantName.trim()
         if (viewModel.fieldNotEmpty(nameTrimmed) && uiState.updatedParticipantIndex >= 0) {
@@ -135,7 +117,7 @@ fun AddTripScreen(
                 onMultiplicatorChange = { viewModel.onEvent(NewParticipantMultiplicatorChanged(it)) },
                 onConfirm = {
                     if (uiState.updatedParticipantIndex >= 0) onEditParticipant()
-                    else onNewParticipant()
+                    else { viewModel.onEvent(NewParticipantSaveClicked) }
                 },
                 onDismiss = { viewModel.onEvent(DismissAddParticipantDialog) },
                 titleRes = if (uiState.updatedParticipantIndex >= 0) R.string.edit_participant else R.string.add_participant,

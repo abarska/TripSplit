@@ -183,13 +183,12 @@ class AddTripViewModel @Inject constructor(
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
 
-            AddTripEvent.DismissAddParticipantDialog -> {
+            is AddTripEvent.DismissAddParticipantDialog -> {
                 updateActiveDialog(ActiveDialog.NONE)
                 resetParticipant()
             }
 
-            AddTripEvent.SaveTripClicked -> {
-                Log.d("marysya", "SaveTripClicked")
+            is AddTripEvent.SaveTripClicked -> {
                 val tripNameTrimmed = _uiState.value.tripName.trim()
                 if (fieldNotEmpty(value = tripNameTrimmed)) {
                     saveTrip(tripName = tripNameTrimmed)
@@ -201,8 +200,27 @@ class AddTripViewModel @Inject constructor(
                 }
             }
 
+            is AddTripEvent.NewParticipantSaveClicked -> {
+                Log.d("marysya", "NewParticipantSaveClicked")
+                val nameTrimmed = _uiState.value.newParticipantName.trim()
+                if (fieldNotEmpty(value = nameTrimmed)) {
+                    val newParticipant =
+                        TripParticipant(
+                            name = nameTrimmed,
+                            multiplicator = uiState.value.newParticipantMultiplicator
+                        )
+                    if (nameAlreadyInUse(newParticipant)) {
+                        updateActiveDialog(ActiveDialog.WARNING)
+                    } else {
+                        addParticipant(newParticipant)
+                        updateActiveDialog(ActiveDialog.NONE)
+                        resetParticipant()
+                    }
+                }
+            }
+
             AddTripEvent.ExistingParticipantEdited -> TODO()
-            AddTripEvent.NewParticipantSaved -> TODO()
+
 
         }
     }

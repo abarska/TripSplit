@@ -145,6 +145,7 @@ class AddTripViewModel @Inject constructor(
                 updateParticipantIndex(_currentTripParticipants.value.indexOf(event.participant))
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
+
             is AddTripEvent.ParticipantDeleted -> {
                 removeParticipant(event.participant)
             }
@@ -169,12 +170,24 @@ class AddTripViewModel @Inject constructor(
                 updateActiveDialog(ActiveDialog.NONE)
             }
 
+            is AddTripEvent.DuplicateNameDialogConfirmed -> {
+                Log.d("marysya", "DuplicateNameDialogConfirmed")
+                resetParticipant()
+                updateActiveDialog(ActiveDialog.USER_INPUT)
+            }
+
             is AddTripEvent.AddParticipantClicked -> TODO()
             AddTripEvent.DismissAddParticipantDialog -> TODO()
             AddTripEvent.ExistingParticipantEdited -> TODO()
             AddTripEvent.NewParticipantSaved -> TODO()
             AddTripEvent.SaveTripClicked -> TODO()
-            AddTripEvent.WarningDialogConfirmed -> TODO()
+
         }
+    }
+
+    fun resetParticipant() {
+        updateNewParticipantName("")
+        updateNewParticipantMultiplicator(1)
+        updateParticipantIndex(-1)
     }
 }

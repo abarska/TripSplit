@@ -1,7 +1,6 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -39,12 +38,6 @@ fun AddTripScreen(
     val currentTripCurrencies by viewModel.currentTripCurrencies.collectAsState()
     val availableCurrencies by viewModel.currencies.collectAsState()
 
-    val resetParticipant = {
-        viewModel.updateNewParticipantName("")
-        viewModel.updateNewParticipantMultiplicator(1)
-        viewModel.updateParticipantIndex(-1)
-    }
-
     val onSaveTrip = {
         val tripNameTrimmed = uiState.tripName.trim()
         if (viewModel.fieldNotEmpty(value = tripNameTrimmed)) {
@@ -74,7 +67,7 @@ fun AddTripScreen(
             } else {
                 viewModel.addParticipant(newParticipant)
                 viewModel.updateActiveDialog(ActiveDialog.NONE)
-                resetParticipant()
+                viewModel.resetParticipant()
             }
         }
     }
@@ -92,13 +85,13 @@ fun AddTripScreen(
                 updatedParticipant
             )
             viewModel.updateActiveDialog(ActiveDialog.NONE)
-            resetParticipant()
+            viewModel.resetParticipant()
         }
     }
 
     val onDismissAddParticipantDialog = {
         viewModel.updateActiveDialog(ActiveDialog.NONE)
-        resetParticipant()
+        viewModel.resetParticipant()
     }
 
     val hasUnsavedInput by remember(
@@ -176,7 +169,6 @@ fun AddTripScreen(
         ActiveDialog.CONFIRMATION -> {
             TsConfirmationDialog(
                 onDismiss = {
-                    Log.d("marysya", "onDismiss")
                     navigateHome(
                         addTripViewModel = viewModel,
                         navController = navController
@@ -192,10 +184,7 @@ fun AddTripScreen(
 
         ActiveDialog.WARNING -> {
             TsConfirmationDialog(
-                onConfirm = {
-                    resetParticipant()
-                    viewModel.updateActiveDialog(ActiveDialog.USER_INPUT)
-                },
+                onConfirm = { viewModel.onEvent(DuplicateNameDialogConfirmed) },
                 titleRes = R.string.duplicate_name_dialog_title,
                 questionRes = R.string.duplicate_name_dialog_warning,
                 positiveTextRes = android.R.string.ok,

@@ -146,12 +146,19 @@ class AddTripViewModel @Inject constructor(
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
             is AddTripEvent.ParticipantDeleted -> {
-                Log.d("marysya", "ParticipantDeleted")
                 removeParticipant(event.participant)
             }
 
+            is AddTripEvent.CurrencyAdded -> {
+                Log.d("marysya", "CurrencyAdded")
+                val code = event.currency.take(3)
+                if (!hasCurrency(code)) {
+                    addCurrency(code)
+                }
+                updateActiveDialog(ActiveDialog.NONE)
+            }
+
             is AddTripEvent.AddParticipantClicked -> TODO()
-            is AddTripEvent.CurrencyAdded -> TODO()
             is AddTripEvent.CurrencyDeleted -> TODO()
             AddTripEvent.AddCurrencyClicked -> TODO()
             AddTripEvent.DismissAddParticipantDialog -> TODO()

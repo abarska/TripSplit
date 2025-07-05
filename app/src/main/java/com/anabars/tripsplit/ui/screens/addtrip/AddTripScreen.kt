@@ -104,14 +104,6 @@ fun AddTripScreen(
         viewModel.updateActiveDialog(ActiveDialog.CHOOSER)
     }
 
-    val onNewCurrency = { currency: String ->
-        val code = currency.take(3)
-        if (!viewModel.hasCurrency(code)) {
-            viewModel.addCurrency(code)
-        }
-        viewModel.updateActiveDialog(ActiveDialog.NONE)
-    }
-
     val onDeleteCurrency = { code: String ->
         viewModel.removeCurrency(code)
     }
@@ -170,7 +162,7 @@ fun AddTripScreen(
             TsCurrencyPicker(
                 currencies = availableCurrencies,
                 expanded = expanded,
-                onCurrencySelected = onNewCurrency,
+                onCurrencySelected = { viewModel.onEvent(CurrencyAdded(it)) },
                 onDismissAddCurrencyDialog = onDismissAddCurrencyDialog
             )
         }

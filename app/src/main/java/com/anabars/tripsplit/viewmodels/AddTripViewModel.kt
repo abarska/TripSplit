@@ -201,7 +201,6 @@ class AddTripViewModel @Inject constructor(
             }
 
             is AddTripEvent.NewParticipantSaveClicked -> {
-                Log.d("marysya", "NewParticipantSaveClicked")
                 val nameTrimmed = _uiState.value.newParticipantName.trim()
                 if (fieldNotEmpty(value = nameTrimmed)) {
                     val newParticipant =
@@ -219,8 +218,23 @@ class AddTripViewModel @Inject constructor(
                 }
             }
 
-            AddTripEvent.ExistingParticipantEdited -> TODO()
-
+            is AddTripEvent.ExistingParticipantEdited -> {
+                Log.d("marysya", "ExistingParticipantEdited")
+                val nameTrimmed = uiState.value.newParticipantName.trim()
+                if (fieldNotEmpty(nameTrimmed) && uiState.value.updatedParticipantIndex >= 0) {
+                    val updatedParticipant =
+                        TripParticipant(
+                            name = nameTrimmed,
+                            multiplicator = uiState.value.newParticipantMultiplicator
+                        )
+                    updateParticipant(
+                        uiState.value.updatedParticipantIndex,
+                        updatedParticipant
+                    )
+                    updateActiveDialog(ActiveDialog.NONE)
+                    resetParticipant()
+                }
+            }
 
         }
     }

@@ -39,23 +39,6 @@ fun AddTripScreen(
     val currentTripCurrencies by viewModel.currentTripCurrencies.collectAsState()
     val availableCurrencies by viewModel.currencies.collectAsState()
 
-    val onEditParticipant = {
-        val nameTrimmed = uiState.newParticipantName.trim()
-        if (viewModel.fieldNotEmpty(nameTrimmed) && uiState.updatedParticipantIndex >= 0) {
-            val updatedParticipant =
-                TripParticipant(
-                    name = nameTrimmed,
-                    multiplicator = uiState.newParticipantMultiplicator
-                )
-            viewModel.updateParticipant(
-                uiState.updatedParticipantIndex,
-                updatedParticipant
-            )
-            viewModel.updateActiveDialog(ActiveDialog.NONE)
-            viewModel.resetParticipant()
-        }
-    }
-
     val hasUnsavedInput by remember(
         uiState.tripName,
         currentTripParticipants,
@@ -116,7 +99,7 @@ fun AddTripScreen(
                 onInputChange = { viewModel.onEvent(NewParticipantNameChanged(it)) },
                 onMultiplicatorChange = { viewModel.onEvent(NewParticipantMultiplicatorChanged(it)) },
                 onConfirm = {
-                    if (uiState.updatedParticipantIndex >= 0) onEditParticipant()
+                    if (uiState.updatedParticipantIndex >= 0) { viewModel.onEvent(ExistingParticipantEdited) }
                     else { viewModel.onEvent(NewParticipantSaveClicked) }
                 },
                 onDismiss = { viewModel.onEvent(DismissAddParticipantDialog) },

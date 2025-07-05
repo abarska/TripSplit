@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.R
@@ -11,6 +10,21 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.model.AddTripEvent
+import com.anabars.tripsplit.ui.model.AddTripEvent.AddCurrencyClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.AddParticipantClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyAdded
+import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyDeleted
+import com.anabars.tripsplit.ui.model.AddTripEvent.DismissAddParticipantDialog
+import com.anabars.tripsplit.ui.model.AddTripEvent.DismissCurrencyDialog
+import com.anabars.tripsplit.ui.model.AddTripEvent.DuplicateNameDialogConfirmed
+import com.anabars.tripsplit.ui.model.AddTripEvent.ExistingParticipantEdited
+import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantMultiplicatorChanged
+import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantNameChanged
+import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantSaveClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantDeleted
+import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
+import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.validCurrencyCodes
@@ -129,32 +143,32 @@ class AddTripViewModel @Inject constructor(
 
     fun onEvent(event: AddTripEvent) {
         when (event) {
-            is AddTripEvent.TripNameChanged -> {
+            is TripNameChanged -> {
                 updateTripName(event.name)
                 updateTripNameErrorMessage(0)
                 updateTripNameError(false)
             }
 
-            is AddTripEvent.NewParticipantNameChanged -> {
+            is NewParticipantNameChanged -> {
                 updateNewParticipantName(event.name)
             }
 
-            is AddTripEvent.NewParticipantMultiplicatorChanged -> {
+            is NewParticipantMultiplicatorChanged -> {
                 updateNewParticipantMultiplicator(event.multiplicator)
             }
 
-            is AddTripEvent.ParticipantEditRequested -> {
+            is ParticipantEditRequested -> {
                 updateNewParticipantName(event.participant.name)
                 updateNewParticipantMultiplicator(event.participant.multiplicator)
                 updateParticipantIndex(_currentTripParticipants.value.indexOf(event.participant))
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
 
-            is AddTripEvent.ParticipantDeleted -> {
+            is ParticipantDeleted -> {
                 removeParticipant(event.participant)
             }
 
-            is AddTripEvent.CurrencyAdded -> {
+            is CurrencyAdded -> {
                 val code = event.currency.take(3)
                 if (!hasCurrency(code)) {
                     addCurrency(code)
@@ -162,33 +176,33 @@ class AddTripViewModel @Inject constructor(
                 updateActiveDialog(ActiveDialog.NONE)
             }
 
-            is AddTripEvent.CurrencyDeleted -> {
+            is CurrencyDeleted -> {
                 removeCurrency(event.code)
             }
 
-            is AddTripEvent.AddCurrencyClicked -> {
+            is AddCurrencyClicked -> {
                 updateActiveDialog(ActiveDialog.CHOOSER)
             }
 
-            is AddTripEvent.DismissCurrencyDialog -> {
+            is DismissCurrencyDialog -> {
                 updateActiveDialog(ActiveDialog.NONE)
             }
 
-            is AddTripEvent.DuplicateNameDialogConfirmed -> {
+            is DuplicateNameDialogConfirmed -> {
                 resetParticipant()
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
 
-            is AddTripEvent.AddParticipantClicked -> {
+            is AddParticipantClicked -> {
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
 
-            is AddTripEvent.DismissAddParticipantDialog -> {
+            is DismissAddParticipantDialog -> {
                 updateActiveDialog(ActiveDialog.NONE)
                 resetParticipant()
             }
 
-            is AddTripEvent.SaveTripClicked -> {
+            is SaveTripClicked -> {
                 val tripNameTrimmed = _uiState.value.tripName.trim()
                 if (fieldNotEmpty(value = tripNameTrimmed)) {
                     saveTrip(tripName = tripNameTrimmed)
@@ -200,7 +214,7 @@ class AddTripViewModel @Inject constructor(
                 }
             }
 
-            is AddTripEvent.NewParticipantSaveClicked -> {
+            is NewParticipantSaveClicked -> {
                 val nameTrimmed = _uiState.value.newParticipantName.trim()
                 if (fieldNotEmpty(value = nameTrimmed)) {
                     val newParticipant =
@@ -218,8 +232,7 @@ class AddTripViewModel @Inject constructor(
                 }
             }
 
-            is AddTripEvent.ExistingParticipantEdited -> {
-                Log.d("marysya", "ExistingParticipantEdited")
+            is ExistingParticipantEdited -> {
                 val nameTrimmed = uiState.value.newParticipantName.trim()
                 if (fieldNotEmpty(nameTrimmed) && uiState.value.updatedParticipantIndex >= 0) {
                     val updatedParticipant =
@@ -244,4 +257,8 @@ class AddTripViewModel @Inject constructor(
         updateNewParticipantMultiplicator(1)
         updateParticipantIndex(-1)
     }
+
+    fun hasUnsavedInput() = _uiState.value.tripName.isNotBlank()
+            || _currentTripParticipants.value.size > 1
+            || _currentTripCurrencies.value.size > 1
 }

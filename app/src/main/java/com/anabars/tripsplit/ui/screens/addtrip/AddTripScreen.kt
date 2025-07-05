@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +19,21 @@ import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
 import com.anabars.tripsplit.ui.dialogs.TsUserInputDialog
-import com.anabars.tripsplit.ui.model.AddTripEvent.*
+import com.anabars.tripsplit.ui.model.AddTripEvent.AddCurrencyClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.AddParticipantClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyAdded
+import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyDeleted
+import com.anabars.tripsplit.ui.model.AddTripEvent.DismissAddParticipantDialog
+import com.anabars.tripsplit.ui.model.AddTripEvent.DismissCurrencyDialog
+import com.anabars.tripsplit.ui.model.AddTripEvent.DuplicateNameDialogConfirmed
+import com.anabars.tripsplit.ui.model.AddTripEvent.ExistingParticipantEdited
+import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantMultiplicatorChanged
+import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantNameChanged
+import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantSaveClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantDeleted
+import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
+import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.AddTripViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
@@ -39,18 +52,8 @@ fun AddTripScreen(
     val currentTripCurrencies by viewModel.currentTripCurrencies.collectAsState()
     val availableCurrencies by viewModel.currencies.collectAsState()
 
-    val hasUnsavedInput by remember(
-        uiState.tripName,
-        currentTripParticipants,
-        currentTripCurrencies
-    ) {
-        derivedStateOf {
-            uiState.tripName.isNotBlank() || currentTripParticipants.size > 1 || currentTripCurrencies.size > 1
-        }
-    }
-
     val handleBackNavigation: () -> Boolean = {
-        if (hasUnsavedInput) {
+        if (viewModel.hasUnsavedInput()) {
             viewModel.updateActiveDialog(ActiveDialog.CONFIRMATION)
             true
         } else {

@@ -171,12 +171,15 @@ class AddTripViewModel @Inject constructor(
             }
 
             is AddTripEvent.DuplicateNameDialogConfirmed -> {
-                Log.d("marysya", "DuplicateNameDialogConfirmed")
                 resetParticipant()
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
 
-            is AddTripEvent.AddParticipantClicked -> TODO()
+            is AddTripEvent.AddParticipantClicked -> {
+                Log.d("marysya", "AddParticipantClicked")
+                updateActiveDialog(ActiveDialog.USER_INPUT)
+            }
+
             AddTripEvent.DismissAddParticipantDialog -> TODO()
             AddTripEvent.ExistingParticipantEdited -> TODO()
             AddTripEvent.NewParticipantSaved -> TODO()

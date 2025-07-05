@@ -50,10 +50,6 @@ fun AddTripScreen(
         }
     }
 
-    val onAddParticipantButtonClick = {
-        viewModel.updateActiveDialog(ActiveDialog.USER_INPUT)
-    }
-
     val onNewParticipant = {
         val nameTrimmed = uiState.newParticipantName.trim()
         if (viewModel.fieldNotEmpty(value = nameTrimmed)) {
@@ -199,7 +195,7 @@ fun AddTripScreen(
                     uiState = uiState,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
                     participants = currentTripParticipants,
-                    onAddParticipantButtonClick = onAddParticipantButtonClick,
+                    onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
                     onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },
                     currencies = currentTripCurrencies,
@@ -212,7 +208,7 @@ fun AddTripScreen(
                     uiState = uiState,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
                     participants = currentTripParticipants,
-                    onAddParticipantButtonClick = onAddParticipantButtonClick,
+                    onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
                     onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },
                     currencies = currentTripCurrencies,

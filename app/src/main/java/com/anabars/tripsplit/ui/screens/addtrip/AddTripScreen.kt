@@ -100,10 +100,6 @@ fun AddTripScreen(
         resetParticipant()
     }
 
-    val onDismissAddCurrencyDialog = {
-        viewModel.updateActiveDialog(ActiveDialog.NONE)
-    }
-
     val onDismissSaveChanges = {
         navigateHome(addTripViewModel = viewModel, navController = navController)
     }
@@ -155,7 +151,7 @@ fun AddTripScreen(
                 currencies = availableCurrencies,
                 expanded = expanded,
                 onCurrencySelected = { viewModel.onEvent(CurrencyAdded(it)) },
-                onDismissAddCurrencyDialog = onDismissAddCurrencyDialog
+                onDismissAddCurrencyDialog = { viewModel.onEvent(DismissCurrencyDialog) }
             )
         }
 

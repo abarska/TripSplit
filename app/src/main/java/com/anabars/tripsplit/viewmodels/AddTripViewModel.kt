@@ -162,13 +162,16 @@ class AddTripViewModel @Inject constructor(
             }
 
             is AddTripEvent.AddCurrencyClicked -> {
-                Log.d("marysya", "AddCurrencyClicked")
                 updateActiveDialog(ActiveDialog.CHOOSER)
+            }
+
+            is AddTripEvent.DismissCurrencyDialog -> {
+                Log.d("marysya", "DismissCurrencyDialog")
+                updateActiveDialog(ActiveDialog.NONE)
             }
 
             is AddTripEvent.AddParticipantClicked -> TODO()
             AddTripEvent.DismissAddParticipantDialog -> TODO()
-            AddTripEvent.DismissCurrencyDialog -> TODO()
             AddTripEvent.ExistingParticipantEdited -> TODO()
             AddTripEvent.NewParticipantSaved -> TODO()
             AddTripEvent.SaveChangesDismissed -> TODO()

@@ -45,9 +45,6 @@ class AddTripViewModel @Inject constructor(
 
     private val _localCurrency = MutableStateFlow("")
     val localCurrency: StateFlow<String> = _localCurrency.asStateFlow()
-
-    private val _currencies = MutableStateFlow<List<String>>(emptyList())
-    val currencies: StateFlow<List<String>> = _currencies.asStateFlow()
     private val _uiState = MutableStateFlow(AddTripUiState())
     val uiState: StateFlow<AddTripUiState> = _uiState.asStateFlow()
 
@@ -56,7 +53,9 @@ class AddTripViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            _currencies.value = getCurrencyDisplayList(validCurrencyCodes())
+            val currencies = getCurrencyDisplayList(validCurrencyCodes())
+            setAvailableCurrencies(currencies)
+
             currencyPreference.getCurrencyFlow(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY)
                 .collect { currency ->
                     _localCurrency.value = currency
@@ -264,4 +263,8 @@ class AddTripViewModel @Inject constructor(
     fun hasUnsavedInput() = _uiState.value.tripName.isNotBlank()
             || _uiState.value.tripParticipants.size > 1
             || _uiState.value.tripCurrencies.size > 1
+
+    private fun setAvailableCurrencies(currencies: List<String>) {
+        _uiState.update { it.copy(availableCurrencies = currencies) }
+    }
 }

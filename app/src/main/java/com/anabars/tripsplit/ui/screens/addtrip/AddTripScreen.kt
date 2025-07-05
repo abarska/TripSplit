@@ -47,7 +47,6 @@ fun AddTripScreen(
     val viewModel: AddTripViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
-    val availableCurrencies by viewModel.currencies.collectAsState()
 
     val handleBackNavigation: () -> Boolean = {
         if (viewModel.hasUnsavedInput()) {
@@ -86,7 +85,7 @@ fun AddTripScreen(
         ActiveDialog.CHOOSER -> {
             val expanded = remember { mutableStateOf(true) }
             TsCurrencyPicker(
-                currencies = availableCurrencies,
+                currencies = uiState.availableCurrencies,
                 expanded = expanded,
                 onCurrencySelected = { viewModel.onEvent(CurrencyAdded(it)) },
                 onDismissAddCurrencyDialog = { viewModel.onEvent(DismissCurrencyDialog) }

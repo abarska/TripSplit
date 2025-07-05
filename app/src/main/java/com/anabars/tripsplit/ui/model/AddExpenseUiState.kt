@@ -5,6 +5,7 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import java.time.LocalDate
 
 data class AddExpenseUiState (
+    // todo split this into several observable states to reduce recomposition overload
     val tripParticipants: List<TripParticipant> = emptyList(),
     val tripCurrencies: List<TripCurrency> = emptyList(),
     val selectedDate: LocalDate = LocalDate.now(),

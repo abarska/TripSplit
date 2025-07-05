@@ -23,7 +23,6 @@ sealed class AddTripEvent {
     data class CurrencyDeleted(val code: String) : AddTripEvent()
     object AddCurrencyClicked : AddTripEvent()
     object DismissCurrencyDialog : AddTripEvent()
-    object SaveChangesDismissed : AddTripEvent()
     object WarningDialogConfirmed : AddTripEvent()
     object AddParticipantClicked : AddTripEvent()
     object DismissAddParticipantDialog : AddTripEvent()

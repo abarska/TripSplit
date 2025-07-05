@@ -166,7 +166,6 @@ class AddTripViewModel @Inject constructor(
             }
 
             is AddTripEvent.DismissCurrencyDialog -> {
-                Log.d("marysya", "DismissCurrencyDialog")
                 updateActiveDialog(ActiveDialog.NONE)
             }
 
@@ -174,7 +173,6 @@ class AddTripViewModel @Inject constructor(
             AddTripEvent.DismissAddParticipantDialog -> TODO()
             AddTripEvent.ExistingParticipantEdited -> TODO()
             AddTripEvent.NewParticipantSaved -> TODO()
-            AddTripEvent.SaveChangesDismissed -> TODO()
             AddTripEvent.SaveTripClicked -> TODO()
             AddTripEvent.WarningDialogConfirmed -> TODO()
         }

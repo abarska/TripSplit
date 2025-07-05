@@ -1,6 +1,7 @@
 package com.anabars.tripsplit.ui.screens.addtrip
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -100,10 +101,6 @@ fun AddTripScreen(
         resetParticipant()
     }
 
-    val onDismissSaveChanges = {
-        navigateHome(addTripViewModel = viewModel, navController = navController)
-    }
-
     val hasUnsavedInput by remember(
         uiState.tripName,
         currentTripParticipants,
@@ -178,7 +175,13 @@ fun AddTripScreen(
 
         ActiveDialog.CONFIRMATION -> {
             TsConfirmationDialog(
-                onDismiss = onDismissSaveChanges,
+                onDismiss = {
+                    Log.d("marysya", "onDismiss")
+                    navigateHome(
+                        addTripViewModel = viewModel,
+                        navController = navController
+                    )
+                },
                 onConfirm = onSaveTrip,
                 titleRes = R.string.save_changes_dialog_title,
                 questionRes = R.string.save_changes_dialog_question,

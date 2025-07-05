@@ -100,10 +100,6 @@ fun AddTripScreen(
         resetParticipant()
     }
 
-    val onAddCurrencyButtonClick = {
-        viewModel.updateActiveDialog(ActiveDialog.CHOOSER)
-    }
-
     val onDismissAddCurrencyDialog = {
         viewModel.updateActiveDialog(ActiveDialog.NONE)
     }
@@ -219,7 +215,7 @@ fun AddTripScreen(
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
                     onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },
                     currencies = currentTripCurrencies,
-                    onAddCurrencyButtonClick = onAddCurrencyButtonClick,
+                    onAddCurrencyButtonClick = { viewModel.onEvent(AddCurrencyClicked) },
                     onDeleteCurrency = { viewModel.onEvent(CurrencyDeleted(it)) },
                     onSaveTrip = onSaveTrip
                 )
@@ -232,7 +228,7 @@ fun AddTripScreen(
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
                     onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },
                     currencies = currentTripCurrencies,
-                    onAddCurrencyButtonClick = onAddCurrencyButtonClick,
+                    onAddCurrencyButtonClick = { viewModel.onEvent(AddCurrencyClicked) },
                     onDeleteCurrency = { viewModel.onEvent(CurrencyDeleted(it)) },
                     onSaveTrip = onSaveTrip
                 )

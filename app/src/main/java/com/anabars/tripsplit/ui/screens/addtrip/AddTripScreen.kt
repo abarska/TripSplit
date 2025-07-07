@@ -48,6 +48,7 @@ fun AddTripScreen(
     val uiState by viewModel.uiState.collectAsState()
     val tripNameUiState by viewModel.nameUiState.collectAsState()
     val tripParticipantsUiState by viewModel.participantsUiState.collectAsState()
+    val tripCurrenciesUiState by viewModel.currenciesUiState.collectAsState()
     val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
 
     val handleBackNavigation: () -> Boolean = {
@@ -87,7 +88,7 @@ fun AddTripScreen(
         ActiveDialog.CHOOSER -> {
             val expanded = remember { mutableStateOf(true) }
             TsCurrencyPicker(
-                currencies = uiState.availableCurrencies,
+                currencies = tripCurrenciesUiState.availableCurrencies,
                 expanded = expanded,
                 onCurrencySelected = { viewModel.onEvent(CurrencyAdded(it)) },
                 onDismissAddCurrencyDialog = { viewModel.onEvent(DismissCurrencyDialog) }
@@ -141,9 +142,9 @@ fun AddTripScreen(
                 LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
             if (isPortrait)
                 AddTripPortraitContent(
-                    uiState = uiState,
                     tripNameUiState = tripNameUiState,
                     tripParticipants = tripParticipantsUiState.tripParticipants,
+                    tripCurrencies = tripCurrenciesUiState.tripCurrencies,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
@@ -154,9 +155,9 @@ fun AddTripScreen(
                 )
             else
                 AddTripLandscapeContent(
-                    uiState = uiState,
                     tripNameUiState = tripNameUiState,
                     tripParticipants = tripParticipantsUiState.tripParticipants,
+                    tripCurrencies = tripCurrenciesUiState.tripCurrencies,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },

@@ -5,7 +5,6 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.model.AddExpenseUiState
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
-import com.anabars.tripsplit.ui.model.AddTripUiState
 
 fun getFakeTripParticipants() = listOf(
     TripParticipant(name = "Harry", multiplicator = 1),
@@ -30,10 +29,6 @@ fun getFakeAddExpenseUiState() = AddExpenseUiState(
 
 fun getFakeTripNameUiState() = AddTripNameUiState(
     tripName = "Placeholder"
-)
-
-fun getFakeAddTripUiState() = AddTripUiState(
-    tripCurrencies = getFakeTripCurrencies().map { it.code }
 )
 
 fun getFakeParticipantsUiState() = AddTripParticipantsUiState(

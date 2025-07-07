@@ -9,6 +9,7 @@ import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
+import com.anabars.tripsplit.ui.model.AddTripCurrenciesUiState
 import com.anabars.tripsplit.ui.model.AddTripEvent
 import com.anabars.tripsplit.ui.model.AddTripEvent.AddCurrencyClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.AddParticipantClicked
@@ -56,6 +57,9 @@ class AddTripViewModel @Inject constructor(
     private val _participantsUiState = MutableStateFlow(AddTripParticipantsUiState())
     val participantsUiState: StateFlow<AddTripParticipantsUiState> = _participantsUiState.asStateFlow()
 
+    private val _currenciesUiState = MutableStateFlow(AddTripCurrenciesUiState())
+    val currenciesUiState: StateFlow<AddTripCurrenciesUiState> = _currenciesUiState.asStateFlow()
+
     private val _shouldNavigateHome = MutableStateFlow(false)
     val shouldNavigateHome: StateFlow<Boolean> = _shouldNavigateHome.asStateFlow()
 
@@ -90,17 +94,17 @@ class AddTripViewModel @Inject constructor(
 
     private fun clearParticipants() = _participantsUiState.update { it.copy(tripParticipants = emptyList()) }
 
-    fun hasCurrency(code: String) = _uiState.value.tripCurrencies.contains(code)
+    fun hasCurrency(code: String) = _currenciesUiState.value.tripCurrencies.contains(code)
 
-    fun addCurrency(code: String) = _uiState.update {
+    fun addCurrency(code: String) = _currenciesUiState.update {
         it.copy(tripCurrencies = it.tripCurrencies + code)
     }
 
-    fun removeCurrency(code: String) = _uiState.update {
+    fun removeCurrency(code: String) = _currenciesUiState.update {
         it.copy(tripCurrencies = it.tripCurrencies - code)
     }
 
-    private fun clearCurrencies() = _uiState.update {
+    private fun clearCurrencies() = _currenciesUiState.update {
         it.copy(tripCurrencies = emptyList())
     }
 
@@ -117,7 +121,7 @@ class AddTripViewModel @Inject constructor(
             tripRepository.saveTrip(
                 trip,
                 _participantsUiState.value.tripParticipants,
-                _uiState.value.tripCurrencies
+                _currenciesUiState.value.tripCurrencies
             )
         }
     }
@@ -270,9 +274,9 @@ class AddTripViewModel @Inject constructor(
 
     fun hasUnsavedInput() = _nameUiState.value.tripName.isNotBlank()
             || _participantsUiState.value.tripParticipants.size > 1
-            || _uiState.value.tripCurrencies.size > 1
+            || _currenciesUiState.value.tripCurrencies.size > 1
 
     private fun setAvailableCurrencies(currencies: List<String>) {
-        _uiState.update { it.copy(availableCurrencies = currencies) }
+        _currenciesUiState.update { it.copy(availableCurrencies = currencies) }
     }
 }

@@ -12,16 +12,15 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
-import com.anabars.tripsplit.ui.model.AddTripUiState
-import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
+import com.anabars.tripsplit.ui.utils.getFakeTripCurrencies
 import com.anabars.tripsplit.ui.utils.getFakeTripNameUiState
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 
 @Composable
 fun AddTripPortraitContent(
-    uiState: AddTripUiState,
     tripNameUiState: AddTripNameUiState,
     tripParticipants: List<TripParticipant>,
+    tripCurrencies: List<String>,
     onTripNameChanged: (String) -> Unit,
     onAddParticipantButtonClick: () -> Unit,
     onEditParticipantButtonClick: (TripParticipant) -> Unit,
@@ -43,7 +42,7 @@ fun AddTripPortraitContent(
         TsContentCard {
             ChipsSection(
                 labelRes = R.string.currencies_section_header,
-                items = uiState.tripCurrencies,
+                items = tripCurrencies,
                 onAddItemButtonClick = onAddCurrencyButtonClick,
                 onDeleteItemButtonClick = onDeleteCurrency,
                 itemLabel = { it }
@@ -69,9 +68,9 @@ fun AddTripPortraitContent(
 @Composable
 private fun AddTripPortraitContentPreview() {
     AddTripPortraitContent(
-        uiState = getFakeAddTripUiState(),
         tripNameUiState = getFakeTripNameUiState(),
         tripParticipants = getFakeTripParticipants(),
+        tripCurrencies = getFakeTripCurrencies().map{it.code},
         onTripNameChanged = {},
         onAddParticipantButtonClick = {},
         onEditParticipantButtonClick = {},

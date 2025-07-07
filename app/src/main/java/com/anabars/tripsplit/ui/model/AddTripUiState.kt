@@ -5,8 +5,6 @@ import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 
 data class AddTripUiState(
     // todo split this into several observable states to reduce recomposition overload
-    val availableCurrencies: List<String> = emptyList(),
-    val tripCurrencies: List<String> = emptyList(),
     val activeDialog: ActiveDialog = ActiveDialog.NONE,
 )
 
@@ -21,6 +19,11 @@ data class AddTripParticipantsUiState(
     val newParticipantName: String = "",
     val newParticipantMultiplicator: Int = 1,
     val updatedParticipantIndex: Int = -1,
+)
+
+data class AddTripCurrenciesUiState(
+    val availableCurrencies: List<String> = emptyList(),
+    val tripCurrencies: List<String> = emptyList()
 )
 
 sealed class AddTripEvent {

@@ -3,8 +3,7 @@ package com.anabars.tripsplit.ui.model
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 
-data class AddTripUiState(
-    // todo split this into several observable states to reduce recomposition overload
+data class AddTripDialogState(
     val activeDialog: ActiveDialog = ActiveDialog.NONE,
 )
 

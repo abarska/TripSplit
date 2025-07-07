@@ -10,6 +10,7 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.model.AddTripCurrenciesUiState
+import com.anabars.tripsplit.ui.model.AddTripDialogState
 import com.anabars.tripsplit.ui.model.AddTripEvent
 import com.anabars.tripsplit.ui.model.AddTripEvent.AddCurrencyClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.AddParticipantClicked
@@ -28,7 +29,6 @@ import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
-import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.validCurrencyCodes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,8 +48,9 @@ class AddTripViewModel @Inject constructor(
 
     private val _localCurrency = MutableStateFlow("")
     val localCurrency: StateFlow<String> = _localCurrency.asStateFlow()
-    private val _uiState = MutableStateFlow(AddTripUiState())
-    val uiState: StateFlow<AddTripUiState> = _uiState.asStateFlow()
+
+    private val _dialogUiState = MutableStateFlow(AddTripDialogState())
+    val dialogUiState: StateFlow<AddTripDialogState> = _dialogUiState.asStateFlow()
 
     private val _nameUiState = MutableStateFlow(AddTripNameUiState())
     val nameUiState: StateFlow<AddTripNameUiState> = _nameUiState.asStateFlow()
@@ -84,7 +85,7 @@ class AddTripViewModel @Inject constructor(
     fun removeParticipant(participant: TripParticipant) =
         _participantsUiState.update { it.copy(tripParticipants = it.tripParticipants - participant) }
 
-    fun updateParticipant(index: Int, participant: TripParticipant) = {
+    fun updateParticipant(index: Int, participant: TripParticipant) {
         _participantsUiState.update {
             val updatedList = it.tripParticipants.toMutableList()
             if (index in updatedList.indices) updatedList[index] = participant
@@ -153,7 +154,7 @@ class AddTripViewModel @Inject constructor(
     }
 
     fun updateActiveDialog(dialog: ActiveDialog) {
-        _uiState.value = _uiState.value.copy(activeDialog = dialog)
+        _dialogUiState.value = _dialogUiState.value.copy(activeDialog = dialog)
     }
 
     fun onEvent(event: AddTripEvent) {

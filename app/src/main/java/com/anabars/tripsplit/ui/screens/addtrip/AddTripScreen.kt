@@ -45,10 +45,12 @@ fun AddTripScreen(
 ) {
 
     val viewModel: AddTripViewModel = hiltViewModel()
-    val uiState by viewModel.uiState.collectAsState()
-    val tripNameUiState by viewModel.nameUiState.collectAsState()
-    val tripParticipantsUiState by viewModel.participantsUiState.collectAsState()
-    val tripCurrenciesUiState by viewModel.currenciesUiState.collectAsState()
+
+    val dialogUiState by viewModel.dialogUiState.collectAsState()
+    val nameUiState by viewModel.nameUiState.collectAsState()
+    val participantsUiState by viewModel.participantsUiState.collectAsState()
+    val currenciesUiState by viewModel.currenciesUiState.collectAsState()
+
     val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
 
     val handleBackNavigation: () -> Boolean = {
@@ -84,11 +86,11 @@ fun AddTripScreen(
         onDispose { sharedViewModel.setBackHandler(null) }
     }
 
-    when (uiState.activeDialog) {
+    when (dialogUiState.activeDialog) {
         ActiveDialog.CHOOSER -> {
             val expanded = remember { mutableStateOf(true) }
             TsCurrencyPicker(
-                currencies = tripCurrenciesUiState.availableCurrencies,
+                currencies = currenciesUiState.availableCurrencies,
                 expanded = expanded,
                 onCurrencySelected = { viewModel.onEvent(CurrencyAdded(it)) },
                 onDismissAddCurrencyDialog = { viewModel.onEvent(DismissCurrencyDialog) }
@@ -97,17 +99,17 @@ fun AddTripScreen(
 
         ActiveDialog.USER_INPUT -> {
             TsUserInputDialog(
-                tripParticipantsUiState = tripParticipantsUiState,
+                tripParticipantsUiState = participantsUiState,
                 onInputChange = { viewModel.onEvent(NewParticipantNameChanged(it)) },
                 onMultiplicatorChange = { viewModel.onEvent(NewParticipantMultiplicatorChanged(it)) },
                 onConfirm = {
-                    if (tripParticipantsUiState.updatedParticipantIndex >= 0) { viewModel.onEvent(ExistingParticipantEdited) }
+                    if (participantsUiState.updatedParticipantIndex >= 0) { viewModel.onEvent(ExistingParticipantEdited) }
                     else { viewModel.onEvent(NewParticipantSaveClicked) }
                 },
                 onDismiss = { viewModel.onEvent(DismissAddParticipantDialog) },
-                titleRes = if (tripParticipantsUiState.updatedParticipantIndex >= 0) R.string.edit_participant else R.string.add_participant,
+                titleRes = if (participantsUiState.updatedParticipantIndex >= 0) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
-                positiveTextRes = if (tripParticipantsUiState.updatedParticipantIndex >= 0) R.string.save else R.string.add,
+                positiveTextRes = if (participantsUiState.updatedParticipantIndex >= 0) R.string.save else R.string.add,
                 negativeTextRes = R.string.cancel
             )
         }
@@ -142,9 +144,9 @@ fun AddTripScreen(
                 LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
             if (isPortrait)
                 AddTripPortraitContent(
-                    tripNameUiState = tripNameUiState,
-                    tripParticipants = tripParticipantsUiState.tripParticipants,
-                    tripCurrencies = tripCurrenciesUiState.tripCurrencies,
+                    tripNameUiState = nameUiState,
+                    tripParticipants = participantsUiState.tripParticipants,
+                    tripCurrencies = currenciesUiState.tripCurrencies,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
@@ -155,9 +157,9 @@ fun AddTripScreen(
                 )
             else
                 AddTripLandscapeContent(
-                    tripNameUiState = tripNameUiState,
-                    tripParticipants = tripParticipantsUiState.tripParticipants,
-                    tripCurrencies = tripCurrenciesUiState.tripCurrencies,
+                    tripNameUiState = nameUiState,
+                    tripParticipants = participantsUiState.tripParticipants,
+                    tripCurrencies = currenciesUiState.tripCurrencies,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },

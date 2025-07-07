@@ -11,12 +11,15 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsMainButton
+import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
+import com.anabars.tripsplit.ui.utils.getFakeTripNameUiState
 
 @Composable
 fun AddTripPortraitContent(
     uiState: AddTripUiState,
+    tripNameUiState: AddTripNameUiState,
     onTripNameChanged: (String) -> Unit,
     onAddParticipantButtonClick: () -> Unit,
     onEditParticipantButtonClick: (TripParticipant) -> Unit,
@@ -31,7 +34,7 @@ fun AddTripPortraitContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
         InputSection(
-            uiState = uiState,
+            tripNameUiState = tripNameUiState,
             onTripNameChanged = onTripNameChanged
         )
 
@@ -65,6 +68,7 @@ fun AddTripPortraitContent(
 private fun AddTripPortraitContentPreview() {
     AddTripPortraitContent(
         uiState = getFakeAddTripUiState(),
+        tripNameUiState = getFakeTripNameUiState(),
         onTripNameChanged = {},
         onAddParticipantButtonClick = {},
         onEditParticipantButtonClick = {},

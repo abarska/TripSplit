@@ -25,6 +25,7 @@ import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantDeleted
 import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
 import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
+import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.validCurrencyCodes
@@ -47,6 +48,9 @@ class AddTripViewModel @Inject constructor(
     val localCurrency: StateFlow<String> = _localCurrency.asStateFlow()
     private val _uiState = MutableStateFlow(AddTripUiState())
     val uiState: StateFlow<AddTripUiState> = _uiState.asStateFlow()
+
+    private val _nameUiState = MutableStateFlow(AddTripNameUiState())
+    val nameUiState: StateFlow<AddTripNameUiState> = _nameUiState.asStateFlow()
 
     private val _shouldNavigateHome = MutableStateFlow(false)
     val shouldNavigateHome: StateFlow<Boolean> = _shouldNavigateHome.asStateFlow()
@@ -116,15 +120,15 @@ class AddTripViewModel @Inject constructor(
 
     fun updateTripName(input: String) {
         val newTripName = input.trimStart().replaceFirstChar { it.titlecase() }
-        _uiState.value = _uiState.value.copy(tripName = newTripName)
+        _nameUiState.value = _nameUiState.value.copy(tripName = newTripName)
     }
 
     fun updateTripNameErrorMessage(resId: Int) {
-        _uiState.value = _uiState.value.copy(tripNameErrorMessage = resId)
+        _nameUiState.value = _nameUiState.value.copy(tripNameErrorMessage = resId)
     }
 
     fun updateTripNameError(isError: Boolean) {
-        _uiState.value = _uiState.value.copy(tripNameError = isError)
+        _nameUiState.value = _nameUiState.value.copy(tripNameError = isError)
     }
 
     fun updateNewParticipantName(input: String) {
@@ -206,7 +210,7 @@ class AddTripViewModel @Inject constructor(
             }
 
             is SaveTripClicked -> {
-                val tripNameTrimmed = _uiState.value.tripName.trim()
+                val tripNameTrimmed = _nameUiState.value.tripName.trim()
                 if (fieldNotEmpty(value = tripNameTrimmed)) {
                     saveTrip(tripName = tripNameTrimmed)
                     _shouldNavigateHome.value = true
@@ -260,7 +264,7 @@ class AddTripViewModel @Inject constructor(
         updateParticipantIndex(-1)
     }
 
-    fun hasUnsavedInput() = _uiState.value.tripName.isNotBlank()
+    fun hasUnsavedInput() = _nameUiState.value.tripName.isNotBlank()
             || _uiState.value.tripParticipants.size > 1
             || _uiState.value.tripCurrencies.size > 1
 

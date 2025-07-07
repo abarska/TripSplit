@@ -8,13 +8,16 @@ data class AddTripUiState(
     val availableCurrencies: List<String> = emptyList(),
     val tripCurrencies: List<String> = emptyList(),
     val tripParticipants: List<TripParticipant> = emptyList(),
-    val tripName: String = "",
-    val tripNameErrorMessage: Int = 0,
-    val tripNameError: Boolean = false,
     val newParticipantName: String = "",
     val newParticipantMultiplicator: Int = 1,
     val updatedParticipantIndex: Int = -1,
     val activeDialog: ActiveDialog = ActiveDialog.NONE,
+)
+
+data class AddTripNameUiState(
+    val tripName: String = "",
+    val tripNameErrorMessage: Int = 0,
+    val tripNameError: Boolean = false
 )
 
 sealed class AddTripEvent {

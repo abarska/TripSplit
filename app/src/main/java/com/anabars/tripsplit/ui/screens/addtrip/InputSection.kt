@@ -7,13 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsShortInput
-import com.anabars.tripsplit.ui.model.AddTripUiState
-import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
+import com.anabars.tripsplit.ui.model.AddTripNameUiState
+import com.anabars.tripsplit.ui.utils.getFakeTripNameUiState
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun InputSection(
-    uiState: AddTripUiState,
+    tripNameUiState: AddTripNameUiState,
     onTripNameChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -22,9 +22,9 @@ fun InputSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TsShortInput(
-            value = uiState.tripName,
-            isError = uiState.tripNameError,
-            labelRes = if (uiState.tripNameErrorMessage > 0 && uiState.tripNameError) uiState.tripNameErrorMessage else R.string.new_trip_title_hint,
+            value = tripNameUiState.tripName,
+            isError = tripNameUiState.tripNameError,
+            labelRes = if (tripNameUiState.tripNameErrorMessage > 0 && tripNameUiState.tripNameError) tripNameUiState.tripNameErrorMessage else R.string.new_trip_title_hint,
             onValueChanged = onTripNameChanged,
             modifier = modifier.inputWidthModifier(),
         )
@@ -35,7 +35,7 @@ fun InputSection(
 @Composable
 private fun InputSectionPreview() {
     InputSection(
-        uiState = getFakeAddTripUiState(),
+        tripNameUiState = getFakeTripNameUiState(),
         onTripNameChanged = {}
     )
 }

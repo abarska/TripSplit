@@ -7,9 +7,6 @@ import java.time.LocalDate
 data class AddExpenseUiState (
     // todo split this into several observable states to reduce recomposition overload
     val tripParticipants: List<TripParticipant> = emptyList(),
-    val tripCurrencies: List<TripCurrency> = emptyList(),
-    val expenseAmount: String = "",
-    val expenseCurrencyCode: String = "",
     val expensePayerId: Long = -1L,
     val selectedParticipants: Set<TripParticipant> = emptySet()
 )
@@ -17,6 +14,12 @@ data class AddExpenseUiState (
 data class AddExpenseDateCategoryState(
     val selectedDate: LocalDate = LocalDate.now(),
     val selectedCategory: ExpenseCategory = ExpenseCategory.Miscellaneous
+)
+
+data class AddExpenseAmountCurrencyState(
+    val tripCurrencies: List<TripCurrency> = emptyList(),
+    val expenseAmount: String = "",
+    val expenseCurrencyCode: String = "",
 )
 
 sealed class AddExpenseEvent {

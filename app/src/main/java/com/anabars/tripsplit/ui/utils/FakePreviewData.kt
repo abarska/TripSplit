@@ -2,6 +2,7 @@ package com.anabars.tripsplit.ui.utils
 
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpenseUiState
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
@@ -22,7 +23,6 @@ fun getFakeTripCurrencies() = listOf(
 
 fun getFakeAddExpenseUiState() = AddExpenseUiState(
     tripParticipants = getFakeTripParticipants(),
-    tripCurrencies = getFakeTripCurrencies(),
     selectedParticipants = getFakeTripParticipants()
         .take(getFakeTripParticipants().size - 1).toSet()
 )
@@ -33,4 +33,8 @@ fun getFakeTripNameUiState() = AddTripNameUiState(
 
 fun getFakeParticipantsUiState() = AddTripParticipantsUiState(
     tripParticipants = getFakeTripParticipants()
+)
+
+fun getFakeAmountCurrencyUiState() = AddExpenseAmountCurrencyState(
+    tripCurrencies = getFakeTripCurrencies()
 )

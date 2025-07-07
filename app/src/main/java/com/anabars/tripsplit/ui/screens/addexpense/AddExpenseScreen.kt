@@ -22,8 +22,10 @@ import com.anabars.tripsplit.viewmodels.SharedViewModel
 fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedViewModel) {
 
     val viewModel: AddExpenseViewModel = hiltViewModel()
+
     val uiState by viewModel.uiState.collectAsState()
     val dateCategoryState by viewModel.dateCategoryState.collectAsState()
+    val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
 
     val onSaveExpense = {
         viewModel.saveExpense()
@@ -48,6 +50,7 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         AddExpensePortraitContent(
             uiState = uiState,
             dateCategoryState = dateCategoryState,
+            amountCurrencyState = amountCurrencyState,
             onDateSelected = { viewModel.onEvent(AddExpenseEvent.DateSelected(it)) },
             onCategoryChange = { viewModel.onEvent(AddExpenseEvent.CategoryChanged(it)) },
             onExpenseAmountChanged = { viewModel.onEvent(AddExpenseEvent.AmountChanged(it)) },
@@ -61,6 +64,7 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         AddExpenseLandscapeContent(
             uiState = uiState,
             dateCategoryState = dateCategoryState,
+            amountCurrencyState = amountCurrencyState,
             onDateSelected = { viewModel.onEvent(AddExpenseEvent.DateSelected(it)) },
             onCategoryChange = { viewModel.onEvent(AddExpenseEvent.CategoryChanged(it)) },
             onExpenseAmountChanged = { viewModel.onEvent(AddExpenseEvent.AmountChanged(it)) },

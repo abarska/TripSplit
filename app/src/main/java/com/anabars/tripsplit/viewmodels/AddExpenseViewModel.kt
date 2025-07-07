@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripExpensesRepository
+import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
 import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.ui.model.AddExpenseUiState
@@ -37,6 +38,9 @@ class AddExpenseViewModel @Inject constructor(
     private val _dateCategoryState = MutableStateFlow(AddExpenseDateCategoryState())
     val dateCategoryState: StateFlow<AddExpenseDateCategoryState> = _dateCategoryState.asStateFlow()
 
+    private val _amountCurrencyState = MutableStateFlow(AddExpenseAmountCurrencyState())
+    val amountCurrencyState: StateFlow<AddExpenseAmountCurrencyState> = _amountCurrencyState.asStateFlow()
+
     init {
         viewModelScope.launch {
             try {
@@ -50,11 +54,14 @@ class AddExpenseViewModel @Inject constructor(
                 _uiState.update { currentState ->
                     currentState.copy(
                         tripParticipants = participants,
-                        tripCurrencies = currencies,
                         selectedParticipants = initialSelectedParticipants,
                         expensePayerId = initialPayerId ?: currentState.expensePayerId,
-                        expenseCurrencyCode = initialCurrencyCode
-                            ?: currentState.expenseCurrencyCode
+                    )
+                }
+                _amountCurrencyState.update { currentState ->
+                    currentState.copy(
+                        tripCurrencies = currencies,
+                        expenseCurrencyCode = initialCurrencyCode ?: currentState.expenseCurrencyCode
                     )
                 }
             } catch (e: Exception) {
@@ -81,10 +88,10 @@ class AddExpenseViewModel @Inject constructor(
         _dateCategoryState.update { it.copy(selectedCategory = cat) }
 
     private fun updateExpenseAmount(amount: String) =
-        _uiState.update { it.copy(expenseAmount = amount) }
+        _amountCurrencyState.update { it.copy(expenseAmount = amount) }
 
     private fun updateCurrencyCode(code: String) =
-        _uiState.update { it.copy(expenseCurrencyCode = code) }
+        _amountCurrencyState.update { it.copy(expenseCurrencyCode = code) }
 
     private fun updatePayerId(id: Long) =
         _uiState.update { it.copy(expensePayerId = id) }
@@ -98,6 +105,7 @@ class AddExpenseViewModel @Inject constructor(
                 TripExpense.fromUiState(
                     uiState = _uiState.value,
                     dateCategoryState = _dateCategoryState.value,
+                    amountCurrencyState = _amountCurrencyState.value,
                     tripId = tripId
                 )
             )

@@ -8,11 +8,11 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
 import com.anabars.tripsplit.ui.components.TsInfoText
-import com.anabars.tripsplit.ui.model.AddExpenseUiState
+import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 
 @Composable
 fun ExpenseAmountAndCurrencyCard(
-    uiState: AddExpenseUiState,
+    amountCurrencyState: AddExpenseAmountCurrencyState,
     onExpenseAmountChanged: (String) -> Unit,
     onCurrencySelected: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -20,15 +20,15 @@ fun ExpenseAmountAndCurrencyCard(
     TsContentCard(modifier = modifier) {
         TsExpenseAmountInput(
             modifier = Modifier.padding(horizontal = 16.dp),
-            value = uiState.expenseAmount,
-            currencyPrefix = uiState.expenseCurrencyCode,
+            value = amountCurrencyState.expenseAmount,
+            currencyPrefix = amountCurrencyState.expenseCurrencyCode,
             onValueChange = onExpenseAmountChanged
         )
         TsInfoText(textRes = R.string.currency)
         ExpenseCurrenciesRadioGroup(
             modifier = Modifier.padding(horizontal = 16.dp),
-            currencies = uiState.tripCurrencies,
-            expenseCurrencyCode = uiState.expenseCurrencyCode,
+            currencies = amountCurrencyState.tripCurrencies,
+            expenseCurrencyCode = amountCurrencyState.expenseCurrencyCode,
             onCurrencySelected = onCurrencySelected,
         )
     }

@@ -93,6 +93,8 @@ class AddTripViewModel @Inject constructor(
         }
     }
 
+    fun isEditingParticipant() = _participantsUiState.value.updatedParticipantIndex >= 0
+
     private fun clearParticipants() = _participantsUiState.update { it.copy(tripParticipants = emptyList()) }
 
     fun hasCurrency(code: String) = _currenciesUiState.value.tripCurrencies.contains(code)

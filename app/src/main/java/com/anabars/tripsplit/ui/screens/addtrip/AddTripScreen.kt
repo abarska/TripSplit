@@ -103,13 +103,15 @@ fun AddTripScreen(
                 onInputChange = { viewModel.onEvent(NewParticipantNameChanged(it)) },
                 onMultiplicatorChange = { viewModel.onEvent(NewParticipantMultiplicatorChanged(it)) },
                 onConfirm = {
-                    if (participantsUiState.updatedParticipantIndex >= 0) { viewModel.onEvent(ExistingParticipantEdited) }
-                    else { viewModel.onEvent(NewParticipantSaveClicked) }
+                    if (viewModel.isEditingParticipant())
+                        viewModel.onEvent(ExistingParticipantEdited)
+                    else
+                        viewModel.onEvent(NewParticipantSaveClicked)
                 },
                 onDismiss = { viewModel.onEvent(DismissAddParticipantDialog) },
-                titleRes = if (participantsUiState.updatedParticipantIndex >= 0) R.string.edit_participant else R.string.add_participant,
+                titleRes = if (viewModel.isEditingParticipant()) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
-                positiveTextRes = if (participantsUiState.updatedParticipantIndex >= 0) R.string.save else R.string.add,
+                positiveTextRes = if (viewModel.isEditingParticipant()) R.string.save else R.string.add,
                 negativeTextRes = R.string.cancel
             )
         }

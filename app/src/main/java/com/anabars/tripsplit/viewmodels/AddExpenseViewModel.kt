@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripExpensesRepository
+import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
 import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.ui.model.AddExpenseUiState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
@@ -32,6 +33,9 @@ class AddExpenseViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AddExpenseUiState())
     val uiState: StateFlow<AddExpenseUiState> = _uiState.asStateFlow()
+
+    private val _dateCategoryState = MutableStateFlow(AddExpenseDateCategoryState())
+    val dateCategoryState: StateFlow<AddExpenseDateCategoryState> = _dateCategoryState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -71,10 +75,10 @@ class AddExpenseViewModel @Inject constructor(
     }
 
     private fun updateDate(date: LocalDate) =
-        _uiState.update { it.copy(selectedDate = date) }
+        _dateCategoryState.update { it.copy(selectedDate = date) }
 
     private fun updateCategory(cat: ExpenseCategory) =
-        _uiState.update { it.copy(selectedCategory = cat) }
+        _dateCategoryState.update { it.copy(selectedCategory = cat) }
 
     private fun updateExpenseAmount(amount: String) =
         _uiState.update { it.copy(expenseAmount = amount) }
@@ -90,7 +94,13 @@ class AddExpenseViewModel @Inject constructor(
 
     fun saveExpense() {
         viewModelScope.launch {
-            tripExpensesRepository.saveExpense(TripExpense.fromUiState(uiState.value, tripId))
+            tripExpensesRepository.saveExpense(
+                TripExpense.fromUiState(
+                    uiState = _uiState.value,
+                    dateCategoryState = _dateCategoryState.value,
+                    tripId = tripId
+                )
+            )
         }
     }
 }

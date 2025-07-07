@@ -7,12 +7,12 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.DateInputSection
-import com.anabars.tripsplit.ui.model.AddExpenseUiState
+import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
 import java.time.LocalDate
 
 @Composable
 fun ExpenseDateAndCategoryCard(
-    uiState: AddExpenseUiState,
+    dateCategoryState: AddExpenseDateCategoryState,
     onDateSelected: (LocalDate) -> Unit,
     onCategoryChanged: (ExpenseCategory) -> Unit,
     modifier: Modifier = Modifier
@@ -20,13 +20,13 @@ fun ExpenseDateAndCategoryCard(
     TsContentCard(modifier = modifier) {
         DateInputSection(
             modifier = Modifier.padding(horizontal = 16.dp),
-            selectedDate = uiState.selectedDate,
+            selectedDate = dateCategoryState.selectedDate,
             onDateSelected = onDateSelected,
         )
 
         ExpenseCategoriesRadioGroup(
             modifier = Modifier.padding(horizontal = 16.dp),
-            selectedCategory = uiState.selectedCategory,
+            selectedCategory = dateCategoryState.selectedCategory,
             onCategoryChanged = onCategoryChanged
         )
     }

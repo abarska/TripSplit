@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.anabars.tripsplit.common.TripSplitConstants
+import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
 import com.anabars.tripsplit.ui.model.AddExpenseUiState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import java.time.ZoneId
@@ -38,14 +39,18 @@ data class TripExpense(
     @ColumnInfo val tripId: Long
 ) {
     companion object {
-        fun fromUiState(uiState: AddExpenseUiState, tripId: Long): TripExpense {
-            val timestamp = uiState.selectedDate
+        fun fromUiState(
+            uiState: AddExpenseUiState,
+            dateCategoryState: AddExpenseDateCategoryState,
+            tripId: Long
+        ): TripExpense {
+            val timestamp = dateCategoryState.selectedDate
                 .atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
             return TripExpense(
                 paidById = uiState.expensePayerId,
                 amount = uiState.expenseAmount.toDoubleOrNull() ?: 0.0,
                 currency = uiState.expenseCurrencyCode,
-                category = uiState.selectedCategory,
+                category = dateCategoryState.selectedCategory,
                 timestamp = timestamp,
                 tripId = tripId
             )

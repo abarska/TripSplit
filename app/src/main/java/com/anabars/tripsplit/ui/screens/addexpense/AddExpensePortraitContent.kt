@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
+import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
 import com.anabars.tripsplit.ui.model.AddExpenseUiState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.getFakeAddExpenseUiState
@@ -18,6 +19,7 @@ import java.time.LocalDate
 @Composable
 fun AddExpensePortraitContent(
     uiState: AddExpenseUiState,
+    dateCategoryState: AddExpenseDateCategoryState,
     onDateSelected: (LocalDate) -> Unit,
     onCategoryChange: (ExpenseCategory) -> Unit,
     onExpenseAmountChanged: (String) -> Unit,
@@ -34,7 +36,7 @@ fun AddExpensePortraitContent(
     ) {
 
         ExpenseDateAndCategoryCard(
-            uiState = uiState,
+            dateCategoryState = dateCategoryState,
             onDateSelected = onDateSelected,
             onCategoryChanged = onCategoryChange
         )
@@ -60,6 +62,7 @@ fun AddExpensePortraitContent(
 private fun AddExpensePortraitContentPreview() {
     AddExpensePortraitContent(
         uiState = getFakeAddExpenseUiState(),
+        dateCategoryState = AddExpenseDateCategoryState(),
         onDateSelected = {},
         onCategoryChange = {},
         onExpenseAmountChanged = {},

@@ -8,12 +8,15 @@ data class AddExpenseUiState (
     // todo split this into several observable states to reduce recomposition overload
     val tripParticipants: List<TripParticipant> = emptyList(),
     val tripCurrencies: List<TripCurrency> = emptyList(),
-    val selectedDate: LocalDate = LocalDate.now(),
-    val selectedCategory: ExpenseCategory = ExpenseCategory.Miscellaneous,
     val expenseAmount: String = "",
     val expenseCurrencyCode: String = "",
     val expensePayerId: Long = -1L,
     val selectedParticipants: Set<TripParticipant> = emptySet()
+)
+
+data class AddExpenseDateCategoryState(
+    val selectedDate: LocalDate = LocalDate.now(),
+    val selectedCategory: ExpenseCategory = ExpenseCategory.Miscellaneous
 )
 
 sealed class AddExpenseEvent {

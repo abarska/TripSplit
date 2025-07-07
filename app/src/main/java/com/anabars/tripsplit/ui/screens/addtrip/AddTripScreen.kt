@@ -47,6 +47,7 @@ fun AddTripScreen(
     val viewModel: AddTripViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val tripNameUiState by viewModel.nameUiState.collectAsState()
+    val tripParticipantsUiState by viewModel.participantsUiState.collectAsState()
     val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
 
     val handleBackNavigation: () -> Boolean = {
@@ -95,17 +96,17 @@ fun AddTripScreen(
 
         ActiveDialog.USER_INPUT -> {
             TsUserInputDialog(
-                uiState = uiState,
+                tripParticipantsUiState = tripParticipantsUiState,
                 onInputChange = { viewModel.onEvent(NewParticipantNameChanged(it)) },
                 onMultiplicatorChange = { viewModel.onEvent(NewParticipantMultiplicatorChanged(it)) },
                 onConfirm = {
-                    if (uiState.updatedParticipantIndex >= 0) { viewModel.onEvent(ExistingParticipantEdited) }
+                    if (tripParticipantsUiState.updatedParticipantIndex >= 0) { viewModel.onEvent(ExistingParticipantEdited) }
                     else { viewModel.onEvent(NewParticipantSaveClicked) }
                 },
                 onDismiss = { viewModel.onEvent(DismissAddParticipantDialog) },
-                titleRes = if (uiState.updatedParticipantIndex >= 0) R.string.edit_participant else R.string.add_participant,
+                titleRes = if (tripParticipantsUiState.updatedParticipantIndex >= 0) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
-                positiveTextRes = if (uiState.updatedParticipantIndex >= 0) R.string.save else R.string.add,
+                positiveTextRes = if (tripParticipantsUiState.updatedParticipantIndex >= 0) R.string.save else R.string.add,
                 negativeTextRes = R.string.cancel
             )
         }
@@ -142,6 +143,7 @@ fun AddTripScreen(
                 AddTripPortraitContent(
                     uiState = uiState,
                     tripNameUiState = tripNameUiState,
+                    tripParticipants = tripParticipantsUiState.tripParticipants,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
@@ -154,6 +156,7 @@ fun AddTripScreen(
                 AddTripLandscapeContent(
                     uiState = uiState,
                     tripNameUiState = tripNameUiState,
+                    tripParticipants = tripParticipantsUiState.tripParticipants,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },

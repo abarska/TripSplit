@@ -19,12 +19,12 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.listitems.TsItemRow
-import com.anabars.tripsplit.ui.model.AddTripUiState
-import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
+import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
+import com.anabars.tripsplit.ui.utils.getFakeParticipantsUiState
 
 @Composable
 fun TsUserInputDialog(
-    uiState: AddTripUiState,
+    tripParticipantsUiState: AddTripParticipantsUiState,
     onInputChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     onMultiplicatorChange: (Int) -> Unit = {},
@@ -57,7 +57,7 @@ fun TsUserInputDialog(
         ) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = uiState.newParticipantName,
+                value = tripParticipantsUiState.newParticipantName,
                 onValueChange = onInputChange,
                 label = { if (labelValue.isNotEmpty()) Text(text = labelValue) },
                 singleLine = true
@@ -71,9 +71,9 @@ fun TsUserInputDialog(
                 )
             ) {
                 TsItemRow(
-                    highlighted = uiState.newParticipantMultiplicator > 1,
-                    enabled = uiState.newParticipantMultiplicator > 1,
-                    onItemClick = { onMultiplicatorChange(uiState.newParticipantMultiplicator - 1) }
+                    highlighted = tripParticipantsUiState.newParticipantMultiplicator > 1,
+                    enabled = tripParticipantsUiState.newParticipantMultiplicator > 1,
+                    onItemClick = { onMultiplicatorChange(tripParticipantsUiState.newParticipantMultiplicator - 1) }
                 ) {
                     Row(
                         modifier = Modifier
@@ -85,12 +85,15 @@ fun TsUserInputDialog(
                     }
                 }
                 Text(
-                    text = stringResource(R.string.pays_for_format, uiState.newParticipantMultiplicator),
+                    text = stringResource(
+                        R.string.pays_for_format,
+                        tripParticipantsUiState.newParticipantMultiplicator
+                    ),
                     style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
                 )
                 TsItemRow(
                     highlighted = true,
-                    onItemClick = { onMultiplicatorChange(uiState.newParticipantMultiplicator + 1) }
+                    onItemClick = { onMultiplicatorChange(tripParticipantsUiState.newParticipantMultiplicator + 1) }
                 ) {
                     Row(
                         modifier = Modifier
@@ -110,7 +113,7 @@ fun TsUserInputDialog(
 @Composable
 private fun TsUserInputDialogPreview() {
     TsUserInputDialog(
-        uiState = getFakeAddTripUiState(),
+        tripParticipantsUiState = getFakeParticipantsUiState(),
         onInputChange = {},
         titleRes = R.string.add_participant,
         labelRes = R.string.participant_name_hint,

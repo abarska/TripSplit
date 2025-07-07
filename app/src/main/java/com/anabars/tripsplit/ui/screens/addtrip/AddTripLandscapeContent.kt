@@ -18,12 +18,14 @@ import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
 import com.anabars.tripsplit.ui.utils.getFakeTripNameUiState
+import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun AddTripLandscapeContent(
     uiState: AddTripUiState,
     tripNameUiState: AddTripNameUiState,
+    tripParticipants: List<TripParticipant>,
     onTripNameChanged: (String) -> Unit,
     onAddParticipantButtonClick: () -> Unit,
     onEditParticipantButtonClick: (TripParticipant) -> Unit,
@@ -60,7 +62,7 @@ fun AddTripLandscapeContent(
             TsContentCard(modifier = Modifier.weight(1f)) {
                 ChipsSection(
                     labelRes = R.string.participants_section_header,
-                    items = uiState.tripParticipants,
+                    items = tripParticipants,
                     onAddItemButtonClick = onAddParticipantButtonClick,
                     onItemClick = onEditParticipantButtonClick,
                     onDeleteItemButtonClick = onDeleteParticipant,
@@ -82,6 +84,7 @@ private fun AddTripLandscapeContentPreview() {
     AddTripLandscapeContent(
         uiState = getFakeAddTripUiState(),
         tripNameUiState = getFakeTripNameUiState(),
+        tripParticipants = getFakeTripParticipants(),
         onTripNameChanged = {},
         onAddParticipantButtonClick = {},
         onEditParticipantButtonClick = {},

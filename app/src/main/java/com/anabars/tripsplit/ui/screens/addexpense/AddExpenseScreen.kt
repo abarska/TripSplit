@@ -23,9 +23,9 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
 
     val viewModel: AddExpenseViewModel = hiltViewModel()
 
-    val uiState by viewModel.uiState.collectAsState()
     val dateCategoryState by viewModel.dateCategoryState.collectAsState()
     val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
+    val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
 
     val onSaveExpense = {
         viewModel.saveExpense()
@@ -48,9 +48,9 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
 
     if (isPortrait) {
         AddExpensePortraitContent(
-            uiState = uiState,
             dateCategoryState = dateCategoryState,
             amountCurrencyState = amountCurrencyState,
+            payerParticipantsState = payerParticipantsState,
             onDateSelected = { viewModel.onEvent(AddExpenseEvent.DateSelected(it)) },
             onCategoryChange = { viewModel.onEvent(AddExpenseEvent.CategoryChanged(it)) },
             onExpenseAmountChanged = { viewModel.onEvent(AddExpenseEvent.AmountChanged(it)) },
@@ -62,9 +62,9 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         )
     } else {
         AddExpenseLandscapeContent(
-            uiState = uiState,
             dateCategoryState = dateCategoryState,
             amountCurrencyState = amountCurrencyState,
+            payerParticipantsState = payerParticipantsState,
             onDateSelected = { viewModel.onEvent(AddExpenseEvent.DateSelected(it)) },
             onCategoryChange = { viewModel.onEvent(AddExpenseEvent.CategoryChanged(it)) },
             onExpenseAmountChanged = { viewModel.onEvent(AddExpenseEvent.AmountChanged(it)) },

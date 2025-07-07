@@ -12,17 +12,17 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
-import com.anabars.tripsplit.ui.model.AddExpenseUiState
+import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.ui.utils.getFakeAddExpenseUiState
+import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
 import java.time.LocalDate
 
 @Composable
 fun AddExpensePortraitContent(
-    uiState: AddExpenseUiState,
     dateCategoryState: AddExpenseDateCategoryState,
     amountCurrencyState: AddExpenseAmountCurrencyState,
+    payerParticipantsState: AddExpensePayerParticipantsState,
     onDateSelected: (LocalDate) -> Unit,
     onCategoryChange: (ExpenseCategory) -> Unit,
     onExpenseAmountChanged: (String) -> Unit,
@@ -51,7 +51,7 @@ fun AddExpensePortraitContent(
         )
 
         ExpensePaidByAndPaidForCard(
-            uiState = uiState,
+            payerParticipantsState = payerParticipantsState,
             onPayerSelected = onPayerSelected,
             onSelectionChanged = onParticipantsSelected
         )
@@ -64,9 +64,9 @@ fun AddExpensePortraitContent(
 @Composable
 private fun AddExpensePortraitContentPreview() {
     AddExpensePortraitContent(
-        uiState = getFakeAddExpenseUiState(),
         dateCategoryState = AddExpenseDateCategoryState(),
         amountCurrencyState = getFakeAmountCurrencyUiState(),
+        payerParticipantsState = getFakePayerParticipantsState(),
         onDateSelected = {},
         onCategoryChange = {},
         onExpenseAmountChanged = {},

@@ -10,7 +10,7 @@ import com.anabars.tripsplit.repository.TripExpensesRepository
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
 import com.anabars.tripsplit.ui.model.AddExpenseEvent
-import com.anabars.tripsplit.ui.model.AddExpenseUiState
+import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,14 +32,14 @@ class AddExpenseViewModel @Inject constructor(
     private val tripId: Long = savedStateHandle.get<Long>("tripId")
         ?: throw IllegalStateException("Trip ID is required for AddExpenseViewModel")
 
-    private val _uiState = MutableStateFlow(AddExpenseUiState())
-    val uiState: StateFlow<AddExpenseUiState> = _uiState.asStateFlow()
-
     private val _dateCategoryState = MutableStateFlow(AddExpenseDateCategoryState())
     val dateCategoryState: StateFlow<AddExpenseDateCategoryState> = _dateCategoryState.asStateFlow()
 
     private val _amountCurrencyState = MutableStateFlow(AddExpenseAmountCurrencyState())
     val amountCurrencyState: StateFlow<AddExpenseAmountCurrencyState> = _amountCurrencyState.asStateFlow()
+
+    private val _payerParticipantsState = MutableStateFlow(AddExpensePayerParticipantsState())
+    val payerParticipantsState: StateFlow<AddExpensePayerParticipantsState> = _payerParticipantsState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -51,17 +51,18 @@ class AddExpenseViewModel @Inject constructor(
                 val initialPayerId = participants.firstOrNull()?.id
                 val initialCurrencyCode = currencies.firstOrNull()?.code
 
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        tripParticipants = participants,
-                        selectedParticipants = initialSelectedParticipants,
-                        expensePayerId = initialPayerId ?: currentState.expensePayerId,
-                    )
-                }
                 _amountCurrencyState.update { currentState ->
                     currentState.copy(
                         tripCurrencies = currencies,
                         expenseCurrencyCode = initialCurrencyCode ?: currentState.expenseCurrencyCode
+                    )
+                }
+
+                _payerParticipantsState.update { currentState ->
+                    currentState.copy(
+                        tripParticipants = participants,
+                        selectedParticipants = initialSelectedParticipants,
+                        expensePayerId = initialPayerId ?: currentState.expensePayerId,
                     )
                 }
             } catch (e: Exception) {
@@ -94,18 +95,18 @@ class AddExpenseViewModel @Inject constructor(
         _amountCurrencyState.update { it.copy(expenseCurrencyCode = code) }
 
     private fun updatePayerId(id: Long) =
-        _uiState.update { it.copy(expensePayerId = id) }
+        _payerParticipantsState.update { it.copy(expensePayerId = id) }
 
     private fun updateSelectedParticipants(participants: Set<TripParticipant>) =
-        _uiState.update { it.copy(selectedParticipants = participants) }
+        _payerParticipantsState.update { it.copy(selectedParticipants = participants) }
 
     fun saveExpense() {
         viewModelScope.launch {
             tripExpensesRepository.saveExpense(
                 TripExpense.fromUiState(
-                    uiState = _uiState.value,
                     dateCategoryState = _dateCategoryState.value,
                     amountCurrencyState = _amountCurrencyState.value,
+                    payerParticipantsState = _payerParticipantsState.value,
                     tripId = tripId
                 )
             )

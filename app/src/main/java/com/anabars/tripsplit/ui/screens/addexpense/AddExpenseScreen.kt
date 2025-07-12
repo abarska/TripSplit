@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -26,15 +27,23 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
     val dateCategoryState by viewModel.dateCategoryState.collectAsState()
     val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
     val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
+    val addExpenseErrorState by viewModel.addExpenseErrorState.collectAsState()
+    val navigateBackState by viewModel.navigateBackState.collectAsState()
 
     val onSaveExpense = {
         viewModel.saveExpense()
-        navController.popBackStack()
     }
 
     BackHandler {
         if (!sharedViewModel.handleBack()) {
             navController.popBackStack()
+        }
+    }
+
+    LaunchedEffect(navigateBackState) {
+        if (navigateBackState) {
+            navController.popBackStack()
+            viewModel.onNavigatedBack()
         }
     }
 
@@ -48,6 +57,7 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
 
     if (isPortrait) {
         AddExpensePortraitContent(
+            addExpenseErrorState = addExpenseErrorState,
             dateCategoryState = dateCategoryState,
             amountCurrencyState = amountCurrencyState,
             payerParticipantsState = payerParticipantsState,
@@ -62,6 +72,7 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         )
     } else {
         AddExpenseLandscapeContent(
+            addExpenseErrorState = addExpenseErrorState,
             dateCategoryState = dateCategoryState,
             amountCurrencyState = amountCurrencyState,
             payerParticipantsState = payerParticipantsState,

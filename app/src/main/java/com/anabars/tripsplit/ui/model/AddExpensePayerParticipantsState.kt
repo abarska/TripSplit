@@ -21,6 +21,10 @@ data class AddExpensePayerParticipantsState (
     val selectedParticipants: Set<TripParticipant> = emptySet()
 )
 
+enum class AddExpenseErrorState {
+    EXPENSE_AMOUNT, SELECTED_PARTICIPANTS, NONE
+}
+
 sealed class AddExpenseEvent {
     data class DateSelected(val date: LocalDate) : AddExpenseEvent()
     data class CategoryChanged(val category: ExpenseCategory) : AddExpenseEvent()

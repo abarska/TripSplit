@@ -33,7 +33,7 @@ fun DateInputSection(
     selectedDate: LocalDate,
     onDateSelected: (LocalDate) -> Unit
 ) {
-    val datePattern = DateTimeFormatter.ofPattern(stringResource(R.string.datepicker_format))
+    val datePattern = DateTimeFormatter.ofPattern(stringResource(R.string.date_picker_format))
     val formattedDate = rememberSaveable(selectedDate) { selectedDate.format(datePattern) }
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
 

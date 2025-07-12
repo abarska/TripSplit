@@ -50,6 +50,8 @@
 
     // used for error messages
     <string name="error_mandatory_field">This field is mandatory</string>
+    <string name="error_participants_not_selected">Please select at least one participant</string>
+    <string name="error_amount_invalid">Please enter a valid, positive amount</string>
 
     // used for dialogs
     <string name="save_changes_dialog_title">Save Changes</string>
@@ -81,6 +83,6 @@
     <string name="expense_category_activities">Activities</string>
     <string name="expense_category_miscellaneous">Miscellaneous</string>
 
-    <string name="datepicker_format">dd.MM.yyyy</string>
+    <string name="date_picker_format">dd.MM.yyyy</string>
     <string name="pays_for_format">Pays for %d</string>
 </resources>

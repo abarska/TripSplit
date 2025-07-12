@@ -17,6 +17,7 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
+import com.anabars.tripsplit.ui.model.AddExpenseErrorState
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
@@ -25,6 +26,7 @@ import java.time.LocalDate
 
 @Composable
 fun AddExpenseLandscapeContent(
+    addExpenseErrorState: AddExpenseErrorState,
     dateCategoryState: AddExpenseDateCategoryState,
     amountCurrencyState: AddExpenseAmountCurrencyState,
     payerParticipantsState: AddExpensePayerParticipantsState,
@@ -34,7 +36,7 @@ fun AddExpenseLandscapeContent(
     onCurrencySelected: (String) -> Unit,
     onPayerSelected: (Long) -> Unit,
     onParticipantsSelected: (Set<TripParticipant>) -> Unit,
-    onSaveExpense: () -> Boolean,
+    onSaveExpense: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -54,6 +56,7 @@ fun AddExpenseLandscapeContent(
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
             ExpenseAmountAndCurrencyCard(
+                addExpenseErrorState = addExpenseErrorState,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
@@ -62,6 +65,7 @@ fun AddExpenseLandscapeContent(
                 onCurrencySelected = onCurrencySelected
             )
             ExpensePaidByAndPaidForCard(
+                addExpenseErrorState = addExpenseErrorState,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
@@ -79,6 +83,7 @@ fun AddExpenseLandscapeContent(
 @Composable
 private fun AddExpenseLandscapeContentPreview() {
     AddExpenseLandscapeContent(
+        addExpenseErrorState = AddExpenseErrorState.NONE,
         dateCategoryState = AddExpenseDateCategoryState(),
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         payerParticipantsState = getFakePayerParticipantsState(),
@@ -88,6 +93,6 @@ private fun AddExpenseLandscapeContentPreview() {
         onCurrencySelected = {},
         onPayerSelected = {},
         onParticipantsSelected = {},
-        onSaveExpense = { true }
+        onSaveExpense = { }
     )
 }

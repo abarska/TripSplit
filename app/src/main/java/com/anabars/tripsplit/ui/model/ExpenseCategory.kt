@@ -2,8 +2,11 @@ package com.anabars.tripsplit.ui.model
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.runtime.saveable.Saver
+import androidx.compose.material.icons.outlined.AccountBalance
+import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.DirectionsCar
+import androidx.compose.material.icons.outlined.Hotel
+import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.anabars.tripsplit.R
 
@@ -12,15 +15,6 @@ sealed class ExpenseCategory(val icon: ImageVector, @StringRes val titleRes: Int
     companion object {
         fun allExpenseCategories() =
             listOf(Transportation, Accommodation, Food, Activities, Miscellaneous)
-
-        val expenseCategorySaver: Saver<ExpenseCategory, String> = Saver(
-            save = {
-                it.javaClass.simpleName ?: Miscellaneous.javaClass.simpleName
-            },
-            restore = { name ->
-                allExpenseCategories().find { it.javaClass.simpleName == name } ?: Miscellaneous
-            }
-        )
     }
 
     data object Transportation :

@@ -24,12 +24,12 @@ val currencyFreaksApiKey = localProperties.getProperty("CURRENCY_FREAKS_API_KEY"
 
 android {
     namespace = "com.anabars.tripsplit"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.anabars.tripsplit"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -88,6 +88,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
     testImplementation(libs.google.truth)
     androidTestImplementation(libs.google.truth)
 

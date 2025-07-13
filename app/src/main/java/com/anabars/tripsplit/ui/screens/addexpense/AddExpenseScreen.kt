@@ -6,15 +6,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.model.AddExpenseErrorState
 import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
@@ -29,10 +39,10 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
     val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
     val addExpenseErrorState by viewModel.addExpenseErrorState.collectAsState()
     val navigateBackState by viewModel.navigateBackState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    val onSaveExpense = {
-        viewModel.saveExpense()
-    }
+    val amountError = stringResource(R.string.error_amount_invalid)
+    val participantsError = stringResource(R.string.error_participants_not_selected)
 
     BackHandler {
         if (!sharedViewModel.handleBack()) {
@@ -40,10 +50,29 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         }
     }
 
-    LaunchedEffect(navigateBackState) {
+    LaunchedEffect(navigateBackState, addExpenseErrorState) {
         if (navigateBackState) {
             navController.popBackStack()
             viewModel.onNavigatedBack()
+        }
+
+        // TODO 14/07/2025: anabars, move logic to the viewModel
+        when (addExpenseErrorState) {
+            AddExpenseErrorState.EXPENSE_AMOUNT -> {
+                snackbarHostState.showSnackbar(
+                    message = amountError,
+                    duration = SnackbarDuration.Short
+                )
+            }
+
+            AddExpenseErrorState.SELECTED_PARTICIPANTS -> {
+                snackbarHostState.showSnackbar(
+                    message = participantsError,
+                    duration = SnackbarDuration.Short
+                )
+            }
+
+            else -> {}
         }
     }
 
@@ -55,35 +84,48 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         .verticalScroll(scrollState)
         .padding(16.dp)
 
-    if (isPortrait) {
-        AddExpensePortraitContent(
-            addExpenseErrorState = addExpenseErrorState,
-            dateCategoryState = dateCategoryState,
-            amountCurrencyState = amountCurrencyState,
-            payerParticipantsState = payerParticipantsState,
-            onDateSelected = { viewModel.onEvent(AddExpenseEvent.DateSelected(it)) },
-            onCategoryChange = { viewModel.onEvent(AddExpenseEvent.CategoryChanged(it)) },
-            onExpenseAmountChanged = { viewModel.onEvent(AddExpenseEvent.AmountChanged(it)) },
-            onCurrencySelected = { viewModel.onEvent(AddExpenseEvent.CurrencySelected(it)) },
-            onPayerSelected = { viewModel.onEvent(AddExpenseEvent.PayerSelected(it)) },
-            onParticipantsSelected = { viewModel.onEvent(AddExpenseEvent.ParticipantsSelected(it)) },
-            onSaveExpense = onSaveExpense,
-            modifier = modifier
-        )
-    } else {
-        AddExpenseLandscapeContent(
-            addExpenseErrorState = addExpenseErrorState,
-            dateCategoryState = dateCategoryState,
-            amountCurrencyState = amountCurrencyState,
-            payerParticipantsState = payerParticipantsState,
-            onDateSelected = { viewModel.onEvent(AddExpenseEvent.DateSelected(it)) },
-            onCategoryChange = { viewModel.onEvent(AddExpenseEvent.CategoryChanged(it)) },
-            onExpenseAmountChanged = { viewModel.onEvent(AddExpenseEvent.AmountChanged(it)) },
-            onCurrencySelected = { viewModel.onEvent(AddExpenseEvent.CurrencySelected(it)) },
-            onPayerSelected = { viewModel.onEvent(AddExpenseEvent.PayerSelected(it)) },
-            onParticipantsSelected = { viewModel.onEvent(AddExpenseEvent.ParticipantsSelected(it)) },
-            onSaveExpense = onSaveExpense,
-            modifier = modifier
-        )
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
+                )
+            }
+        }
+    ) { paddingValues ->
+        val paddedModifier = modifier.padding(paddingValues)
+        if (isPortrait) {
+            AddExpensePortraitContent(
+                addExpenseErrorState = addExpenseErrorState,
+                dateCategoryState = dateCategoryState,
+                amountCurrencyState = amountCurrencyState,
+                payerParticipantsState = payerParticipantsState,
+                onDateSelected = { viewModel.onEvent(AddExpenseEvent.DateSelected(it)) },
+                onCategoryChange = { viewModel.onEvent(AddExpenseEvent.CategoryChanged(it)) },
+                onExpenseAmountChanged = { viewModel.onEvent(AddExpenseEvent.AmountChanged(it)) },
+                onCurrencySelected = { viewModel.onEvent(AddExpenseEvent.CurrencySelected(it)) },
+                onPayerSelected = { viewModel.onEvent(AddExpenseEvent.PayerSelected(it)) },
+                onParticipantsSelected = { viewModel.onEvent(AddExpenseEvent.ParticipantsSelected(it)) },
+                onSaveExpense = { viewModel.saveExpense() },
+                modifier = paddedModifier
+            )
+        } else {
+            AddExpenseLandscapeContent(
+                addExpenseErrorState = addExpenseErrorState,
+                dateCategoryState = dateCategoryState,
+                amountCurrencyState = amountCurrencyState,
+                payerParticipantsState = payerParticipantsState,
+                onDateSelected = { viewModel.onEvent(AddExpenseEvent.DateSelected(it)) },
+                onCategoryChange = { viewModel.onEvent(AddExpenseEvent.CategoryChanged(it)) },
+                onExpenseAmountChanged = { viewModel.onEvent(AddExpenseEvent.AmountChanged(it)) },
+                onCurrencySelected = { viewModel.onEvent(AddExpenseEvent.CurrencySelected(it)) },
+                onPayerSelected = { viewModel.onEvent(AddExpenseEvent.PayerSelected(it)) },
+                onParticipantsSelected = { viewModel.onEvent(AddExpenseEvent.ParticipantsSelected(it)) },
+                onSaveExpense = { viewModel.saveExpense() },
+                modifier = paddedModifier
+            )
+        }
     }
 }

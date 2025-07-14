@@ -9,11 +9,10 @@ import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
-import com.anabars.tripsplit.ui.model.AddExpenseErrorState
 
 @Composable
 fun ExpenseAmountAndCurrencyCard(
-    addExpenseErrorState: AddExpenseErrorState,
+    addExpenseErrorRes: Int,
     amountCurrencyState: AddExpenseAmountCurrencyState,
     onExpenseAmountChanged: (String) -> Unit,
     onCurrencySelected: (String) -> Unit,
@@ -21,7 +20,7 @@ fun ExpenseAmountAndCurrencyCard(
 ) {
     TsContentCard(
         modifier = modifier,
-        isError = addExpenseErrorState == AddExpenseErrorState.EXPENSE_AMOUNT
+        isError = addExpenseErrorRes == R.string.error_amount_invalid
     ) {
         TsExpenseAmountInput(
             modifier = Modifier.padding(horizontal = 16.dp),

@@ -19,12 +19,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.model.AddExpenseErrorState
 import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
@@ -32,17 +30,15 @@ import com.anabars.tripsplit.viewmodels.SharedViewModel
 @Composable
 fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedViewModel) {
 
+    val context = LocalContext.current
     val viewModel: AddExpenseViewModel = hiltViewModel()
 
     val dateCategoryState by viewModel.dateCategoryState.collectAsState()
     val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
     val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
-    val addExpenseErrorState by viewModel.addExpenseErrorState.collectAsState()
+    val addExpenseErrorRes by viewModel.addExpenseErrorRes.collectAsState()
     val navigateBackState by viewModel.navigateBackState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    val amountError = stringResource(R.string.error_amount_invalid)
-    val participantsError = stringResource(R.string.error_participants_not_selected)
+    val snackBarHostState = remember { SnackbarHostState() }
 
     BackHandler {
         if (!sharedViewModel.handleBack()) {
@@ -50,29 +46,17 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         }
     }
 
-    LaunchedEffect(navigateBackState, addExpenseErrorState) {
+    LaunchedEffect(navigateBackState, addExpenseErrorRes) {
         if (navigateBackState) {
             navController.popBackStack()
             viewModel.onNavigatedBack()
         }
 
-        // TODO 14/07/2025: anabars, move logic to the viewModel
-        when (addExpenseErrorState) {
-            AddExpenseErrorState.EXPENSE_AMOUNT -> {
-                snackbarHostState.showSnackbar(
-                    message = amountError,
-                    duration = SnackbarDuration.Short
-                )
-            }
-
-            AddExpenseErrorState.SELECTED_PARTICIPANTS -> {
-                snackbarHostState.showSnackbar(
-                    message = participantsError,
-                    duration = SnackbarDuration.Short
-                )
-            }
-
-            else -> {}
+        if (addExpenseErrorRes != 0) {
+            snackBarHostState.showSnackbar(
+                message = context.getString(addExpenseErrorRes),
+                duration = SnackbarDuration.Short
+            )
         }
     }
 
@@ -86,7 +70,7 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
 
     Scaffold(
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) { data ->
+            SnackbarHost(hostState = snackBarHostState) { data ->
                 Snackbar(
                     snackbarData = data,
                     containerColor = MaterialTheme.colorScheme.error,
@@ -98,7 +82,7 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
         val paddedModifier = modifier.padding(paddingValues)
         if (isPortrait) {
             AddExpensePortraitContent(
-                addExpenseErrorState = addExpenseErrorState,
+                addExpenseErrorRes = addExpenseErrorRes,
                 dateCategoryState = dateCategoryState,
                 amountCurrencyState = amountCurrencyState,
                 payerParticipantsState = payerParticipantsState,
@@ -113,7 +97,7 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
             )
         } else {
             AddExpenseLandscapeContent(
-                addExpenseErrorState = addExpenseErrorState,
+                addExpenseErrorRes = addExpenseErrorRes,
                 dateCategoryState = dateCategoryState,
                 amountCurrencyState = amountCurrencyState,
                 payerParticipantsState = payerParticipantsState,

@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripExpensesRepository
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
-import com.anabars.tripsplit.ui.model.AddExpenseErrorState
 import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
@@ -44,8 +44,8 @@ class AddExpenseViewModel @Inject constructor(
     val payerParticipantsState: StateFlow<AddExpensePayerParticipantsState> =
         _payerParticipantsState.asStateFlow()
 
-    private val _addExpenseErrorState = MutableStateFlow(AddExpenseErrorState.NONE)
-    val addExpenseErrorState = _addExpenseErrorState.asStateFlow()
+    private val _addExpenseErrorRes = MutableStateFlow(0)
+    val addExpenseErrorRes = _addExpenseErrorRes.asStateFlow()
 
     private val _navigateBackState = MutableStateFlow(false)
     val navigateBackState = _navigateBackState.asStateFlow()
@@ -100,8 +100,8 @@ class AddExpenseViewModel @Inject constructor(
 
     private fun updateExpenseAmount(amount: String) {
         _amountCurrencyState.update { it.copy(expenseAmount = amount) }
-        if (_addExpenseErrorState.value == AddExpenseErrorState.EXPENSE_AMOUNT) {
-            clearError()
+        if (_addExpenseErrorRes.value == R.string.error_amount_invalid) {
+            _addExpenseErrorRes.value = 0
         }
     }
 
@@ -113,13 +113,9 @@ class AddExpenseViewModel @Inject constructor(
 
     private fun updateSelectedParticipants(participants: Set<TripParticipant>) {
         _payerParticipantsState.update { it.copy(selectedParticipants = participants) }
-        if (_addExpenseErrorState.value == AddExpenseErrorState.SELECTED_PARTICIPANTS) {
-            clearError()
+        if (_addExpenseErrorRes.value == R.string.error_participants_not_selected) {
+            _addExpenseErrorRes.value = 0
         }
-    }
-
-    private fun clearError() {
-        _addExpenseErrorState.value = AddExpenseErrorState.NONE
     }
 
     fun saveExpense() {
@@ -139,14 +135,14 @@ class AddExpenseViewModel @Inject constructor(
 
     fun validateExpense(): Boolean {
         val amount = _amountCurrencyState.value.expenseAmount.toDoubleOrNull()
-        val hasAmountError = amount == null || amount <= 0.0
-        val hasPayerError = _payerParticipantsState.value.selectedParticipants.isEmpty()
-        _addExpenseErrorState.value = when {
-            hasAmountError -> AddExpenseErrorState.EXPENSE_AMOUNT
-            hasPayerError -> AddExpenseErrorState.SELECTED_PARTICIPANTS
-            else -> AddExpenseErrorState.NONE
+        val wrongAmount = amount == null || amount <= 0.0
+        val participantsMissingError = _payerParticipantsState.value.selectedParticipants.isEmpty()
+        _addExpenseErrorRes.value = when {
+            wrongAmount -> R.string.error_amount_invalid
+            participantsMissingError -> R.string.error_participants_not_selected
+            else -> 0
         }
-        return !hasAmountError && !hasPayerError
+        return !wrongAmount && !participantsMissingError
     }
 
     fun onNavigatedBack() {

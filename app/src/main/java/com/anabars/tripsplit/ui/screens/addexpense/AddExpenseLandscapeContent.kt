@@ -17,7 +17,6 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
-import com.anabars.tripsplit.ui.model.AddExpenseErrorState
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
@@ -26,7 +25,7 @@ import java.time.LocalDate
 
 @Composable
 fun AddExpenseLandscapeContent(
-    addExpenseErrorState: AddExpenseErrorState,
+    addExpenseErrorRes: Int,
     dateCategoryState: AddExpenseDateCategoryState,
     amountCurrencyState: AddExpenseAmountCurrencyState,
     payerParticipantsState: AddExpensePayerParticipantsState,
@@ -56,7 +55,7 @@ fun AddExpenseLandscapeContent(
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
             ExpenseAmountAndCurrencyCard(
-                addExpenseErrorState = addExpenseErrorState,
+                addExpenseErrorRes = addExpenseErrorRes,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
@@ -65,7 +64,7 @@ fun AddExpenseLandscapeContent(
                 onCurrencySelected = onCurrencySelected
             )
             ExpensePaidByAndPaidForCard(
-                addExpenseErrorState = addExpenseErrorState,
+                addExpenseErrorRes = addExpenseErrorRes,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
@@ -83,7 +82,7 @@ fun AddExpenseLandscapeContent(
 @Composable
 private fun AddExpenseLandscapeContentPreview() {
     AddExpenseLandscapeContent(
-        addExpenseErrorState = AddExpenseErrorState.NONE,
+        addExpenseErrorRes = 0,
         dateCategoryState = AddExpenseDateCategoryState(),
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         payerParticipantsState = getFakePayerParticipantsState(),

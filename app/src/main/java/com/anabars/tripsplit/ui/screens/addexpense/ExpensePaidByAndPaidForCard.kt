@@ -9,12 +9,11 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
-import com.anabars.tripsplit.ui.model.AddExpenseErrorState
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 
 @Composable
 fun ExpensePaidByAndPaidForCard(
-    addExpenseErrorState: AddExpenseErrorState,
+    addExpenseErrorRes: Int,
     payerParticipantsState: AddExpensePayerParticipantsState,
     onPayerSelected: (Long) -> Unit,
     onSelectionChanged: (Set<TripParticipant>) -> Unit,
@@ -22,7 +21,7 @@ fun ExpensePaidByAndPaidForCard(
 ) {
     TsContentCard(
         modifier = modifier,
-        isError = addExpenseErrorState == AddExpenseErrorState.SELECTED_PARTICIPANTS
+        isError = addExpenseErrorRes == R.string.error_participants_not_selected
     ) {
 
         TsInfoText(textRes = R.string.expense_paid_by)

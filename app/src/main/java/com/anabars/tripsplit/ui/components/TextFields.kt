@@ -44,7 +44,7 @@ fun TsInfoText(
             Text(
                 modifier = modifier,
                 text = value,
-                style = if (isHeader) MaterialTheme.typography.headlineLarge else MaterialTheme.typography.bodyLarge
+                style = if (isHeader) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.bodyLarge
             )
         }
     }

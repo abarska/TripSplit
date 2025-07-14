@@ -69,6 +69,7 @@
     <string name="settlements_tab">Settlements</string>
 
     <string name="you">You</string>
+    <string name="everyone">Everyone</string>
     <string name="participants_section_header">Participants:</string>
     <string name="currencies_section_header">Currencies:</string>
     <string name="loading_trip_details">Loading Trip Details</string>
@@ -83,6 +84,7 @@
     <string name="expense_category_activities">Activities</string>
     <string name="expense_category_miscellaneous">Miscellaneous</string>
 
-    <string name="date_picker_format">dd.MM.yyyy</string>
+    <string name="date_picker_format" translatable="false">dd.MM.yyyy</string>
+    <string name="currency_format" translatable="false">#0.00</string>
     <string name="pays_for_format">Pays for %d</string>
 </resources>

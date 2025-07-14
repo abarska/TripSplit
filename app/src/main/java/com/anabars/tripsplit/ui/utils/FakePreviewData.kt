@@ -1,17 +1,19 @@
 package com.anabars.tripsplit.ui.utils
 
 import com.anabars.tripsplit.data.room.entity.TripCurrency
+import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
+import com.anabars.tripsplit.ui.model.ExpenseCategory
 
 fun getFakeTripParticipants() = listOf(
-    TripParticipant(name = "Harry", multiplicator = 1),
-    TripParticipant(name = "Hermione", multiplicator = 2),
-    TripParticipant(name = "Ron", multiplicator = 3),
-    TripParticipant(name = "Draco", multiplicator = 1)
+    TripParticipant(id = 1, name = "Harry", multiplicator = 1),
+    TripParticipant(id = 2, name = "Hermione", multiplicator = 2),
+    TripParticipant(id = 3, name = "Ron", multiplicator = 3),
+    TripParticipant(id = 4, name = "Draco", multiplicator = 1)
 )
 
 fun getFakeTripCurrencies() = listOf(
@@ -37,4 +39,13 @@ fun getFakePayerParticipantsState() = AddExpensePayerParticipantsState(
     tripParticipants = getFakeTripParticipants(),
     selectedParticipants = getFakeTripParticipants()
         .take(getFakeTripParticipants().size - 1).toSet()
+)
+
+fun getFakeTripExpense() = TripExpense(
+    paidById = 1,
+    amount = 50.0,
+    currency = "EUR",
+    category = ExpenseCategory.Accommodation,
+    timestamp = System.currentTimeMillis(),
+    tripId = 0
 )

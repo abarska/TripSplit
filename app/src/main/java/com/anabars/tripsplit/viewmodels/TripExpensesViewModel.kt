@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.data.room.entity.TripExpense
+import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripExpensesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,6 +23,14 @@ class TripExpensesViewModel @Inject constructor(
 
     val tripExpenses: StateFlow<List<TripExpense>> =
         tripExpensesRepository.getExpensesByTrip(tripId)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                emptyList()
+            )
+
+    val tripParticipants: StateFlow<List<TripParticipant>> =
+        tripExpensesRepository.getParticipantsByTripId(tripId)
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5000),

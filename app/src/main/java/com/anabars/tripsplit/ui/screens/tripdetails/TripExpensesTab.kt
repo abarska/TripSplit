@@ -13,13 +13,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsFab
+import com.anabars.tripsplit.ui.listitems.TsExpenseItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.TripExpensesViewModel
 
@@ -32,6 +31,7 @@ fun TripExpensesTab(
 
     val viewModel: TripExpensesViewModel = hiltViewModel()
     val expenses by viewModel.tripExpenses.collectAsState()
+    val participants by viewModel.tripParticipants.collectAsState()
 
     Box(
         modifier = modifier
@@ -40,8 +40,9 @@ fun TripExpensesTab(
     ) {
         LazyColumn(modifier = modifier.fillMaxSize()) {
             items(expenses) { expense ->
-                TsInfoText(
-                    text = "${stringResource(expense.category.titleRes)}: ${expense.amount} ${expense.currency}",
+                TsExpenseItemRow(
+                    expense = expense,
+                    participants = participants,
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
                 )
             }

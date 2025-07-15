@@ -18,8 +18,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsFab
+import com.anabars.tripsplit.ui.listitems.TsDateHeader
 import com.anabars.tripsplit.ui.listitems.TsExpenseItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.utils.formatDate
 import com.anabars.tripsplit.viewmodels.TripExpensesViewModel
 
 @Composable
@@ -30,22 +32,30 @@ fun TripExpensesTab(
 ) {
 
     val viewModel: TripExpensesViewModel = hiltViewModel()
-    val expenses by viewModel.tripExpenses.collectAsState()
-    val participants by viewModel.tripParticipants.collectAsState()
+    val tripExpenses by viewModel.groupedExpenses.collectAsState()
+    val tripParticipants by viewModel.tripParticipants.collectAsState()
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .padding(bottom = paddingValues.calculateBottomPadding())
     ) {
-        LazyColumn(modifier = modifier.fillMaxSize()) {
-            items(expenses) { expenseWithParticipants ->
-                TsExpenseItemRow(
-                    expense = expenseWithParticipants.expense,
-                    paidFor = expenseWithParticipants.participants,
-                    participants = participants,
-                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-                )
+        LazyColumn(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            tripExpenses.forEach { (date, group) ->
+                item {
+                    TsDateHeader(formattedDate = formatDate(date))
+                }
+                items(group) { expenseWithParticipants ->
+                    TsExpenseItemRow(
+                        expense = expenseWithParticipants.expense,
+                        paidFor = expenseWithParticipants.participants,
+                        tripParticipants = tripParticipants,
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+                    )
+                }
             }
         }
         TsFab(

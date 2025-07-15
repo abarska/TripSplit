@@ -27,7 +27,7 @@ import java.text.DecimalFormat
 fun TsExpenseItemRow(
     expense: TripExpense,
     paidFor: List<TripParticipant>,
-    participants: List<TripParticipant>,
+    tripParticipants: List<TripParticipant>,
     modifier: Modifier = Modifier,
 ) {
     TsItemRow(
@@ -47,8 +47,8 @@ fun TsExpenseItemRow(
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 TsInfoText(textRes = expense.category.titleRes)
-                val payer = participants.find { it.id == expense.paidById }
-                val paidForText = if (paidFor.size == participants.size) {
+                val payer = tripParticipants.find { it.id == expense.paidById }
+                val paidForText = if (paidFor.size == tripParticipants.size) {
                     context.getString(R.string.everyone)
                 } else {
                     paidFor.joinToString(", ") { it.name }
@@ -74,6 +74,6 @@ private fun TsExpenseItemRowPreview() {
     TsExpenseItemRow(
         expense = getFakeTripExpense(),
         paidFor = getFakeTripParticipants(),
-        participants = getFakeTripParticipants()
+        tripParticipants = getFakeTripParticipants()
     )
 }

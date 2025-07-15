@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.utils
+package com.anabars.tripsplit.utils.formatters
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

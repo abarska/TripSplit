@@ -21,7 +21,7 @@ import com.anabars.tripsplit.ui.components.TsFab
 import com.anabars.tripsplit.ui.listitems.TsDateHeader
 import com.anabars.tripsplit.ui.listitems.TsExpenseItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
-import com.anabars.tripsplit.utils.formatDate
+import com.anabars.tripsplit.utils.formatters.formatDate
 import com.anabars.tripsplit.viewmodels.TripExpensesViewModel
 
 @Composable

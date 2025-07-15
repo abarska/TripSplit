@@ -21,7 +21,7 @@ import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.utils.getFakeTripExpense
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
-import java.text.DecimalFormat
+import com.anabars.tripsplit.utils.formatAmount
 
 @Composable
 fun TsExpenseItemRow(
@@ -38,7 +38,6 @@ fun TsExpenseItemRow(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val context = LocalContext.current
             Icon(
                 imageVector = expense.category.icon,
                 contentDescription = stringResource(R.string.expense_category_icon),
@@ -49,7 +48,7 @@ fun TsExpenseItemRow(
                 TsInfoText(textRes = expense.category.titleRes)
                 val payer = tripParticipants.find { it.id == expense.paidById }
                 val paidForText = if (paidFor.size == tripParticipants.size) {
-                    context.getString(R.string.everyone)
+                    LocalContext.current.getString(R.string.everyone)
                 } else {
                     paidFor.joinToString(", ") { it.name }
                 }
@@ -59,9 +58,11 @@ fun TsExpenseItemRow(
                 }
             }
             Spacer(modifier = Modifier.width(16.dp))
-            val formatter = DecimalFormat(context.getString(R.string.currency_format))
+
+            val formattedAmount =
+                formatAmount(expense.amount, stringResource(R.string.currency_format))
             TsInfoText(
-                text = "${expense.currency} ${formatter.format(expense.amount)}",
+                text = "${expense.currency} $formattedAmount",
                 isHeader = true
             )
         }

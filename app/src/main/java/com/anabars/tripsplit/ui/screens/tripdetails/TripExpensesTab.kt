@@ -53,7 +53,8 @@ fun TripExpensesTab(
                         expense = expenseWithParticipants.expense,
                         paidFor = expenseWithParticipants.participants,
                         tripParticipants = tripParticipants,
-                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+                        onDeleteClick = { viewModel.deleteExpenseById(expenseWithParticipants.expense.id) }
                     )
                 }
             }

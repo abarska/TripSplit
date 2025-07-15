@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TripExpensesViewModel @Inject constructor(
-    tripExpensesRepository: TripExpensesRepository,
+    val tripExpensesRepository: TripExpensesRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -47,4 +48,10 @@ class TripExpensesViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList()
             )
+
+    fun deleteExpenseById(expenseId: Long) {
+        viewModelScope.launch {
+            tripExpensesRepository.deleteExpenseById(expenseId)
+        }
+    }
 }

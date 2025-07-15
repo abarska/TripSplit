@@ -32,4 +32,8 @@ class TripExpensesRepository @Inject constructor(
     ) {
         return tripExpensesDao.insertExpenseWithParticipants(expense, participants)
     }
+
+    suspend fun deleteExpenseById(expenseId: Long) {
+        tripExpensesDao.deleteExpenseById(expenseId)
+    }
 }

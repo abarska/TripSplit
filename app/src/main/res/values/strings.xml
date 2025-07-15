@@ -23,6 +23,8 @@
     <string name="expenses_tab_content_description">Trip Expenses</string>
     <string name="settlements_tab_content_description">Trip Settlements</string>
     <string name="expense_category_icon">Expense Category Icon</string>
+    <string name="expand_card_icon">Expand Card</string>
+    <string name="collapse_card_icon">Collapse Card</string>
     <string name="add_item">Add item</string>
 
     // used for hints
@@ -38,6 +40,8 @@
     <string name="minus_one">-1</string>
     <string name="cancel">Cancel</string>
     <string name="discard">Discard</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
     <string name="add_participant">Add Participant</string>
     <string name="edit_participant">Edit Participant</string>
 

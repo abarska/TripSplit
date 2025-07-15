@@ -39,4 +39,7 @@ interface TripExpensesDao {
         }
         saveCrossRefs(crossRefs)
     }
+
+    @Query("DELETE FROM $TRIP_EXPENSES_TABLE WHERE id = :expenseId")
+    suspend fun deleteExpenseById(expenseId: Long)
 }

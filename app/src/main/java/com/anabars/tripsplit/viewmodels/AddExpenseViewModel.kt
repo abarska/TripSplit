@@ -121,14 +121,16 @@ class AddExpenseViewModel @Inject constructor(
     fun saveExpense() {
         viewModelScope.launch {
             if (!validateExpense()) return@launch
-            tripExpensesRepository.saveExpense(
-                TripExpense.fromUiState(
-                    dateCategoryState = _dateCategoryState.value,
-                    amountCurrencyState = _amountCurrencyState.value,
-                    payerParticipantsState = _payerParticipantsState.value,
-                    tripId = tripId
-                )
+
+            val expense = TripExpense.fromUiState(
+                dateCategoryState = _dateCategoryState.value,
+                amountCurrencyState = _amountCurrencyState.value,
+                payerParticipantsState = _payerParticipantsState.value,
+                tripId = tripId
             )
+            val participants = _payerParticipantsState.value.selectedParticipants
+            tripExpensesRepository.saveExpenseWithParticipants(expense, participants)
+
             _navigateBackState.value = true
         }
     }

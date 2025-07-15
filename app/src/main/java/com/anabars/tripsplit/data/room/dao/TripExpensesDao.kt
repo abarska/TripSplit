@@ -19,7 +19,7 @@ interface TripExpensesDao {
     fun getExpensesByTripId(tripId: Long): Flow<List<TripExpense>>
 
     @Transaction
-    @Query("SELECT * FROM $TRIP_EXPENSES_TABLE WHERE tripId = :tripId")
+    @Query("SELECT * FROM $TRIP_EXPENSES_TABLE WHERE tripId = :tripId ORDER BY timestamp DESC")
     fun getExpensesWithParticipantsByTrip(tripId: Long): Flow<List<ExpenseWithParticipants>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -5,6 +5,7 @@ import com.anabars.tripsplit.data.room.dao.TripExpensesDao
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.data.room.model.ExpenseWithParticipants
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -13,8 +14,8 @@ class TripExpensesRepository @Inject constructor(
     private val tripDao: TripDao
 ) {
 
-    fun getExpensesByTrip(tripId: Long): Flow<List<TripExpense>> {
-        return tripExpensesDao.getExpensesByTripId(tripId)
+    fun getExpensesWithParticipantsByTrip(tripId: Long): Flow<List<ExpenseWithParticipants>> {
+        return tripExpensesDao.getExpensesWithParticipantsByTrip(tripId)
     }
 
     fun getCurrenciesByTripId(tripId: Long): Flow<List<TripCurrency>> {

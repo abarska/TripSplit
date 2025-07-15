@@ -39,9 +39,10 @@ fun TripExpensesTab(
             .padding(bottom = paddingValues.calculateBottomPadding())
     ) {
         LazyColumn(modifier = modifier.fillMaxSize()) {
-            items(expenses) { expense ->
+            items(expenses) { expenseWithParticipants ->
                 TsExpenseItemRow(
-                    expense = expense,
+                    expense = expenseWithParticipants.expense,
+                    paidFor = expenseWithParticipants.participants,
                     participants = participants,
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
                 )

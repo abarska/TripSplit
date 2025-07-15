@@ -3,8 +3,8 @@ package com.anabars.tripsplit.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.data.room.model.ExpenseWithParticipants
 import com.anabars.tripsplit.repository.TripExpensesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,19 +21,19 @@ class TripExpensesViewModel @Inject constructor(
     val tripId: Long = savedStateHandle.get<Long>("id")
         ?: throw IllegalStateException("Trip ID is required for TripExpensesViewModel")
 
-    val tripExpenses: StateFlow<List<TripExpense>> =
-        tripExpensesRepository.getExpensesByTrip(tripId)
+    val tripExpenses: StateFlow<List<ExpenseWithParticipants>> =
+        tripExpensesRepository.getExpensesWithParticipantsByTrip(tripId)
             .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5000),
-                emptyList()
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
             )
 
     val tripParticipants: StateFlow<List<TripParticipant>> =
         tripExpensesRepository.getParticipantsByTripId(tripId)
             .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5000),
-                emptyList()
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
             )
 }

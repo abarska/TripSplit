@@ -3,7 +3,6 @@ package com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +18,7 @@ fun TripOverviewTabLandscapeContent(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
     ) {
         val modifier = Modifier

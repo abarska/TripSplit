@@ -2,6 +2,7 @@ package com.anabars.tripsplit.ui.screens.tripdetails
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -9,6 +10,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab.TripOverviewTab
 import com.anabars.tripsplit.ui.widgets.TsBottomTabs
@@ -24,7 +26,15 @@ fun TripDetailsScreen(navController: NavController, modifier: Modifier = Modifie
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize()) {
             when (selectedTabIndex) {
-                0 -> TripOverviewTab()
+                0 -> {
+                    TripOverviewTab(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .padding(all = 16.dp)
+                            .padding(bottom = paddingValues.calculateBottomPadding())
+                    )
+                }
+
                 1 -> TripExpensesTab(navController = navController, paddingValues = paddingValues)
                 2 -> TripSettlementsTab()
             }

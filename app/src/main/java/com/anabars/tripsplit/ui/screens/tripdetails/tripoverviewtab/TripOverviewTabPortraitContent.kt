@@ -23,14 +23,16 @@ fun TripOverviewTabPortraitContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
-        val modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f)
-        TripDataCard(tripDetails = tripDetails, modifier = modifier)
+        TripSummaryCard(
+            tripDetails = tripDetails,
+            modifier = Modifier.fillMaxWidth()
+        )
         ExpenseStatisticsCard(
             exchangeRatesAvailable = exchangeRatesAvailable,
             categorizedExpenses = categorizedExpenses,
-            modifier = modifier
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         )
     }
 }

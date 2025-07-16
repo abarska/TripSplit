@@ -21,14 +21,18 @@ fun TripOverviewTabLandscapeContent(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
     ) {
-        val modifier = Modifier
-            .fillMaxHeight()
-            .weight(1f)
-        TripDataCard(tripDetails = tripDetails, modifier = modifier)
+        TripSummaryCard(
+            tripDetails = tripDetails,
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(2f)
+        )
         ExpenseStatisticsCard(
             exchangeRatesAvailable = exchangeRatesAvailable,
             categorizedExpenses = categorizedExpenses,
-            modifier = modifier
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(3f)
         )
     }
 }

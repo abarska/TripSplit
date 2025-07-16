@@ -7,7 +7,7 @@ import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 
 @Composable
-fun TripDataCard(tripDetails: TripWithDetails?, modifier: Modifier = Modifier) {
+fun TripSummaryCard(tripDetails: TripWithDetails?, modifier: Modifier = Modifier) {
     TsContentCard(modifier = modifier) {
         tripDetails?.let {
             TsInfoText(text = tripDetails.trip.title, isHeader = true)

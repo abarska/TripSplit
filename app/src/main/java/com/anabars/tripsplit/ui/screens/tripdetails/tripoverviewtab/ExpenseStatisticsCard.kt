@@ -10,14 +10,26 @@ import com.anabars.tripsplit.ui.widgets.TsExpensePieChart
 
 @Composable
 fun ExpenseStatisticsCard(
+    exchangeRatesAvailable: Boolean,
     categorizedExpenses: Map<ExpenseCategory, Double>,
     modifier: Modifier = Modifier
 ) {
     TsContentCard(modifier = modifier) {
-        if (categorizedExpenses.size < 3) {
-            TsInfoText(textRes = R.string.placeholder_statistics, isHeader = true)
-        } else {
-            TsExpensePieChart(data = categorizedExpenses)
+        when {
+            !exchangeRatesAvailable ->
+                TsInfoText(
+                    textRes = R.string.placeholder_no_exchange_rates_available,
+                    isHeader = true
+                )
+
+            categorizedExpenses.size < 3 ->
+                TsInfoText(
+                    textRes = R.string.placeholder_statistics,
+                    isHeader = true
+                )
+
+            else ->
+                TsExpensePieChart(data = categorizedExpenses)
         }
     }
 }

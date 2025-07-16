@@ -14,6 +14,7 @@ import com.anabars.tripsplit.ui.model.ExpenseCategory
 @Composable
 fun TripOverviewTabLandscapeContent(
     tripDetails: TripWithDetails?,
+    exchangeRatesAvailable: Boolean,
     categorizedExpenses: Map<ExpenseCategory, Double>,
     modifier: Modifier = Modifier
 ) {
@@ -25,6 +26,10 @@ fun TripOverviewTabLandscapeContent(
             .fillMaxHeight()
             .weight(1f)
         TripDataCard(tripDetails = tripDetails, modifier = modifier)
-        ExpenseStatisticsCard(categorizedExpenses = categorizedExpenses, modifier = modifier)
+        ExpenseStatisticsCard(
+            exchangeRatesAvailable = exchangeRatesAvailable,
+            categorizedExpenses = categorizedExpenses,
+            modifier = modifier
+        )
     }
 }

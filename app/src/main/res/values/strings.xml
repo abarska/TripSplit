@@ -94,4 +94,5 @@
 
     // missing data placeholders
     <string name="placeholder_statistics">Statistics will be shown here when available</string>
+    <string name="placeholder_no_exchange_rates_available">Exchange rates needed for conversion are not available\nThey will be loaded automatically once you have stable internet connection</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.anabars.tripsplit.ui.widgets
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -15,7 +17,7 @@ import kotlin.math.min
 import kotlin.math.sin
 
 @Composable
-fun TsExpensePieChart(data: Map<ExpenseCategory, Double>, modifier: Modifier = Modifier) {
+fun TsExpensePieChart(data: Map<ExpenseCategory, Double>) {
     val colors = listOf(
         Color(0xFFFF69B4),
         Color(0xFF3CB371),
@@ -29,10 +31,15 @@ fun TsExpensePieChart(data: Map<ExpenseCategory, Double>, modifier: Modifier = M
 
     val sweepAngles = data.map { (_, value) -> (value / total * 360f).toFloat() }
 
-    val lineColor = MaterialTheme.colorScheme.onSurface
-    val lineThickness = 4.dp
+    val lineColor = Color.Black
+    val lineThickness = 2.dp
 
-    Canvas(modifier = modifier) {
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize(0.8f)
+            .aspectRatio(1f)
+            .padding(top = 16.dp)
+    ) {
         val center = Offset(size.width / 2f, size.height / 2f)
         val radius = min(size.width, size.height) / 2f
         val lineThicknessPx = lineThickness.toPx()
@@ -46,9 +53,13 @@ fun TsExpensePieChart(data: Map<ExpenseCategory, Double>, modifier: Modifier = M
             style = Stroke(width = lineThicknessPx)
         )
 
+        val startAngles = mutableListOf<Float>()
+
         data.entries.forEachIndexed { index, entry ->
             val sweep = sweepAngles[index]
-            // Draw each slice
+            startAngles += currentStartAngle
+
+            // Draw pie slices
             drawArc(
                 color = colors[index % colors.size],
                 startAngle = currentStartAngle,
@@ -57,18 +68,21 @@ fun TsExpensePieChart(data: Map<ExpenseCategory, Double>, modifier: Modifier = M
                 topLeft = Offset(center.x - radius, center.y - radius),
                 size = Size(radius * 2, radius * 2)
             )
-            // Draw radial lines
-            val endAngle = currentStartAngle + sweep
-            val endAngleRad = Math.toRadians(endAngle.toDouble()).toFloat()
-            val lineEndX = center.x + radius * cos(endAngleRad)
-            val lineEndY = center.y + radius * sin(endAngleRad)
+
+            currentStartAngle += sweep
+        }
+
+        // Draw the radial lines
+        startAngles.forEach { angle ->
+            val angleRad = Math.toRadians(angle.toDouble()).toFloat()
+            val endX = center.x + radius * cos(angleRad)
+            val endY = center.y + radius * sin(angleRad)
             drawLine(
                 color = lineColor,
                 start = center,
-                end = Offset(lineEndX, lineEndY),
+                end = Offset(endX, endY),
                 strokeWidth = lineThicknessPx
             )
-            currentStartAngle += sweep
         }
     }
 }

@@ -12,20 +12,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.utils.getExpenseCategoryColors
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
 
 @Composable
 fun TsExpensePieChart(data: Map<ExpenseCategory, Double>) {
-    val colors = listOf(
-        Color(0xFFFF69B4),
-        Color(0xFF3CB371),
-        Color(0xFF8A2BE2),
-        Color(0xFF00BFFF),
-        Color(0xFFFFA500)
-
-    )
+    val colors = getExpenseCategoryColors()
     val total = data.values.sum()
     if (total <= 0.0) return
 

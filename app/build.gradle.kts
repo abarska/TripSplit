@@ -122,6 +122,8 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
+    implementation(libs.moshi.kotlin)
+    kapt(libs.moshi.kotlin.codegen)
 
     // WorkManager
     implementation(libs.androidx.work.runtime.ktx)

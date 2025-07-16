@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.TsTab
+import com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab.TripOverviewTab
 
 @Composable
 fun TripDetailsScreen(navController: NavController, modifier: Modifier = Modifier) {

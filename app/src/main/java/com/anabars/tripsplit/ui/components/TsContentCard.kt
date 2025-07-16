@@ -23,7 +23,7 @@ fun TsContentCard(
 ) {
     OutlinedCard(
         modifier = modifier.border(
-            width = if (isError) 2.dp else 1.dp,
+            width = if (isError) 2.dp else 0.dp,
             color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline,
             shape = RoundedCornerShape(dimensionResource(R.dimen.chip_corner_radius))
         ),

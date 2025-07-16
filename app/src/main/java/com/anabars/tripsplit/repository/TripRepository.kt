@@ -1,10 +1,12 @@
 package com.anabars.tripsplit.repository
 
 import androidx.room.Transaction
+import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
 import com.anabars.tripsplit.data.room.dao.TripCurrencyDao
 import com.anabars.tripsplit.data.room.dao.TripParticipantDao
 import com.anabars.tripsplit.data.room.dao.TripDao
 import com.anabars.tripsplit.data.room.dao.TripExpensesDao
+import com.anabars.tripsplit.data.room.entity.ExchangeRate
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
@@ -20,6 +22,7 @@ class TripRepository @Inject constructor(
     private val tripDao: TripDao,
     private val tripExpensesDao: TripExpensesDao,
     private val participantDao: TripParticipantDao,
+    private val exchangeRateDao: ExchangeRateDao,
     private val currencyDao: TripCurrencyDao
 ) {
 
@@ -42,5 +45,9 @@ class TripRepository @Inject constructor(
 
     fun getExpensesByTripId(id: Long): Flow<List<TripExpense>> {
         return tripExpensesDao.getExpensesByTripId(id)
+    }
+
+    fun getExchangeRatesFlow(): Flow<List<ExchangeRate>> {
+        return exchangeRateDao.getExchangeRatesFlow()
     }
 }

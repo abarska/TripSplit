@@ -7,12 +7,13 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.entity.ExchangeRate
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExchangeRateDao {
 
     @Query("SELECT * FROM ${TripSplitConstants.EXCHANGE_RATE_TABLE}")
-    suspend fun getAllRates(): List<ExchangeRate>
+    fun getExchangeRatesFlow(): Flow<List<ExchangeRate>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(rates: List<ExchangeRate>)

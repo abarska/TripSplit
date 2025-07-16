@@ -3,6 +3,7 @@ package com.anabars.tripsplit.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anabars.tripsplit.data.room.entity.ExchangeRate
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.model.TripWithDetails
 import com.anabars.tripsplit.repository.TripRepository
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,15 +38,21 @@ class TripOverviewViewModel @Inject constructor(
                 initialValue = emptyList()
             )
 
+    val exchangeRates: StateFlow<List<ExchangeRate>> =
+        tripRepository.getExchangeRatesFlow()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     val categorizedExpenses: StateFlow<Map<ExpenseCategory, Double>> =
-        expenses.map { list ->
-            list.groupBy { it.category }
-                .mapValues { entry -> entry.value.sumOf { it.amount } }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyMap()
-        )
+        combine(expenses, exchangeRates) { expensesList, ratesList ->
+            val rateMap = ratesList.associateBy { it.currencyCode }
+            expensesList.groupBy { it.category }
+                .mapValues { (_, expenses) ->
+                    expenses.sumOf { expense ->
+                        val rate = rateMap[expense.currency]?.rate ?: 1.0
+                        if (rate > 0.0) expense.amount / rate else 0.0
+                    }
+                }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
 
     init {
         viewModelScope.launch {

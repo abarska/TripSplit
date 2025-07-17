@@ -17,7 +17,7 @@ fun TripOverviewTab(onTabTitleChange: (String) -> Unit, modifier: Modifier = Mod
 
     val viewModel: TripOverviewViewModel = hiltViewModel()
     val tripDetails by viewModel.tripDetails.collectAsState()
-    val categorizedExpenses by viewModel.categorizedExpenses.collectAsState()
+    val expenseCategorizationResult by viewModel.expenseCategorizationResult.collectAsState()
     val exchangeRatesAvailable by viewModel.areExchangeRatesAvailable.collectAsState()
 
     val screenTitle = String.format(
@@ -35,14 +35,14 @@ fun TripOverviewTab(onTabTitleChange: (String) -> Unit, modifier: Modifier = Mod
         TripOverviewTabPortraitContent(
             tripDetails = tripDetails,
             exchangeRatesAvailable = exchangeRatesAvailable,
-            categorizedExpenses = categorizedExpenses,
+            expenseCategorizationResult = expenseCategorizationResult,
             modifier = modifier
         )
     } else {
         TripOverviewTabLandscapeContent(
             tripDetails = tripDetails,
             exchangeRatesAvailable = exchangeRatesAvailable,
-            categorizedExpenses = categorizedExpenses,
+            expenseCategorizationResult = expenseCategorizationResult,
             modifier = modifier
         )
     }

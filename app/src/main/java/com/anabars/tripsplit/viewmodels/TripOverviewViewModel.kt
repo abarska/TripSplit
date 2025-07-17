@@ -43,17 +43,32 @@ class TripOverviewViewModel @Inject constructor(
         tripRepository.getExchangeRatesFlow()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val categorizedExpenses: StateFlow<Map<ExpenseCategory, Double>> =
+    val expenseCategorizationResult: StateFlow<ExpenseCategorizationResult> =
         combine(expenses, exchangeRates) { expensesList, ratesList ->
             val rateMap = ratesList.associateBy { it.currencyCode }
-            expensesList.groupBy { it.category }
-                .mapValues { (_, expenses) ->
-                    expenses.sumOf { expense ->
-                        val rate = rateMap[expense.currency]?.rate ?: 1.0
-                        if (rate > 0.0) expense.amount / rate else 0.0
+
+            val missingCurrencies = expensesList
+                .map { it.currency }
+                .filter { it !in rateMap }
+                .distinct()
+
+            if (missingCurrencies.isNotEmpty()) {
+                ExpenseCategorizationResult.Error(missingCurrencies)
+            } else {
+                val grouped = expensesList.groupBy { it.category }
+                    .mapValues { (_, expenses) ->
+                        expenses.sumOf { expense ->
+                            val rate = rateMap[expense.currency]!!.rate
+                            expense.amount / rate
+                        }
                     }
-                }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
+                ExpenseCategorizationResult.Success(grouped)
+            }
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            ExpenseCategorizationResult.Success(emptyMap())
+        )
 
     val areExchangeRatesAvailable: StateFlow<Boolean> =
         exchangeRates.map { it.isNotEmpty() }
@@ -71,4 +86,9 @@ class TripOverviewViewModel @Inject constructor(
                 }
         }
     }
+}
+
+sealed class ExpenseCategorizationResult {
+    data class Success(val data: Map<ExpenseCategory, Double>) : ExpenseCategorizationResult()
+    data class Error(val missingCurrencies: List<String>) : ExpenseCategorizationResult()
 }

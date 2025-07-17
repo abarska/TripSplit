@@ -8,13 +8,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.data.room.model.TripWithDetails
-import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.viewmodels.ExpenseCategorizationResult
 
 @Composable
 fun TripOverviewTabLandscapeContent(
     tripDetails: TripWithDetails?,
     exchangeRatesAvailable: Boolean,
-    categorizedExpenses: Map<ExpenseCategory, Double>,
+    expenseCategorizationResult: ExpenseCategorizationResult,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -29,7 +29,7 @@ fun TripOverviewTabLandscapeContent(
         )
         ExpenseStatisticsCard(
             exchangeRatesAvailable = exchangeRatesAvailable,
-            categorizedExpenses = categorizedExpenses,
+            expenseCategorizationResult = expenseCategorizationResult,
             isPortrait = false,
             modifier = Modifier
                 .fillMaxHeight()

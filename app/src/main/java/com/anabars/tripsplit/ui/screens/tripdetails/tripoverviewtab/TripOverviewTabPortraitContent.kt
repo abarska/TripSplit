@@ -9,13 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.model.TripWithDetails
-import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.viewmodels.ExpenseCategorizationResult
 
 @Composable
 fun TripOverviewTabPortraitContent(
     tripDetails: TripWithDetails?,
     exchangeRatesAvailable: Boolean,
-    categorizedExpenses: Map<ExpenseCategory, Double>,
+    expenseCategorizationResult: ExpenseCategorizationResult,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -29,7 +29,7 @@ fun TripOverviewTabPortraitContent(
         )
         ExpenseStatisticsCard(
             exchangeRatesAvailable = exchangeRatesAvailable,
-            categorizedExpenses = categorizedExpenses,
+            expenseCategorizationResult = expenseCategorizationResult,
             isPortrait = true,
             modifier = Modifier
                 .fillMaxWidth()

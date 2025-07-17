@@ -10,11 +10,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -29,11 +31,17 @@ import com.anabars.tripsplit.viewmodels.TripsViewModel
 @Composable
 fun TripsScreen(
     navController: NavController,
+    onTabTitleChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val tripsViewModel: TripsViewModel = hiltViewModel()
     val trips by tripsViewModel.tripList.collectAsState()
+
+    val screenTitle = stringResource(R.string.title_trips)
+    LaunchedEffect(Unit) {
+        onTabTitleChange(screenTitle)
+    }
 
     Box(
         modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))

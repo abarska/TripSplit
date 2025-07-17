@@ -21,17 +21,25 @@ fun AppNavGraph(
     sharedViewModel: SharedViewModel,
     modifier: Modifier = Modifier,
 ) {
+    val onTabTitleChange = { tabTitle: String ->
+        sharedViewModel.setTabTitle(tabTitle)
+    }
     NavHost(
         navController = navController,
         startDestination = AppScreens.ROUTE_TRIPS,
         modifier = modifier
     ) {
         composable(route = AppScreens.ROUTE_TRIPS) {
-            TripsScreen(navController = navController, modifier = modifier)
+            TripsScreen(
+                navController = navController,
+                onTabTitleChange = onTabTitleChange,
+                modifier = modifier
+            )
         }
         composable(route = AppScreens.ROUTE_ADD_TRIP) {
             AddTripScreen(
                 navController = navController,
+                onTabTitleChange = onTabTitleChange,
                 sharedViewModel = sharedViewModel
             )
         }
@@ -42,18 +50,25 @@ fun AppNavGraph(
             backStackEntry.arguments?.getLong("tripId") ?: return@composable
             AddExpenseScreen(
                 navController = navController,
+                onTabTitleChange = onTabTitleChange,
                 sharedViewModel = sharedViewModel
             )
         }
         composable(route = AppScreens.ROUTE_SETTINGS) {
-            SettingsScreen(navController = navController, modifier = modifier)
+            SettingsScreen(
+                onTabTitleChange = onTabTitleChange,
+                modifier = modifier
+            )
         }
         composable(
             route = AppScreens.ROUTE_TRIP_DETAILS + "/{id}",
             arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { backStackEntry ->
             backStackEntry.arguments?.getLong("id") ?: return@composable
-            TripDetailsScreen(navController = navController)
+            TripDetailsScreen(
+                navController = navController,
+                onTabTitleChange = onTabTitleChange,
+            )
         }
     }
 }

@@ -41,6 +41,7 @@ import com.anabars.tripsplit.viewmodels.SharedViewModel
 @Composable
 fun AddTripScreen(
     navController: NavController,
+    onTabTitleChange: (String) -> Unit,
     sharedViewModel: SharedViewModel,
 ) {
 
@@ -50,8 +51,12 @@ fun AddTripScreen(
     val nameUiState by viewModel.nameUiState.collectAsState()
     val participantsUiState by viewModel.participantsUiState.collectAsState()
     val currenciesUiState by viewModel.currenciesUiState.collectAsState()
-
     val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
+
+    val screenTitle = stringResource(R.string.title_new_trip)
+    LaunchedEffect(Unit) {
+        onTabTitleChange(screenTitle)
+    }
 
     val handleBackNavigation: () -> Boolean = {
         if (viewModel.hasUnsavedInput()) {

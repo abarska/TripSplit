@@ -20,15 +20,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 
 @Composable
-fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedViewModel) {
+fun AddExpenseScreen(
+    navController: NavHostController,
+    onTabTitleChange: (String) -> Unit,
+    sharedViewModel: SharedViewModel
+) {
 
     val context = LocalContext.current
     val viewModel: AddExpenseViewModel = hiltViewModel()
@@ -39,6 +45,11 @@ fun AddExpenseScreen(navController: NavHostController, sharedViewModel: SharedVi
     val addExpenseErrorRes by viewModel.addExpenseErrorRes.collectAsState()
     val navigateBackState by viewModel.navigateBackState.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
+
+    val screenTitle = stringResource(R.string.title_new_expense)
+    LaunchedEffect(Unit) {
+        onTabTitleChange(screenTitle)
+    }
 
     BackHandler {
         if (!sharedViewModel.handleBack()) {

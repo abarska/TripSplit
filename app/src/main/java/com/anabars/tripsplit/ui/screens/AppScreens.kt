@@ -1,14 +1,11 @@
 package com.anabars.tripsplit.ui.screens
 
-import androidx.annotation.StringRes
-import com.anabars.tripsplit.R
-
-sealed class AppScreens(val route: String, @StringRes val title: Int) {
-    data object TripsScreen : AppScreens(ROUTE_TRIPS, R.string.title_trips)
-    data object AddTripScreen : AppScreens(ROUTE_ADD_TRIP, R.string.title_new_trip)
-    data object AddExpenseScreen : AppScreens(ROUTE_ADD_EXPENSE, R.string.title_new_expense)
-    data object SettingsScreen : AppScreens(ROUTE_SETTINGS, R.string.title_settings)
-    data object TripDetailsScreen : AppScreens(ROUTE_TRIP_DETAILS, R.string.title_trip_details)
+sealed class AppScreens(val route: String) {
+    data object TripsScreen : AppScreens(ROUTE_TRIPS)
+    data object AddTripScreen : AppScreens(ROUTE_ADD_TRIP)
+    data object AddExpenseScreen : AppScreens(ROUTE_ADD_EXPENSE)
+    data object SettingsScreen : AppScreens(ROUTE_SETTINGS)
+    data object TripDetailsScreen : AppScreens(ROUTE_TRIP_DETAILS)
 
     companion object {
         const val ROUTE_TRIPS = "trips"

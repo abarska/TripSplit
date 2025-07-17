@@ -25,7 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.anabars.tripsplit.navigation.AppNavGraph
 import com.anabars.tripsplit.ui.theme.AppTheme
 import com.anabars.tripsplit.ui.components.DrawerContent
-import com.anabars.tripsplit.ui.components.TripSplitToolbar
+import com.anabars.tripsplit.ui.components.TsToolbar
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,7 +55,7 @@ fun MainScreenWithDrawer() {
 
     Scaffold(
         topBar = {
-            TripSplitToolbar(
+            TsToolbar(
                 navController = navController,
                 sharedViewModel = sharedViewModel,
                 coroutineScope = coroutineScope,

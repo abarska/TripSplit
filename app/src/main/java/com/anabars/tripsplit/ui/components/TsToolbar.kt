@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TripSplitToolbar(
+fun TsToolbar(
     navController: NavController,
     sharedViewModel: SharedViewModel,
     coroutineScope: CoroutineScope,
@@ -33,10 +34,10 @@ fun TripSplitToolbar(
     val startDestination = AppScreens.ROUTE_TRIPS
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val currentScreen = AppScreens.fromRoute(currentRoute) ?: AppScreens.TripsScreen
+    val tabTitle by sharedViewModel.tabTitle.collectAsState()
 
     TopAppBar(
-        title = { Text(stringResource(currentScreen.title)) },
+        title = { Text(tabTitle ?: stringResource(R.string.app_name)) },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
         ),

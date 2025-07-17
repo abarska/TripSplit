@@ -16,7 +16,11 @@ import com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab.TripOverview
 import com.anabars.tripsplit.ui.widgets.TsBottomTabs
 
 @Composable
-fun TripDetailsScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun TripDetailsScreen(
+    navController: NavController,
+    onTabTitleChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(1) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -28,6 +32,7 @@ fun TripDetailsScreen(navController: NavController, modifier: Modifier = Modifie
             when (selectedTabIndex) {
                 0 -> {
                     TripOverviewTab(
+                        onTabTitleChange = onTabTitleChange,
                         modifier = modifier
                             .fillMaxSize()
                             .padding(all = 16.dp)
@@ -35,8 +40,13 @@ fun TripDetailsScreen(navController: NavController, modifier: Modifier = Modifie
                     )
                 }
 
-                1 -> TripExpensesTab(navController = navController, paddingValues = paddingValues)
-                2 -> TripSettlementsTab()
+                1 -> TripExpensesTab(
+                    navController = navController,
+                    onTabTitleChange = onTabTitleChange,
+                    paddingValues = paddingValues
+                )
+
+                2 -> TripSettlementsTab(onTabTitleChange = onTabTitleChange)
             }
         }
     }

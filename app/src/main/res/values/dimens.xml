@@ -15,4 +15,6 @@
 
     <dimen name="dropdown_menu_height">400dp</dimen>
     <dimen name="dropdown_menu_width">300dp</dimen>
+
+    <dimen name="placeholder_image_size">200dp</dimen>
 </resources>

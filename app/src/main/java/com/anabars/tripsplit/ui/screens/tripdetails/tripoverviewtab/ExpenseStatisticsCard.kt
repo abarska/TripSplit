@@ -6,6 +6,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.ui.widgets.TsPlaceholderView
 
 @Composable
 fun ExpenseStatisticsCard(
@@ -23,9 +24,10 @@ fun ExpenseStatisticsCard(
                 )
 
             categorizedExpenses.size < 3 ->
-                TsInfoText(
+                TsPlaceholderView(
+                    painterRes = R.drawable.empty_pie_chart_image,
+                    contentDescriptionRes = R.string.empty_pie_chart_image,
                     textRes = R.string.placeholder_statistics,
-                    isHeader = true
                 )
 
             else ->

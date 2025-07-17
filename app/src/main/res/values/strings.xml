@@ -27,6 +27,7 @@
     <string name="collapse_card_icon">Collapse Card</string>
     <string name="add_item">Add item</string>
     <string name="empty_wallet_image">Empty wallet image</string>
+    <string name="empty_pie_chart_image">Empty pie chart image</string>
 
     // used for hints
     <string name="new_trip_title_hint">Trip title:</string>

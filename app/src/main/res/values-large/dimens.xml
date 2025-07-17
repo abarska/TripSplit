@@ -4,4 +4,5 @@
     <dimen name="vertical_spacer_normal">16dp</dimen>
     <dimen name="vertical_spacer_large">24dp</dimen>
     <dimen name="vertical_spacer_double">48dp</dimen>
+    <dimen name="placeholder_image_size">300dp</dimen>
 </resources>

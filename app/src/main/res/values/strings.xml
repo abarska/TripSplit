@@ -26,6 +26,7 @@
     <string name="expand_card_icon">Expand Card</string>
     <string name="collapse_card_icon">Collapse Card</string>
     <string name="add_item">Add item</string>
+    <string name="empty_wallet_image">Empty wallet image</string>
 
     // used for hints
     <string name="new_trip_title_hint">Trip title:</string>
@@ -93,6 +94,7 @@
     <string name="pays_for_format">Pays for %d</string>
 
     // missing data placeholders
+    <string name="placeholder_expenses">Your expenses will be shown here</string>
     <string name="placeholder_statistics">Statistics will be shown here when available</string>
     <string name="placeholder_no_exchange_rates_available">Exchange rates needed for conversion are not available\nThey will be loaded automatically once you have stable internet connection</string>
 </resources>

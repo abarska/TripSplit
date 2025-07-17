@@ -1,9 +1,13 @@
 package com.anabars.tripsplit.ui.screens.tripdetails
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -13,11 +17,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsFab
+import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.listitems.TsDateHeader
 import com.anabars.tripsplit.ui.listitems.TsExpenseItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
@@ -40,22 +47,37 @@ fun TripExpensesTab(
             .fillMaxSize()
             .padding(bottom = paddingValues.calculateBottomPadding())
     ) {
-        LazyColumn(
-            modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            tripExpenses.forEach { (date, group) ->
-                item {
-                    TsDateHeader(formattedDate = formatDate(date))
-                }
-                items(group) { expenseWithParticipants ->
-                    TsExpenseItemRow(
-                        expense = expenseWithParticipants.expense,
-                        paidFor = expenseWithParticipants.participants,
-                        tripParticipants = tripParticipants,
-                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                        onDeleteClick = { viewModel.deleteExpenseById(expenseWithParticipants.expense.id) }
-                    )
+        if (tripExpenses.isEmpty()) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.empty_wallet_image),
+                    contentDescription = stringResource(R.string.empty_wallet_image),
+                    modifier = Modifier.size(200.dp)
+                )
+                TsInfoText(textRes = R.string.placeholder_expenses, isHeader = true)
+            }
+        } else {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                tripExpenses.forEach { (date, group) ->
+                    item {
+                        TsDateHeader(formattedDate = formatDate(date))
+                    }
+                    items(group) { expenseWithParticipants ->
+                        TsExpenseItemRow(
+                            expense = expenseWithParticipants.expense,
+                            paidFor = expenseWithParticipants.participants,
+                            tripParticipants = tripParticipants,
+                            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+                            onDeleteClick = { viewModel.deleteExpenseById(expenseWithParticipants.expense.id) }
+                        )
+                    }
                 }
             }
         }

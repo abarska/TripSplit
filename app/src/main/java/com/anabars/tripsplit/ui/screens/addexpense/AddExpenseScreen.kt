@@ -1,5 +1,6 @@
 package com.anabars.tripsplit.ui.screens.addexpense
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
@@ -71,14 +72,7 @@ fun AddExpenseScreen(
         }
     }
 
-    val isPortrait =
-        LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
-    val scrollState = rememberScrollState()
-    val modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(scrollState)
-        .padding(16.dp)
-
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState) { data ->
@@ -90,7 +84,13 @@ fun AddExpenseScreen(
             }
         }
     ) { paddingValues ->
-        val paddedModifier = modifier.padding(paddingValues)
+        val isPortrait =
+            LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+        val scrollState = rememberScrollState()
+        val modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(16.dp)
         if (isPortrait) {
             AddExpensePortraitContent(
                 addExpenseErrorRes = addExpenseErrorRes,
@@ -104,7 +104,7 @@ fun AddExpenseScreen(
                 onPayerSelected = { viewModel.onEvent(AddExpenseEvent.PayerSelected(it)) },
                 onParticipantsSelected = { viewModel.onEvent(AddExpenseEvent.ParticipantsSelected(it)) },
                 onSaveExpense = { viewModel.saveExpense() },
-                modifier = paddedModifier
+                modifier = modifier
             )
         } else {
             AddExpenseLandscapeContent(
@@ -119,7 +119,7 @@ fun AddExpenseScreen(
                 onPayerSelected = { viewModel.onEvent(AddExpenseEvent.PayerSelected(it)) },
                 onParticipantsSelected = { viewModel.onEvent(AddExpenseEvent.ParticipantsSelected(it)) },
                 onSaveExpense = { viewModel.saveExpense() },
-                modifier = paddedModifier
+                modifier = modifier
             )
         }
     }

@@ -18,9 +18,10 @@ import com.anabars.tripsplit.viewmodels.SettingsViewModel
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    onTabTitleChange: (String) -> Unit,
-    viewModel: SettingsViewModel = hiltViewModel()
+    onTabTitleChange: (String) -> Unit
 ) {
+
+    val viewModel: SettingsViewModel = hiltViewModel()
     val localCurrency by viewModel.localCurrencyFlow.collectAsState()
     val currencies by viewModel.currencies.collectAsState()
     val onCurrencySelected: (String) -> Unit =

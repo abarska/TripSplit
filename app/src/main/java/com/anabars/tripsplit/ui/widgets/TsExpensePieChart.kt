@@ -1,9 +1,7 @@
 package com.anabars.tripsplit.ui.widgets
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -29,10 +27,7 @@ fun TsExpensePieChart(data: Map<ExpenseCategory, Double>) {
     val lineThickness = 2.dp
 
     Canvas(
-        modifier = Modifier
-            .fillMaxSize(0.8f)
-            .aspectRatio(1f)
-            .padding(top = 16.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
         val center = Offset(size.width / 2f, size.height / 2f)
         val radius = min(size.width, size.height) / 2f

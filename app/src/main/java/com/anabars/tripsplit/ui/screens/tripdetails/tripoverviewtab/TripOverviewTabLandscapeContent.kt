@@ -30,6 +30,7 @@ fun TripOverviewTabLandscapeContent(
         ExpenseStatisticsCard(
             exchangeRatesAvailable = exchangeRatesAvailable,
             categorizedExpenses = categorizedExpenses,
+            isPortrait = false,
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(3f)

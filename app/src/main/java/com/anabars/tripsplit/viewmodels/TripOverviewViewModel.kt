@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,38 +44,34 @@ class TripOverviewViewModel @Inject constructor(
 
     val expenseCategorizationResult: StateFlow<ExpenseCategorizationResult> =
         combine(expenses, exchangeRates) { expensesList, ratesList ->
-            val rateMap = ratesList.associateBy { it.currencyCode }
-
-            val missingCurrencies = expensesList
-                .map { it.currency }
-                .filter { it !in rateMap }
-                .distinct()
-
-            if (missingCurrencies.isNotEmpty()) {
-                ExpenseCategorizationResult.Error(missingCurrencies)
+            if (ratesList.isEmpty()) {
+                ExpenseCategorizationResult.ErrorUnavailableData
             } else {
-                val grouped = expensesList.groupBy { it.category }
-                    .mapValues { (_, expenses) ->
-                        expenses.sumOf { expense ->
-                            val rate = rateMap[expense.currency]!!.rate
-                            expense.amount / rate
+                val rateMap = ratesList.associateBy { it.currencyCode }
+
+                val missingCurrencies = expensesList
+                    .map { it.currency }
+                    .filter { it !in rateMap }
+                    .distinct()
+
+                if (missingCurrencies.isNotEmpty()) {
+                    ExpenseCategorizationResult.ErrorMissingCurrencies(missingCurrencies)
+                } else {
+                    val grouped = expensesList.groupBy { it.category }
+                        .mapValues { (_, expenses) ->
+                            expenses.sumOf { expense ->
+                                val rate = rateMap[expense.currency]!!.rate
+                                expense.amount / rate
+                            }
                         }
-                    }
-                ExpenseCategorizationResult.Success(grouped)
+                    ExpenseCategorizationResult.Success(grouped)
+                }
             }
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             ExpenseCategorizationResult.Success(emptyMap())
         )
-
-    val areExchangeRatesAvailable: StateFlow<Boolean> =
-        exchangeRates.map { it.isNotEmpty() }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = false
-            )
 
     init {
         viewModelScope.launch {
@@ -89,6 +84,12 @@ class TripOverviewViewModel @Inject constructor(
 }
 
 sealed class ExpenseCategorizationResult {
-    data class Success(val data: Map<ExpenseCategory, Double>) : ExpenseCategorizationResult()
-    data class Error(val missingCurrencies: List<String>) : ExpenseCategorizationResult()
+    data class Success(val data: Map<ExpenseCategory, Double>) :
+        ExpenseCategorizationResult()
+
+    data class ErrorMissingCurrencies(val missingCurrencies: List<String>) :
+        ExpenseCategorizationResult()
+
+    object ErrorUnavailableData :
+        ExpenseCategorizationResult()
 }

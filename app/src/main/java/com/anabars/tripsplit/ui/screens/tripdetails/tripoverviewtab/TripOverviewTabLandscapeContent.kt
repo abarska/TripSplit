@@ -13,7 +13,6 @@ import com.anabars.tripsplit.viewmodels.ExpenseCategorizationResult
 @Composable
 fun TripOverviewTabLandscapeContent(
     tripDetails: TripWithDetails?,
-    exchangeRatesAvailable: Boolean,
     expenseCategorizationResult: ExpenseCategorizationResult,
     modifier: Modifier = Modifier
 ) {
@@ -28,7 +27,6 @@ fun TripOverviewTabLandscapeContent(
                 .weight(2f)
         )
         ExpenseStatisticsCard(
-            exchangeRatesAvailable = exchangeRatesAvailable,
             expenseCategorizationResult = expenseCategorizationResult,
             isPortrait = false,
             modifier = Modifier

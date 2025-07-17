@@ -20,7 +20,8 @@ import com.anabars.tripsplit.ui.components.TsInfoText
 fun TsPlaceholderView(
     @DrawableRes painterRes: Int,
     @StringRes contentDescriptionRes: Int,
-    @StringRes textRes: Int,
+    @StringRes textRes: Int = 0,
+    text: String = "",
     imageSize: Dp = dimensionResource(R.dimen.placeholder_image_size),
     modifier: Modifier = Modifier.fillMaxSize()
 ) {
@@ -33,6 +34,6 @@ fun TsPlaceholderView(
             contentDescription = stringResource(contentDescriptionRes),
             modifier = Modifier.size(imageSize)
         )
-        TsInfoText(textRes = textRes, isHeader = true)
+        TsInfoText(text = text, textRes = textRes, isHeader = true)
     }
 }

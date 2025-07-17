@@ -14,7 +14,6 @@ import com.anabars.tripsplit.viewmodels.ExpenseCategorizationResult
 @Composable
 fun TripOverviewTabPortraitContent(
     tripDetails: TripWithDetails?,
-    exchangeRatesAvailable: Boolean,
     expenseCategorizationResult: ExpenseCategorizationResult,
     modifier: Modifier = Modifier
 ) {
@@ -28,7 +27,6 @@ fun TripOverviewTabPortraitContent(
             modifier = Modifier.fillMaxWidth()
         )
         ExpenseStatisticsCard(
-            exchangeRatesAvailable = exchangeRatesAvailable,
             expenseCategorizationResult = expenseCategorizationResult,
             isPortrait = true,
             modifier = Modifier

@@ -61,7 +61,8 @@
     <string name="error_mandatory_field">This field is mandatory</string>
     <string name="error_participants_not_selected">Please select at least one participant</string>
     <string name="error_amount_invalid">Please enter a valid, positive amount</string>
-    <string name="error_missing_exchange_rates">Unable to display data: some exchange rates are missing</string>
+    <string name="error_exchange_rates_unavailable">Unable to display data: unavailable exchange rates</string>
+    <string name="error_exchange_rates_missing">Unable to display data: missing exchange rates for %s</string>
 
     // used for dialogs
     <string name="save_changes_dialog_title">Save Changes</string>

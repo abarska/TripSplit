@@ -13,27 +13,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
-fun TsLabelText(
-    modifier: Modifier = Modifier,
-    @StringRes textRes: Int = 0,
-    text: String = "",
-    isError: Boolean = false
-) {
-    val value = if (textRes != 0) stringResource(textRes) else text
-    if (value.isNotEmpty()) {
-        Text(
-            modifier = modifier,
-            text = value,
-            style = MaterialTheme.typography.titleLarge.copy(
-                color =
-                    if (isError) MaterialTheme.colorScheme.error
-                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-            )
-        )
-    }
-}
-
-@Composable
 fun TsInfoText(
     modifier: Modifier = Modifier,
     @StringRes textRes: Int = 0,
@@ -56,18 +35,6 @@ fun TsInfoText(
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TsLabelTextPreview() {
-    TsLabelText(text = "Placeholder")
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TsErrorLabelTextPreview() {
-    TsLabelText(text = "Placeholder", isError = true)
 }
 
 @Preview(showBackground = true)

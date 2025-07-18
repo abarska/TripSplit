@@ -36,7 +36,7 @@ fun TsExpenseAmountInput(
             imeAction = ImeAction.Done
         ),
         textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.End),
-        prefix = { TsLabelText(text = currencyPrefix) },
+        prefix = { TsInfoText(text = currencyPrefix) },
         modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally)
     )
 }

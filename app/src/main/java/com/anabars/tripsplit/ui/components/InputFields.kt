@@ -33,11 +33,13 @@ fun TsShortInput(
         value = value,
         isError = isError,
         label = {
-            TsLabelText(
+            TsInfoText(
                 modifier = modifier,
                 textRes = labelRes,
                 text = label,
-                isError = isError
+                textColor =
+                    if (isError) MaterialTheme.colorScheme.error
+                    else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         },
         keyboardOptions = keyboardOptions,

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
@@ -31,7 +32,7 @@ fun CurrencyPreferenceView(
     summary: String = "",
     onCurrencySelected: (String) -> Unit
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth().padding(16.dp)) {
         val expanded = remember { mutableStateOf(false) }
         Row(
             modifier = Modifier.fillMaxWidth(),

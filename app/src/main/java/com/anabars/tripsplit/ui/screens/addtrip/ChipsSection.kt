@@ -33,9 +33,9 @@ fun <T> ChipsSection(
     onItemClick: (T) -> Unit = {},
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_small))
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         TsInfoText(textRes = labelRes, fontSize = TsFontSize.MEDIUM)
 

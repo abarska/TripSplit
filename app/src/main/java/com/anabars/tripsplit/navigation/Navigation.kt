@@ -1,5 +1,6 @@
 package com.anabars.tripsplit.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -27,7 +28,7 @@ fun AppNavGraph(
     NavHost(
         navController = navController,
         startDestination = AppScreens.ROUTE_TRIPS,
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
         composable(route = AppScreens.ROUTE_TRIPS) {
             TripsScreen(

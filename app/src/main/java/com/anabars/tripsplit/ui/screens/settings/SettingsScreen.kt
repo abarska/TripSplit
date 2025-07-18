@@ -7,12 +7,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsContentCard
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
 import com.anabars.tripsplit.viewmodels.SettingsViewModel
 
 @Composable
@@ -34,10 +36,11 @@ fun SettingsScreen(
 
     Column(
         modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding)),
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
 
-        TsContentCard {
+        TsContentCard(modifier = Modifier.inputWidthModifier()) {
             CurrencyPreferenceView(
                 selectedCurrency = localCurrency.take(3),
                 labelRes = R.string.local_currency,

@@ -36,8 +36,9 @@ fun TsItemRow(
         onClick = onItemClick,
         colors =
             if (highlighted) CardDefaults.elevatedCardColors()
-                .copy(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                .copy(containerColor = MaterialTheme.colorScheme.primaryContainer)
             else CardDefaults.elevatedCardColors()
+                .copy(containerColor = MaterialTheme.colorScheme.surfaceContainer)
     ) {
         content()
     }

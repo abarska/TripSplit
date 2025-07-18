@@ -40,8 +40,8 @@ fun TsFab(
     modifier: Modifier = Modifier,
     iconVector: ImageVector? = null,
     @DrawableRes iconRes: Int = 0,
-    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
+    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     @StringRes contentDescription: Int = R.string.action_button,
     isEnabled: Boolean = true,
     onClick: () -> Unit

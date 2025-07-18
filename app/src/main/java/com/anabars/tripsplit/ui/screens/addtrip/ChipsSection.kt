@@ -20,6 +20,7 @@ import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsItemRowActionButton
 import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun <T> ChipsSection(
@@ -36,7 +37,7 @@ fun <T> ChipsSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_small))
     ) {
-        TsInfoText(textRes = labelRes)
+        TsInfoText(textRes = labelRes, fontSize = TsFontSize.MEDIUM)
 
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
@@ -56,7 +57,7 @@ fun <T> ChipsSection(
                         if (items.first() != value) {
                             TsItemRowActionButton(button)
                         }
-                        TsInfoText(text = itemLabel(value))
+                        TsInfoText(text = itemLabel(value), fontSize = TsFontSize.MEDIUM)
                     }
                 }
             }
@@ -70,7 +71,7 @@ fun <T> ChipsSection(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     TsItemRowActionButton(button)
-                    TsInfoText(textRes = R.string.add)
+                    TsInfoText(textRes = R.string.add, fontSize = TsFontSize.MEDIUM)
                 }
             }
         }

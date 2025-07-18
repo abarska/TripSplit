@@ -9,6 +9,7 @@ import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun ExpenseAmountAndCurrencyCard(
@@ -28,7 +29,7 @@ fun ExpenseAmountAndCurrencyCard(
             currencyPrefix = amountCurrencyState.expenseCurrencyCode,
             onValueChange = onExpenseAmountChanged
         )
-        TsInfoText(textRes = R.string.currency)
+        TsInfoText(textRes = R.string.currency, fontSize = TsFontSize.MEDIUM)
         ExpenseCurrenciesRadioGroup(
             modifier = Modifier.padding(horizontal = 16.dp),
             currencies = amountCurrencyState.tripCurrencies,

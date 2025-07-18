@@ -7,14 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.utils.getExpenseCategoryColors
 
 @Composable
@@ -39,10 +39,10 @@ fun TsExpenseChartLegend(data: Map<ExpenseCategory, Double>, modifier: Modifier 
                         .size(12.dp)
                         .background(color = color, shape = CircleShape)
                 )
-                Text(
+                TsInfoText(
                     text = stringResource(entry.key.titleRes) + ": " + "%.1f%%".format(percent),
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1
+                    maxLines = 1,
+                    fontSize = TsFontSize.MEDIUM
                 )
             }
         }

@@ -8,7 +8,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -19,6 +18,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -37,7 +37,12 @@ fun TsToolbar(
     val tabTitle by sharedViewModel.tabTitle.collectAsState()
 
     TopAppBar(
-        title = { Text(tabTitle ?: stringResource(R.string.app_name)) },
+        title = {
+            TsInfoText(
+                text = tabTitle ?: stringResource(R.string.app_name),
+                fontSize = TsFontSize.MEDIUM
+            )
+        },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
         ),

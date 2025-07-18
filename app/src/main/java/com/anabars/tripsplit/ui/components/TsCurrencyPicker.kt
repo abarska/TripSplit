@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -31,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun TsCurrencyPicker(
@@ -63,7 +63,12 @@ fun TsCurrencyPicker(
                     OutlinedTextField(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
-                        placeholder = { Text(stringResource(R.string.search_currency)) },
+                        placeholder = {
+                            TsInfoText(
+                                textRes = R.string.search_currency,
+                                fontSize = TsFontSize.MEDIUM
+                            )
+                        },
                         singleLine = true,
                         leadingIcon = {
                             Icon(
@@ -71,7 +76,8 @@ fun TsCurrencyPicker(
                                 contentDescription = stringResource(R.string.search_currency)
                             )
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(fontSize = TsFontSize.MEDIUM.sp),
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -91,7 +97,9 @@ fun TsCurrencyPicker(
                         ) {
                             items(filteredCurrencies) { currency ->
                                 DropdownMenuItem(
-                                    text = { Text(currency) },
+                                    text = {
+                                        TsInfoText(text = currency)
+                                    },
                                     onClick = {
                                         onCurrencySelected(currency)
                                         expanded.value = false

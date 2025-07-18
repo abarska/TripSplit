@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,7 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.components.LayoutType
+import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsRadioGroup
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun ExpenseCategoriesRadioGroup(
@@ -75,9 +76,9 @@ fun ExpenseCategoriesRadioGroup(
                     contentDescription = stringResource(category.titleRes),
                 )
                 if (enoughSpace) {
-                    Text(
+                    TsInfoText(
                         text = stringResource(category.titleRes),
-                        style = MaterialTheme.typography.labelLarge,
+                        fontSize = TsFontSize.SMALL
                     )
                 }
             }

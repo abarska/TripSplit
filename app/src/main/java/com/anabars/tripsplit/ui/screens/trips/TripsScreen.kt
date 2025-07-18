@@ -1,9 +1,8 @@
 package com.anabars.tripsplit.ui.screens.trips
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,10 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsFab
+import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 import com.anabars.tripsplit.viewmodels.TripsViewModel
 
@@ -48,7 +48,8 @@ fun TripsScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             if (trips.isNotEmpty()) {
                 items(items = trips) { trip ->
@@ -56,10 +57,11 @@ fun TripsScreen(
                         modifier = modifier.inputWidthModifier(),
                         onItemClick = { navController.navigate(AppScreens.ROUTE_TRIP_DETAILS + "/${trip.id}") }
                     ) {
-                        TsInfoText(modifier = Modifier.padding(8.dp), text = trip.title)
-                    }
-                    if (trip != trips.last()) {
-                        Spacer(Modifier.height(dimensionResource(R.dimen.vertical_spacer_small)))
+                        TsInfoText(
+                            modifier = Modifier.padding(8.dp),
+                            text = trip.title,
+                            fontSize = TsFontSize.MEDIUM
+                        )
                     }
                 }
             }

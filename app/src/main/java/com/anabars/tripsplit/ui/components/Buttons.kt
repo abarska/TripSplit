@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ActionButton
+import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
@@ -96,7 +97,12 @@ fun TsMainButton(
         ),
         modifier = modifier.then(Modifier.inputWidthModifier()),
     ) {
-        TsInfoText(textRes = textRes, text = text)
+        TsInfoText(
+            textRes = textRes,
+            text = text,
+            fontSize = TsFontSize.MEDIUM,
+            textColor = MaterialTheme.colorScheme.onPrimary
+        )
     }
 }
 

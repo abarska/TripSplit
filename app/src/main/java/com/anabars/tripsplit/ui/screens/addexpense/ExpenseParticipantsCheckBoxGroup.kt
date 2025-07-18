@@ -10,6 +10,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsCheckboxPill
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun ExpenseParticipantsCheckBoxGroup(
@@ -38,7 +39,7 @@ fun ExpenseParticipantsCheckBoxGroup(
                 isSelected = selectedParticipants.contains(participant),
                 onItemClick = { toggleItem(participant) },
                 content = {
-                    TsInfoText(text = participant.name)
+                    TsInfoText(text = participant.name, fontSize = TsFontSize.MEDIUM)
                 }
             )
         }

@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun TsConfirmationDialog(
@@ -34,7 +35,8 @@ fun TsConfirmationDialog(
     ) {
         TsInfoText(
             textRes = questionRes,
-            text = question
+            text = question,
+            fontSize = TsFontSize.MEDIUM
         )
     }
 }

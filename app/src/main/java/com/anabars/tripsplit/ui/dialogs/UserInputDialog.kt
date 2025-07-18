@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,8 +16,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsShortInput
 import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
+import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.getFakeParticipantsUiState
 
 @Composable
@@ -55,12 +55,11 @@ fun TsUserInputDialog(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
         ) {
-            OutlinedTextField(
+            TsShortInput(
                 modifier = Modifier.fillMaxWidth(),
                 value = tripParticipantsUiState.newParticipantName,
-                onValueChange = onInputChange,
-                label = { if (labelValue.isNotEmpty()) Text(text = labelValue) },
-                singleLine = true
+                onValueChanged = onInputChange,
+                label = labelValue
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -81,15 +80,18 @@ fun TsUserInputDialog(
                             .padding(8.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        TsInfoText(text = stringResource(R.string.minus_one))
+                        TsInfoText(
+                            text = stringResource(R.string.minus_one),
+                            fontSize = TsFontSize.MEDIUM
+                        )
                     }
                 }
-                Text(
+                TsInfoText(
                     text = stringResource(
                         R.string.pays_for_format,
                         tripParticipantsUiState.newParticipantMultiplicator
                     ),
-                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
+                    fontSize = TsFontSize.MEDIUM
                 )
                 TsItemRow(
                     highlighted = true,
@@ -101,7 +103,10 @@ fun TsUserInputDialog(
                             .padding(8.dp),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        TsInfoText(text = stringResource(R.string.plus_one))
+                        TsInfoText(
+                            text = stringResource(R.string.plus_one),
+                            fontSize = TsFontSize.MEDIUM
+                        )
                     }
                 }
             }

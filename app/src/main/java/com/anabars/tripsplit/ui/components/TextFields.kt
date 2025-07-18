@@ -7,8 +7,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun TsLabelText(
@@ -22,7 +24,7 @@ fun TsLabelText(
         Text(
             modifier = modifier,
             text = value,
-            style = MaterialTheme.typography.labelLarge.copy(
+            style = MaterialTheme.typography.titleLarge.copy(
                 color =
                     if (isError) MaterialTheme.colorScheme.error
                     else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
@@ -36,7 +38,9 @@ fun TsInfoText(
     modifier: Modifier = Modifier,
     @StringRes textRes: Int = 0,
     text: String = "",
-    isHeader: Boolean = false
+    fontSize: TsFontSize = TsFontSize.SMALL,
+    maxLines: Int = 10,
+    textColor: Color = MaterialTheme.colorScheme.onSurface
 ) {
     val value = if (textRes != 0) stringResource(textRes) else text
     if (value.isNotEmpty()) {
@@ -44,7 +48,11 @@ fun TsInfoText(
             Text(
                 modifier = modifier,
                 text = value,
-                style = if (isHeader) MaterialTheme.typography.bodyLarge else MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = fontSize.sp,
+                    color = textColor
+                ),
+                maxLines = maxLines
             )
         }
     }
@@ -64,12 +72,18 @@ private fun TsErrorLabelTextPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun TsInfoTextPreview() {
+private fun TsInfoTextSmallPreview() {
     TsInfoText(text = "Placeholder")
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun TsInfoTextHeaderPreview() {
-    TsInfoText(text = "Placeholder", isHeader = true)
+private fun TsInfoTextMediumPreview() {
+    TsInfoText(text = "Placeholder", fontSize = TsFontSize.MEDIUM)
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TsInfoTextLargePreview() {
+    TsInfoText(text = "Placeholder", fontSize = TsFontSize.LARGE)
 }

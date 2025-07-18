@@ -8,6 +8,7 @@ import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.LayoutType
 import com.anabars.tripsplit.ui.components.TsRadioGroup
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun ExpenseCurrenciesRadioGroup(
@@ -27,7 +28,8 @@ fun ExpenseCurrenciesRadioGroup(
     ) { currency ->
         TsInfoText(
             text = currency.code,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            fontSize = TsFontSize.MEDIUM
         )
     }
 }

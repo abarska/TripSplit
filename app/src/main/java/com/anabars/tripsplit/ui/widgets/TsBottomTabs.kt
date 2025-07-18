@@ -10,12 +10,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.model.TsTab
 
 @Composable
@@ -33,7 +33,7 @@ fun TsBottomTabs(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                 selected = isSelected,
                 onClick = { onTabSelected(index) },
                 text = {
-                    Text(text = stringResource(tab.titleRes), color = contentColor)
+                    TsInfoText(textRes = tab.titleRes, textColor = contentColor)
                 },
                 icon = {
                     Icon(

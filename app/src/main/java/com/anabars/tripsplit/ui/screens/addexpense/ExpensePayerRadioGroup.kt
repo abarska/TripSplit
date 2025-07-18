@@ -8,6 +8,7 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.LayoutType
 import com.anabars.tripsplit.ui.components.TsRadioGroup
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun ExpensePayerRadioGroup(
@@ -28,6 +29,7 @@ fun ExpensePayerRadioGroup(
     ) { participant ->
         TsInfoText(
             text = itemLabel(participant),
+            fontSize = TsFontSize.MEDIUM,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
         )
     }

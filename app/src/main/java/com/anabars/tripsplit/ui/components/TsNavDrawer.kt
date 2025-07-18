@@ -9,15 +9,14 @@ import androidx.compose.material3.DrawerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.ui.utils.TsFontSize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -66,7 +65,7 @@ fun DrawerNavItem(
     drawerState: DrawerState
 ) {
     NavigationDrawerItem(
-        label = { Text(stringResource(labelRes)) },
+        label = { TsInfoText(textRes = labelRes, fontSize = TsFontSize.MEDIUM) },
         selected = currentRoute == route,
         colors = NavigationDrawerItemDefaults.colors(
             selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),

@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun TsPlaceholderView(
@@ -34,6 +35,6 @@ fun TsPlaceholderView(
             contentDescription = stringResource(contentDescriptionRes),
             modifier = Modifier.size(imageSize)
         )
-        TsInfoText(text = text, textRes = textRes, isHeader = true)
+        TsInfoText(text = text, textRes = textRes, fontSize = TsFontSize.MEDIUM)
     }
 }

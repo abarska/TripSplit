@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +31,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.getFakeTripExpense
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
@@ -81,7 +83,7 @@ private fun VisiblePart(
         Icon(
             imageVector = expense.category.icon,
             contentDescription = stringResource(R.string.expense_category_icon),
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(36.dp)
         )
         Column(modifier = Modifier.weight(1f)) {
             TsInfoText(textRes = expense.category.titleRes)
@@ -106,7 +108,7 @@ private fun VisiblePart(
             )
             TsInfoText(
                 text = "${expense.currency} $formattedAmount",
-                isHeader = true
+                fontSize = TsFontSize.MEDIUM
             )
             Spacer(modifier = Modifier.height(16.dp))
             val contentDescriptionRes =
@@ -130,10 +132,18 @@ private fun HiddenPart(onEditClick: () -> Unit, onDeleteClick: () -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
     ) {
         TextButton(onClick = onEditClick) {
-            TsInfoText(text = stringResource(R.string.edit))
+            TsInfoText(
+                text = stringResource(R.string.edit),
+                fontSize = TsFontSize.MEDIUM,
+                textColor = MaterialTheme.colorScheme.primary
+            )
         }
         TextButton(onClick = onDeleteClick) {
-            TsInfoText(text = stringResource(R.string.delete))
+            TsInfoText(
+                text = stringResource(R.string.delete),
+                fontSize = TsFontSize.MEDIUM,
+                textColor = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }

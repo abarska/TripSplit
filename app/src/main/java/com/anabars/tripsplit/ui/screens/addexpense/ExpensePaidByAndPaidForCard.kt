@@ -10,6 +10,7 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
+import com.anabars.tripsplit.ui.utils.TsFontSize
 
 @Composable
 fun ExpensePaidByAndPaidForCard(
@@ -24,7 +25,7 @@ fun ExpensePaidByAndPaidForCard(
         isError = addExpenseErrorRes == R.string.error_participants_not_selected
     ) {
 
-        TsInfoText(textRes = R.string.expense_paid_by)
+        TsInfoText(textRes = R.string.expense_paid_by, fontSize = TsFontSize.MEDIUM)
 
         ExpensePayerRadioGroup(
             modifier = Modifier
@@ -36,7 +37,7 @@ fun ExpensePaidByAndPaidForCard(
             itemLabel = { it.chipDisplayLabel() }
         )
 
-        TsInfoText(textRes = R.string.expense_paid_for)
+        TsInfoText(textRes = R.string.expense_paid_for, fontSize = TsFontSize.MEDIUM)
 
         ExpenseParticipantsCheckBoxGroup(
             modifier = Modifier

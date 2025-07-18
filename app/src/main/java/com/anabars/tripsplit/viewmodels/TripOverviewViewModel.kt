@@ -9,11 +9,17 @@ import com.anabars.tripsplit.data.room.model.TripWithDetails
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,36 +48,45 @@ class TripOverviewViewModel @Inject constructor(
         tripRepository.getExchangeRatesFlow()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val expenseCategorizationResult: StateFlow<ExpenseCategorizationResult> =
         combine(expenses, exchangeRates) { expensesList, ratesList ->
-            if (ratesList.isEmpty()) {
-                ExpenseCategorizationResult.ErrorUnavailableData
-            } else {
-                val rateMap = ratesList.associateBy { it.currencyCode }
-
-                val missingCurrencies = expensesList
-                    .map { it.currency }
-                    .filter { it !in rateMap }
-                    .distinct()
-
-                if (missingCurrencies.isNotEmpty()) {
-                    ExpenseCategorizationResult.ErrorMissingCurrencies(missingCurrencies)
-                } else {
-                    val grouped = expensesList.groupBy { it.category }
-                        .mapValues { (_, expenses) ->
-                            expenses.sumOf { expense ->
-                                val rate = rateMap[expense.currency]!!.rate
-                                expense.amount / rate
-                            }
+            Pair(expensesList, ratesList)
+        }
+            .debounce(100) // reduce flicker
+            .flatMapLatest { (expensesList, ratesList) ->
+                flow {
+                    emit(ExpenseCategorizationResult.Loading)
+                    delay(100) // show spinner briefly
+                    val result = if (ratesList.isEmpty()) {
+                        ExpenseCategorizationResult.UnavailableData
+                    } else {
+                        val rateMap = ratesList.associateBy { it.currencyCode }
+                        val missingCurrencies = expensesList
+                            .map { it.currency }
+                            .filter { it !in rateMap }
+                            .distinct()
+                        if (missingCurrencies.isNotEmpty()) {
+                            ExpenseCategorizationResult.MissingCurrencies(missingCurrencies)
+                        } else {
+                            val grouped = expensesList.groupBy { it.category }
+                                .mapValues { (_, expenses) ->
+                                    expenses.sumOf { expense ->
+                                        val rate = rateMap[expense.currency]!!.rate
+                                        expense.amount / rate
+                                    }
+                                }
+                            ExpenseCategorizationResult.Success(grouped)
                         }
-                    ExpenseCategorizationResult.Success(grouped)
+                    }
+                    emit(result)
                 }
             }
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            ExpenseCategorizationResult.Success(emptyMap())
-        )
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                ExpenseCategorizationResult.Loading
+            )
 
     init {
         viewModelScope.launch {
@@ -84,12 +99,10 @@ class TripOverviewViewModel @Inject constructor(
 }
 
 sealed class ExpenseCategorizationResult {
+    object Loading : ExpenseCategorizationResult()
+    object UnavailableData : ExpenseCategorizationResult()
+    data class MissingCurrencies(val missingCurrencies: List<String>) :
+        ExpenseCategorizationResult()
     data class Success(val data: Map<ExpenseCategory, Double>) :
-        ExpenseCategorizationResult()
-
-    data class ErrorMissingCurrencies(val missingCurrencies: List<String>) :
-        ExpenseCategorizationResult()
-
-    object ErrorUnavailableData :
         ExpenseCategorizationResult()
 }

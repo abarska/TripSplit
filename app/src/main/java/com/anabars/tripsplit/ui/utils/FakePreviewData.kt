@@ -55,3 +55,12 @@ fun getFakeAddExpensePayerParticipantsState() = AddExpensePayerParticipantsState
     expensePayerId = 1,
     selectedParticipants = getFakeTripParticipants().toSet()
 )
+
+fun getFakePieChartData(): MutableMap<ExpenseCategory, Double> {
+    val data = mutableMapOf<ExpenseCategory, Double>()
+    val categories = ExpenseCategory.allExpenseCategories()
+    categories.forEachIndexed { index, category ->
+        data[categories[index]] = 1.00 + (index * 1.00)
+    }
+    return data
+}

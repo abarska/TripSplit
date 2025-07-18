@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsInfoText
@@ -37,4 +38,15 @@ fun TsPlaceholderView(
         )
         TsInfoText(text = text, textRes = textRes, fontSize = TsFontSize.MEDIUM)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TsPlaceholderViewPreview() {
+    TsPlaceholderView(
+        painterRes = R.drawable.empty_wallet_image,
+        contentDescriptionRes = R.string.empty_wallet_image,
+        textRes = R.string.placeholder_expenses,
+        imageSize = dimensionResource(R.dimen.placeholder_image_size)
+    )
 }

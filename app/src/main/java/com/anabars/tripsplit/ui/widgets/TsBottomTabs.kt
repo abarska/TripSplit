@@ -13,6 +13,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsInfoText
@@ -65,3 +66,12 @@ fun tripDetailsTabs() = listOf(
         contentDescriptionRes = R.string.settlements_tab_content_description,
     )
 )
+
+@Preview(showBackground = true)
+@Composable
+private fun TsBottomTabsPreview() {
+    TsBottomTabs(
+        selectedTabIndex = 0,
+        onTabSelected = { }
+    )
+}

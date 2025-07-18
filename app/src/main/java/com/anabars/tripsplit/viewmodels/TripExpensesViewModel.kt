@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -26,20 +27,27 @@ class TripExpensesViewModel @Inject constructor(
     val tripId: Long = savedStateHandle.get<Long>("id")
         ?: throw IllegalStateException("Trip ID is required for TripExpensesViewModel")
 
-    val groupedExpenses: StateFlow<Map<LocalDate, List<ExpenseWithParticipants>>> =
+    val groupedExpensesResult: StateFlow<GroupedExpensesResult> =
         tripExpensesRepository.getExpensesWithParticipantsByTrip(tripId)
             .map { expenses ->
-                expenses.groupBy {
-                    Instant.ofEpochMilli(it.expense.timestamp)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
-                }.toSortedMap(compareByDescending { it })
+                if (expenses.isEmpty()) {
+                    GroupedExpensesResult.Empty
+                } else {
+                    val grouped = expenses.groupBy {
+                        Instant.ofEpochMilli(it.expense.timestamp)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                    }.toSortedMap(compareByDescending { it })
+                    GroupedExpensesResult.Success(data = grouped)
+                }
             }
+            .onStart { emit(GroupedExpensesResult.Loading) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
-                initialValue = emptyMap()
+                initialValue = GroupedExpensesResult.Loading
             )
+
 
     val tripParticipants: StateFlow<List<TripParticipant>> =
         tripExpensesRepository.getParticipantsByTripId(tripId)
@@ -54,4 +62,11 @@ class TripExpensesViewModel @Inject constructor(
             tripExpensesRepository.deleteExpenseById(expenseId)
         }
     }
+}
+
+sealed class GroupedExpensesResult {
+    object Loading : GroupedExpensesResult()
+    object Empty : GroupedExpensesResult()
+    data class Success(val data: Map<LocalDate, List<ExpenseWithParticipants>>) :
+        GroupedExpensesResult()
 }

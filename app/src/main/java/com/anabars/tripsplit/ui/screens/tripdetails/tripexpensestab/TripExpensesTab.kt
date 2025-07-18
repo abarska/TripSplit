@@ -1,13 +1,12 @@
-package com.anabars.tripsplit.ui.screens.tripdetails
+package com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,11 +19,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsFab
-import com.anabars.tripsplit.ui.listitems.TsDateHeader
-import com.anabars.tripsplit.ui.listitems.TsExpenseItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.widgets.TsPlaceholderView
-import com.anabars.tripsplit.utils.formatters.formatDate
+import com.anabars.tripsplit.viewmodels.GroupedExpensesResult
 import com.anabars.tripsplit.viewmodels.TripExpensesViewModel
 
 @Composable
@@ -36,7 +33,7 @@ fun TripExpensesTab(
 ) {
 
     val viewModel: TripExpensesViewModel = hiltViewModel()
-    val tripExpenses by viewModel.groupedExpenses.collectAsState()
+    val groupedExpensesResult by viewModel.groupedExpensesResult.collectAsState()
     val tripParticipants by viewModel.tripParticipants.collectAsState()
 
     val screenTitle = String.format(
@@ -53,33 +50,25 @@ fun TripExpensesTab(
             .fillMaxSize()
             .padding(bottom = paddingValues.calculateBottomPadding())
     ) {
-        if (tripExpenses.isEmpty()) {
-            TsPlaceholderView(
-                painterRes = R.drawable.empty_wallet_image,
-                contentDescriptionRes = R.string.empty_wallet_image,
-                textRes = R.string.placeholder_expenses
-            )
-        } else {
-            LazyColumn(
-                modifier = modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                tripExpenses.forEach { (date, group) ->
-                    item {
-                        TsDateHeader(formattedDate = formatDate(date))
-                    }
-                    items(group) { expenseWithParticipants ->
-                        TsExpenseItemRow(
-                            expense = expenseWithParticipants.expense,
-                            paidFor = expenseWithParticipants.participants,
-                            tripParticipants = tripParticipants,
-                            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                            onDeleteClick = { viewModel.deleteExpenseById(expenseWithParticipants.expense.id) }
-                        )
-                    }
-                }
-            }
+        when (groupedExpensesResult) {
+            is GroupedExpensesResult.Loading ->
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+
+            is GroupedExpensesResult.Empty ->
+                TsPlaceholderView(
+                    painterRes = R.drawable.empty_wallet_image,
+                    contentDescriptionRes = R.string.empty_wallet_image,
+                    textRes = R.string.placeholder_expenses
+                )
+
+            is GroupedExpensesResult.Success ->
+                TripExpensesData(
+                    groupedExpensesResult = groupedExpensesResult,
+                    tripParticipants = tripParticipants,
+                    onDeleteClick = {expenseId -> viewModel.deleteExpenseById(expenseId) }
+                )
         }
+
         TsFab(
             modifier = Modifier
                 .padding(16.dp)

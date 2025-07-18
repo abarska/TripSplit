@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab.TripExpensesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab.TripOverviewTab
 import com.anabars.tripsplit.ui.widgets.TsBottomTabs
 

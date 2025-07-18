@@ -49,3 +49,9 @@ fun getFakeTripExpense() = TripExpense(
     timestamp = System.currentTimeMillis(),
     tripId = 0
 )
+
+fun getFakeAddExpensePayerParticipantsState() = AddExpensePayerParticipantsState(
+    tripParticipants = getFakeTripParticipants(),
+    expensePayerId = 1,
+    selectedParticipants = getFakeTripParticipants().toSet()
+)

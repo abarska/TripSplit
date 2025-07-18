@@ -6,11 +6,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsCheckboxPill
 import com.anabars.tripsplit.ui.utils.TsFontSize
+import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun ExpenseParticipantsCheckBoxGroup(
@@ -44,4 +47,17 @@ fun ExpenseParticipantsCheckBoxGroup(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ExpenseParticipantsCheckBoxGroupPreview() {
+    ExpenseParticipantsCheckBoxGroup(
+        modifier = Modifier.inputWidthModifier(),
+        participants = getFakeTripParticipants(),
+        selectedParticipants = getFakeTripParticipants()
+            .subList(0, getFakeTripParticipants().size - 1)
+            .toSet(),
+        onSelectionChanged = {}
+    )
 }

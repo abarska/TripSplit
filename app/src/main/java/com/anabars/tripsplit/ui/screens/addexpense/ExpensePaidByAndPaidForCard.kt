@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
@@ -11,6 +12,8 @@ import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.utils.TsFontSize
+import com.anabars.tripsplit.ui.utils.getFakeAddExpensePayerParticipantsState
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun ExpensePaidByAndPaidForCard(
@@ -48,4 +51,28 @@ fun ExpensePaidByAndPaidForCard(
             onSelectionChanged = onSelectionChanged
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ExpensePaidByAndPaidForCardPreview() {
+    ExpensePaidByAndPaidForCard(
+        addExpenseErrorRes = 0,
+        payerParticipantsState = getFakeAddExpensePayerParticipantsState(),
+        onPayerSelected = {},
+        onSelectionChanged = {},
+        modifier = Modifier.inputWidthModifier()
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ExpensePaidByAndPaidForCardPreviewWithError() {
+    ExpensePaidByAndPaidForCard(
+        addExpenseErrorRes = R.string.error_participants_not_selected,
+        payerParticipantsState = getFakeAddExpensePayerParticipantsState(),
+        onPayerSelected = {},
+        onSelectionChanged = {},
+        modifier = Modifier.inputWidthModifier()
+    )
 }

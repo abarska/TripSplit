@@ -19,6 +19,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ExpenseCategory
@@ -26,6 +27,7 @@ import com.anabars.tripsplit.ui.components.LayoutType
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsRadioGroup
 import com.anabars.tripsplit.ui.utils.TsFontSize
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun ExpenseCategoriesRadioGroup(
@@ -84,4 +86,14 @@ fun ExpenseCategoriesRadioGroup(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ExpenseCategoriesRadioGroupPreview() {
+    ExpenseCategoriesRadioGroup(
+        selectedCategory = ExpenseCategory.Food,
+        onCategoryChanged = {},
+        modifier = Modifier.inputWidthModifier()
+    )
 }

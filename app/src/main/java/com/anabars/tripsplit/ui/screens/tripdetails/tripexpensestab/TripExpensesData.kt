@@ -5,6 +5,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -23,6 +28,14 @@ fun TripExpensesData(
     onDeleteClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val savedMap: Map<Long, Boolean> =
+        rememberSaveable { mutableStateOf(emptyMap<Long, Boolean>()) }.value
+    // Non-saveable derived state
+    val expandedMap = remember { mutableStateMapOf<Long, Boolean>() }
+    LaunchedEffect(Unit) {
+        expandedMap.putAll(savedMap)
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -34,12 +47,21 @@ fun TripExpensesData(
                 TsDateHeader(formattedDate = formatDate(date))
             }
             items(group) { expenseWithParticipants ->
+                val expenseId = expenseWithParticipants.expense.id
+                val isExpanded = expandedMap[expenseId] ?: false
                 TsExpenseItemRow(
                     expense = expenseWithParticipants.expense,
                     paidFor = expenseWithParticipants.participants,
                     tripParticipants = tripParticipants,
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-                    onDeleteClick = { onDeleteClick(expenseWithParticipants.expense.id) }
+                    isExpanded = isExpanded,
+                    onExpandToggle = {
+                        expandedMap[expenseId] = !isExpanded
+                    },
+                    onDeleteClick = {
+                        expandedMap.remove(expenseId)
+                        onDeleteClick(expenseId)
+                    },
                 )
             }
         }

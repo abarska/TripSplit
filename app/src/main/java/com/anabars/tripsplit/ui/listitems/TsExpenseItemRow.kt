@@ -16,10 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +39,8 @@ fun TsExpenseItemRow(
     paidFor: List<TripParticipant>,
     tripParticipants: List<TripParticipant>,
     modifier: Modifier = Modifier,
+    isExpanded: Boolean = false,
+    onExpandToggle: () -> Unit,
     onEditClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {}
 ) {
@@ -51,13 +49,12 @@ fun TsExpenseItemRow(
         onItemClick = {}
     ) {
         Column(modifier = modifier.fillMaxWidth()) {
-            var isExpanded by rememberSaveable { mutableStateOf(false) }
             VisiblePart(
                 expense = expense,
                 paidFor = paidFor,
                 tripParticipants = tripParticipants,
                 isExpanded = isExpanded
-            ) { isExpanded = !isExpanded }
+            ) { onExpandToggle() }
             AnimatedVisibility(visible = isExpanded) {
                 HiddenPart(
                     onEditClick = onEditClick,
@@ -150,10 +147,23 @@ private fun HiddenPart(onEditClick: () -> Unit, onDeleteClick: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-private fun TsExpenseItemRowPreview() {
+private fun TsExpenseItemRowPreviewCollapsed() {
     TsExpenseItemRow(
         expense = getFakeTripExpense(),
         paidFor = getFakeTripParticipants(),
-        tripParticipants = getFakeTripParticipants()
+        tripParticipants = getFakeTripParticipants(),
+        onExpandToggle = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TsExpenseItemRowPreviewExpanded() {
+    TsExpenseItemRow(
+        expense = getFakeTripExpense(),
+        paidFor = getFakeTripParticipants(),
+        tripParticipants = getFakeTripParticipants(),
+        isExpanded = true,
+        onExpandToggle = {}
     )
 }

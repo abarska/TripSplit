@@ -2,6 +2,7 @@ package com.anabars.tripsplit.ui.components
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,6 +20,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -138,5 +140,36 @@ fun TsItemRowActionButton(actionButton: ActionButton) {
 private fun TsItemRowActionButtonPreview() {
     TsItemRowActionButton(
         ActionButton(icon = Icons.Default.Pause) {}
+    )
+}
+
+@Composable
+fun TsOutlinedButton(
+    text: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    OutlinedButton(
+        modifier = modifier,
+        enabled = enabled,
+        border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.primary),
+        onClick = onClick
+    ) {
+        TsInfoText(
+            text = text,
+            fontSize = TsFontSize.MEDIUM,
+            textColor = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TsOutlinedButtonPreview() {
+    TsOutlinedButton(
+        text = "Placeholder",
+        modifier = Modifier.inputWidthModifier(),
+        onClick = {}
     )
 }

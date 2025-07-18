@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -8,7 +7,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -21,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import java.time.Instant
@@ -40,13 +37,10 @@ fun DateInputSection(
     val formattedDate = rememberSaveable(selectedDate) { selectedDate.format(datePattern) }
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
-    OutlinedButton(
-        modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally),
-        onClick = { showDatePicker = true },
-        border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.primary)
-    ) {
-        TsInfoText(text = formattedDate, fontSize = TsFontSize.MEDIUM, textColor = MaterialTheme.colorScheme.primary)
-    }
+    TsOutlinedButton(
+        text = formattedDate,
+        modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally)
+    ) { showDatePicker = true }
 
     if (showDatePicker) {
         val initialDate = remember(selectedDate) {

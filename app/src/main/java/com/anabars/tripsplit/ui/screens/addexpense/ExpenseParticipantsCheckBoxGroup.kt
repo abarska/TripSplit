@@ -1,16 +1,17 @@
 package com.anabars.tripsplit.ui.screens.addexpense
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsCheckboxPill
+import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
@@ -29,13 +30,12 @@ fun ExpenseParticipantsCheckBoxGroup(
         onSelectionChanged(newSelection)
     }
 
-    FlowRow(
+    Column(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(
-            dimensionResource(R.dimen.vertical_spacer_small),
-            Alignment.CenterHorizontally
-        )
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        TsInfoText(textRes = R.string.expense_paid_for, fontSize = TsFontSize.MEDIUM)
+        Spacer(modifier = Modifier.height(8.dp))
         participants.forEach { participant ->
             TsCheckboxPill(
                 value = participant,

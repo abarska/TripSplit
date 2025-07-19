@@ -29,7 +29,8 @@ data class TripParticipant(
     fun withTripId(id: Long): TripParticipant {
         return copy(tripId = id)
     }
-    fun chipDisplayLabel() = "$name ($multiplicator)"
+
+    fun chipDisplayLabel() = name
 }
 
 enum class ParticipantStatus {

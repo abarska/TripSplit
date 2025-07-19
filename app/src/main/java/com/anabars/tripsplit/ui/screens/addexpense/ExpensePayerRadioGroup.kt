@@ -1,10 +1,14 @@
 package com.anabars.tripsplit.ui.screens.addexpense
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.LayoutType
@@ -22,19 +26,24 @@ fun ExpensePayerRadioGroup(
     itemLabel: (TripParticipant) -> String,
 ) {
     if (participants.isEmpty()) return
-
-    TsRadioGroup(
+    Column(
         modifier = modifier,
-        items = participants,
-        selectedItem = participants.find { it.id == paidBy } ?: participants.first(),
-        onItemSelected = { onPayerSelected(it.id) },
-        layout = LayoutType.Flow
-    ) { participant ->
-        TsInfoText(
-            text = itemLabel(participant),
-            fontSize = TsFontSize.MEDIUM,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-        )
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        TsInfoText(textRes = R.string.expense_paid_by, fontSize = TsFontSize.MEDIUM)
+        TsRadioGroup(
+            items = participants,
+            selectedItem = participants.find { it.id == paidBy } ?: participants.first(),
+            onItemSelected = { onPayerSelected(it.id) },
+            layout = LayoutType.Flow
+        ) { participant ->
+            TsInfoText(
+                text = itemLabel(participant),
+                fontSize = TsFontSize.MEDIUM,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            )
+        }
     }
 }
 

@@ -3,6 +3,11 @@ package com.anabars.tripsplit.ui.screens.addtrip
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CurrencyExchange
+import androidx.compose.material.icons.outlined.People
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -30,8 +35,11 @@ fun AddTripPortraitContent(
     onSaveTrip: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val scrollState = rememberScrollState()
     Column(
-        modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding)),
+        modifier = modifier
+            .padding(dimensionResource(R.dimen.full_screen_padding))
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
         InputSection(
@@ -41,7 +49,7 @@ fun AddTripPortraitContent(
 
         TsContentCard {
             ChipsSection(
-                labelRes = R.string.currencies_section_header,
+                leadingIcon = Icons.Default.CurrencyExchange,
                 items = tripCurrencies,
                 onAddItemButtonClick = onAddCurrencyButtonClick,
                 onDeleteItemButtonClick = onDeleteCurrency,
@@ -51,7 +59,7 @@ fun AddTripPortraitContent(
 
         TsContentCard {
             ChipsSection(
-                labelRes = R.string.participants_section_header,
+                leadingIcon = Icons.Outlined.People,
                 items = tripParticipants,
                 onAddItemButtonClick = onAddParticipantButtonClick,
                 onItemClick = onEditParticipantButtonClick,
@@ -70,7 +78,7 @@ private fun AddTripPortraitContentPreview() {
     AddTripPortraitContent(
         tripNameUiState = getFakeTripNameUiState(),
         tripParticipants = getFakeTripParticipants(),
-        tripCurrencies = getFakeTripCurrencies().map{it.code},
+        tripCurrencies = getFakeTripCurrencies().map { it.code },
         onTripNameChanged = {},
         onAddParticipantButtonClick = {},
         onEditParticipantButtonClick = {},

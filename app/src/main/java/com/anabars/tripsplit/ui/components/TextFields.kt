@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.anabars.tripsplit.ui.utils.TsFontSize
 
@@ -19,19 +20,20 @@ fun TsInfoText(
     text: String = "",
     fontSize: TsFontSize = TsFontSize.SMALL,
     maxLines: Int = 10,
-    textColor: Color = MaterialTheme.colorScheme.onSurface
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    textAlign: TextAlign = TextAlign.Start
 ) {
     val value = if (textRes != 0) stringResource(textRes) else text
     if (value.isNotEmpty()) {
         Box(modifier = modifier, contentAlignment = Alignment.Center) {
             Text(
-                modifier = modifier,
                 text = value,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = fontSize.sp,
                     color = textColor
                 ),
-                maxLines = maxLines
+                maxLines = maxLines,
+                textAlign = textAlign
             )
         }
     }
@@ -53,4 +55,13 @@ private fun TsInfoTextMediumPreview() {
 @Composable
 private fun TsInfoTextLargePreview() {
     TsInfoText(text = "Placeholder", fontSize = TsFontSize.LARGE)
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TsInfoTextCenterAlignmentPreview() {
+    TsInfoText(
+        text = "This is some long text that will hopefully take more than 1 line",
+        textAlign = TextAlign.Center
+    )
 }

@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
@@ -30,15 +31,18 @@ fun TripSummaryCard(tripDetails: TripWithDetails?, modifier: Modifier = Modifier
             tripDetails?.let {
                 TsInfoText(
                     text = tripDetails.trip.title,
-                    fontSize = TsFontSize.LARGE
+                    fontSize = TsFontSize.LARGE,
+                    textAlign = TextAlign.Center
                 )
                 TsInfoText(
                     text = "${stringResource(R.string.participants)}: ${tripDetails.participants.joinToString { it.name }}",
-                    fontSize = TsFontSize.MEDIUM
+                    fontSize = TsFontSize.MEDIUM,
+                    textAlign = TextAlign.Center
                 )
                 TsInfoText(
                     text = "${stringResource(R.string.currencies)}: ${tripDetails.currencies.joinToString { it.code }}",
-                    fontSize = TsFontSize.MEDIUM
+                    fontSize = TsFontSize.MEDIUM,
+                    textAlign = TextAlign.Center
                 )
             }
         }

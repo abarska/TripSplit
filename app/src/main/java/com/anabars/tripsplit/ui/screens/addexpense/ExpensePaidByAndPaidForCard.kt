@@ -35,7 +35,7 @@ fun ExpensePaidByAndPaidForCard(
                 participants = payerParticipantsState.tripParticipants,
                 paidBy = payerParticipantsState.expensePayerId,
                 onPayerSelected = onPayerSelected,
-                itemLabel = { it.chipDisplayLabel() }
+                itemLabel = { it.chipDisplayLabelName() }
             )
 
             ExpenseParticipantsCheckBoxGroup(

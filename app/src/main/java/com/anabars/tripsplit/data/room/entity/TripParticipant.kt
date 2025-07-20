@@ -30,7 +30,8 @@ data class TripParticipant(
         return copy(tripId = id)
     }
 
-    fun chipDisplayLabel() = name
+    fun chipDisplayLabelName() = name
+    fun chipDisplayLabelNameWithMultiplicator() = "$name ($multiplicator)"
 }
 
 enum class ParticipantStatus {

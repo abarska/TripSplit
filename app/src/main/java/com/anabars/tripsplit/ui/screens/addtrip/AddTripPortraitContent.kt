@@ -64,7 +64,7 @@ fun AddTripPortraitContent(
                 onAddItemButtonClick = onAddParticipantButtonClick,
                 onItemClick = onEditParticipantButtonClick,
                 onDeleteItemButtonClick = onDeleteParticipant,
-                itemLabel = { it.chipDisplayLabel() }
+                itemLabel = { it.chipDisplayLabelNameWithMultiplicator() }
             )
         }
 

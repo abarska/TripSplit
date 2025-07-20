@@ -2,7 +2,6 @@ package com.anabars.tripsplit.ui.screens.addexpense
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -14,6 +13,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,13 +28,12 @@ import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
-import com.anabars.tripsplit.viewmodels.SharedViewModel
 
 @Composable
 fun AddExpenseScreen(
     navController: NavHostController,
     onTabTitleChange: (String) -> Unit,
-    sharedViewModel: SharedViewModel
+    setBackHandler: ((() -> Boolean)?) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -52,10 +51,14 @@ fun AddExpenseScreen(
         onTabTitleChange(screenTitle)
     }
 
-    BackHandler {
-        if (!sharedViewModel.handleBack()) {
-            navController.popBackStack()
-        }
+    val handleBackNavigation = {
+        navController.popBackStack()
+        true
+    }
+
+    DisposableEffect(Unit) {
+        setBackHandler(handleBackNavigation)
+        onDispose { setBackHandler(null) }
     }
 
     LaunchedEffect(navigateBackState, addExpenseErrorRes) {

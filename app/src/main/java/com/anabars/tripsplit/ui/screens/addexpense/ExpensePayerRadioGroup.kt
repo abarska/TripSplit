@@ -41,7 +41,7 @@ fun ExpensePayerRadioGroup(
             TsInfoText(
                 text = itemLabel(participant),
                 fontSize = TsFontSize.MEDIUM,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                modifier = Modifier.padding(8.dp)
             )
         }
     }

@@ -84,6 +84,7 @@
     <string name="everyone">Everyone</string>
     <string name="participants">Participants</string>
     <string name="currencies">Currencies</string>
+    <string name="status">Status</string>
     <string name="loading_trip_details">Loading Trip Details</string>
     <string name="expense_paid_by">Paid by:</string>
     <string name="expense_paid_for">Paid for:</string>
@@ -99,6 +100,12 @@
     <string name="date_picker_format" translatable="false">dd.MM.yyyy</string>
     <string name="currency_format" translatable="false">#0.00</string>
     <string name="pays_for_format">Pays for %d</string>
+
+    // trip status labels
+    <string name="planned">Planned</string>
+    <string name="started">Started</string>
+    <string name="finished">Finished</string>
+    <string name="archived">Archived</string>
 
     // missing data placeholders
     <string name="placeholder_expenses">Your expenses will be shown here</string>

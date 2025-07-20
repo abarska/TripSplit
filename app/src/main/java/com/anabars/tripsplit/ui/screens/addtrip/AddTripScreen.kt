@@ -19,6 +19,7 @@ import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
 import com.anabars.tripsplit.ui.dialogs.TsUserInputDialog
+import com.anabars.tripsplit.ui.model.AddTripEvent
 import com.anabars.tripsplit.ui.model.AddTripEvent.AddCurrencyClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.AddParticipantClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyAdded
@@ -48,6 +49,7 @@ fun AddTripScreen(
 
     val dialogUiState by viewModel.dialogUiState.collectAsState()
     val nameUiState by viewModel.nameUiState.collectAsState()
+    val tripStatusUiState by viewModel.statusUiState.collectAsState()
     val participantsUiState by viewModel.participantsUiState.collectAsState()
     val currenciesUiState by viewModel.currenciesUiState.collectAsState()
     val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
@@ -151,9 +153,11 @@ fun AddTripScreen(
             if (isPortrait)
                 AddTripPortraitContent(
                     tripNameUiState = nameUiState,
+                    tripStatusUiState = tripStatusUiState,
                     tripParticipants = participantsUiState.tripParticipants,
                     tripCurrencies = currenciesUiState.tripCurrencies,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
+                    onTripStatusChanged = { viewModel.onEvent(AddTripEvent.TripStatusChanged(it)) },
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
                     onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },
@@ -164,9 +168,11 @@ fun AddTripScreen(
             else
                 AddTripLandscapeContent(
                     tripNameUiState = nameUiState,
+                    tripStatusUiState = tripStatusUiState,
                     tripParticipants = participantsUiState.tripParticipants,
                     tripCurrencies = currenciesUiState.tripCurrencies,
                     onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
+                    onTripStatusChanged = { viewModel.onEvent(AddTripEvent.TripStatusChanged(it)) },
                     onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
                     onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
                     onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },

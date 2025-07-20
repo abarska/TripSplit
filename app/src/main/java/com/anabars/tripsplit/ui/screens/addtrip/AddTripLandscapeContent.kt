@@ -12,12 +12,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.data.room.entity.TripStatus
+import com.anabars.tripsplit.ui.components.LayoutType
 import com.anabars.tripsplit.ui.components.TsContentCard
+import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsMainButton
+import com.anabars.tripsplit.ui.components.TsRadioGroup
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
+import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.getFakeTripCurrencies
 import com.anabars.tripsplit.ui.utils.getFakeTripNameUiState
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
@@ -26,9 +33,11 @@ import com.anabars.tripsplit.ui.utils.inputWidthModifier
 @Composable
 fun AddTripLandscapeContent(
     tripNameUiState: AddTripNameUiState,
+    tripStatusUiState: TripStatus,
     tripParticipants: List<TripParticipant>,
     tripCurrencies: List<String>,
     onTripNameChanged: (String) -> Unit,
+    onTripStatusChanged: (TripStatus) -> Unit,
     onAddParticipantButtonClick: () -> Unit,
     onEditParticipantButtonClick: (TripParticipant) -> Unit,
     onDeleteParticipant: (TripParticipant) -> Unit,
@@ -51,6 +60,24 @@ fun AddTripLandscapeContent(
             tripNameUiState = tripNameUiState,
             onTripNameChanged = onTripNameChanged
         )
+
+        TsContentCard {
+            TsRadioGroup(
+                modifier = modifier
+                    .inputWidthModifier()
+                    .padding(16.dp),
+                items = TripStatus.getInitialTripStatuses(),
+                selectedItem = tripStatusUiState,
+                onItemSelected = onTripStatusChanged,
+                layout = LayoutType.Row,
+            ) { status ->
+                TsInfoText(
+                    text = stringResource(status.labelRes),
+                    modifier = Modifier.padding(8.dp),
+                    fontSize = TsFontSize.MEDIUM
+                )
+            }
+        }
 
         TsContentCard(modifier = Modifier.inputWidthModifier()) {
             ChipsSection(
@@ -85,9 +112,11 @@ fun AddTripLandscapeContent(
 private fun AddTripLandscapeContentPreview() {
     AddTripLandscapeContent(
         tripNameUiState = getFakeTripNameUiState(),
+        tripStatusUiState = TripStatus.PLANNED,
         tripParticipants = getFakeTripParticipants(),
         tripCurrencies = getFakeTripCurrencies().map { it.code },
         onTripNameChanged = {},
+        onTripStatusChanged = {},
         onAddParticipantButtonClick = {},
         onEditParticipantButtonClick = {},
         onDeleteParticipant = {},

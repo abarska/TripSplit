@@ -44,6 +44,11 @@ fun TripSummaryCard(tripDetails: TripWithDetails?, modifier: Modifier = Modifier
                     fontSize = TsFontSize.MEDIUM,
                     textAlign = TextAlign.Center
                 )
+                TsInfoText(
+                    text = "${stringResource(R.string.status)}: ${stringResource(tripDetails.trip.status.labelRes)}",
+                    fontSize = TsFontSize.MEDIUM,
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }

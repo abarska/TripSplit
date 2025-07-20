@@ -18,11 +18,15 @@ data class Trip(
     @ColumnInfo val createdAt: Date = Date()
 )
 
-enum class TripStatus {
-    PLANNED,
-    STARTED,
-    FINISHED,
-    COMPLETED
+enum class TripStatus(@StringRes val labelRes: Int) {
+    PLANNED(R.string.planned),
+    STARTED(R.string.started),
+    FINISHED(R.string.finished),
+    ARCHIVED(R.string.archived);
+
+    companion object {
+        fun getInitialTripStatuses() = listOf(PLANNED, STARTED)
+    }
 }
 
 enum class Tag(@StringRes tagRes: Int) {

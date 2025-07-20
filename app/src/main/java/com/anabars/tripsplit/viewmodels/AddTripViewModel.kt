@@ -7,26 +7,13 @@ import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.preferences.CurrencyPreference
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.data.room.entity.TripStatus
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.model.AddTripCurrenciesUiState
 import com.anabars.tripsplit.ui.model.AddTripDialogState
 import com.anabars.tripsplit.ui.model.AddTripEvent
-import com.anabars.tripsplit.ui.model.AddTripEvent.AddCurrencyClicked
-import com.anabars.tripsplit.ui.model.AddTripEvent.AddParticipantClicked
-import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyAdded
-import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyDeleted
-import com.anabars.tripsplit.ui.model.AddTripEvent.DismissAddParticipantDialog
-import com.anabars.tripsplit.ui.model.AddTripEvent.DismissCurrencyDialog
-import com.anabars.tripsplit.ui.model.AddTripEvent.DuplicateNameDialogConfirmed
-import com.anabars.tripsplit.ui.model.AddTripEvent.ExistingParticipantEdited
-import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantMultiplicatorChanged
-import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantNameChanged
-import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantSaveClicked
-import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantDeleted
-import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
-import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
-import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
+import com.anabars.tripsplit.ui.model.AddTripEvent.*
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
@@ -54,6 +41,9 @@ class AddTripViewModel @Inject constructor(
 
     private val _nameUiState = MutableStateFlow(AddTripNameUiState())
     val nameUiState: StateFlow<AddTripNameUiState> = _nameUiState.asStateFlow()
+
+    private val _statusUiState = MutableStateFlow(TripStatus.PLANNED)
+    val statusUiState: StateFlow<TripStatus> = _statusUiState.asStateFlow()
 
     private val _participantsUiState = MutableStateFlow(AddTripParticipantsUiState())
     val participantsUiState: StateFlow<AddTripParticipantsUiState> = _participantsUiState.asStateFlow()
@@ -120,13 +110,17 @@ class AddTripViewModel @Inject constructor(
 
     fun saveTrip(tripName: String) {
         viewModelScope.launch {
-            val trip = Trip(title = tripName)
+            val trip = Trip(title = tripName, status = _statusUiState.value)
             tripRepository.saveTrip(
                 trip,
                 _participantsUiState.value.tripParticipants,
                 _currenciesUiState.value.tripCurrencies
             )
         }
+    }
+
+    private fun updateTripStatus(status: TripStatus) {
+        _statusUiState.value = status
     }
 
     fun updateTripName(input: String) {
@@ -165,6 +159,10 @@ class AddTripViewModel @Inject constructor(
                 updateTripName(event.name)
                 updateTripNameErrorMessage(0)
                 updateTripNameError(false)
+            }
+
+            is TripStatusChanged -> {
+                updateTripStatus(event.status)
             }
 
             is NewParticipantNameChanged -> {

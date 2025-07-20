@@ -58,7 +58,7 @@ fun TripsScreen(
                         onItemClick = { navController.navigate(AppScreens.ROUTE_TRIP_DETAILS + "/${trip.id}") }
                     ) {
                         TsInfoText(
-                            modifier = Modifier.padding(8.dp),
+                            modifier = Modifier.padding(16.dp),
                             text = trip.title,
                             fontSize = TsFontSize.MEDIUM
                         )

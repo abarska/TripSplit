@@ -22,28 +22,28 @@ fun AppNavGraph(
     sharedViewModel: SharedViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val onTabTitleChange = { tabTitle: String ->
-        sharedViewModel.setTabTitle(tabTitle)
-    }
     NavHost(
         navController = navController,
         startDestination = AppScreens.ROUTE_TRIPS,
         modifier = modifier.fillMaxSize()
     ) {
+
         composable(route = AppScreens.ROUTE_TRIPS) {
             TripsScreen(
                 navController = navController,
-                onTabTitleChange = onTabTitleChange,
+                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
                 modifier = modifier
             )
         }
+
         composable(route = AppScreens.ROUTE_ADD_TRIP) {
             AddTripScreen(
                 navController = navController,
-                onTabTitleChange = onTabTitleChange,
+                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }
+
         composable(
             route = AppScreens.ROUTE_ADD_EXPENSE + "/{tripId}",
             arguments = listOf(navArgument("tripId") { type = NavType.LongType })
@@ -51,16 +51,18 @@ fun AppNavGraph(
             backStackEntry.arguments?.getLong("tripId") ?: return@composable
             AddExpenseScreen(
                 navController = navController,
-                onTabTitleChange = onTabTitleChange,
+                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }
+
         composable(route = AppScreens.ROUTE_SETTINGS) {
             SettingsScreen(
-                onTabTitleChange = onTabTitleChange,
+                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
                 modifier = modifier
             )
         }
+
         composable(
             route = AppScreens.ROUTE_TRIP_DETAILS + "/{id}",
             arguments = listOf(navArgument("id") { type = NavType.LongType })
@@ -68,7 +70,7 @@ fun AppNavGraph(
             backStackEntry.arguments?.getLong("id") ?: return@composable
             TripDetailsScreen(
                 navController = navController,
-                onTabTitleChange = onTabTitleChange,
+                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) }
             )
         }
     }

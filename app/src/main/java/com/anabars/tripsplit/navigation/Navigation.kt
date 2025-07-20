@@ -41,7 +41,7 @@ fun AppNavGraph(
             AddTripScreen(
                 navController = navController,
                 onTabTitleChange = onTabTitleChange,
-                sharedViewModel = sharedViewModel
+                setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }
         composable(

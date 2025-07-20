@@ -36,13 +36,12 @@ import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.AddTripViewModel
-import com.anabars.tripsplit.viewmodels.SharedViewModel
 
 @Composable
 fun AddTripScreen(
     navController: NavController,
     onTabTitleChange: (String) -> Unit,
-    sharedViewModel: SharedViewModel,
+    setBackHandler: ((() -> Boolean)?) -> Unit
 ) {
 
     val viewModel: AddTripViewModel = hiltViewModel()
@@ -81,14 +80,14 @@ fun AddTripScreen(
         if (localCurrency.isNotBlank() && !viewModel.hasCurrency(localCurrency)) {
             viewModel.addCurrency(localCurrency)
         }
-        sharedViewModel.setBackHandler { handleBackNavigation() }
+        setBackHandler { handleBackNavigation() }
         if (shouldNavigateHome) {
             navigateHome(addTripViewModel = viewModel, navController = navController)
         }
     }
 
     DisposableEffect(Unit) {
-        onDispose { sharedViewModel.setBackHandler(null) }
+        onDispose { setBackHandler(null) }
     }
 
     when (dialogUiState.activeDialog) {

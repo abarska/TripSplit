@@ -1,6 +1,7 @@
 package com.anabars.tripsplit.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,31 +33,59 @@ fun <T> TsRadioGroup(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = arrangement
         ) {
-            items.forEach { item ->
-                TripSplitRadioButton(
-                    modifier = itemWidth?.let { Modifier.width(it) } ?: Modifier,
-                    value = item,
-                    isSelected = item == selectedItem,
-                    onItemClick = { onItemSelected(item) },
-                    content = { itemContent(item) }
-                )
-            }
+            TsRadioGroupItems(
+                items = items,
+                selectedItem = selectedItem,
+                onItemSelected = onItemSelected,
+                itemWidth = itemWidth,
+                itemContent = itemContent
+            )
         }
 
         LayoutType.Flow -> FlowRow(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = arrangement
         ) {
-            items.forEach { item ->
-                TripSplitRadioButton(
-                    value = item,
-                    isSelected = item == selectedItem,
-                    onItemClick = { onItemSelected(item) },
-                    content = { itemContent(item) }
-                )
-            }
+            TsRadioGroupItems(
+                items = items,
+                selectedItem = selectedItem,
+                onItemSelected = onItemSelected,
+                itemContent = itemContent
+            )
+        }
+
+        LayoutType.Column -> Column(
+            modifier = modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TsRadioGroupItems(
+                items = items,
+                selectedItem = selectedItem,
+                onItemSelected = onItemSelected,
+                itemWidth = itemWidth,
+                itemContent = itemContent
+            )
         }
     }
 }
 
-enum class LayoutType { Row, Flow }
+@Composable
+private fun <T> TsRadioGroupItems(
+    items: List<T>,
+    selectedItem: T,
+    onItemSelected: (T) -> Unit,
+    itemWidth: Dp? = null,
+    itemContent: @Composable (T) -> Unit
+) {
+    items.forEach { item ->
+        TripSplitRadioButton(
+            modifier = itemWidth?.let { Modifier.width(it) } ?: Modifier,
+            value = item,
+            isSelected = item == selectedItem,
+            onItemClick = { onItemSelected(item) },
+            content = { itemContent(item) }
+        )
+    }
+}
+
+enum class LayoutType { Row, Flow, Column }

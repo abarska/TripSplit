@@ -36,7 +36,7 @@ fun ExpensePayerRadioGroup(
             items = participants,
             selectedItem = participants.find { it.id == paidBy } ?: participants.first(),
             onItemSelected = { onPayerSelected(it.id) },
-            layout = LayoutType.Flow
+            layout = LayoutType.Column
         ) { participant ->
             TsInfoText(
                 text = itemLabel(participant),

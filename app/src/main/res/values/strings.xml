@@ -62,7 +62,7 @@
     <string name="error_participants_not_selected">Please select at least one participant</string>
     <string name="error_amount_invalid">Please enter a valid, positive amount</string>
     <string name="error_exchange_rates_unavailable">Unable to display data: unavailable exchange rates</string>
-    <string name="error_exchange_rates_missing">Unable to display data: missing exchange rates for %s</string>
+    <string name="error_exchange_rates_missing">Unable to display data: missing exchange rates for </string>
 
     // used for dialogs
     <string name="save_changes_dialog_title">Save Changes</string>

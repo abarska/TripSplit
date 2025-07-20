@@ -10,6 +10,7 @@ import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.viewmodels.ExpenseCategorizationResult
 
 fun getFakeTripParticipants() = listOf(
     TripParticipant(id = 1, name = "Harry", multiplicator = 1),
@@ -72,3 +73,19 @@ fun getFakeTripWithDetails() = TripWithDetails(
     participants = getFakeTripParticipants(),
     currencies = getFakeTripCurrencies()
 )
+
+fun getFakeExpenseCategorizationResultUnavailableData() =
+    ExpenseCategorizationResult.UnavailableData
+
+fun getFakeExpenseCategorizationResultMissingCurrencies() =
+    ExpenseCategorizationResult.MissingCurrencies(getFakeTripCurrencies().map { it.code })
+
+fun getFakeExpenseCategorizationResultInsufficientData() =
+    ExpenseCategorizationResult.Success(
+        data = getFakePieChartData()
+            .entries
+            .take(2)
+            .associate { it.toPair() })
+
+fun getFakeExpenseCategorizationResultSuccess() =
+    ExpenseCategorizationResult.Success(getFakePieChartData())

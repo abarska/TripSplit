@@ -52,6 +52,14 @@ fun DrawerContent(
             coroutineScope,
             drawerState
         )
+        DrawerNavItem(
+            R.string.title_archive,
+            AppScreens.ROUTE_ARCHIVE,
+            currentRoute,
+            navController,
+            coroutineScope,
+            drawerState
+        )
     }
 }
 

@@ -13,6 +13,7 @@ import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
 import com.anabars.tripsplit.ui.screens.settings.SettingsScreen
 import com.anabars.tripsplit.ui.screens.tripdetails.TripDetailsScreen
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseScreen
+import com.anabars.tripsplit.ui.screens.archive.ArchiveScreen
 import com.anabars.tripsplit.ui.screens.trips.TripsScreen
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 
@@ -58,6 +59,13 @@ fun AppNavGraph(
 
         composable(route = AppScreens.ROUTE_SETTINGS) {
             SettingsScreen(
+                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                modifier = modifier
+            )
+        }
+
+        composable(route = AppScreens.ROUTE_ARCHIVE) {
+            ArchiveScreen(
                 onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
                 modifier = modifier
             )

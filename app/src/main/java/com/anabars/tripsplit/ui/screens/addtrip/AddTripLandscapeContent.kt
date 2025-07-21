@@ -66,7 +66,7 @@ fun AddTripLandscapeContent(
                 modifier = modifier
                     .inputWidthModifier()
                     .padding(16.dp),
-                items = TripStatus.getInitialTripStatuses(),
+                items = TripStatus.getInitialStatuses(),
                 selectedItem = tripStatusUiState,
                 onItemSelected = onTripStatusChanged,
                 layout = LayoutType.Row,

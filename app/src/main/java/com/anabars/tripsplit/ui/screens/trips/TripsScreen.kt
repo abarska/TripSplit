@@ -2,6 +2,7 @@ package com.anabars.tripsplit.ui.screens.trips
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -24,8 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.data.room.entity.TripStatus
 import com.anabars.tripsplit.ui.components.TsFab
 import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsItemRowActionButton
 import com.anabars.tripsplit.ui.components.TsOutlinedButton
 import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
@@ -94,11 +98,30 @@ fun TripsScreen(
                             navController.navigate(AppScreens.ROUTE_TRIP_DETAILS + "/${trip.id}")
                         }
                     ) {
-                        TsInfoText(
-                            modifier = Modifier.padding(16.dp),
-                            text = trip.title,
-                            fontSize = TsFontSize.MEDIUM
-                        )
+                        Row(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            TsInfoText(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .weight(1f),
+                                text = trip.title,
+                                fontSize = TsFontSize.MEDIUM
+                            )
+                            val button = ActionButton.ChipActionButton(
+                                icon = Icons.Outlined.Archive,
+                                iconSize = 32.dp,
+                                contentDescriptionRes = R.string.archive_item,
+                            ) {
+                                tripsViewModel.updateTripStatus(
+                                    id = trip.id,
+                                    status = TripStatus.ARCHIVED
+                                )
+                            }
+                            TsItemRowActionButton(button)
+                        }
                     }
                 }
             }

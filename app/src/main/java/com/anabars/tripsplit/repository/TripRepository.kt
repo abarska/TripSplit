@@ -11,6 +11,7 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripExpense
+import com.anabars.tripsplit.data.room.entity.TripStatus
 import com.anabars.tripsplit.data.room.model.TripWithDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -26,10 +27,15 @@ class TripRepository @Inject constructor(
     private val currencyDao: TripCurrencyDao
 ) {
 
-    fun getAllTrips() = tripDao.getAllTrips().flowOn(Dispatchers.IO).conflate()
+    fun getTripsWithStatuses(statuses: List<TripStatus>) =
+        tripDao.getTripsWithStatuses(statuses).flowOn(Dispatchers.IO).conflate()
 
     @Transaction
-    suspend fun saveTrip(trip: Trip, participants: List<TripParticipant>, currencyCodes: List<String>) {
+    suspend fun saveTrip(
+        trip: Trip,
+        participants: List<TripParticipant>,
+        currencyCodes: List<String>
+    ) {
         val tripId = tripDao.insertTrip(trip)
         val participantsWithTripId = participants.map { it.withTripId(tripId) }
         val currencies = currencyCodes.map { code ->
@@ -49,5 +55,9 @@ class TripRepository @Inject constructor(
 
     fun getExchangeRatesFlow(): Flow<List<ExchangeRate>> {
         return exchangeRateDao.getExchangeRatesFlow()
+    }
+
+    suspend fun updateTripStatus(id: Long, status: TripStatus) {
+        tripDao.updateTripStatus(tripId = id, status = status)
     }
 }

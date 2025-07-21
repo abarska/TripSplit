@@ -28,7 +28,7 @@ class TripsViewModel @Inject constructor(private val tripRepository: TripReposit
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            tripRepository.getAllTrips()
+            tripRepository.getTripsWithStatuses(TripStatus.getActiveStatuses())
                 .distinctUntilChanged()
                 .collect { trips ->
                     if (trips.isNotEmpty()) {
@@ -54,5 +54,11 @@ class TripsViewModel @Inject constructor(private val tripRepository: TripReposit
     fun toggleSorting() {
         _ascendingOrder.value = !_ascendingOrder.value
         updateGroupedTrips(cachedTrips)
+    }
+
+    fun updateTripStatus(id: Long, status: TripStatus) {
+        viewModelScope.launch {
+            tripRepository.updateTripStatus(id, status)
+        }
     }
 }

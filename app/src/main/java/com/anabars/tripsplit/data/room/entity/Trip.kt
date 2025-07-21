@@ -25,7 +25,8 @@ enum class TripStatus(val sortOrder: Int, @StringRes val labelRes: Int) {
     ARCHIVED(4, R.string.archived);
 
     companion object {
-        fun getInitialTripStatuses() = listOf(PLANNED, STARTED)
+        fun getInitialStatuses() = listOf(PLANNED, STARTED)
+        fun getActiveStatuses() = listOf(PLANNED, STARTED, FINISHED)
         val comparator: Comparator<TripStatus> = Comparator { status1, status2 ->
             status1.sortOrder.compareTo(status2.sortOrder)
         }

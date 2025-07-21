@@ -1,11 +1,9 @@
 package com.anabars.tripsplit.ui.components
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -25,17 +23,16 @@ fun TsInfoText(
 ) {
     val value = if (textRes != 0) stringResource(textRes) else text
     if (value.isNotEmpty()) {
-        Box(modifier = modifier, contentAlignment = Alignment.Center) {
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = fontSize.sp,
-                    color = textColor
-                ),
-                maxLines = maxLines,
-                textAlign = textAlign
-            )
-        }
+        Text(
+            modifier = modifier,
+            text = value,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = fontSize.sp,
+                color = textColor
+            ),
+            maxLines = maxLines,
+            textAlign = textAlign
+        )
     }
 }
 

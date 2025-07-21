@@ -59,7 +59,7 @@ fun AddTripPortraitContent(
         TsContentCard {
             TsRadioGroup(
                 modifier = modifier.padding(16.dp),
-                items = TripStatus.getInitialTripStatuses(),
+                items = TripStatus.getInitialStatuses(),
                 selectedItem = tripStatusUiState,
                 onItemSelected = onTripStatusChanged,
                 layout = LayoutType.Row,

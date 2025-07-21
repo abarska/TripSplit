@@ -11,14 +11,15 @@ import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.data.room.entity.TripStatus
 import com.anabars.tripsplit.data.room.model.TripWithDetails
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TripDao {
 
-    @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE}")
-    fun getAllTrips(): Flow<List<Trip>>
+    @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE status IN (:statuses)")
+    fun getTripsWithStatuses(statuses: List<TripStatus>): Flow<List<Trip>>
 
     @Query("DELETE from ${TripSplitConstants.TRIP_TABLE}")
     suspend fun deleteAllTrips()
@@ -50,4 +51,7 @@ interface TripDao {
     @Transaction
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :tripId")
     fun getTripWithDetails(tripId: Long): Flow<TripWithDetails?>
+
+    @Query("UPDATE ${TripSplitConstants.TRIP_TABLE}  SET status = :status WHERE id = :tripId")
+    suspend fun updateTripStatus(tripId: Long, status: TripStatus): Int
 }

@@ -16,8 +16,15 @@ import javax.inject.Inject
 @HiltViewModel
 class TripsViewModel @Inject constructor(private val tripRepository: TripRepository) : ViewModel() {
 
-    private val _tripsGroupedByStatus = MutableStateFlow<Map<TripStatus, List<Trip>>>(emptyMap())
+    // map can't be used because it doesn't trigger recomposition after sorting
+    private val _tripsGroupedByStatus =
+        MutableStateFlow<List<Pair<TripStatus, List<Trip>>>>(emptyList())
     val tripsGroupedByStatus = _tripsGroupedByStatus.asStateFlow()
+
+    private val _ascendingOrder = MutableStateFlow(true)
+    val ascendingOrder = _ascendingOrder.asStateFlow()
+
+    private var cachedTrips: List<Trip> = emptyList()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -25,14 +32,27 @@ class TripsViewModel @Inject constructor(private val tripRepository: TripReposit
                 .distinctUntilChanged()
                 .collect { trips ->
                     if (trips.isNotEmpty()) {
-                        val groupedTrips: Map<TripStatus, List<Trip>> = trips.groupBy { it.status }
-                        _tripsGroupedByStatus.value = groupedTrips.toSortedMap(TripStatus.comparator)
+                        cachedTrips = trips
+                        updateGroupedTrips(trips)
                     }
                 }
         }
     }
 
-    fun toggleSorting() {
+    private fun updateGroupedTrips(trips: List<Trip>) {
+        val grouped = trips.groupBy { it.status }
+        val comparator =
+            if (_ascendingOrder.value) TripStatus.comparator
+            else TripStatus.comparator.reversed()
+        val sortedList =
+            grouped.entries
+                .sortedWith { entry1, entry2 -> comparator.compare(entry1.key, entry2.key) }
+                .map { it.key to it.value }
+        _tripsGroupedByStatus.value = sortedList
+    }
 
+    fun toggleSorting() {
+        _ascendingOrder.value = !_ascendingOrder.value
+        updateGroupedTrips(cachedTrips)
     }
 }

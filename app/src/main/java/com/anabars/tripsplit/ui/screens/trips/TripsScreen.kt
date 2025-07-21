@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -43,16 +44,19 @@ fun TripsScreen(
 
     val tripsViewModel: TripsViewModel = hiltViewModel()
     val tripsGrouped by tripsViewModel.tripsGroupedByStatus.collectAsState()
-
+    val ascendingOrder by tripsViewModel.ascendingOrder.collectAsState()
     val screenTitle = stringResource(R.string.title_trips)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(screenTitle) {
         onTabTitleChange(screenTitle)
+    }
+
+    LaunchedEffect(ascendingOrder) {
         setToolbarActions(
             listOf(
                 ActionButton.ToolbarActionButton(
-                    icon = Icons.Filled.ArrowDownward,
-                    contentDescriptionRes = R.string.reverse_sorting,
+                    icon = if (ascendingOrder) Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward,
+                    contentDescriptionRes = if (ascendingOrder) R.string.arrow_down else R.string.arrow_up,
                     onClick = { tripsViewModel.toggleSorting() }
                 )
             )
@@ -74,14 +78,16 @@ fun TripsScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             tripsGrouped.forEach { (status, trips) ->
-                item {
+                item(key = "status_${status.name}") {
                     TsOutlinedButton(
                         text = stringResource(id = status.labelRes),
                         modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally)
                     ) {}
                 }
-
-                items(trips, key = { it.id }) { trip ->
+                items(
+                    items = trips,
+                    key = { trip -> trip.id }
+                ) { trip ->
                     TsItemRow(
                         modifier = modifier.inputWidthModifier(),
                         onItemClick = {

@@ -33,7 +33,8 @@
     <string name="expand_card_icon">Expand Card</string>
     <string name="collapse_card_icon">Collapse Card</string>
     <string name="add_item">Add item</string>
-    <string name="reverse_sorting">Reverse sorting</string>
+    <string name="arrow_up">Arrow up</string>
+    <string name="arrow_down">Arrow down</string>
     <string name="empty_wallet_image">Empty wallet image</string>
     <string name="empty_pie_chart_image">Empty pie chart image</string>
 

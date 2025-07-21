@@ -18,15 +18,17 @@ data class Trip(
     @ColumnInfo val createdAt: Date = Date()
 )
 
-enum class TripStatus(@StringRes val labelRes: Int) {
-    PLANNED(R.string.planned),
-    STARTED(R.string.started),
-    FINISHED(R.string.finished),
-    ARCHIVED(R.string.archived);
+enum class TripStatus(val sortOrder: Int, @StringRes val labelRes: Int) {
+    PLANNED(1, R.string.planned),
+    STARTED(2, R.string.started),
+    FINISHED(3, R.string.finished),
+    ARCHIVED(4, R.string.archived);
 
     companion object {
         fun getInitialTripStatuses() = listOf(PLANNED, STARTED)
-        val comparator: Comparator<TripStatus> = compareBy<TripStatus> { it.ordinal }
+        val comparator: Comparator<TripStatus> = Comparator { status1, status2 ->
+            status1.sortOrder.compareTo(status2.sortOrder)
+        }
     }
 }
 

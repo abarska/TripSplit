@@ -33,6 +33,7 @@ fun AppNavGraph(
             TripsScreen(
                 navController = navController,
                 onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                setToolbarActions = { sharedViewModel.setToolbarActions(it) },
                 modifier = modifier
             )
         }

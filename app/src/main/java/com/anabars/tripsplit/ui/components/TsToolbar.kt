@@ -35,6 +35,7 @@ fun TsToolbar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val tabTitle by sharedViewModel.tabTitle.collectAsState()
+    val toolbarActions by sharedViewModel.toolbarActions.collectAsState()
 
     TopAppBar(
         title = {
@@ -74,6 +75,16 @@ fun TsToolbar(
                     )
                 }
             }
-        }
+        },
+        actions = {
+            toolbarActions.forEach { action ->
+                IconButton(onClick = action.onClick) {
+                    Icon(
+                        imageVector = action.icon,
+                        contentDescription = stringResource(action.contentDescriptionRes)
+                    )
+                }
+            }
+        },
     )
 }

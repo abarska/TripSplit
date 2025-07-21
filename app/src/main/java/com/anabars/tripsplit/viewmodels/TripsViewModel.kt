@@ -31,4 +31,8 @@ class TripsViewModel @Inject constructor(private val tripRepository: TripReposit
                 }
         }
     }
+
+    fun toggleSorting() {
+
+    }
 }

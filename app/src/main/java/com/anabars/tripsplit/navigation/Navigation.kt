@@ -80,7 +80,8 @@ fun AppNavGraph(
             backStackEntry.arguments?.getLong("id") ?: return@composable
             TripDetailsScreen(
                 navController = navController,
-                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) }
+                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                setToolbarActions = { sharedViewModel.setToolbarActions(it) }
             )
         }
     }

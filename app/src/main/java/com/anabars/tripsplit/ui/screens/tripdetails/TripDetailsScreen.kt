@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab.TripExpensesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab.TripOverviewTab
 import com.anabars.tripsplit.ui.widgets.TsBottomTabs
@@ -20,6 +21,7 @@ import com.anabars.tripsplit.ui.widgets.TsBottomTabs
 fun TripDetailsScreen(
     navController: NavController,
     onTabTitleChange: (String) -> Unit,
+    setToolbarActions: (List<ActionButton.ToolbarActionButton>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(1) }
@@ -34,6 +36,8 @@ fun TripDetailsScreen(
                 0 -> {
                     TripOverviewTab(
                         onTabTitleChange = onTabTitleChange,
+                        setToolbarActions = setToolbarActions,
+                        navController = navController,
                         modifier = modifier
                             .fillMaxSize()
                             .padding(all = 16.dp)

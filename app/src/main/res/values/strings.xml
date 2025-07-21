@@ -26,6 +26,7 @@
     <string name="deactivate_item">Deactivate item</string>
     <string name="delete_item">Delete item</string>
     <string name="archive_item">Archive item</string>
+    <string name="edit_item">Edit item</string>
     <string name="search_currency">Search currency</string>
     <string name="overview_tab_content_description">Trip Overview</string>
     <string name="expenses_tab_content_description">Trip Expenses</string>

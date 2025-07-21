@@ -1,7 +1,10 @@
 package com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab
 
 import android.content.res.Configuration
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -9,11 +12,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.model.ActionButton
+import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.TripOverviewViewModel
 
 @Composable
-fun TripOverviewTab(onTabTitleChange: (String) -> Unit, modifier: Modifier = Modifier) {
+fun TripOverviewTab(
+    onTabTitleChange: (String) -> Unit,
+    setToolbarActions: (List<ActionButton.ToolbarActionButton>) -> Unit,
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
 
     val viewModel: TripOverviewViewModel = hiltViewModel()
     val tripDetails by viewModel.tripDetails.collectAsState()
@@ -26,6 +37,21 @@ fun TripOverviewTab(onTabTitleChange: (String) -> Unit, modifier: Modifier = Mod
     )
     LaunchedEffect(Unit) {
         onTabTitleChange(screenTitle)
+        setToolbarActions(
+            listOf(
+                ActionButton.ToolbarActionButton(
+                    icon = Icons.Default.Edit,
+                    contentDescriptionRes = R.string.edit_item,
+                    onClick = { navController.navigate(AppScreens.ROUTE_ADD_TRIP) }
+                )
+            )
+        )
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            setToolbarActions(emptyList())
+        }
     }
 
     val isPortrait =

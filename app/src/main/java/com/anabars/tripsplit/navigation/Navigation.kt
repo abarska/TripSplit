@@ -68,6 +68,7 @@ fun AppNavGraph(
         composable(route = AppScreens.ROUTE_ARCHIVE) {
             ArchiveScreen(
                 onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                navController = navController,
                 modifier = modifier
             )
         }

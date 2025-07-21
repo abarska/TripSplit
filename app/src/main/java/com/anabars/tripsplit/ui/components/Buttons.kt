@@ -44,7 +44,7 @@ fun TsFab(
     @DrawableRes iconRes: Int = 0,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    @StringRes contentDescription: Int = R.string.action_button,
+    @StringRes contentDescription: Int = R.string.floating_action_button,
     isEnabled: Boolean = true,
     onClick: () -> Unit
 ) {
@@ -115,7 +115,7 @@ private fun TsMainButtonPreview() {
 }
 
 @Composable
-fun TsItemRowActionButton(actionButton: ActionButton) {
+fun TsItemRowActionButton(actionButton: ActionButton.ChipActionButton) {
     Box(
         modifier = Modifier
             .size(actionButton.iconSize)
@@ -139,7 +139,7 @@ fun TsItemRowActionButton(actionButton: ActionButton) {
 @Composable
 private fun TsItemRowActionButtonPreview() {
     TsItemRowActionButton(
-        ActionButton(icon = Icons.Default.Pause) {}
+        ActionButton.ChipActionButton(icon = Icons.Default.Pause) {}
     )
 }
 

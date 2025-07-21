@@ -46,7 +46,7 @@ fun <T> ChipsSection(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_small))
         ) {
             items.forEach { value ->
-                val button = ActionButton(
+                val button = ActionButton.ChipActionButton(
                     icon = Icons.Default.Close,
                     contentDescriptionRes = R.string.delete_item,
                 ) { onDeleteItemButtonClick(value) }
@@ -63,10 +63,10 @@ fun <T> ChipsSection(
                 }
             }
             TsItemRow(highlighted = true, onItemClick = onAddItemButtonClick) {
-                val button = ActionButton(
+                val button = ActionButton.ChipActionButton(
                     icon = leadingIcon,
                     contentDescriptionRes = R.string.add_item,
-                )
+                ){}
                 Row(
                     modifier = Modifier.padding(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)

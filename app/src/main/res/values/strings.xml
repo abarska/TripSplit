@@ -17,7 +17,10 @@
     <string name="time_format" translatable="false">EEE, d MMM hh:mm aaa</string>
 
     // used for content description
-    <string name="action_button">action button</string>
+    <string name="toolbar_action_button">Toolbar action button</string>
+    <string name="chip_action_button">Chip action button</string>
+    <string name="floating_action_button">Floating action button</string>
+    <string name="plus_button">Plus button</string>
     <string name="add_a_new_trip">Add a new trip</string>
     <string name="add_a_new_expense">Add a new expense</string>
     <string name="deactivate_item">Deactivate item</string>

@@ -1,7 +1,7 @@
 package com.anabars.tripsplit.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.anabars.tripsplit.ui.model.ToolbarAction
+import com.anabars.tripsplit.ui.model.ActionButton
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,10 +21,10 @@ class SharedViewModel @Inject constructor() : ViewModel() {
         return _backHandler?.invoke() ?: false
     }
 
-    private val _toolbarActions = MutableStateFlow<List<ToolbarAction>>(emptyList())
-    val toolbarActions: StateFlow<List<ToolbarAction>> = _toolbarActions.asStateFlow()
+    private val _toolbarActions = MutableStateFlow<List<ActionButton.ToolbarActionButton>>(emptyList())
+    val toolbarActions: StateFlow<List<ActionButton.ToolbarActionButton>> = _toolbarActions.asStateFlow()
 
-    fun setToolbarActions(actions: List<ToolbarAction>) {
+    fun setToolbarActions(actions: List<ActionButton.ToolbarActionButton>) {
         _toolbarActions.value = actions
     }
 

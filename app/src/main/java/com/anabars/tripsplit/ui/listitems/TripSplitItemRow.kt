@@ -49,7 +49,7 @@ fun TsItemRow(
 private fun TsItemRowPreview() {
     TsItemRow(onItemClick = {}) {
         Row(modifier = Modifier.padding(8.dp)) {
-            TsItemRowActionButton(ActionButton(icon = Icons.Default.Close) {})
+            TsItemRowActionButton(ActionButton.ChipActionButton(icon = Icons.Default.Close) {})
             Spacer(modifier = Modifier.width(8.dp))
             TsInfoText(text = "placeholder")
         }

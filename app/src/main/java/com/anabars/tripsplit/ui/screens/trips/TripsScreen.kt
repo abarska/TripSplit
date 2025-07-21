@@ -27,7 +27,7 @@ import com.anabars.tripsplit.ui.components.TsFab
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsOutlinedButton
 import com.anabars.tripsplit.ui.listitems.TsItemRow
-import com.anabars.tripsplit.ui.model.ToolbarAction
+import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
@@ -37,7 +37,7 @@ import com.anabars.tripsplit.viewmodels.TripsViewModel
 fun TripsScreen(
     navController: NavController,
     onTabTitleChange: (String) -> Unit,
-    setToolbarActions: (List<ToolbarAction>) -> Unit,
+    setToolbarActions: (List<ActionButton.ToolbarActionButton>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -50,7 +50,7 @@ fun TripsScreen(
         onTabTitleChange(screenTitle)
         setToolbarActions(
             listOf(
-                ToolbarAction(
+                ActionButton.ToolbarActionButton(
                     icon = Icons.Filled.ArrowDownward,
                     contentDescriptionRes = R.string.reverse_sorting,
                     onClick = { tripsViewModel.toggleSorting() }

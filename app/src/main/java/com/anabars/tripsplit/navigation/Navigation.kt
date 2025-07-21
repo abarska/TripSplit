@@ -38,7 +38,16 @@ fun AppNavGraph(
             )
         }
 
-        composable(route = AppScreens.ROUTE_ADD_TRIP) {
+        composable(
+            route = "${AppScreens.ROUTE_ADD_TRIP}?tripId={tripId}",
+            arguments = listOf(
+                navArgument("tripId") {
+                    type = NavType.StringType // passing a string because long arg is not nullable
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) {
             AddTripScreen(
                 navController = navController,
                 onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },

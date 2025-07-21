@@ -6,6 +6,7 @@
     // used for toolbar titles
     <string name="title_trips">Trips</string>
     <string name="title_new_trip">New Trip</string>
+    <string name="title_edit_trip">Edit Trip</string>
     <string name="title_new_expense">New Expense</string>
     <string name="title_settings">Settings</string>
     <string name="title_archive">Archive</string>

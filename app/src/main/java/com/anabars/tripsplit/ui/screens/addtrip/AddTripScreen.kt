@@ -54,7 +54,7 @@ fun AddTripScreen(
     val currenciesUiState by viewModel.currenciesUiState.collectAsState()
     val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
 
-    val screenTitle = stringResource(R.string.title_new_trip)
+    val screenTitle = stringResource(viewModel.screenTitle)
     LaunchedEffect(Unit) {
         onTabTitleChange(screenTitle)
     }

@@ -42,7 +42,7 @@ fun TripOverviewTab(
                 ActionButton.ToolbarActionButton(
                     icon = Icons.Default.Edit,
                     contentDescriptionRes = R.string.edit_item,
-                    onClick = { navController.navigate(AppScreens.ROUTE_ADD_TRIP) }
+                    onClick = { navController.navigate("${AppScreens.ROUTE_ADD_TRIP}?tripId=${tripDetails?.trip?.id}") }
                 )
             )
         )

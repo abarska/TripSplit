@@ -1,5 +1,6 @@
 package com.anabars.tripsplit.viewmodels
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.R
@@ -29,9 +30,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddTripViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val tripRepository: TripRepository,
     private val currencyPreference: CurrencyPreference
 ) : ViewModel() {
+
+    private val tripId: Long? = savedStateHandle.get<String>("tripId")?.toLongOrNull()
+    val screenTitle = if (tripId == null) R.string.title_new_trip else R.string.title_edit_trip
 
     private val _localCurrency = MutableStateFlow("")
     val localCurrency: StateFlow<String> = _localCurrency.asStateFlow()
@@ -55,6 +60,10 @@ class AddTripViewModel @Inject constructor(
     val shouldNavigateHome: StateFlow<Boolean> = _shouldNavigateHome.asStateFlow()
 
     init {
+        tripId?.let {
+            loadTripData(it)
+        }
+
         viewModelScope.launch(Dispatchers.IO) {
             val currencies = getCurrencyDisplayList(validCurrencyCodes())
             setAvailableCurrencies(currencies)
@@ -64,6 +73,18 @@ class AddTripViewModel @Inject constructor(
                     _localCurrency.value = currency
                 }
         }
+    }
+
+    private fun loadTripData(id: Long) {
+        viewModelScope.launch {
+            populateState(tripRepository.getTripById(id))
+        }
+    }
+
+    private fun populateState(trip: Trip) {
+        _nameUiState.value = _nameUiState.value.copy(tripName = trip.title)
+        _statusUiState.value = trip.status
+        // TODO: add logic for currencies and participants
     }
 
     fun nameAlreadyInUse(participant: TripParticipant) =

@@ -25,7 +25,7 @@ interface TripDao {
     suspend fun deleteAllTrips()
 
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :id")
-    suspend fun getTripById(id: String): Trip
+    suspend fun getTripById(id: Long): Trip
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrip(trip: Trip): Long

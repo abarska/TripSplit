@@ -45,6 +45,10 @@ class TripRepository @Inject constructor(
         currencyDao.insertCurrencies(currencies)
     }
 
+    suspend fun getTripById(id: Long): Trip {
+        return tripDao.getTripById(id)
+    }
+
     fun getTripDetailsWithFlow(tripId: Long): Flow<TripWithDetails?> {
         return tripDao.getTripWithDetails(tripId)
     }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -22,6 +23,7 @@ import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsFab
 import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.components.TsOutlinedButton
 import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.utils.TsFontSize
@@ -36,7 +38,7 @@ fun TripsScreen(
 ) {
 
     val tripsViewModel: TripsViewModel = hiltViewModel()
-    val trips by tripsViewModel.tripList.collectAsState()
+    val tripsGrouped by tripsViewModel.tripsGroupedByStatus.collectAsState()
 
     val screenTitle = stringResource(R.string.title_trips)
     LaunchedEffect(Unit) {
@@ -51,11 +53,20 @@ fun TripsScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            if (trips.isNotEmpty()) {
-                items(items = trips) { trip ->
+            tripsGrouped.forEach { (status, trips) ->
+                item {
+                    TsOutlinedButton(
+                        text = stringResource(id = status.labelRes),
+                        modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally)
+                    ) {}
+                }
+
+                items(trips, key = { it.id }) { trip ->
                     TsItemRow(
                         modifier = modifier.inputWidthModifier(),
-                        onItemClick = { navController.navigate(AppScreens.ROUTE_TRIP_DETAILS + "/${trip.id}") }
+                        onItemClick = {
+                            navController.navigate(AppScreens.ROUTE_TRIP_DETAILS + "/${trip.id}")
+                        }
                     ) {
                         TsInfoText(
                             modifier = Modifier.padding(16.dp),

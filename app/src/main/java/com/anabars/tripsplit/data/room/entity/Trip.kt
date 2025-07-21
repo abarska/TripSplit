@@ -26,6 +26,7 @@ enum class TripStatus(@StringRes val labelRes: Int) {
 
     companion object {
         fun getInitialTripStatuses() = listOf(PLANNED, STARTED)
+        val comparator: Comparator<TripStatus> = compareBy<TripStatus> { it.ordinal }
     }
 }
 

@@ -31,7 +31,7 @@ interface TripDao {
     suspend fun insertTrip(trip: Trip): Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun update(trip: Trip)
+    suspend fun updateTrip(trip: Trip)
 
     @Delete
     suspend fun deleteTrip(trip: Trip)
@@ -51,6 +51,10 @@ interface TripDao {
     @Transaction
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :tripId")
     fun getTripDetailsFlow(tripId: Long): Flow<TripDetails?>
+
+    @Transaction
+    @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :tripId")
+    fun getTripDetailsData(tripId: Long): TripDetails?
 
     @Query("UPDATE ${TripSplitConstants.TRIP_TABLE}  SET status = :status WHERE id = :tripId")
     suspend fun updateTripStatus(tripId: Long, status: TripStatus): Int

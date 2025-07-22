@@ -32,25 +32,34 @@ class TripRepository @Inject constructor(
 
     @Transaction
     suspend fun saveTrip(
+        tripId: Long?,
         trip: Trip,
         participants: List<TripParticipant>,
         currencyCodes: List<String>
     ) {
-        val tripId = tripDao.insertTrip(trip)
-        val participantsWithTripId = participants.map { it.withTripId(tripId) }
+        val finalTripId =
+            if (tripId == null) {
+                tripDao.insertTrip(trip)
+            } else {
+                tripDao.updateTrip(trip.copy(id = tripId))
+                participantDao.deleteParticipantsByTripId(tripId)
+                currencyDao.deleteCurrenciesByTripId(tripId)
+                tripId
+            }
+        val participantsWithTripId = participants.map { it.withTripId(finalTripId) }
         val currencies = currencyCodes.map { code ->
-            TripCurrency(code = code, tripId = tripId)
+            TripCurrency(code = code, tripId = finalTripId)
         }
         participantDao.insertParticipants(participantsWithTripId)
         currencyDao.insertCurrencies(currencies)
     }
 
-    suspend fun getTripById(id: Long): Trip {
-        return tripDao.getTripById(id)
-    }
-
     fun getTripDetailsFlow(tripId: Long): Flow<TripDetails?> {
         return tripDao.getTripDetailsFlow(tripId)
+    }
+
+    fun getTripDetailsData(tripId: Long): TripDetails? {
+        return tripDao.getTripDetailsData(tripId)
     }
 
     fun getExpensesByTripId(id: Long): Flow<List<TripExpense>> {

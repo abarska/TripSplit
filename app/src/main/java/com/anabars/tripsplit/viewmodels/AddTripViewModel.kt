@@ -1,5 +1,6 @@
 package com.anabars.tripsplit.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import com.anabars.tripsplit.data.preferences.CurrencyPreference
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripStatus
+import com.anabars.tripsplit.data.room.model.TripDetails
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.model.AddTripCurrenciesUiState
@@ -51,7 +53,8 @@ class AddTripViewModel @Inject constructor(
     val statusUiState: StateFlow<TripStatus> = _statusUiState.asStateFlow()
 
     private val _participantsUiState = MutableStateFlow(AddTripParticipantsUiState())
-    val participantsUiState: StateFlow<AddTripParticipantsUiState> = _participantsUiState.asStateFlow()
+    val participantsUiState: StateFlow<AddTripParticipantsUiState> =
+        _participantsUiState.asStateFlow()
 
     private val _currenciesUiState = MutableStateFlow(AddTripCurrenciesUiState())
     val currenciesUiState: StateFlow<AddTripCurrenciesUiState> = _currenciesUiState.asStateFlow()
@@ -60,8 +63,10 @@ class AddTripViewModel @Inject constructor(
     val shouldNavigateHome: StateFlow<Boolean> = _shouldNavigateHome.asStateFlow()
 
     init {
-        tripId?.let {
-            loadTripData(it)
+        viewModelScope.launch(Dispatchers.IO) {
+            tripId?.let {
+                populateState(tripRepository.getTripDetailsData(it))
+            }
         }
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -75,16 +80,14 @@ class AddTripViewModel @Inject constructor(
         }
     }
 
-    private fun loadTripData(id: Long) {
-        viewModelScope.launch {
-            populateState(tripRepository.getTripById(id))
+    private fun populateState(tripDetailsData: TripDetails?) {
+        tripDetailsData?.let { data ->
+            Log.d("marysya", tripDetailsData.currencies.joinToString(", ") { it.code })
+            _nameUiState.value = _nameUiState.value.copy(data.trip.title)
+            _statusUiState.value = data.trip.status
+            _participantsUiState.value = _participantsUiState.value.copy(data.participants)
+            _currenciesUiState.value = _currenciesUiState.value.copy(data.currencies.map { it.code })
         }
-    }
-
-    private fun populateState(trip: Trip) {
-        _nameUiState.value = _nameUiState.value.copy(tripName = trip.title)
-        _statusUiState.value = trip.status
-        // TODO: add logic for currencies and participants
     }
 
     fun nameAlreadyInUse(participant: TripParticipant) =
@@ -93,10 +96,10 @@ class AddTripViewModel @Inject constructor(
     fun addParticipant(participant: TripParticipant) =
         _participantsUiState.update { it.copy(tripParticipants = it.tripParticipants + participant) }
 
-    fun removeParticipant(participant: TripParticipant) =
+    private fun removeParticipant(participant: TripParticipant) =
         _participantsUiState.update { it.copy(tripParticipants = it.tripParticipants - participant) }
 
-    fun updateParticipant(index: Int, participant: TripParticipant) {
+    private fun updateParticipant(index: Int, participant: TripParticipant) {
         _participantsUiState.update {
             val updatedList = it.tripParticipants.toMutableList()
             if (index in updatedList.indices) updatedList[index] = participant
@@ -106,7 +109,8 @@ class AddTripViewModel @Inject constructor(
 
     fun isEditingParticipant() = _participantsUiState.value.updatedParticipantIndex >= 0
 
-    private fun clearParticipants() = _participantsUiState.update { it.copy(tripParticipants = emptyList()) }
+    private fun clearParticipants() =
+        _participantsUiState.update { it.copy(tripParticipants = emptyList()) }
 
     fun hasCurrency(code: String) = _currenciesUiState.value.tripCurrencies.contains(code)
 
@@ -114,7 +118,7 @@ class AddTripViewModel @Inject constructor(
         it.copy(tripCurrencies = it.tripCurrencies + code)
     }
 
-    fun removeCurrency(code: String) = _currenciesUiState.update {
+    private fun removeCurrency(code: String) = _currenciesUiState.update {
         it.copy(tripCurrencies = it.tripCurrencies - code)
     }
 
@@ -127,12 +131,13 @@ class AddTripViewModel @Inject constructor(
         clearCurrencies()
     }
 
-    fun fieldNotEmpty(value: String) = value.isNotEmpty()
+    private fun fieldNotEmpty(value: String) = value.isNotEmpty()
 
-    fun saveTrip(tripName: String) {
+    private fun saveTrip(tripName: String) {
         viewModelScope.launch {
             val trip = Trip(title = tripName, status = _statusUiState.value)
             tripRepository.saveTrip(
+                tripId,
                 trip,
                 _participantsUiState.value.tripParticipants,
                 _currenciesUiState.value.tripCurrencies
@@ -144,30 +149,33 @@ class AddTripViewModel @Inject constructor(
         _statusUiState.value = status
     }
 
-    fun updateTripName(input: String) {
+    private fun updateTripName(input: String) {
         val newTripName = input.trimStart().replaceFirstChar { it.titlecase() }
         _nameUiState.value = _nameUiState.value.copy(tripName = newTripName)
     }
 
-    fun updateTripNameErrorMessage(resId: Int) {
+    private fun updateTripNameErrorMessage(resId: Int) {
         _nameUiState.value = _nameUiState.value.copy(tripNameErrorMessage = resId)
     }
 
-    fun updateTripNameError(isError: Boolean) {
+    private fun updateTripNameError(isError: Boolean) {
         _nameUiState.value = _nameUiState.value.copy(tripNameError = isError)
     }
 
-    fun updateNewParticipantName(input: String) {
+    private fun updateNewParticipantName(input: String) {
         val newParticipantName = input.trimStart().replaceFirstChar { it.titlecase() }
-        _participantsUiState.value = _participantsUiState.value.copy(newParticipantName = newParticipantName)
+        _participantsUiState.value =
+            _participantsUiState.value.copy(newParticipantName = newParticipantName)
     }
 
-    fun updateNewParticipantMultiplicator(multiplicator: Int) {
-        _participantsUiState.value = _participantsUiState.value.copy(newParticipantMultiplicator = multiplicator)
+    private fun updateNewParticipantMultiplicator(multiplicator: Int) {
+        _participantsUiState.value =
+            _participantsUiState.value.copy(newParticipantMultiplicator = multiplicator)
     }
 
-    fun updateParticipantIndex(index: Int) {
-        _participantsUiState.value = _participantsUiState.value.copy(updatedParticipantIndex = index)
+    private fun updateParticipantIndex(index: Int) {
+        _participantsUiState.value =
+            _participantsUiState.value.copy(updatedParticipantIndex = index)
     }
 
     fun updateActiveDialog(dialog: ActiveDialog) {
@@ -288,7 +296,7 @@ class AddTripViewModel @Inject constructor(
         }
     }
 
-    fun resetParticipant() {
+    private fun resetParticipant() {
         updateNewParticipantName("")
         updateNewParticipantMultiplicator(1)
         updateParticipantIndex(-1)

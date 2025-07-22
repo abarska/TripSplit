@@ -143,11 +143,6 @@ class AddTripViewModel @Inject constructor(
         it.copy(tripCurrencies = emptyList())
     }
 
-    fun clearTempData() {
-        clearParticipants()
-        clearCurrencies()
-    }
-
     private fun fieldNotEmpty(value: String) = value.isNotEmpty()
 
     private fun saveTrip(tripName: String) {
@@ -159,6 +154,8 @@ class AddTripViewModel @Inject constructor(
                 _participantsUiState.value.tripParticipants,
                 _currenciesUiState.value.tripCurrencies
             )
+            clearParticipants()
+            clearCurrencies()
         }
     }
 
@@ -195,7 +192,7 @@ class AddTripViewModel @Inject constructor(
             _participantsUiState.value.copy(updatedParticipantIndex = index)
     }
 
-    fun updateActiveDialog(dialog: ActiveDialog) {
+    private fun updateActiveDialog(dialog: ActiveDialog) {
         _dialogUiState.value = _dialogUiState.value.copy(activeDialog = dialog)
     }
 

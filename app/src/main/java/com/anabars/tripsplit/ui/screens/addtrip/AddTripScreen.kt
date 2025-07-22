@@ -77,7 +77,7 @@ fun AddTripScreen(
             true
         }
         if (shouldNavigateHome) {
-            navigateHome(addTripViewModel = viewModel, navController = navController)
+            navigateHome(navController = navController)
         }
     }
 
@@ -117,12 +117,7 @@ fun AddTripScreen(
 
         ActiveDialog.CONFIRMATION -> {
             TsConfirmationDialog(
-                onDismiss = {
-                    navigateHome(
-                        addTripViewModel = viewModel,
-                        navController = navController
-                    )
-                },
+                onDismiss = { navigateHome(navController = navController) },
                 onConfirm = { viewModel.onEvent(SaveTripClicked) },
                 titleRes = R.string.save_changes_dialog_title,
                 questionRes = R.string.save_changes_dialog_question,
@@ -177,12 +172,11 @@ fun AddTripScreen(
     }
 }
 
-private fun navigateHome(addTripViewModel: AddTripViewModel, navController: NavController) {
+private fun navigateHome(navController: NavController) {
     navController.navigate(AppScreens.ROUTE_TRIPS) {
         popUpTo(navController.graph.startDestinationId) {
             inclusive = true
         }
         launchSingleTop = true
     }
-    addTripViewModel.clearTempData()
 }

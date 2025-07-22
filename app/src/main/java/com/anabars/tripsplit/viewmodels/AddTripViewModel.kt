@@ -326,7 +326,7 @@ class AddTripViewModel @Inject constructor(
         updateParticipantIndex(-1)
     }
 
-    fun hasUnsavedInput() = _nameUiState.value.tripName.isNotBlank()
+    private fun hasUnsavedInput() = _nameUiState.value.tripName.isNotBlank()
             || _participantsUiState.value.tripParticipants.size > 1
             || _currenciesUiState.value.tripCurrencies.size > 1
 

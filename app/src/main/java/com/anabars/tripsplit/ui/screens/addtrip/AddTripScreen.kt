@@ -59,16 +59,6 @@ fun AddTripScreen(
         onTabTitleChange(screenTitle)
     }
 
-    val handleBackNavigation: () -> Boolean = {
-        if (viewModel.hasUnsavedInput()) {
-            viewModel.updateActiveDialog(ActiveDialog.CONFIRMATION)
-            true
-        } else {
-            navigateHome(addTripViewModel = viewModel, navController = navController)
-            false
-        }
-    }
-
     BackHandler(enabled = true) {
         viewModel.onEvent(AddTripEvent.OnBackPressed)
     }
@@ -82,7 +72,10 @@ fun AddTripScreen(
         if (localCurrency.isNotBlank() && !viewModel.hasCurrency(localCurrency)) {
             viewModel.addCurrency(localCurrency)
         }
-        setBackHandler { handleBackNavigation() }
+        setBackHandler {
+            viewModel.onEvent(AddTripEvent.OnBackPressed)
+            true
+        }
         if (shouldNavigateHome) {
             navigateHome(addTripViewModel = viewModel, navController = navController)
         }

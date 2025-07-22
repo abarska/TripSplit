@@ -43,4 +43,5 @@ sealed class AddTripEvent {
     object SaveTripClicked : AddTripEvent()
     object NewParticipantSaveClicked : AddTripEvent()
     object ExistingParticipantEdited : AddTripEvent()
+    object OnBackPressed : AddTripEvent()
 }

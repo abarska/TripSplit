@@ -16,7 +16,23 @@ import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.model.AddTripCurrenciesUiState
 import com.anabars.tripsplit.ui.model.AddTripDialogState
 import com.anabars.tripsplit.ui.model.AddTripEvent
-import com.anabars.tripsplit.ui.model.AddTripEvent.*
+import com.anabars.tripsplit.ui.model.AddTripEvent.AddCurrencyClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.AddParticipantClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyAdded
+import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyDeleted
+import com.anabars.tripsplit.ui.model.AddTripEvent.DismissAddParticipantDialog
+import com.anabars.tripsplit.ui.model.AddTripEvent.DismissCurrencyDialog
+import com.anabars.tripsplit.ui.model.AddTripEvent.DuplicateNameDialogConfirmed
+import com.anabars.tripsplit.ui.model.AddTripEvent.ExistingParticipantEdited
+import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantMultiplicatorChanged
+import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantNameChanged
+import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantSaveClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.OnBackPressed
+import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantDeleted
+import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
+import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
+import com.anabars.tripsplit.ui.model.AddTripEvent.TripStatusChanged
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
@@ -86,7 +102,8 @@ class AddTripViewModel @Inject constructor(
             _nameUiState.value = _nameUiState.value.copy(data.trip.title)
             _statusUiState.value = data.trip.status
             _participantsUiState.value = _participantsUiState.value.copy(data.participants)
-            _currenciesUiState.value = _currenciesUiState.value.copy(data.currencies.map { it.code })
+            _currenciesUiState.value =
+                _currenciesUiState.value.copy(data.currencies.map { it.code })
         }
     }
 
@@ -292,6 +309,13 @@ class AddTripViewModel @Inject constructor(
                     updateActiveDialog(ActiveDialog.NONE)
                     resetParticipant()
                 }
+            }
+
+            OnBackPressed -> {
+                if (hasUnsavedInput())
+                    updateActiveDialog(ActiveDialog.CONFIRMATION)
+                else
+                    _shouldNavigateHome.value = true
             }
         }
     }

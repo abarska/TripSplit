@@ -70,7 +70,7 @@ fun AddTripScreen(
     }
 
     BackHandler(enabled = true) {
-        handleBackNavigation()
+        viewModel.onEvent(AddTripEvent.OnBackPressed)
     }
 
     val you = stringResource(R.string.you)

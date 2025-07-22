@@ -12,7 +12,7 @@ import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripStatus
-import com.anabars.tripsplit.data.room.model.TripWithDetails
+import com.anabars.tripsplit.data.room.model.TripDetails
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -50,7 +50,7 @@ interface TripDao {
 
     @Transaction
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :tripId")
-    fun getTripWithDetails(tripId: Long): Flow<TripWithDetails?>
+    fun getTripDetailsFlow(tripId: Long): Flow<TripDetails?>
 
     @Query("UPDATE ${TripSplitConstants.TRIP_TABLE}  SET status = :status WHERE id = :tripId")
     suspend fun updateTripStatus(tripId: Long, status: TripStatus): Int

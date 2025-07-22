@@ -6,7 +6,7 @@ import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 
-data class TripWithDetails(
+data class TripDetails(
 
     @Embedded
     val trip: Trip,

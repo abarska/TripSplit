@@ -4,7 +4,7 @@ import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.data.room.model.TripWithDetails
+import com.anabars.tripsplit.data.room.model.TripDetails
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
@@ -68,7 +68,7 @@ fun getFakePieChartData(): MutableMap<ExpenseCategory, Double> {
     return data
 }
 
-fun getFakeTripWithDetails() = TripWithDetails(
+fun getFakeTripWithDetails() = TripDetails(
     trip = Trip(id = 0, title = "Antarctica"),
     participants = getFakeTripParticipants(),
     currencies = getFakeTripCurrencies()

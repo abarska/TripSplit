@@ -11,7 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.data.room.model.TripWithDetails
+import com.anabars.tripsplit.data.room.model.TripDetails
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.utils.TsFontSize
@@ -19,7 +19,7 @@ import com.anabars.tripsplit.ui.utils.getFakeTripWithDetails
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
-fun TripSummaryCard(tripDetails: TripWithDetails?, modifier: Modifier = Modifier) {
+fun TripSummaryCard(tripDetails: TripDetails?, modifier: Modifier = Modifier) {
     TsContentCard(modifier = modifier) {
         Column(
             modifier = Modifier

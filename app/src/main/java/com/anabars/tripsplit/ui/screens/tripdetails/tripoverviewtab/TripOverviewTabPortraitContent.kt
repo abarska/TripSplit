@@ -8,12 +8,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.data.room.model.TripWithDetails
+import com.anabars.tripsplit.data.room.model.TripDetails
 import com.anabars.tripsplit.viewmodels.ExpenseCategorizationResult
 
 @Composable
 fun TripOverviewTabPortraitContent(
-    tripDetails: TripWithDetails?,
+    tripDetails: TripDetails?,
     expenseCategorizationResult: ExpenseCategorizationResult,
     modifier: Modifier = Modifier
 ) {

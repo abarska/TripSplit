@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.data.room.entity.ExchangeRate
 import com.anabars.tripsplit.data.room.entity.TripExpense
-import com.anabars.tripsplit.data.room.model.TripWithDetails
+import com.anabars.tripsplit.data.room.model.TripDetails
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,8 +33,8 @@ class TripOverviewViewModel @Inject constructor(
     private val tripId: Long = savedStateHandle.get<Long>("id")
         ?: throw IllegalStateException("Trip ID is required for TripOverviewViewModel")
 
-    private val _tripDetails = MutableStateFlow<TripWithDetails?>(null)
-    val tripDetails: StateFlow<TripWithDetails?> = _tripDetails.asStateFlow()
+    private val _tripDetails = MutableStateFlow<TripDetails?>(null)
+    val tripDetails: StateFlow<TripDetails?> = _tripDetails.asStateFlow()
 
     val expenses: StateFlow<List<TripExpense>> =
         tripRepository.getExpensesByTripId(tripId)
@@ -90,7 +90,7 @@ class TripOverviewViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            tripRepository.getTripDetailsWithFlow(tripId)
+            tripRepository.getTripDetailsFlow(tripId)
                 .collect { details ->
                     _tripDetails.value = details
                 }

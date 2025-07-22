@@ -12,7 +12,7 @@ import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripStatus
-import com.anabars.tripsplit.data.room.model.TripWithDetails
+import com.anabars.tripsplit.data.room.model.TripDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
@@ -49,8 +49,8 @@ class TripRepository @Inject constructor(
         return tripDao.getTripById(id)
     }
 
-    fun getTripDetailsWithFlow(tripId: Long): Flow<TripWithDetails?> {
-        return tripDao.getTripWithDetails(tripId)
+    fun getTripDetailsFlow(tripId: Long): Flow<TripDetails?> {
+        return tripDao.getTripDetailsFlow(tripId)
     }
 
     fun getExpensesByTripId(id: Long): Flow<List<TripExpense>> {

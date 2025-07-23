@@ -26,10 +26,8 @@ import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyDeleted
 import com.anabars.tripsplit.ui.model.AddTripEvent.DismissAddParticipantDialog
 import com.anabars.tripsplit.ui.model.AddTripEvent.DismissCurrencyDialog
 import com.anabars.tripsplit.ui.model.AddTripEvent.DuplicateNameDialogConfirmed
-import com.anabars.tripsplit.ui.model.AddTripEvent.ExistingParticipantEdited
 import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantMultiplicatorChanged
 import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantNameChanged
-import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantSaveClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantDeleted
 import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
 import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
@@ -65,7 +63,7 @@ fun AddTripScreen(
     val defaultParticipantName = stringResource(R.string.you)
 
     LaunchedEffect(Unit) {
-        viewModel.onEvent(AddTripEvent.DefaultParticipantAdded(defaultParticipantName))
+        viewModel.onEvent(AddTripEvent.AddDefaultParticipant(defaultParticipantName))
         setBackHandler {
             viewModel.onEvent(AddTripEvent.OnBackPressed)
             true
@@ -96,12 +94,7 @@ fun AddTripScreen(
                 tripParticipantsUiState = participantsUiState,
                 onInputChange = { viewModel.onEvent(NewParticipantNameChanged(it)) },
                 onMultiplicatorChange = { viewModel.onEvent(NewParticipantMultiplicatorChanged(it)) },
-                onConfirm = {
-                    if (viewModel.isEditingParticipant())
-                        viewModel.onEvent(ExistingParticipantEdited)
-                    else
-                        viewModel.onEvent(NewParticipantSaveClicked)
-                },
+                onConfirm = { viewModel.onEvent(AddTripEvent.ParticipantInputSaved) },
                 onDismiss = { viewModel.onEvent(DismissAddParticipantDialog) },
                 titleRes = if (viewModel.isEditingParticipant()) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,

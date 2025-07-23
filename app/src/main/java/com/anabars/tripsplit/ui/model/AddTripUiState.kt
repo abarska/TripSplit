@@ -33,7 +33,7 @@ sealed class AddTripEvent {
     data class NewParticipantMultiplicatorChanged(val multiplicator: Int) : AddTripEvent()
     data class ParticipantEditRequested(val participant: TripParticipant) : AddTripEvent()
     data class ParticipantDeleted(val participant: TripParticipant) : AddTripEvent()
-    data class DefaultParticipantAdded(val name: String) : AddTripEvent()
+    data class AddDefaultParticipant(val name: String) : AddTripEvent()
     data class CurrencyAdded(val currency: String) : AddTripEvent()
     data class CurrencyDeleted(val code: String) : AddTripEvent()
     object AddCurrencyClicked : AddTripEvent()
@@ -42,7 +42,6 @@ sealed class AddTripEvent {
     object AddParticipantClicked : AddTripEvent()
     object DismissAddParticipantDialog : AddTripEvent()
     object SaveTripClicked : AddTripEvent()
-    object NewParticipantSaveClicked : AddTripEvent()
-    object ExistingParticipantEdited : AddTripEvent()
+    object ParticipantInputSaved : AddTripEvent()
     object OnBackPressed : AddTripEvent()
 }

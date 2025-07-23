@@ -1,5 +1,6 @@
 package com.anabars.tripsplit.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,19 +17,19 @@ import com.anabars.tripsplit.ui.model.AddTripCurrenciesUiState
 import com.anabars.tripsplit.ui.model.AddTripDialogState
 import com.anabars.tripsplit.ui.model.AddTripEvent
 import com.anabars.tripsplit.ui.model.AddTripEvent.AddCurrencyClicked
+import com.anabars.tripsplit.ui.model.AddTripEvent.AddDefaultParticipant
 import com.anabars.tripsplit.ui.model.AddTripEvent.AddParticipantClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyAdded
 import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyDeleted
 import com.anabars.tripsplit.ui.model.AddTripEvent.DismissAddParticipantDialog
 import com.anabars.tripsplit.ui.model.AddTripEvent.DismissCurrencyDialog
 import com.anabars.tripsplit.ui.model.AddTripEvent.DuplicateNameDialogConfirmed
-import com.anabars.tripsplit.ui.model.AddTripEvent.ExistingParticipantEdited
 import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantMultiplicatorChanged
 import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantNameChanged
-import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantSaveClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.OnBackPressed
 import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantDeleted
 import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
+import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantInputSaved
 import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
 import com.anabars.tripsplit.ui.model.AddTripEvent.TripStatusChanged
@@ -142,8 +143,6 @@ class AddTripViewModel @Inject constructor(
     private fun clearCurrencies() = _currenciesUiState.update {
         it.copy(tripCurrencies = emptyList())
     }
-
-    private fun fieldNotEmpty(value: String) = value.isNotEmpty()
 
     private fun saveTrip(tripName: String) {
         viewModelScope.launch {
@@ -260,7 +259,7 @@ class AddTripViewModel @Inject constructor(
 
             is SaveTripClicked -> {
                 val tripNameTrimmed = _nameUiState.value.tripName.trim()
-                if (fieldNotEmpty(value = tripNameTrimmed)) {
+                if (tripNameTrimmed.isNotEmpty()) {
                     saveTrip(tripName = tripNameTrimmed)
                     _shouldNavigateHome.value = true
                 } else {
@@ -270,51 +269,57 @@ class AddTripViewModel @Inject constructor(
                 }
             }
 
-            is AddTripEvent.DefaultParticipantAdded -> {
-                val defaultParticipant = TripParticipant(name = event.name, multiplicator = 1)
-                if (!nameAlreadyInUse(defaultParticipant)) addParticipant(defaultParticipant)
-            }
-
-            is NewParticipantSaveClicked -> {
-                val nameTrimmed = _participantsUiState.value.newParticipantName.trim()
-                if (fieldNotEmpty(value = nameTrimmed)) {
-                    val newParticipant =
-                        TripParticipant(
-                            name = nameTrimmed,
-                            multiplicator = _participantsUiState.value.newParticipantMultiplicator
-                        )
-                    if (nameAlreadyInUse(newParticipant)) {
-                        updateActiveDialog(ActiveDialog.WARNING)
-                    } else {
-                        addParticipant(newParticipant)
-                        updateActiveDialog(ActiveDialog.NONE)
-                        resetParticipant()
-                    }
-                }
-            }
-
-            is ExistingParticipantEdited -> {
-                val nameTrimmed = _participantsUiState.value.newParticipantName.trim()
-                if (fieldNotEmpty(nameTrimmed) && _participantsUiState.value.updatedParticipantIndex >= 0) {
-                    val updatedParticipant =
-                        TripParticipant(
-                            name = nameTrimmed,
-                            multiplicator = _participantsUiState.value.newParticipantMultiplicator
-                        )
-                    updateParticipant(
-                        _participantsUiState.value.updatedParticipantIndex,
-                        updatedParticipant
-                    )
-                    updateActiveDialog(ActiveDialog.NONE)
-                    resetParticipant()
-                }
-            }
-
-            OnBackPressed -> {
+            is OnBackPressed -> {
                 if (hasUnsavedInput())
                     updateActiveDialog(ActiveDialog.CONFIRMATION)
                 else
                     _shouldNavigateHome.value = true
+            }
+
+            is ParticipantInputSaved -> {
+                saveOrUpdateParticipant()
+            }
+
+            is AddDefaultParticipant -> {
+                val defaultParticipant = TripParticipant(name = event.name, multiplicator = 1)
+                if (!nameAlreadyInUse(defaultParticipant)) addParticipant(defaultParticipant)
+            }
+        }
+    }
+
+    private fun saveOrUpdateParticipant() {
+        if (!isEditingParticipant()) {
+            Log.d("marysya", "add")
+            val nameTrimmed = _participantsUiState.value.newParticipantName.trim()
+            if (nameTrimmed.isNotEmpty()) {
+                val newParticipant =
+                    TripParticipant(
+                        name = nameTrimmed,
+                        multiplicator = _participantsUiState.value.newParticipantMultiplicator
+                    )
+                if (nameAlreadyInUse(newParticipant)) {
+                    updateActiveDialog(ActiveDialog.WARNING)
+                } else {
+                    addParticipant(newParticipant)
+                    updateActiveDialog(ActiveDialog.NONE)
+                    resetParticipant()
+                }
+            }
+        } else {
+            Log.d("marysya", "edit")
+            val nameTrimmed = _participantsUiState.value.newParticipantName.trim()
+            if (nameTrimmed.isNotEmpty() && _participantsUiState.value.updatedParticipantIndex >= 0) {
+                val updatedParticipant =
+                    TripParticipant(
+                        name = nameTrimmed,
+                        multiplicator = _participantsUiState.value.newParticipantMultiplicator
+                    )
+                updateParticipant(
+                    _participantsUiState.value.updatedParticipantIndex,
+                    updatedParticipant
+                )
+                updateActiveDialog(ActiveDialog.NONE)
+                resetParticipant()
             }
         }
     }

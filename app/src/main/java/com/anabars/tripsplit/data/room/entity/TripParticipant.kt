@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.anabars.tripsplit.common.TripSplitConstants
+import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
 
 @Entity(
     tableName = TripSplitConstants.TRIP_PARTICIPANTS_TABLE,
@@ -26,12 +27,18 @@ data class TripParticipant(
     @ColumnInfo val multiplicator: Int = 1,
     @ColumnInfo val tripId: Long = 0L
 ) {
-    fun withTripId(id: Long): TripParticipant {
-        return copy(tripId = id)
-    }
-
+    fun withTripId(id: Long): TripParticipant = copy(tripId = id)
     fun chipDisplayLabelName() = name
     fun chipDisplayLabelNameWithMultiplicator() = "$name ($multiplicator)"
+
+    companion object {
+        fun fromUiState(uiState: AddTripParticipantsUiState, tripId: Long) =
+            TripParticipant(
+                name = uiState.newParticipantName,
+                multiplicator = uiState.newParticipantMultiplicator,
+                tripId = tripId
+            )
+    }
 }
 
 enum class ParticipantStatus {

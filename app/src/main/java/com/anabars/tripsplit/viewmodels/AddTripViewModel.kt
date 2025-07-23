@@ -288,36 +288,31 @@ class AddTripViewModel @Inject constructor(
     }
 
     private fun saveOrUpdateParticipant() {
-        if (!isEditingParticipant()) {
-            Log.d("marysya", "add")
-            val nameTrimmed = _participantsUiState.value.newParticipantName.trim()
-            if (nameTrimmed.isNotEmpty()) {
-                val newParticipant =
-                    TripParticipant(
-                        name = nameTrimmed,
-                        multiplicator = _participantsUiState.value.newParticipantMultiplicator
-                    )
-                if (nameAlreadyInUse(newParticipant)) {
-                    updateActiveDialog(ActiveDialog.WARNING)
-                } else {
-                    addParticipant(newParticipant)
-                    updateActiveDialog(ActiveDialog.NONE)
-                    resetParticipant()
-                }
-            }
-        } else {
+        val nameTrimmed = _participantsUiState.value.newParticipantName.trim()
+        if (nameTrimmed.isEmpty()) return
+
+        val currentParticipant =
+            TripParticipant.fromUiState(
+                uiState = _participantsUiState.value,
+                tripId = tripId ?: 0L
+            )
+
+        if (isEditingParticipant()) {
             Log.d("marysya", "edit")
-            val nameTrimmed = _participantsUiState.value.newParticipantName.trim()
-            if (nameTrimmed.isNotEmpty() && _participantsUiState.value.updatedParticipantIndex >= 0) {
-                val updatedParticipant =
-                    TripParticipant(
-                        name = nameTrimmed,
-                        multiplicator = _participantsUiState.value.newParticipantMultiplicator
-                    )
+            if (_participantsUiState.value.updatedParticipantIndex >= 0) {
                 updateParticipant(
                     _participantsUiState.value.updatedParticipantIndex,
-                    updatedParticipant
+                    currentParticipant
                 )
+                updateActiveDialog(ActiveDialog.NONE)
+                resetParticipant()
+            }
+        } else {
+            Log.d("marysya", "add")
+            if (nameAlreadyInUse(currentParticipant)) {
+                updateActiveDialog(ActiveDialog.WARNING)
+            } else {
+                addParticipant(currentParticipant)
                 updateActiveDialog(ActiveDialog.NONE)
                 resetParticipant()
             }

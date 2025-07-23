@@ -43,7 +43,6 @@ fun AddTripScreen(
 ) {
 
     val viewModel: AddTripViewModel = hiltViewModel()
-
     val dialogUiState by viewModel.dialogUiState.collectAsState()
     val nameUiState by viewModel.nameUiState.collectAsState()
     val tripStatusUiState by viewModel.statusUiState.collectAsState()
@@ -51,18 +50,14 @@ fun AddTripScreen(
     val currenciesUiState by viewModel.currenciesUiState.collectAsState()
     val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
 
-    val screenTitle = stringResource(viewModel.screenTitle)
-    LaunchedEffect(Unit) {
-        onTabTitleChange(screenTitle)
-    }
-
     BackHandler(enabled = true) {
         viewModel.onEvent(AddTripEvent.OnBackPressed)
     }
 
     val defaultParticipantName = stringResource(R.string.you)
-
+    val screenTitle = stringResource(viewModel.screenTitle)
     LaunchedEffect(Unit) {
+        onTabTitleChange(screenTitle)
         viewModel.onEvent(AddTripEvent.AddDefaultParticipant(defaultParticipantName))
         setBackHandler {
             viewModel.onEvent(AddTripEvent.OnBackPressed)
@@ -96,9 +91,9 @@ fun AddTripScreen(
                 onMultiplicatorChange = { viewModel.onEvent(NewParticipantMultiplicatorChanged(it)) },
                 onConfirm = { viewModel.onEvent(AddTripEvent.ParticipantInputSaved) },
                 onDismiss = { viewModel.onEvent(DismissAddParticipantDialog) },
-                titleRes = if (viewModel.isEditingParticipant()) R.string.edit_participant else R.string.add_participant,
+                titleRes = if (viewModel.isEditParticipant) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
-                positiveTextRes = if (viewModel.isEditingParticipant()) R.string.save else R.string.add,
+                positiveTextRes = if (viewModel.isEditParticipant) R.string.save else R.string.add,
                 negativeTextRes = R.string.cancel
             )
         }

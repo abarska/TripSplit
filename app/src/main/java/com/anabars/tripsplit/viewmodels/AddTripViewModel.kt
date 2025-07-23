@@ -54,7 +54,6 @@ class AddTripViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val tripId: Long? = savedStateHandle.get<String>("tripId")?.toLongOrNull()
-    val screenTitle = if (tripId == null) R.string.title_new_trip else R.string.title_edit_trip
 
     private val _dialogUiState = MutableStateFlow(AddTripDialogState())
     val dialogUiState: StateFlow<AddTripDialogState> = _dialogUiState.asStateFlow()
@@ -74,6 +73,9 @@ class AddTripViewModel @Inject constructor(
 
     private val _shouldNavigateHome = MutableStateFlow(false)
     val shouldNavigateHome: StateFlow<Boolean> = _shouldNavigateHome.asStateFlow()
+
+    val screenTitle = if (tripId == null) R.string.title_new_trip else R.string.title_edit_trip
+    val isEditParticipant = _participantsUiState.value.updatedParticipantIndex >= 0
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -126,8 +128,6 @@ class AddTripViewModel @Inject constructor(
         }
         resetParticipant(ActiveDialog.NONE)
     }
-
-    fun isEditingParticipant() = _participantsUiState.value.updatedParticipantIndex >= 0
 
     private fun clearParticipants() =
         _participantsUiState.update { it.copy(tripParticipants = emptyList()) }
@@ -303,7 +303,7 @@ class AddTripViewModel @Inject constructor(
                 tripId = tripId ?: 0L
             )
 
-        if (isEditingParticipant()) {
+        if (isEditParticipant) {
             updateParticipant(_participantsUiState.value.updatedParticipantIndex, participant)
         } else {
             addParticipant(participant = participant, isDefault = false)

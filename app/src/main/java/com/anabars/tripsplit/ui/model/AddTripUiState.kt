@@ -33,6 +33,7 @@ sealed class AddTripEvent {
     data class NewParticipantMultiplicatorChanged(val multiplicator: Int) : AddTripEvent()
     data class ParticipantEditRequested(val participant: TripParticipant) : AddTripEvent()
     data class ParticipantDeleted(val participant: TripParticipant) : AddTripEvent()
+    data class DefaultParticipantAdded(val name: String) : AddTripEvent()
     data class CurrencyAdded(val currency: String) : AddTripEvent()
     data class CurrencyDeleted(val code: String) : AddTripEvent()
     object AddCurrencyClicked : AddTripEvent()

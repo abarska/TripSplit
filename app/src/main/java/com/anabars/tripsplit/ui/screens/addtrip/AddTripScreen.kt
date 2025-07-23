@@ -14,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
@@ -63,12 +62,14 @@ fun AddTripScreen(
         viewModel.onEvent(AddTripEvent.OnBackPressed)
     }
 
-    val you = stringResource(R.string.you)
+    val defaultParticipantName = stringResource(R.string.you)
     val localCurrency by viewModel.localCurrency.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.onEvent(AddTripEvent.DefaultParticipantAdded(defaultParticipantName))
+    }
+
     LaunchedEffect(localCurrency, shouldNavigateHome) {
-        val mainUser = TripParticipant(name = you, multiplicator = 1)
-        if (!viewModel.nameAlreadyInUse(mainUser)) viewModel.addParticipant(mainUser)
         if (localCurrency.isNotBlank() && !viewModel.hasCurrency(localCurrency)) {
             viewModel.addCurrency(localCurrency)
         }

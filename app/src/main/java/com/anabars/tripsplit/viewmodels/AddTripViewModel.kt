@@ -273,6 +273,11 @@ class AddTripViewModel @Inject constructor(
                 }
             }
 
+            is AddTripEvent.DefaultParticipantAdded -> {
+                val defaultParticipant = TripParticipant(name = event.name, multiplicator = 1)
+                if (!nameAlreadyInUse(defaultParticipant)) addParticipant(defaultParticipant)
+            }
+
             is NewParticipantSaveClicked -> {
                 val nameTrimmed = _participantsUiState.value.newParticipantName.trim()
                 if (fieldNotEmpty(value = nameTrimmed)) {

@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -104,11 +103,17 @@ class AddTripViewModel @Inject constructor(
         }
     }
 
-    fun nameAlreadyInUse(participant: TripParticipant) =
+    private fun nameAlreadyInUse(participant: TripParticipant) =
         _participantsUiState.value.tripParticipants.any { it.name == participant.name }
 
-    fun addParticipant(participant: TripParticipant) =
-        _participantsUiState.update { it.copy(tripParticipants = it.tripParticipants + participant) }
+    private fun addParticipant(participant: TripParticipant, isDefault: Boolean) {
+        if (nameAlreadyInUse(participant)) {
+            resetParticipant(if (isDefault) ActiveDialog.NONE else ActiveDialog.WARNING)
+        } else {
+            _participantsUiState.update { it.copy(tripParticipants = it.tripParticipants + participant) }
+            resetParticipant(ActiveDialog.NONE)
+        }
+    }
 
     private fun removeParticipant(participant: TripParticipant) =
         _participantsUiState.update { it.copy(tripParticipants = it.tripParticipants - participant) }
@@ -119,6 +124,7 @@ class AddTripViewModel @Inject constructor(
             if (index in updatedList.indices) updatedList[index] = participant
             it.copy(tripParticipants = updatedList)
         }
+        resetParticipant(ActiveDialog.NONE)
     }
 
     fun isEditingParticipant() = _participantsUiState.value.updatedParticipantIndex >= 0
@@ -244,8 +250,7 @@ class AddTripViewModel @Inject constructor(
             }
 
             is DuplicateNameDialogConfirmed -> {
-                resetParticipant()
-                updateActiveDialog(ActiveDialog.USER_INPUT)
+                resetParticipant(ActiveDialog.USER_INPUT)
             }
 
             is AddParticipantClicked -> {
@@ -253,8 +258,7 @@ class AddTripViewModel @Inject constructor(
             }
 
             is DismissAddParticipantDialog -> {
-                updateActiveDialog(ActiveDialog.NONE)
-                resetParticipant()
+                resetParticipant(ActiveDialog.NONE)
             }
 
             is SaveTripClicked -> {
@@ -281,8 +285,10 @@ class AddTripViewModel @Inject constructor(
             }
 
             is AddDefaultParticipant -> {
-                val defaultParticipant = TripParticipant(name = event.name, multiplicator = 1)
-                if (!nameAlreadyInUse(defaultParticipant)) addParticipant(defaultParticipant)
+                addParticipant(
+                    participant = TripParticipant(name = event.name, multiplicator = 1),
+                    isDefault = true
+                )
             }
         }
     }
@@ -291,38 +297,24 @@ class AddTripViewModel @Inject constructor(
         val nameTrimmed = _participantsUiState.value.newParticipantName.trim()
         if (nameTrimmed.isEmpty()) return
 
-        val currentParticipant =
+        val participant =
             TripParticipant.fromUiState(
                 uiState = _participantsUiState.value,
                 tripId = tripId ?: 0L
             )
 
         if (isEditingParticipant()) {
-            Log.d("marysya", "edit")
-            if (_participantsUiState.value.updatedParticipantIndex >= 0) {
-                updateParticipant(
-                    _participantsUiState.value.updatedParticipantIndex,
-                    currentParticipant
-                )
-                updateActiveDialog(ActiveDialog.NONE)
-                resetParticipant()
-            }
+            updateParticipant(_participantsUiState.value.updatedParticipantIndex, participant)
         } else {
-            Log.d("marysya", "add")
-            if (nameAlreadyInUse(currentParticipant)) {
-                updateActiveDialog(ActiveDialog.WARNING)
-            } else {
-                addParticipant(currentParticipant)
-                updateActiveDialog(ActiveDialog.NONE)
-                resetParticipant()
-            }
+            addParticipant(participant = participant, isDefault = false)
         }
     }
 
-    private fun resetParticipant() {
+    private fun resetParticipant(dialog: ActiveDialog) {
         updateNewParticipantName("")
         updateNewParticipantMultiplicator(1)
         updateParticipantIndex(-1)
+        updateActiveDialog(dialog)
     }
 
     private fun hasUnsavedInput() = _nameUiState.value.tripName.isNotBlank()

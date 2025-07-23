@@ -63,23 +63,17 @@ fun AddTripScreen(
     }
 
     val defaultParticipantName = stringResource(R.string.you)
-    val localCurrency by viewModel.localCurrency.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.onEvent(AddTripEvent.DefaultParticipantAdded(defaultParticipantName))
-    }
-
-    LaunchedEffect(localCurrency, shouldNavigateHome) {
-        if (localCurrency.isNotBlank() && !viewModel.hasCurrency(localCurrency)) {
-            viewModel.addCurrency(localCurrency)
-        }
         setBackHandler {
             viewModel.onEvent(AddTripEvent.OnBackPressed)
             true
         }
-        if (shouldNavigateHome) {
-            navigateHome(navController = navController)
-        }
+    }
+
+    LaunchedEffect(shouldNavigateHome) {
+        if (shouldNavigateHome) navigateHome(navController = navController)
     }
 
     DisposableEffect(Unit) {

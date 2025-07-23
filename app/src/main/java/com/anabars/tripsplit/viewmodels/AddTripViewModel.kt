@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -55,9 +55,6 @@ class AddTripViewModel @Inject constructor(
 
     private val tripId: Long? = savedStateHandle.get<String>("tripId")?.toLongOrNull()
     val screenTitle = if (tripId == null) R.string.title_new_trip else R.string.title_edit_trip
-
-    private val _localCurrency = MutableStateFlow("")
-    val localCurrency: StateFlow<String> = _localCurrency.asStateFlow()
 
     private val _dialogUiState = MutableStateFlow(AddTripDialogState())
     val dialogUiState: StateFlow<AddTripDialogState> = _dialogUiState.asStateFlow()
@@ -89,21 +86,20 @@ class AddTripViewModel @Inject constructor(
             val currencies = getCurrencyDisplayList(validCurrencyCodes())
             setAvailableCurrencies(currencies)
 
-            currencyPreference.getCurrencyFlow(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY)
-                .collect { currency ->
-                    _localCurrency.value = currency
-                }
+            val localCurrencyCode = currencyPreference
+                .getCurrencyFlow(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY)
+                .first()
+            addCurrency(localCurrencyCode)
         }
     }
 
     private fun populateState(tripDetailsData: TripDetails?) {
         tripDetailsData?.let { data ->
-            Log.d("marysya", tripDetailsData.currencies.joinToString(", ") { it.code })
             _nameUiState.value = _nameUiState.value.copy(data.trip.title)
             _statusUiState.value = data.trip.status
             _participantsUiState.value = _participantsUiState.value.copy(data.participants)
             _currenciesUiState.value =
-                _currenciesUiState.value.copy(data.currencies.map { it.code })
+                _currenciesUiState.value.copy(tripCurrencies = data.currencies.map { it.code })
         }
     }
 
@@ -129,10 +125,14 @@ class AddTripViewModel @Inject constructor(
     private fun clearParticipants() =
         _participantsUiState.update { it.copy(tripParticipants = emptyList()) }
 
-    fun hasCurrency(code: String) = _currenciesUiState.value.tripCurrencies.contains(code)
+    private fun hasCurrency(code: String) = _currenciesUiState.value.tripCurrencies.contains(code)
 
-    fun addCurrency(code: String) = _currenciesUiState.update {
-        it.copy(tripCurrencies = it.tripCurrencies + code)
+    private fun addCurrency(code: String) {
+        if (code.isNotBlank() && !hasCurrency(code)) {
+            _currenciesUiState.update {
+                it.copy(tripCurrencies = it.tripCurrencies + code)
+            }
+        }
     }
 
     private fun removeCurrency(code: String) = _currenciesUiState.update {
@@ -228,10 +228,7 @@ class AddTripViewModel @Inject constructor(
             }
 
             is CurrencyAdded -> {
-                val code = event.currency.take(3)
-                if (!hasCurrency(code)) {
-                    addCurrency(code)
-                }
+                addCurrency(event.currency.take(3))
                 updateActiveDialog(ActiveDialog.NONE)
             }
 

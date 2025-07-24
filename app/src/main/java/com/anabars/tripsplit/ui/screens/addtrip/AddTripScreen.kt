@@ -32,7 +32,6 @@ import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantDeleted
 import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
 import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
-import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.viewmodels.AddTripViewModel
 
 @Composable
@@ -48,7 +47,7 @@ fun AddTripScreen(
     val tripStatusUiState by viewModel.statusUiState.collectAsState()
     val participantsUiState by viewModel.participantsUiState.collectAsState()
     val currenciesUiState by viewModel.currenciesUiState.collectAsState()
-    val shouldNavigateHome by viewModel.shouldNavigateHome.collectAsState()
+    val shouldNavigateBack by viewModel.shouldNavigateBack.collectAsState()
 
     BackHandler(enabled = true) {
         viewModel.onEvent(AddTripEvent.OnBackPressed)
@@ -65,8 +64,8 @@ fun AddTripScreen(
         }
     }
 
-    LaunchedEffect(shouldNavigateHome) {
-        if (shouldNavigateHome) navigateHome(navController = navController)
+    LaunchedEffect(shouldNavigateBack) {
+        if (shouldNavigateBack) navController.popBackStack()
     }
 
     DisposableEffect(Unit) {
@@ -100,7 +99,7 @@ fun AddTripScreen(
 
         ActiveDialog.CONFIRMATION -> {
             TsConfirmationDialog(
-                onDismiss = { navigateHome(navController = navController) },
+                onDismiss = { navController.popBackStack() },
                 onConfirm = { viewModel.onEvent(SaveTripClicked) },
                 titleRes = R.string.save_changes_dialog_title,
                 questionRes = R.string.save_changes_dialog_question,
@@ -152,14 +151,5 @@ fun AddTripScreen(
                     onSaveTrip = { viewModel.onEvent(SaveTripClicked) }
                 )
         }
-    }
-}
-
-private fun navigateHome(navController: NavController) {
-    navController.navigate(AppScreens.ROUTE_TRIPS) {
-        popUpTo(navController.graph.startDestinationId) {
-            inclusive = true
-        }
-        launchSingleTop = true
     }
 }

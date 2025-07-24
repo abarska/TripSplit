@@ -71,8 +71,8 @@ class AddTripViewModel @Inject constructor(
     private val _currenciesUiState = MutableStateFlow(AddTripCurrenciesUiState())
     val currenciesUiState: StateFlow<AddTripCurrenciesUiState> = _currenciesUiState.asStateFlow()
 
-    private val _shouldNavigateHome = MutableStateFlow(false)
-    val shouldNavigateHome: StateFlow<Boolean> = _shouldNavigateHome.asStateFlow()
+    private val _shouldNavigateBack = MutableStateFlow(false)
+    val shouldNavigateBack: StateFlow<Boolean> = _shouldNavigateBack.asStateFlow()
 
     val screenTitle = if (tripId == null) R.string.title_new_trip else R.string.title_edit_trip
     val isEditParticipant = _participantsUiState.value.updatedParticipantIndex >= 0
@@ -265,7 +265,7 @@ class AddTripViewModel @Inject constructor(
                 val tripNameTrimmed = _nameUiState.value.tripName.trim()
                 if (tripNameTrimmed.isNotEmpty()) {
                     saveTrip(tripName = tripNameTrimmed)
-                    _shouldNavigateHome.value = true
+                    _shouldNavigateBack.value = true
                 } else {
                     updateActiveDialog(ActiveDialog.NONE)
                     updateTripNameError(true)
@@ -277,7 +277,7 @@ class AddTripViewModel @Inject constructor(
                 if (hasUnsavedInput())
                     updateActiveDialog(ActiveDialog.CONFIRMATION)
                 else
-                    _shouldNavigateHome.value = true
+                    _shouldNavigateBack.value = true
             }
 
             is ParticipantInputSaved -> {

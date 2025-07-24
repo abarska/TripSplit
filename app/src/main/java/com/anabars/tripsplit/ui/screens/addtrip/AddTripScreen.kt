@@ -55,6 +55,7 @@ fun AddTripScreen(
 
     val defaultParticipantName = stringResource(R.string.you)
     val screenTitle = stringResource(viewModel.screenTitle)
+
     LaunchedEffect(Unit) {
         onTabTitleChange(screenTitle)
         viewModel.onEvent(AddTripEvent.AddDefaultParticipant(defaultParticipantName))

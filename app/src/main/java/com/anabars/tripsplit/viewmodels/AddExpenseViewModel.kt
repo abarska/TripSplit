@@ -47,8 +47,8 @@ class AddExpenseViewModel @Inject constructor(
     private val _addExpenseErrorRes = MutableStateFlow(0)
     val addExpenseErrorRes = _addExpenseErrorRes.asStateFlow()
 
-    private val _navigateBackState = MutableStateFlow(false)
-    val navigateBackState = _navigateBackState.asStateFlow()
+    private val _shouldNavigateBack = MutableStateFlow(false)
+    val shouldNavigateBack = _shouldNavigateBack.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -90,6 +90,7 @@ class AddExpenseViewModel @Inject constructor(
             is AddExpenseEvent.PayerSelected -> updatePayerId(event.id)
             is AddExpenseEvent.ParticipantsSelected -> updateSelectedParticipants(event.participants)
             is AddExpenseEvent.SaveExpense -> saveExpense()
+            is AddExpenseEvent.OnBackPressed -> _shouldNavigateBack.value = true
         }
     }
 
@@ -132,11 +133,11 @@ class AddExpenseViewModel @Inject constructor(
             val participants = _payerParticipantsState.value.selectedParticipants
             tripExpensesRepository.saveExpenseWithParticipants(expense, participants)
 
-            _navigateBackState.value = true
+            _shouldNavigateBack.value = true
         }
     }
 
-    fun validateExpense(): Boolean {
+    private fun validateExpense(): Boolean {
         val amount = _amountCurrencyState.value.expenseAmount.toDoubleOrNull()
         val wrongAmount = amount == null || amount <= 0.0
         val participantsMissingError = _payerParticipantsState.value.selectedParticipants.isEmpty()
@@ -146,9 +147,5 @@ class AddExpenseViewModel @Inject constructor(
             else -> 0
         }
         return !wrongAmount && !participantsMissingError
-    }
-
-    fun onNavigatedBack() {
-        _navigateBackState.value = false
     }
 }

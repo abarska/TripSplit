@@ -2,6 +2,7 @@ package com.anabars.tripsplit.ui.screens.addexpense
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -43,36 +44,38 @@ fun AddExpenseScreen(
     val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
     val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
     val addExpenseErrorRes by viewModel.addExpenseErrorRes.collectAsState()
-    val navigateBackState by viewModel.navigateBackState.collectAsState()
+    val shouldNavigateBack by viewModel.shouldNavigateBack.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
 
     val screenTitle = stringResource(R.string.title_new_expense)
+
     LaunchedEffect(Unit) {
         onTabTitleChange(screenTitle)
-    }
-
-    val handleBackNavigation = {
-        navController.popBackStack()
-        true
-    }
-
-    DisposableEffect(Unit) {
-        setBackHandler(handleBackNavigation)
-        onDispose { setBackHandler(null) }
-    }
-
-    LaunchedEffect(navigateBackState, addExpenseErrorRes) {
-        if (navigateBackState) {
-            navController.popBackStack()
-            viewModel.onNavigatedBack()
+        setBackHandler {
+            viewModel.onEvent(AddExpenseEvent.OnBackPressed)
+            true
         }
+    }
 
+    LaunchedEffect(shouldNavigateBack) {
+        if (shouldNavigateBack) navController.popBackStack()
+    }
+
+    LaunchedEffect(addExpenseErrorRes) {
         if (addExpenseErrorRes != 0) {
             snackBarHostState.showSnackbar(
                 message = context.getString(addExpenseErrorRes),
                 duration = SnackbarDuration.Short
             )
         }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { setBackHandler(null) }
+    }
+
+    BackHandler(enabled = true) {
+        viewModel.onEvent(AddExpenseEvent.OnBackPressed)
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

@@ -54,6 +54,7 @@ class AddTripViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val tripId: Long? = savedStateHandle.get<String>("tripId")?.toLongOrNull()
+    private var tripDetails: TripDetails? = null
 
     private val _dialogUiState = MutableStateFlow(AddTripDialogState())
     val dialogUiState: StateFlow<AddTripDialogState> = _dialogUiState.asStateFlow()
@@ -80,7 +81,8 @@ class AddTripViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             tripId?.let {
-                populateState(tripRepository.getTripDetailsData(it))
+                tripDetails = tripRepository.getTripDetailsData(it)
+                populateState()
             }
         }
 
@@ -95,8 +97,8 @@ class AddTripViewModel @Inject constructor(
         }
     }
 
-    private fun populateState(tripDetailsData: TripDetails?) {
-        tripDetailsData?.let { data ->
+    private fun populateState() {
+        tripDetails?.let { data ->
             _nameUiState.value = _nameUiState.value.copy(data.trip.title)
             _statusUiState.value = data.trip.status
             _participantsUiState.value = _participantsUiState.value.copy(data.participants)
@@ -274,7 +276,7 @@ class AddTripViewModel @Inject constructor(
             }
 
             is OnBackPressed -> {
-                if (hasUnsavedInput())
+                if (newTripHasUnsavedInput() || existingTripDataChanged())
                     updateActiveDialog(ActiveDialog.CONFIRMATION)
                 else
                     _shouldNavigateBack.value = true
@@ -317,9 +319,20 @@ class AddTripViewModel @Inject constructor(
         updateActiveDialog(dialog)
     }
 
-    private fun hasUnsavedInput() = _nameUiState.value.tripName.isNotBlank()
-            || _participantsUiState.value.tripParticipants.size > 1
-            || _currenciesUiState.value.tripCurrencies.size > 1
+    private fun existingTripDataChanged(): Boolean {
+        return tripId != null &&
+                (_nameUiState.value.tripName != tripDetails?.trip?.title ||
+                        _statusUiState.value != tripDetails?.trip?.status ||
+                        _participantsUiState.value.tripParticipants != tripDetails?.participants ||
+                        _currenciesUiState.value.tripCurrencies != tripDetails?.currencies)
+    }
+
+    private fun newTripHasUnsavedInput(): Boolean {
+        return tripId == null &&
+                (_nameUiState.value.tripName.isNotBlank() ||
+                        _participantsUiState.value.tripParticipants.size > 1 ||
+                        _currenciesUiState.value.tripCurrencies.size > 1)
+    }
 
     private fun setAvailableCurrencies(currencies: List<String>) {
         _currenciesUiState.update { it.copy(availableCurrencies = currencies) }

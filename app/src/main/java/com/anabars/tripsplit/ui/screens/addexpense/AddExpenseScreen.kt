@@ -106,7 +106,7 @@ fun AddExpenseScreen(
                 onCurrencySelected = { viewModel.onEvent(AddExpenseEvent.CurrencySelected(it)) },
                 onPayerSelected = { viewModel.onEvent(AddExpenseEvent.PayerSelected(it)) },
                 onParticipantsSelected = { viewModel.onEvent(AddExpenseEvent.ParticipantsSelected(it)) },
-                onSaveExpense = { viewModel.saveExpense() },
+                onSaveExpense = { viewModel.onEvent(AddExpenseEvent.SaveExpense) },
                 modifier = modifier
             )
         } else {
@@ -121,7 +121,7 @@ fun AddExpenseScreen(
                 onCurrencySelected = { viewModel.onEvent(AddExpenseEvent.CurrencySelected(it)) },
                 onPayerSelected = { viewModel.onEvent(AddExpenseEvent.PayerSelected(it)) },
                 onParticipantsSelected = { viewModel.onEvent(AddExpenseEvent.ParticipantsSelected(it)) },
-                onSaveExpense = { viewModel.saveExpense() },
+                onSaveExpense = { viewModel.onEvent(AddExpenseEvent.SaveExpense) },
                 modifier = modifier
             )
         }

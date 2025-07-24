@@ -28,4 +28,5 @@ sealed class AddExpenseEvent {
     data class CurrencySelected(val code: String) : AddExpenseEvent()
     data class PayerSelected(val id: Long) : AddExpenseEvent()
     data class ParticipantsSelected(val participants: Set<TripParticipant>) : AddExpenseEvent()
+    object SaveExpense : AddExpenseEvent()
 }

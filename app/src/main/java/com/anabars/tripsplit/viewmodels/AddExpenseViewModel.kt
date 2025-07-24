@@ -89,6 +89,7 @@ class AddExpenseViewModel @Inject constructor(
             is AddExpenseEvent.CurrencySelected -> updateCurrencyCode(event.code)
             is AddExpenseEvent.PayerSelected -> updatePayerId(event.id)
             is AddExpenseEvent.ParticipantsSelected -> updateSelectedParticipants(event.participants)
+            is AddExpenseEvent.SaveExpense -> saveExpense()
         }
     }
 
@@ -118,7 +119,7 @@ class AddExpenseViewModel @Inject constructor(
         }
     }
 
-    fun saveExpense() {
+    private fun saveExpense() {
         viewModelScope.launch {
             if (!validateExpense()) return@launch
 

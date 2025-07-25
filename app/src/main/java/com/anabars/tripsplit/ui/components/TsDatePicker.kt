@@ -23,6 +23,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
@@ -77,8 +78,8 @@ fun DateInputSection(
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let { millis ->
-                            val newDate =
-                                Instant.ofEpochMilli(millis).atZone(ZoneOffset.UTC).toLocalDate()
+                            val newDate = Instant.ofEpochMilli(millis)
+                                .atZone(ZoneId.systemDefault()).toLocalDate()
                             onDateSelected(newDate)
                         }
                         showDatePicker = false

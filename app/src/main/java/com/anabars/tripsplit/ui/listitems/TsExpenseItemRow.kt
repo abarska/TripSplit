@@ -3,6 +3,7 @@ package com.anabars.tripsplit.ui.listitems
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,7 +42,6 @@ fun TsExpenseItemRow(
     modifier: Modifier = Modifier,
     isExpanded: Boolean = false,
     onExpandToggle: () -> Unit,
-    onEditClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {}
 ) {
     TsItemRow(
@@ -56,10 +56,7 @@ fun TsExpenseItemRow(
                 isExpanded = isExpanded
             ) { onExpandToggle() }
             AnimatedVisibility(visible = isExpanded) {
-                HiddenPart(
-                    onEditClick = onEditClick,
-                    onDeleteClick = onDeleteClick
-                )
+                HiddenPart(onDeleteClick = onDeleteClick)
             }
         }
     }
@@ -123,18 +120,11 @@ private fun VisiblePart(
 }
 
 @Composable
-private fun HiddenPart(onEditClick: () -> Unit, onDeleteClick: () -> Unit) {
-    Row(
+private fun HiddenPart(onDeleteClick: () -> Unit) {
+    Box(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
+        contentAlignment = Alignment.Center
     ) {
-        TextButton(onClick = onEditClick) {
-            TsInfoText(
-                text = stringResource(R.string.edit),
-                fontSize = TsFontSize.MEDIUM,
-                textColor = MaterialTheme.colorScheme.primary
-            )
-        }
         TextButton(onClick = onDeleteClick) {
             TsInfoText(
                 text = stringResource(R.string.delete),

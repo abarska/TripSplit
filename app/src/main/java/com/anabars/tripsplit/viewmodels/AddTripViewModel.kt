@@ -77,7 +77,8 @@ class AddTripViewModel @Inject constructor(
     val shouldNavigateBack: StateFlow<Boolean> = _shouldNavigateBack.asStateFlow()
 
     val screenTitle = if (tripId == null) R.string.title_new_trip else R.string.title_edit_trip
-    val isEditParticipant = _participantsUiState.value.updatedParticipantIndex >= 0
+    val isEditParticipant: Boolean
+        get() = _participantsUiState.value.updatedParticipantIndex >= 0
 
     init {
         viewModelScope.launch(Dispatchers.IO) {

@@ -23,7 +23,7 @@ data class AddTripParticipantsUiState(
 
 data class AddTripCurrenciesUiState(
     val availableCurrencies: List<String> = emptyList(),
-    val tripCurrencies: List<String> = emptyList()
+    val tripCurrencyCodes: List<String> = emptyList()
 )
 
 sealed class AddTripEvent {

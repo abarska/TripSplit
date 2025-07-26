@@ -114,7 +114,7 @@ class AddTripViewModel @Inject constructor(
             _statusUiState.value = data.trip.status
             _participantsUiState.value = _participantsUiState.value.copy(data.participants)
             _currenciesUiState.value =
-                _currenciesUiState.value.copy(tripCurrencies = data.currencies.map { it.code })
+                _currenciesUiState.value.copy(tripCurrencyCodes = data.currencies.map { it.code })
         }
     }
 
@@ -145,22 +145,22 @@ class AddTripViewModel @Inject constructor(
     private fun clearParticipants() =
         _participantsUiState.update { it.copy(tripParticipants = emptyList()) }
 
-    private fun hasCurrency(code: String) = _currenciesUiState.value.tripCurrencies.contains(code)
+    private fun hasCurrency(code: String) = _currenciesUiState.value.tripCurrencyCodes.contains(code)
 
     private fun addCurrency(code: String) {
         if (code.isNotBlank() && !hasCurrency(code)) {
             _currenciesUiState.update {
-                it.copy(tripCurrencies = it.tripCurrencies + code)
+                it.copy(tripCurrencyCodes = it.tripCurrencyCodes + code)
             }
         }
     }
 
     private fun removeCurrency(code: String) = _currenciesUiState.update {
-        it.copy(tripCurrencies = it.tripCurrencies - code)
+        it.copy(tripCurrencyCodes = it.tripCurrencyCodes - code)
     }
 
     private fun clearCurrencies() = _currenciesUiState.update {
-        it.copy(tripCurrencies = emptyList())
+        it.copy(tripCurrencyCodes = emptyList())
     }
 
     private fun saveTrip(tripName: String) {
@@ -170,7 +170,7 @@ class AddTripViewModel @Inject constructor(
                 tripId,
                 trip,
                 _participantsUiState.value.tripParticipants,
-                _currenciesUiState.value.tripCurrencies
+                _currenciesUiState.value.tripCurrencyCodes
             )
             clearParticipants()
             clearCurrencies()
@@ -335,14 +335,14 @@ class AddTripViewModel @Inject constructor(
                 (_nameUiState.value.tripName != tripDetails?.trip?.title ||
                         _statusUiState.value != tripDetails?.trip?.status ||
                         _participantsUiState.value.tripParticipants != tripDetails?.participants ||
-                        _currenciesUiState.value.tripCurrencies != tripDetails?.currencies)
+                        _currenciesUiState.value.tripCurrencyCodes != tripDetails?.currencies?.map { it.code })
     }
 
     private fun newTripHasUnsavedInput(): Boolean {
         return tripId == null &&
                 (_nameUiState.value.tripName.isNotBlank() ||
                         _participantsUiState.value.tripParticipants.size > 1 ||
-                        _currenciesUiState.value.tripCurrencies.size > 1)
+                        _currenciesUiState.value.tripCurrencyCodes.size > 1)
     }
 
     private fun setAvailableCurrencies(currencies: List<String>) {

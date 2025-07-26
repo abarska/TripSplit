@@ -54,3 +54,17 @@ fun validCurrencyCodes() = Locale.getAvailableLocales()
         }
     }
     .toSet()
+
+val validCurrencyCodesCached: Set<String> by lazy {
+    Locale.getAvailableLocales()
+        .asSequence()
+        .filter { it.country.isNotEmpty() }
+        .mapNotNull {
+            try {
+                Currency.getInstance(it).currencyCode
+            } catch (_: IllegalArgumentException) {
+                null
+            }
+        }
+        .toSet()
+}

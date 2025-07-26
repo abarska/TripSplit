@@ -35,7 +35,7 @@ import com.anabars.tripsplit.ui.model.AddTripEvent.TripStatusChanged
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
-import com.anabars.tripsplit.utils.validCurrencyCodes
+import com.anabars.tripsplit.utils.validCurrencyCodesCached
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,6 +44,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -80,21 +81,31 @@ class AddTripViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            tripId?.let {
-                tripDetails = tripRepository.getTripDetailsData(it)
-                populateState()
-            }
+            loadTripDetailsIfEditing()
+            loadAvailableCurrencies()
+            addHomeCurrency()
         }
+    }
 
-        viewModelScope.launch(Dispatchers.IO) {
-            val currencies = getCurrencyDisplayList(validCurrencyCodes())
-            setAvailableCurrencies(currencies)
-
-            val localCurrencyCode = currencyPreference
-                .getCurrencyFlow(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY)
-                .first()
-            addCurrency(localCurrencyCode)
+    private fun loadTripDetailsIfEditing() {
+        tripId?.let {
+            tripDetails = tripRepository.getTripDetailsData(it)
+            populateState()
         }
+    }
+
+    private suspend fun loadAvailableCurrencies() {
+        val currencyCodes = withContext(Dispatchers.Default) {
+            getCurrencyDisplayList(validCurrencyCodesCached)
+        }
+        setAvailableCurrencies(currencyCodes)
+    }
+
+    private suspend fun addHomeCurrency() {
+        val localCurrencyCode = currencyPreference
+            .getCurrencyFlow(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY)
+            .first()
+        addCurrency(localCurrencyCode)
     }
 
     private fun populateState() {

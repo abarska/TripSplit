@@ -22,5 +22,11 @@ import com.anabars.tripsplit.common.TripSplitConstants
 data class TripCurrency(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val code: String = "",
-    @ColumnInfo val tripId: Long
+    @ColumnInfo val tripId: Long,
+    @ColumnInfo val status: CurrencyStatus = CurrencyStatus.ACTIVE
 )
+
+enum class CurrencyStatus {
+    ACTIVE,
+    INACTIVE
+}

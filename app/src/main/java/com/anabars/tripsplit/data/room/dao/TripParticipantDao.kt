@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 
@@ -18,4 +19,7 @@ interface TripParticipantDao {
 
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_PARTICIPANTS_TABLE} WHERE tripId = :tripId")
     suspend fun getParticipantsByTripId(tripId: Long): List<TripParticipant>
+
+    @Upsert
+    suspend fun upsertParticipants(participants: List<TripParticipant>)
 }

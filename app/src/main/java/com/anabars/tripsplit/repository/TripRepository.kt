@@ -3,14 +3,16 @@ package com.anabars.tripsplit.repository
 import androidx.room.Transaction
 import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
 import com.anabars.tripsplit.data.room.dao.TripCurrencyDao
-import com.anabars.tripsplit.data.room.dao.TripParticipantDao
 import com.anabars.tripsplit.data.room.dao.TripDao
 import com.anabars.tripsplit.data.room.dao.TripExpensesDao
+import com.anabars.tripsplit.data.room.dao.TripParticipantDao
+import com.anabars.tripsplit.data.room.entity.CurrencyStatus
 import com.anabars.tripsplit.data.room.entity.ExchangeRate
-import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.data.room.entity.ParticipantStatus
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripExpense
+import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripStatus
 import com.anabars.tripsplit.data.room.model.TripDetails
 import kotlinx.coroutines.Dispatchers
@@ -42,16 +44,71 @@ class TripRepository @Inject constructor(
                 tripDao.insertTrip(trip)
             } else {
                 tripDao.updateTrip(trip.copy(id = tripId))
-                participantDao.deleteParticipantsByTripId(tripId)
-                currencyDao.deleteCurrenciesByTripId(tripId)
                 tripId
             }
-        val participantsWithTripId = participants.map { it.withTripId(finalTripId) }
-        val currencies = currencyCodes.map { code ->
-            TripCurrency(code = code, tripId = finalTripId)
+
+        handleParticipants(tripId = finalTripId, incomingParticipants = participants)
+        handleCurrencies(tripId = finalTripId, incomingCurrencyCodes = currencyCodes)
+    }
+
+    private suspend fun handleCurrencies(
+        tripId: Long,
+        incomingCurrencyCodes: List<String>
+    ) {
+        val existingCurrencies = currencyDao.getCurrenciesByTripId(tripId)
+        val existingCurrenciesMap = existingCurrencies.associateBy { it.code }
+        val incomingCurrencyCodesSet = incomingCurrencyCodes.toSet()
+        val currenciesToUpsert = mutableListOf<TripCurrency>()
+        for (incomingCode in incomingCurrencyCodesSet) {
+            val existingCurrency = existingCurrenciesMap[incomingCode]
+            if (existingCurrency == null) {
+                currenciesToUpsert.add(TripCurrency(code = incomingCode, tripId = tripId))
+            } else if (existingCurrency.status == CurrencyStatus.INACTIVE) {
+                currenciesToUpsert.add(existingCurrency.copy(status = CurrencyStatus.ACTIVE))
+            }
         }
-        participantDao.insertParticipants(participantsWithTripId)
-        currencyDao.insertCurrencies(currencies)
+        val currenciesToInactivate = existingCurrencies
+            .filter { it.code !in incomingCurrencyCodesSet && it.status == CurrencyStatus.ACTIVE }
+            .map { it.copy(status = CurrencyStatus.INACTIVE) }
+        currencyDao.upsertCurrencies(currenciesToUpsert + currenciesToInactivate)
+    }
+
+    private suspend fun handleParticipants(
+        tripId: Long,
+        incomingParticipants: List<TripParticipant>
+    ) {
+        val existingParticipants = participantDao.getParticipantsByTripId(tripId)
+        val existingParticipantsMap = existingParticipants.associateBy { it.name }
+        val participantsToUpsert = mutableListOf<TripParticipant>()
+
+        for (incomingP in incomingParticipants) {
+            val existingP = existingParticipantsMap[incomingP.name]
+            if (existingP == null) {
+                participantsToUpsert.add(incomingP.copy(tripId = tripId))
+            } else {
+                var shouldUpdate = false
+                var updatedParticipant = existingP
+                if (existingP.status == ParticipantStatus.INACTIVE) {
+                    updatedParticipant = updatedParticipant.copy(status = ParticipantStatus.ACTIVE)
+                    shouldUpdate = true
+                }
+                if (existingP.multiplicator != incomingP.multiplicator) {
+                    updatedParticipant =
+                        updatedParticipant.copy(multiplicator = incomingP.multiplicator)
+                    shouldUpdate = true
+                }
+                if (shouldUpdate) {
+                    participantsToUpsert.add(
+                        updatedParticipant.copy(id = existingP.id, tripId = tripId)
+                    )
+                }
+            }
+        }
+        val incomingParticipantNames = incomingParticipants.map { it.name }.toSet()
+        val participantsToInactivate = existingParticipants
+            .filter { it.name !in incomingParticipantNames && it.status == ParticipantStatus.ACTIVE }
+            .map { it.copy(status = ParticipantStatus.INACTIVE) }
+        participantDao.upsertParticipants(participantsToUpsert + participantsToInactivate)
     }
 
     fun getTripDetailsFlow(tripId: Long): Flow<TripDetails?> {

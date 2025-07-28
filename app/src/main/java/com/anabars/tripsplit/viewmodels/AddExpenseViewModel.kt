@@ -53,8 +53,8 @@ class AddExpenseViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                val participants = tripExpensesRepository.getParticipantsByTripId(tripId).first()
-                val currencies = tripExpensesRepository.getCurrenciesByTripId(tripId).first()
+                val participants = tripExpensesRepository.getActiveParticipantsByTripId(tripId).first()
+                val currencies = tripExpensesRepository.getActiveCurrenciesByTripId(tripId).first()
 
                 val initialSelectedParticipants = participants.toSet()
                 val initialPayerId = participants.firstOrNull()?.id

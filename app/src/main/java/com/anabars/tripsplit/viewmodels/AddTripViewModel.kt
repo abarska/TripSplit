@@ -113,9 +113,9 @@ class AddTripViewModel @Inject constructor(
         tripDetails?.let { data ->
             _nameUiState.value = _nameUiState.value.copy(data.trip.title)
             _statusUiState.value = data.trip.status
-            _participantsUiState.value = _participantsUiState.value.copy(data.participants)
+            _participantsUiState.value = _participantsUiState.value.copy(data.activeParticipants)
             _currenciesUiState.value =
-                _currenciesUiState.value.copy(tripCurrencyCodes = data.currencies.map { it.code })
+                _currenciesUiState.value.copy(tripCurrencyCodes = data.activeCurrencies.map { it.code })
         }
     }
 
@@ -146,7 +146,8 @@ class AddTripViewModel @Inject constructor(
     private fun clearParticipants() =
         _participantsUiState.update { it.copy(tripParticipants = emptyList()) }
 
-    private fun hasCurrency(code: String) = _currenciesUiState.value.tripCurrencyCodes.contains(code)
+    private fun hasCurrency(code: String) =
+        _currenciesUiState.value.tripCurrencyCodes.contains(code)
 
     private fun addCurrency(code: String) {
         if (code.isNotBlank() && !hasCurrency(code)) {
@@ -335,8 +336,8 @@ class AddTripViewModel @Inject constructor(
         return tripId != null &&
                 (_nameUiState.value.tripName != tripDetails?.trip?.title ||
                         _statusUiState.value != tripDetails?.trip?.status ||
-                        _participantsUiState.value.tripParticipants != tripDetails?.participants ||
-                        _currenciesUiState.value.tripCurrencyCodes != tripDetails?.currencies?.map { it.code })
+                        _participantsUiState.value.tripParticipants != tripDetails?.activeParticipants ||
+                        _currenciesUiState.value.tripCurrencyCodes != tripDetails?.activeCurrencies?.map { it.code })
     }
 
     private fun newTripHasUnsavedInput(): Boolean {

@@ -19,7 +19,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -82,11 +81,7 @@ private fun VisiblePart(
         Column(modifier = Modifier.weight(1f)) {
             TsInfoText(textRes = expense.category.titleRes)
             val payer = tripParticipants.find { it.id == expense.paidById }
-            val paidForText = if (paidFor.size == tripParticipants.size) {
-                LocalContext.current.getString(R.string.everyone)
-            } else {
-                paidFor.joinToString(", ") { it.name }
-            }
+            val paidForText = paidFor.joinToString(", ") { it.name }
             payer?.let {
                 TsInfoText(text = "${stringResource(R.string.expense_paid_by)} ${it.name}")
                 TsInfoText(text = "${stringResource(R.string.expense_paid_for)} $paidForText")

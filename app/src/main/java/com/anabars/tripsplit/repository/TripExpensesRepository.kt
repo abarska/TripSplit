@@ -18,12 +18,16 @@ class TripExpensesRepository @Inject constructor(
         return tripExpensesDao.getExpensesWithParticipantsByTrip(tripId)
     }
 
-    fun getCurrenciesByTripId(tripId: Long): Flow<List<TripCurrency>> {
-        return tripDao.getCurrenciesByTripId(tripId)
+    fun getActiveCurrenciesByTripId(tripId: Long): Flow<List<TripCurrency>> {
+        return tripDao.getActiveCurrenciesByTripId(tripId)
     }
 
     fun getParticipantsByTripId(tripId: Long): Flow<List<TripParticipant>> {
         return tripDao.getParticipantsByTripId(tripId)
+    }
+
+    fun getActiveParticipantsByTripId(tripId: Long): Flow<List<TripParticipant>> {
+        return tripDao.getActiveParticipantsByTripId(tripId)
     }
 
     suspend fun saveExpenseWithParticipants(

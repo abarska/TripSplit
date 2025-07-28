@@ -45,8 +45,14 @@ interface TripDao {
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_CURRENCIES_TABLE} WHERE tripId = :tripId")
     fun getCurrenciesByTripId(tripId: Long): Flow<List<TripCurrency>>
 
+    @Query("SELECT * FROM ${TripSplitConstants.TRIP_CURRENCIES_TABLE} WHERE tripId = :tripId AND status = 'ACTIVE'")
+    fun getActiveCurrenciesByTripId(tripId: Long): Flow<List<TripCurrency>>
+
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_PARTICIPANTS_TABLE} WHERE tripId = :tripId")
     fun getParticipantsByTripId(tripId: Long): Flow<List<TripParticipant>>
+
+    @Query("SELECT * FROM ${TripSplitConstants.TRIP_PARTICIPANTS_TABLE} WHERE tripId = :tripId AND status = 'ACTIVE'")
+    fun getActiveParticipantsByTripId(tripId: Long): Flow<List<TripParticipant>>
 
     @Transaction
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :tripId")

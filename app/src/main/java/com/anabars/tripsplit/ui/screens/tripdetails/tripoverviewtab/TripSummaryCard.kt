@@ -35,12 +35,12 @@ fun TripSummaryCard(tripDetails: TripDetails?, modifier: Modifier = Modifier) {
                     textAlign = TextAlign.Center
                 )
                 TsInfoText(
-                    text = "${stringResource(R.string.participants)}: ${tripDetails.participants.joinToString { it.name }}",
+                    text = "${stringResource(R.string.participants)}: ${tripDetails.activeParticipants.joinToString { it.name }}",
                     fontSize = TsFontSize.MEDIUM,
                     textAlign = TextAlign.Center
                 )
                 TsInfoText(
-                    text = "${stringResource(R.string.currencies)}: ${tripDetails.currencies.joinToString { it.code }}",
+                    text = "${stringResource(R.string.currencies)}: ${tripDetails.activeCurrencies.joinToString { it.code }}",
                     fontSize = TsFontSize.MEDIUM,
                     textAlign = TextAlign.Center
                 )

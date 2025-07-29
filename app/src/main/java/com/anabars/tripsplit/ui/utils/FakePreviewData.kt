@@ -4,6 +4,7 @@ import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.data.room.entity.TripSettlement
 import com.anabars.tripsplit.data.room.model.TripDetails
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
@@ -89,3 +90,13 @@ fun getFakeExpenseCategorizationResultInsufficientData() =
 
 fun getFakeExpenseCategorizationResultSuccess() =
     ExpenseCategorizationResult.Success(getFakePieChartData())
+
+fun getFakeSettlement() = TripSettlement(
+    id = 1L,
+    tripId = 2L,
+    fromUserId = 1L,
+    toUserId = 2L,
+    amount = 30.00,
+    currency = "EUR",
+    timestamp = System.currentTimeMillis()
+)

@@ -33,6 +33,7 @@
     <string name="expenses_tab_content_description">Trip Expenses</string>
     <string name="settlements_tab_content_description">Trip Settlements</string>
     <string name="expense_category_icon">Expense Category Icon</string>
+    <string name="settlement_icon">Settlement Icon</string>
     <string name="expand_card_icon">Expand Card</string>
     <string name="collapse_card_icon">Collapse Card</string>
     <string name="add_item">Add item</string>
@@ -95,6 +96,9 @@
     <string name="loading_trip_details">Loading Trip Details</string>
     <string name="expense_paid_by">Paid by:</string>
     <string name="expense_paid_for">Paid for:</string>
+    <string name="settlement">Settlement</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
 
     // used in expense categories
     <string name="expense_category_transportation">Transportation</string>

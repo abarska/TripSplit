@@ -39,6 +39,11 @@ fun getFakeAmountCurrencyUiState() = AddExpenseAmountCurrencyState(
     tripCurrencies = getFakeTripCurrencies()
 )
 
+fun getFakeAmountCurrencyUiStateWithError() = AddExpenseAmountCurrencyState(
+    tripCurrencies = getFakeTripCurrencies(),
+    isError = true
+)
+
 fun getFakePayerParticipantsState() = AddExpensePayerParticipantsState(
     tripParticipants = getFakeTripParticipants(),
     selectedParticipants = getFakeTripParticipants()
@@ -58,6 +63,13 @@ fun getFakeAddExpensePayerParticipantsState() = AddExpensePayerParticipantsState
     tripParticipants = getFakeTripParticipants(),
     expensePayerId = 1,
     selectedParticipants = getFakeTripParticipants().toSet()
+)
+
+fun getFakeAddExpensePayerParticipantsStateWithError() = AddExpensePayerParticipantsState(
+    tripParticipants = getFakeTripParticipants(),
+    expensePayerId = 1,
+    selectedParticipants = getFakeTripParticipants().toSet(),
+    isError = true
 )
 
 fun getFakePieChartData(): MutableMap<ExpenseCategory, Double> {

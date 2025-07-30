@@ -25,7 +25,6 @@ import java.time.LocalDate
 
 @Composable
 fun AddExpenseLandscapeContent(
-    addExpenseErrorRes: Int,
     dateCategoryState: AddExpenseDateCategoryState,
     amountCurrencyState: AddExpenseAmountCurrencyState,
     payerParticipantsState: AddExpensePayerParticipantsState,
@@ -55,7 +54,6 @@ fun AddExpenseLandscapeContent(
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
             ExpenseAmountAndCurrencyCard(
-                addExpenseErrorRes = addExpenseErrorRes,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
@@ -64,7 +62,6 @@ fun AddExpenseLandscapeContent(
                 onCurrencySelected = onCurrencySelected
             )
             ExpensePaidByAndPaidForCard(
-                addExpenseErrorRes = addExpenseErrorRes,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
@@ -82,7 +79,6 @@ fun AddExpenseLandscapeContent(
 @Composable
 private fun AddExpenseLandscapeContentPreview() {
     AddExpenseLandscapeContent(
-        addExpenseErrorRes = 0,
         dateCategoryState = AddExpenseDateCategoryState(),
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         payerParticipantsState = getFakePayerParticipantsState(),

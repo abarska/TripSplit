@@ -12,10 +12,13 @@ import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
 import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
+import com.anabars.tripsplit.ui.model.AddExpenseUiEffect
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -44,11 +47,8 @@ class AddExpenseViewModel @Inject constructor(
     val payerParticipantsState: StateFlow<AddExpensePayerParticipantsState> =
         _payerParticipantsState.asStateFlow()
 
-    private val _addExpenseErrorRes = MutableStateFlow(0)
-    val addExpenseErrorRes = _addExpenseErrorRes.asStateFlow()
-
-    private val _shouldNavigateBack = MutableStateFlow(false)
-    val shouldNavigateBack = _shouldNavigateBack.asStateFlow()
+    private val _uiEffect = MutableSharedFlow<AddExpenseUiEffect>()
+    val uiEffect = _uiEffect.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -90,7 +90,9 @@ class AddExpenseViewModel @Inject constructor(
             is AddExpenseEvent.PayerSelected -> updatePayerId(event.id)
             is AddExpenseEvent.ParticipantsSelected -> updateSelectedParticipants(event.participants)
             is AddExpenseEvent.SaveExpense -> saveExpense()
-            is AddExpenseEvent.OnBackPressed -> _shouldNavigateBack.value = true
+            is AddExpenseEvent.OnBackPressed -> viewModelScope.launch {
+                _uiEffect.emit(AddExpenseUiEffect.NavigateBack)
+            }
         }
     }
 
@@ -101,9 +103,8 @@ class AddExpenseViewModel @Inject constructor(
         _dateCategoryState.update { it.copy(selectedCategory = cat) }
 
     private fun updateExpenseAmount(amount: String) {
-        _amountCurrencyState.update { it.copy(expenseAmount = amount) }
-        if (_addExpenseErrorRes.value == R.string.error_amount_invalid) {
-            _addExpenseErrorRes.value = 0
+        _amountCurrencyState.update {
+            it.copy(expenseAmount = amount, isError = false)
         }
     }
 
@@ -114,9 +115,8 @@ class AddExpenseViewModel @Inject constructor(
         _payerParticipantsState.update { it.copy(expensePayerId = id) }
 
     private fun updateSelectedParticipants(participants: Set<TripParticipant>) {
-        _payerParticipantsState.update { it.copy(selectedParticipants = participants) }
-        if (_addExpenseErrorRes.value == R.string.error_participants_not_selected) {
-            _addExpenseErrorRes.value = 0
+        _payerParticipantsState.update {
+            it.copy(selectedParticipants = participants, isError = false)
         }
     }
 
@@ -132,8 +132,9 @@ class AddExpenseViewModel @Inject constructor(
             )
             val participants = _payerParticipantsState.value.selectedParticipants
             tripExpensesRepository.saveExpenseWithParticipants(expense, participants)
-
-            _shouldNavigateBack.value = true
+            viewModelScope.launch {
+                _uiEffect.emit(AddExpenseUiEffect.NavigateBack)
+            }
         }
     }
 
@@ -141,11 +142,35 @@ class AddExpenseViewModel @Inject constructor(
         val amount = _amountCurrencyState.value.expenseAmount.toDoubleOrNull()
         val wrongAmount = amount == null || amount <= 0.0
         val participantsMissingError = _payerParticipantsState.value.selectedParticipants.isEmpty()
-        _addExpenseErrorRes.value = when {
-            wrongAmount -> R.string.error_amount_invalid
-            participantsMissingError -> R.string.error_participants_not_selected
-            else -> 0
+        if (wrongAmount || participantsMissingError) {
+            showError(
+                wrongAmount = wrongAmount,
+                participantsMissingError = participantsMissingError
+            )
+            highlightCardWithError(
+                wrongAmount = wrongAmount,
+                participantsMissingError = participantsMissingError
+            )
         }
         return !wrongAmount && !participantsMissingError
+    }
+
+    private fun highlightCardWithError(wrongAmount: Boolean, participantsMissingError: Boolean) {
+        if (wrongAmount)
+            _amountCurrencyState.update { it.copy(isError = true) }
+        if (participantsMissingError)
+            _payerParticipantsState.update { it.copy(isError = true) }
+    }
+
+    private fun showError(wrongAmount: Boolean, participantsMissingError: Boolean) {
+        if (wrongAmount) {
+            viewModelScope.launch {
+                _uiEffect.emit(AddExpenseUiEffect.ShowSnackBar(R.string.error_amount_invalid))
+            }
+        } else if (participantsMissingError) {
+            viewModelScope.launch {
+                _uiEffect.emit(AddExpenseUiEffect.ShowSnackBar(R.string.error_participants_not_selected))
+            }
+        }
     }
 }

@@ -8,15 +8,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.utils.getFakeAddExpensePayerParticipantsState
+import com.anabars.tripsplit.ui.utils.getFakeAddExpensePayerParticipantsStateWithError
 
 @Composable
 fun ExpensePaidByAndPaidForCard(
-    addExpenseErrorRes: Int,
     payerParticipantsState: AddExpensePayerParticipantsState,
     onPayerSelected: (Long) -> Unit,
     onSelectionChanged: (Set<TripParticipant>) -> Unit,
@@ -24,7 +23,7 @@ fun ExpensePaidByAndPaidForCard(
 ) {
     TsContentCard(
         modifier = modifier,
-        isError = addExpenseErrorRes == R.string.error_participants_not_selected
+        isError = payerParticipantsState.isError
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -53,7 +52,6 @@ fun ExpensePaidByAndPaidForCard(
 @Composable
 private fun ExpensePaidByAndPaidForCardPreview() {
     ExpensePaidByAndPaidForCard(
-        addExpenseErrorRes = 0,
         payerParticipantsState = getFakeAddExpensePayerParticipantsState(),
         onPayerSelected = {},
         onSelectionChanged = {},
@@ -65,8 +63,7 @@ private fun ExpensePaidByAndPaidForCardPreview() {
 @Composable
 private fun ExpensePaidByAndPaidForCardPreviewWithError() {
     ExpensePaidByAndPaidForCard(
-        addExpenseErrorRes = R.string.error_participants_not_selected,
-        payerParticipantsState = getFakeAddExpensePayerParticipantsState(),
+        payerParticipantsState = getFakeAddExpensePayerParticipantsStateWithError(),
         onPayerSelected = {},
         onSelectionChanged = {},
         modifier = Modifier.fillMaxWidth()

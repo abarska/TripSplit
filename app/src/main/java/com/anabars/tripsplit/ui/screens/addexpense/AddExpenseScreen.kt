@@ -10,7 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -28,7 +27,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.AddExpenseEvent
+import com.anabars.tripsplit.ui.model.AddExpenseUiEffect
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddExpenseScreen(
@@ -43,8 +44,6 @@ fun AddExpenseScreen(
     val dateCategoryState by viewModel.dateCategoryState.collectAsState()
     val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
     val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
-    val addExpenseErrorRes by viewModel.addExpenseErrorRes.collectAsState()
-    val shouldNavigateBack by viewModel.shouldNavigateBack.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
 
     val screenTitle = stringResource(R.string.title_new_expense)
@@ -57,16 +56,16 @@ fun AddExpenseScreen(
         }
     }
 
-    LaunchedEffect(shouldNavigateBack) {
-        if (shouldNavigateBack) navController.popBackStack()
-    }
-
-    LaunchedEffect(addExpenseErrorRes) {
-        if (addExpenseErrorRes != 0) {
-            snackBarHostState.showSnackbar(
-                message = context.getString(addExpenseErrorRes),
-                duration = SnackbarDuration.Short
-            )
+    LaunchedEffect(Unit) {
+        viewModel.uiEffect.collectLatest { effect ->
+            when (effect) {
+                is AddExpenseUiEffect.NavigateBack -> {
+                    navController.popBackStack()
+                }
+                is AddExpenseUiEffect.ShowSnackBar -> {
+                    snackBarHostState.showSnackbar(context.getString(effect.resId))
+                }
+            }
         }
     }
 
@@ -99,7 +98,6 @@ fun AddExpenseScreen(
             .padding(16.dp)
         if (isPortrait) {
             AddExpensePortraitContent(
-                addExpenseErrorRes = addExpenseErrorRes,
                 dateCategoryState = dateCategoryState,
                 amountCurrencyState = amountCurrencyState,
                 payerParticipantsState = payerParticipantsState,
@@ -114,7 +112,6 @@ fun AddExpenseScreen(
             )
         } else {
             AddExpenseLandscapeContent(
-                addExpenseErrorRes = addExpenseErrorRes,
                 dateCategoryState = dateCategoryState,
                 amountCurrencyState = amountCurrencyState,
                 payerParticipantsState = payerParticipantsState,

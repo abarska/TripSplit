@@ -9,15 +9,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
+import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiStateWithError
 
 @Composable
 fun ExpenseAmountAndCurrencyCard(
-    addExpenseErrorRes: Int,
     amountCurrencyState: AddExpenseAmountCurrencyState,
     onExpenseAmountChanged: (String) -> Unit,
     onCurrencySelected: (String) -> Unit,
@@ -25,7 +24,7 @@ fun ExpenseAmountAndCurrencyCard(
 ) {
     TsContentCard(
         modifier = modifier,
-        isError = addExpenseErrorRes == R.string.error_amount_invalid
+        isError = amountCurrencyState.isError
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -51,7 +50,6 @@ fun ExpenseAmountAndCurrencyCard(
 @Composable
 private fun ExpenseAmountAndCurrencyCardPreview() {
     ExpenseAmountAndCurrencyCard(
-        addExpenseErrorRes = 0,
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         onExpenseAmountChanged = {},
         onCurrencySelected = {},
@@ -64,8 +62,7 @@ private fun ExpenseAmountAndCurrencyCardPreview() {
 @Composable
 private fun ExpenseAmountAndCurrencyCardPreviewWithError() {
     ExpenseAmountAndCurrencyCard(
-        addExpenseErrorRes = R.string.error_amount_invalid,
-        amountCurrencyState = getFakeAmountCurrencyUiState(),
+        amountCurrencyState = getFakeAmountCurrencyUiStateWithError(),
         onExpenseAmountChanged = {},
         onCurrencySelected = {},
         modifier = Modifier.fillMaxWidth()

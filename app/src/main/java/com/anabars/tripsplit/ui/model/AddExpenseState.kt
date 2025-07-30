@@ -13,13 +13,20 @@ data class AddExpenseAmountCurrencyState(
     val tripCurrencies: List<TripCurrency> = emptyList(),
     val expenseAmount: String = "",
     val expenseCurrencyCode: String = "",
+    val isError: Boolean = false
 )
 
 data class AddExpensePayerParticipantsState (
     val tripParticipants: List<TripParticipant> = emptyList(),
     val expensePayerId: Long = -1L,
-    val selectedParticipants: Set<TripParticipant> = emptySet()
+    val selectedParticipants: Set<TripParticipant> = emptySet(),
+    val isError: Boolean = false
 )
+
+sealed class AddExpenseUiEffect {
+    object NavigateBack : AddExpenseUiEffect()
+    data class ShowSnackBar(val resId: Int) : AddExpenseUiEffect()
+}
 
 sealed class AddExpenseEvent {
     data class DateSelected(val date: LocalDate) : AddExpenseEvent()

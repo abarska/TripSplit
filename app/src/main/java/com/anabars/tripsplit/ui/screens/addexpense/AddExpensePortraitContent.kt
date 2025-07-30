@@ -20,7 +20,6 @@ import java.time.LocalDate
 
 @Composable
 fun AddExpensePortraitContent(
-    addExpenseErrorRes: Int,
     dateCategoryState: AddExpenseDateCategoryState,
     amountCurrencyState: AddExpenseAmountCurrencyState,
     payerParticipantsState: AddExpensePayerParticipantsState,
@@ -46,14 +45,12 @@ fun AddExpensePortraitContent(
         )
 
         ExpenseAmountAndCurrencyCard(
-            addExpenseErrorRes = addExpenseErrorRes,
             amountCurrencyState = amountCurrencyState,
             onExpenseAmountChanged = onExpenseAmountChanged,
             onCurrencySelected = onCurrencySelected
         )
 
         ExpensePaidByAndPaidForCard(
-            addExpenseErrorRes = addExpenseErrorRes,
             payerParticipantsState = payerParticipantsState,
             onPayerSelected = onPayerSelected,
             onSelectionChanged = onParticipantsSelected
@@ -67,7 +64,6 @@ fun AddExpensePortraitContent(
 @Composable
 private fun AddExpensePortraitContentPreview() {
     AddExpensePortraitContent(
-        addExpenseErrorRes = 0,
         dateCategoryState = AddExpenseDateCategoryState(),
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         payerParticipantsState = getFakePayerParticipantsState(),

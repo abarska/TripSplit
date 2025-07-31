@@ -38,10 +38,14 @@ import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.validCurrencyCodesCached
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -73,12 +77,10 @@ class AddTripViewModel @Inject constructor(
     private val _currenciesUiState = MutableStateFlow(AddTripCurrenciesUiState())
     val currenciesUiState: StateFlow<AddTripCurrenciesUiState> = _currenciesUiState.asStateFlow()
 
-    private val _shouldNavigateBack = MutableStateFlow(false)
-    val shouldNavigateBack: StateFlow<Boolean> = _shouldNavigateBack.asStateFlow()
+    private val _shouldNavigateBack = MutableSharedFlow<Boolean>()
+    val shouldNavigateBack = _shouldNavigateBack.asSharedFlow()
 
-    val screenTitle = if (tripId == null) R.string.title_new_trip else R.string.title_edit_trip
-    val isEditParticipant: Boolean
-        get() = _participantsUiState.value.updatedParticipantIndex >= 0
+    val isEditModeFlow: Flow<Boolean> = flowOf(tripId != null)
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -280,7 +282,9 @@ class AddTripViewModel @Inject constructor(
                 val tripNameTrimmed = _nameUiState.value.tripName.trim()
                 if (tripNameTrimmed.isNotEmpty()) {
                     saveTrip(tripName = tripNameTrimmed)
-                    _shouldNavigateBack.value = true
+                    viewModelScope.launch {
+                        _shouldNavigateBack.emit(true)
+                    }
                 } else {
                     updateActiveDialog(ActiveDialog.NONE)
                     updateTripNameError(true)
@@ -292,7 +296,9 @@ class AddTripViewModel @Inject constructor(
                 if (newTripHasUnsavedInput() || existingTripDataChanged())
                     updateActiveDialog(ActiveDialog.CONFIRMATION)
                 else
-                    _shouldNavigateBack.value = true
+                    viewModelScope.launch {
+                        _shouldNavigateBack.emit(true)
+                    }
             }
 
             is ParticipantInputSaved -> {
@@ -318,7 +324,7 @@ class AddTripViewModel @Inject constructor(
                 tripId = tripId ?: 0L
             )
 
-        if (isEditParticipant) {
+        if (_participantsUiState.value.isEditParticipant) {
             updateParticipant(_participantsUiState.value.updatedParticipantIndex, participant)
         } else {
             addParticipant(participant = participant, isDefault = false)

@@ -33,6 +33,8 @@ import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
 import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
 import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
 import com.anabars.tripsplit.viewmodels.AddTripViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 
 @Composable
 fun AddTripScreen(
@@ -47,26 +49,25 @@ fun AddTripScreen(
     val tripStatusUiState by viewModel.statusUiState.collectAsState()
     val participantsUiState by viewModel.participantsUiState.collectAsState()
     val currenciesUiState by viewModel.currenciesUiState.collectAsState()
-    val shouldNavigateBack by viewModel.shouldNavigateBack.collectAsState()
 
     BackHandler(enabled = true) {
         viewModel.onEvent(AddTripEvent.OnBackPressed)
     }
 
     val defaultParticipantName = stringResource(R.string.you)
-    val screenTitle = stringResource(viewModel.screenTitle)
+    val addScreenTitle = stringResource(R.string.title_new_trip)
+    val editScreenTitle = stringResource(R.string.title_edit_trip)
 
     LaunchedEffect(Unit) {
-        onTabTitleChange(screenTitle)
+        onTabTitleChange(if (viewModel.isEditModeFlow.first()) editScreenTitle else addScreenTitle)
         viewModel.onEvent(AddTripEvent.AddDefaultParticipant(defaultParticipantName))
+        viewModel.shouldNavigateBack.collectLatest { navigateBack ->
+            if (navigateBack) navController.popBackStack()
+        }
         setBackHandler {
             viewModel.onEvent(AddTripEvent.OnBackPressed)
             true
         }
-    }
-
-    LaunchedEffect(shouldNavigateBack) {
-        if (shouldNavigateBack) navController.popBackStack()
     }
 
     DisposableEffect(Unit) {
@@ -91,9 +92,9 @@ fun AddTripScreen(
                 onMultiplicatorChange = { viewModel.onEvent(NewParticipantMultiplicatorChanged(it)) },
                 onConfirm = { viewModel.onEvent(AddTripEvent.ParticipantInputSaved) },
                 onDismiss = { viewModel.onEvent(DismissAddParticipantDialog) },
-                titleRes = if (viewModel.isEditParticipant) R.string.edit_participant else R.string.add_participant,
+                titleRes = if (participantsUiState.isEditParticipant) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
-                positiveTextRes = if (viewModel.isEditParticipant) R.string.save else R.string.add,
+                positiveTextRes = if (participantsUiState.isEditParticipant) R.string.save else R.string.add,
                 negativeTextRes = R.string.cancel
             )
         }

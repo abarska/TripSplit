@@ -18,8 +18,11 @@ data class AddTripParticipantsUiState(
     val tripParticipants: List<TripParticipant> = emptyList(),
     val newParticipantName: String = "",
     val newParticipantMultiplicator: Int = 1,
-    val updatedParticipantIndex: Int = -1,
-)
+    val updatedParticipantIndex: Int = -1
+) {
+    val isEditParticipant: Boolean
+        get() = updatedParticipantIndex >= 0
+}
 
 data class AddTripCurrenciesUiState(
     val availableCurrencies: List<String> = emptyList(),

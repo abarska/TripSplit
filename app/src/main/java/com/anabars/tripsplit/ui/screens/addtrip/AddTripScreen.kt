@@ -18,20 +18,7 @@ import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
 import com.anabars.tripsplit.ui.dialogs.TsUserInputDialog
-import com.anabars.tripsplit.ui.model.AddTripEvent
-import com.anabars.tripsplit.ui.model.AddTripEvent.AddCurrencyClicked
-import com.anabars.tripsplit.ui.model.AddTripEvent.AddParticipantClicked
-import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyAdded
-import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyDeleted
-import com.anabars.tripsplit.ui.model.AddTripEvent.DismissAddParticipantDialog
-import com.anabars.tripsplit.ui.model.AddTripEvent.DismissCurrencyDialog
-import com.anabars.tripsplit.ui.model.AddTripEvent.DuplicateNameDialogConfirmed
-import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantMultiplicatorChanged
-import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantNameChanged
-import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantDeleted
-import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
-import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
-import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.*
 import com.anabars.tripsplit.viewmodels.AddTripViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -51,7 +38,7 @@ fun AddTripScreen(
     val currenciesUiState by viewModel.currenciesUiState.collectAsState()
 
     BackHandler(enabled = true) {
-        viewModel.onEvent(AddTripEvent.OnBackPressed)
+        viewModel.onIntent(OnBackPressed)
     }
 
     val defaultParticipantName = stringResource(R.string.you)
@@ -60,12 +47,12 @@ fun AddTripScreen(
 
     LaunchedEffect(Unit) {
         onTabTitleChange(if (viewModel.isEditModeFlow.first()) editScreenTitle else addScreenTitle)
-        viewModel.onEvent(AddTripEvent.AddDefaultParticipant(defaultParticipantName))
+        viewModel.onIntent(AddDefaultParticipant(defaultParticipantName))
         viewModel.shouldNavigateBack.collectLatest { navigateBack ->
             if (navigateBack) navController.popBackStack()
         }
         setBackHandler {
-            viewModel.onEvent(AddTripEvent.OnBackPressed)
+            viewModel.onIntent(OnBackPressed)
             true
         }
     }
@@ -80,18 +67,18 @@ fun AddTripScreen(
             TsCurrencyPicker(
                 currencies = currenciesUiState.availableCurrencies,
                 expanded = expanded,
-                onCurrencySelected = { viewModel.onEvent(CurrencyAdded(it)) },
-                onDismissAddCurrencyDialog = { viewModel.onEvent(DismissCurrencyDialog) }
+                onCurrencySelected = { viewModel.onIntent(CurrencyAdded(it)) },
+                onDismissAddCurrencyDialog = { viewModel.onIntent(DismissCurrencyDialog) }
             )
         }
 
         ActiveDialog.USER_INPUT -> {
             TsUserInputDialog(
                 tripParticipantsUiState = participantsUiState,
-                onInputChange = { viewModel.onEvent(NewParticipantNameChanged(it)) },
-                onMultiplicatorChange = { viewModel.onEvent(NewParticipantMultiplicatorChanged(it)) },
-                onConfirm = { viewModel.onEvent(AddTripEvent.ParticipantInputSaved) },
-                onDismiss = { viewModel.onEvent(DismissAddParticipantDialog) },
+                onInputChange = { viewModel.onIntent(NewParticipantNameChanged(it)) },
+                onMultiplicatorChange = { viewModel.onIntent(NewParticipantMultiplicatorChanged(it)) },
+                onConfirm = { viewModel.onIntent(ParticipantInputSaved) },
+                onDismiss = { viewModel.onIntent(DismissAddParticipantDialog) },
                 titleRes = if (participantsUiState.isEditParticipant) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
                 positiveTextRes = if (participantsUiState.isEditParticipant) R.string.save else R.string.add,
@@ -102,7 +89,7 @@ fun AddTripScreen(
         ActiveDialog.CONFIRMATION -> {
             TsConfirmationDialog(
                 onDismiss = { navController.popBackStack() },
-                onConfirm = { viewModel.onEvent(SaveTripClicked) },
+                onConfirm = { viewModel.onIntent(SaveTripClicked) },
                 titleRes = R.string.save_changes_dialog_title,
                 questionRes = R.string.save_changes_dialog_question,
                 positiveTextRes = R.string.save,
@@ -112,7 +99,7 @@ fun AddTripScreen(
 
         ActiveDialog.WARNING -> {
             TsConfirmationDialog(
-                onConfirm = { viewModel.onEvent(DuplicateNameDialogConfirmed) },
+                onConfirm = { viewModel.onIntent(DuplicateNameDialogConfirmed) },
                 titleRes = R.string.duplicate_name_dialog_title,
                 questionRes = R.string.duplicate_name_dialog_warning,
                 positiveTextRes = android.R.string.ok,
@@ -128,14 +115,14 @@ fun AddTripScreen(
                     tripStatusUiState = tripStatusUiState,
                     tripParticipants = participantsUiState.tripParticipants,
                     tripCurrencies = currenciesUiState.tripCurrencyCodes,
-                    onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
-                    onTripStatusChanged = { viewModel.onEvent(AddTripEvent.TripStatusChanged(it)) },
-                    onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
-                    onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
-                    onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },
-                    onAddCurrencyButtonClick = { viewModel.onEvent(AddCurrencyClicked) },
-                    onDeleteCurrency = { viewModel.onEvent(CurrencyDeleted(it)) },
-                    onSaveTrip = { viewModel.onEvent(SaveTripClicked) }
+                    onTripNameChanged = { viewModel.onIntent(TripNameChanged(it)) },
+                    onTripStatusChanged = { viewModel.onIntent(TripStatusChanged(it)) },
+                    onAddParticipantButtonClick = { viewModel.onIntent(AddParticipantClicked) },
+                    onEditParticipantButtonClick = { viewModel.onIntent(ParticipantEditRequested(it)) },
+                    onDeleteParticipant = { viewModel.onIntent(ParticipantDeleted(it)) },
+                    onAddCurrencyButtonClick = { viewModel.onIntent(AddCurrencyClicked) },
+                    onDeleteCurrency = { viewModel.onIntent(CurrencyDeleted(it)) },
+                    onSaveTrip = { viewModel.onIntent(SaveTripClicked) }
                 )
             else
                 AddTripLandscapeContent(
@@ -143,14 +130,14 @@ fun AddTripScreen(
                     tripStatusUiState = tripStatusUiState,
                     tripParticipants = participantsUiState.tripParticipants,
                     tripCurrencies = currenciesUiState.tripCurrencyCodes,
-                    onTripNameChanged = { viewModel.onEvent(TripNameChanged(it)) },
-                    onTripStatusChanged = { viewModel.onEvent(AddTripEvent.TripStatusChanged(it)) },
-                    onAddParticipantButtonClick = { viewModel.onEvent(AddParticipantClicked) },
-                    onEditParticipantButtonClick = { viewModel.onEvent(ParticipantEditRequested(it)) },
-                    onDeleteParticipant = { viewModel.onEvent(ParticipantDeleted(it)) },
-                    onAddCurrencyButtonClick = { viewModel.onEvent(AddCurrencyClicked) },
-                    onDeleteCurrency = { viewModel.onEvent(CurrencyDeleted(it)) },
-                    onSaveTrip = { viewModel.onEvent(SaveTripClicked) }
+                    onTripNameChanged = { viewModel.onIntent(TripNameChanged(it)) },
+                    onTripStatusChanged = { viewModel.onIntent(TripStatusChanged(it)) },
+                    onAddParticipantButtonClick = { viewModel.onIntent(AddParticipantClicked) },
+                    onEditParticipantButtonClick = { viewModel.onIntent(ParticipantEditRequested(it)) },
+                    onDeleteParticipant = { viewModel.onIntent(ParticipantDeleted(it)) },
+                    onAddCurrencyButtonClick = { viewModel.onIntent(AddCurrencyClicked) },
+                    onDeleteCurrency = { viewModel.onIntent(CurrencyDeleted(it)) },
+                    onSaveTrip = { viewModel.onIntent(SaveTripClicked) }
                 )
         }
     }

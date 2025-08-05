@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.ui.model.AddExpenseUiEffect
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.*
 import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -51,7 +51,7 @@ fun AddExpenseScreen(
     LaunchedEffect(Unit) {
         onTabTitleChange(screenTitle)
         setBackHandler {
-            viewModel.onEvent(AddExpenseEvent.OnBackPressed)
+            viewModel.onIntent(OnBackPressed)
             true
         }
     }
@@ -74,7 +74,7 @@ fun AddExpenseScreen(
     }
 
     BackHandler(enabled = true) {
-        viewModel.onEvent(AddExpenseEvent.OnBackPressed)
+        viewModel.onIntent(OnBackPressed)
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -101,13 +101,13 @@ fun AddExpenseScreen(
                 dateCategoryState = dateCategoryState,
                 amountCurrencyState = amountCurrencyState,
                 payerParticipantsState = payerParticipantsState,
-                onDateSelected = { viewModel.onEvent(AddExpenseEvent.DateSelected(it)) },
-                onCategoryChange = { viewModel.onEvent(AddExpenseEvent.CategoryChanged(it)) },
-                onExpenseAmountChanged = { viewModel.onEvent(AddExpenseEvent.AmountChanged(it)) },
-                onCurrencySelected = { viewModel.onEvent(AddExpenseEvent.CurrencySelected(it)) },
-                onPayerSelected = { viewModel.onEvent(AddExpenseEvent.PayerSelected(it)) },
-                onParticipantsSelected = { viewModel.onEvent(AddExpenseEvent.ParticipantsSelected(it)) },
-                onSaveExpense = { viewModel.onEvent(AddExpenseEvent.SaveExpense) },
+                onDateSelected = { viewModel.onIntent(DateSelected(it)) },
+                onCategoryChange = { viewModel.onIntent(CategoryChanged(it)) },
+                onExpenseAmountChanged = { viewModel.onIntent(AmountChanged(it)) },
+                onCurrencySelected = { viewModel.onIntent(CurrencySelected(it)) },
+                onPayerSelected = { viewModel.onIntent(PayerSelected(it)) },
+                onParticipantsSelected = { viewModel.onIntent(ParticipantsSelected(it)) },
+                onSaveExpense = { viewModel.onIntent(SaveExpense) },
                 modifier = modifier
             )
         } else {
@@ -115,13 +115,13 @@ fun AddExpenseScreen(
                 dateCategoryState = dateCategoryState,
                 amountCurrencyState = amountCurrencyState,
                 payerParticipantsState = payerParticipantsState,
-                onDateSelected = { viewModel.onEvent(AddExpenseEvent.DateSelected(it)) },
-                onCategoryChange = { viewModel.onEvent(AddExpenseEvent.CategoryChanged(it)) },
-                onExpenseAmountChanged = { viewModel.onEvent(AddExpenseEvent.AmountChanged(it)) },
-                onCurrencySelected = { viewModel.onEvent(AddExpenseEvent.CurrencySelected(it)) },
-                onPayerSelected = { viewModel.onEvent(AddExpenseEvent.PayerSelected(it)) },
-                onParticipantsSelected = { viewModel.onEvent(AddExpenseEvent.ParticipantsSelected(it)) },
-                onSaveExpense = { viewModel.onEvent(AddExpenseEvent.SaveExpense) },
+                onDateSelected = { viewModel.onIntent(DateSelected(it)) },
+                onCategoryChange = { viewModel.onIntent(CategoryChanged(it)) },
+                onExpenseAmountChanged = { viewModel.onIntent(AmountChanged(it)) },
+                onCurrencySelected = { viewModel.onIntent(CurrencySelected(it)) },
+                onPayerSelected = { viewModel.onIntent(PayerSelected(it)) },
+                onParticipantsSelected = { viewModel.onIntent(ParticipantsSelected(it)) },
+                onSaveExpense = { viewModel.onIntent(SaveExpense) },
                 modifier = modifier
             )
         }

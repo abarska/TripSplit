@@ -10,10 +10,11 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripExpensesRepository
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
-import com.anabars.tripsplit.ui.model.AddExpenseEvent
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddExpenseUiEffect
 import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,7 +54,8 @@ class AddExpenseViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                val participants = tripExpensesRepository.getActiveParticipantsByTripId(tripId).first()
+                val participants =
+                    tripExpensesRepository.getActiveParticipantsByTripId(tripId).first()
                 val currencies = tripExpensesRepository.getActiveCurrenciesByTripId(tripId).first()
 
                 val initialSelectedParticipants = participants.toSet()
@@ -81,16 +83,16 @@ class AddExpenseViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: AddExpenseEvent) {
-        when (event) {
-            is AddExpenseEvent.DateSelected -> updateDate(event.date)
-            is AddExpenseEvent.CategoryChanged -> updateCategory(event.category)
-            is AddExpenseEvent.AmountChanged -> updateExpenseAmount(event.amount)
-            is AddExpenseEvent.CurrencySelected -> updateCurrencyCode(event.code)
-            is AddExpenseEvent.PayerSelected -> updatePayerId(event.id)
-            is AddExpenseEvent.ParticipantsSelected -> updateSelectedParticipants(event.participants)
-            is AddExpenseEvent.SaveExpense -> saveExpense()
-            is AddExpenseEvent.OnBackPressed -> viewModelScope.launch {
+    fun onIntent(intent: AddExpenseIntent) {
+        when (intent) {
+            is DateSelected -> updateDate(intent.date)
+            is CategoryChanged -> updateCategory(intent.category)
+            is AmountChanged -> updateExpenseAmount(intent.amount)
+            is CurrencySelected -> updateCurrencyCode(intent.code)
+            is PayerSelected -> updatePayerId(intent.id)
+            is ParticipantsSelected -> updateSelectedParticipants(intent.participants)
+            is SaveExpense -> saveExpense()
+            is OnBackPressed -> viewModelScope.launch {
                 _uiEffect.emit(AddExpenseUiEffect.NavigateBack)
             }
         }

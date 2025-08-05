@@ -24,17 +24,6 @@ data class AddExpensePayerParticipantsState (
 )
 
 sealed class AddExpenseUiEffect {
-    object NavigateBack : AddExpenseUiEffect()
+    data object NavigateBack : AddExpenseUiEffect()
     data class ShowSnackBar(val resId: Int) : AddExpenseUiEffect()
-}
-
-sealed class AddExpenseEvent {
-    data class DateSelected(val date: LocalDate) : AddExpenseEvent()
-    data class CategoryChanged(val category: ExpenseCategory) : AddExpenseEvent()
-    data class AmountChanged(val amount: String) : AddExpenseEvent()
-    data class CurrencySelected(val code: String) : AddExpenseEvent()
-    data class PayerSelected(val id: Long) : AddExpenseEvent()
-    data class ParticipantsSelected(val participants: Set<TripParticipant>) : AddExpenseEvent()
-    object SaveExpense : AddExpenseEvent()
-    object OnBackPressed : AddExpenseEvent()
 }

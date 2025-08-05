@@ -14,26 +14,10 @@ import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.model.AddTripCurrenciesUiState
 import com.anabars.tripsplit.ui.model.AddTripDialogState
-import com.anabars.tripsplit.ui.model.AddTripEvent
-import com.anabars.tripsplit.ui.model.AddTripEvent.AddCurrencyClicked
-import com.anabars.tripsplit.ui.model.AddTripEvent.AddDefaultParticipant
-import com.anabars.tripsplit.ui.model.AddTripEvent.AddParticipantClicked
-import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyAdded
-import com.anabars.tripsplit.ui.model.AddTripEvent.CurrencyDeleted
-import com.anabars.tripsplit.ui.model.AddTripEvent.DismissAddParticipantDialog
-import com.anabars.tripsplit.ui.model.AddTripEvent.DismissCurrencyDialog
-import com.anabars.tripsplit.ui.model.AddTripEvent.DuplicateNameDialogConfirmed
-import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantMultiplicatorChanged
-import com.anabars.tripsplit.ui.model.AddTripEvent.NewParticipantNameChanged
-import com.anabars.tripsplit.ui.model.AddTripEvent.OnBackPressed
-import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantDeleted
-import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantEditRequested
-import com.anabars.tripsplit.ui.model.AddTripEvent.ParticipantInputSaved
-import com.anabars.tripsplit.ui.model.AddTripEvent.SaveTripClicked
-import com.anabars.tripsplit.ui.model.AddTripEvent.TripNameChanged
-import com.anabars.tripsplit.ui.model.AddTripEvent.TripStatusChanged
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.*
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.validCurrencyCodesCached
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -218,44 +202,44 @@ class AddTripViewModel @Inject constructor(
         _dialogUiState.value = _dialogUiState.value.copy(activeDialog = dialog)
     }
 
-    fun onEvent(event: AddTripEvent) {
-        when (event) {
+    fun onIntent(intent: AddTripIntent) {
+        when (intent) {
             is TripNameChanged -> {
-                updateTripName(event.name)
+                updateTripName(intent.name)
                 updateTripNameErrorMessage(0)
                 updateTripNameError(false)
             }
 
             is TripStatusChanged -> {
-                updateTripStatus(event.status)
+                updateTripStatus(intent.status)
             }
 
             is NewParticipantNameChanged -> {
-                updateNewParticipantName(event.name)
+                updateNewParticipantName(intent.name)
             }
 
             is NewParticipantMultiplicatorChanged -> {
-                updateNewParticipantMultiplicator(event.multiplicator)
+                updateNewParticipantMultiplicator(intent.multiplicator)
             }
 
             is ParticipantEditRequested -> {
-                updateNewParticipantName(event.participant.name)
-                updateNewParticipantMultiplicator(event.participant.multiplicator)
-                updateParticipantIndex(_participantsUiState.value.tripParticipants.indexOf(event.participant))
+                updateNewParticipantName(intent.participant.name)
+                updateNewParticipantMultiplicator(intent.participant.multiplicator)
+                updateParticipantIndex(_participantsUiState.value.tripParticipants.indexOf(intent.participant))
                 updateActiveDialog(ActiveDialog.USER_INPUT)
             }
 
             is ParticipantDeleted -> {
-                removeParticipant(event.participant)
+                removeParticipant(intent.participant)
             }
 
             is CurrencyAdded -> {
-                addCurrency(event.currency.take(3))
+                addCurrency(intent.currency.take(3))
                 updateActiveDialog(ActiveDialog.NONE)
             }
 
             is CurrencyDeleted -> {
-                removeCurrency(event.code)
+                removeCurrency(intent.code)
             }
 
             is AddCurrencyClicked -> {
@@ -307,7 +291,7 @@ class AddTripViewModel @Inject constructor(
 
             is AddDefaultParticipant -> {
                 addParticipant(
-                    participant = TripParticipant(name = event.name, multiplicator = 1),
+                    participant = TripParticipant(name = intent.name, multiplicator = 1),
                     isDefault = true
                 )
             }

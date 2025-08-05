@@ -62,8 +62,8 @@ fun tripDetailsTabs() = listOf(
     ),
     TsTab(
         icon = Icons.AutoMirrored.Outlined.CompareArrows,
-        titleRes = R.string.settlements_tab,
-        contentDescriptionRes = R.string.settlements_tab_content_description,
+        titleRes = R.string.payments_tab,
+        contentDescriptionRes = R.string.payments_tab_content_description,
     )
 )
 

@@ -21,18 +21,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.data.room.entity.TripSettlement
+import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.utils.TsFontSize
-import com.anabars.tripsplit.ui.utils.getFakeSettlement
+import com.anabars.tripsplit.ui.utils.getFakePayment
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 import com.anabars.tripsplit.ui.widgets.TsExpandCollapseToggle
 import com.anabars.tripsplit.utils.formatAmount
 
 @Composable
-fun TsSettlementItemRow(
-    settlement: TripSettlement,
+fun TsPaymentItemRow(
+    payment: TripPayment,
     fromParticipant: TripParticipant,
     toParticipant: TripParticipant,
     modifier: Modifier = Modifier,
@@ -46,7 +46,7 @@ fun TsSettlementItemRow(
     ) {
         Column(modifier = modifier.fillMaxWidth()) {
             VisiblePart(
-                settlement = settlement,
+                payment = payment,
                 fromParticipant = fromParticipant,
                 toParticipant = toParticipant,
                 isExpanded = isExpanded
@@ -60,7 +60,7 @@ fun TsSettlementItemRow(
 
 @Composable
 private fun VisiblePart(
-    settlement: TripSettlement,
+    payment: TripPayment,
     fromParticipant: TripParticipant,
     toParticipant: TripParticipant,
     isExpanded: Boolean,
@@ -76,7 +76,7 @@ private fun VisiblePart(
             modifier = Modifier.size(36.dp)
         )
         Column(modifier = Modifier.weight(1f)) {
-            TsInfoText(textRes = R.string.settlement)
+            TsInfoText(textRes = R.string.payment)
             TsInfoText(text = "${stringResource(R.string.from)} ${fromParticipant.name}")
             TsInfoText(text = "${stringResource(R.string.to)} ${toParticipant.name}")
         }
@@ -85,11 +85,11 @@ private fun VisiblePart(
             horizontalAlignment = Alignment.End
         ) {
             val formattedAmount = formatAmount(
-                settlement.amount,
+                payment.amount,
                 stringResource(R.string.currency_format)
             )
             TsInfoText(
-                text = "${settlement.currency} $formattedAmount",
+                text = "${payment.currency} $formattedAmount",
                 fontSize = TsFontSize.MEDIUM
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -100,9 +100,9 @@ private fun VisiblePart(
 
 @Preview(showBackground = true)
 @Composable
-private fun TsSettlementItemRowPreviewCollapsed() {
-    TsSettlementItemRow(
-        settlement = getFakeSettlement(),
+private fun TsPaymentItemRowPreviewCollapsed() {
+    TsPaymentItemRow(
+        payment = getFakePayment(),
         fromParticipant = getFakeTripParticipants()[0],
         toParticipant = getFakeTripParticipants()[1],
         modifier = Modifier.padding(8.dp),
@@ -114,9 +114,9 @@ private fun TsSettlementItemRowPreviewCollapsed() {
 
 @Preview(showBackground = true)
 @Composable
-private fun TsSettlementItemRowPreviewExpanded() {
-    TsSettlementItemRow(
-        settlement = getFakeSettlement(),
+private fun TsPaymentItemRowPreviewExpanded() {
+    TsPaymentItemRow(
+        payment = getFakePayment(),
         fromParticipant = getFakeTripParticipants()[1],
         toParticipant = getFakeTripParticipants()[0],
         modifier = Modifier.padding(8.dp),

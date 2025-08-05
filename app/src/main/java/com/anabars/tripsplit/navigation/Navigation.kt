@@ -13,6 +13,7 @@ import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
 import com.anabars.tripsplit.ui.screens.settings.SettingsScreen
 import com.anabars.tripsplit.ui.screens.tripdetails.TripDetailsScreen
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseScreen
+import com.anabars.tripsplit.ui.screens.addpayment.AddPaymentScreen
 import com.anabars.tripsplit.ui.screens.archive.ArchiveScreen
 import com.anabars.tripsplit.ui.screens.trips.TripsScreen
 import com.anabars.tripsplit.viewmodels.SharedViewModel
@@ -39,7 +40,7 @@ fun AppNavGraph(
         }
 
         composable(
-            route = "${AppScreens.ROUTE_ADD_TRIP}?tripId={tripId}",
+            route = "${AppScreens.ROUTE_ADD_TRIP}?tripId={tripId}", // optional parameter
             arguments = listOf(
                 navArgument("tripId") {
                     type = NavType.StringType // passing a string because long arg is not nullable
@@ -61,6 +62,18 @@ fun AppNavGraph(
         ) { backStackEntry ->
             backStackEntry.arguments?.getLong("tripId") ?: return@composable
             AddExpenseScreen(
+                navController = navController,
+                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
+            )
+        }
+
+        composable(
+            route = AppScreens.ROUTE_ADD_PAYMENT + "/{tripId}",
+            arguments = listOf(navArgument("tripId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            backStackEntry.arguments?.getLong("tripId") ?: return@composable
+            AddPaymentScreen(
                 navController = navController,
                 onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }

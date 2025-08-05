@@ -9,6 +9,7 @@ import com.anabars.tripsplit.data.room.dao.TripParticipantDao
 import com.anabars.tripsplit.data.room.dao.TripDao
 import com.anabars.tripsplit.data.room.dao.TripExpensesDao
 import com.anabars.tripsplit.data.room.TripSplitDatabase
+import com.anabars.tripsplit.data.room.dao.TripPaymentDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +45,10 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideTripExpensesDao(db: TripSplitDatabase): TripExpensesDao = db.tripExpensesDao()
+
+    @Provides
+    @Singleton
+    fun provideTripPaymentDao(db: TripSplitDatabase): TripPaymentDao = db.tripPaymentDao()
 
     @Provides
     @Singleton

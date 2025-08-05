@@ -51,7 +51,11 @@ fun TripDetailsScreen(
                     paddingValues = paddingValues
                 )
 
-                2 -> TripSettlementsTab(onTabTitleChange = onTabTitleChange)
+                2 -> TripPaymentTab(
+                    navController = navController,
+                    onTabTitleChange = onTabTitleChange,
+                    paddingValues = paddingValues
+                )
             }
         }
     }

@@ -8,12 +8,13 @@
     <string name="title_new_trip">New Trip</string>
     <string name="title_edit_trip">Edit Trip</string>
     <string name="title_new_expense">New Expense</string>
+    <string name="title_new_payment">New Payment</string>
     <string name="title_settings">Settings</string>
     <string name="title_archive">Archive</string>
     <string name="title_trip_details">Trip Details</string>
     <string name="title_tab_overview">Overview</string>
     <string name="title_tab_expenses">Expenses</string>
-    <string name="title_tab_settlements">Settlements</string>
+    <string name="title_tab_payments">Payments</string>
 
     <string name="time_format" translatable="false">EEE, d MMM hh:mm aaa</string>
 
@@ -22,8 +23,9 @@
     <string name="chip_action_button">Chip action button</string>
     <string name="floating_action_button">Floating action button</string>
     <string name="plus_button">Plus button</string>
-    <string name="add_a_new_trip">Add a new trip</string>
-    <string name="add_a_new_expense">Add a new expense</string>
+    <string name="add_a_new_trip">Add new trip</string>
+    <string name="add_a_new_expense">Add new expense</string>
+    <string name="add_a_new_payment">Add new payment</string>
     <string name="deactivate_item">Deactivate item</string>
     <string name="delete_item">Delete item</string>
     <string name="archive_item">Archive item</string>
@@ -31,9 +33,9 @@
     <string name="search_currency">Search currency</string>
     <string name="overview_tab_content_description">Trip Overview</string>
     <string name="expenses_tab_content_description">Trip Expenses</string>
-    <string name="settlements_tab_content_description">Trip Settlements</string>
+    <string name="payments_tab_content_description">Trip Payments</string>
     <string name="expense_category_icon">Expense Category Icon</string>
-    <string name="settlement_icon">Settlement Icon</string>
+    <string name="payment_icon">Payment Icon</string>
     <string name="expand_card_icon">Expand Card</string>
     <string name="collapse_card_icon">Collapse Card</string>
     <string name="add_item">Add item</string>
@@ -87,7 +89,7 @@
     // used for tabs in TripDetails
     <string name="overview_tab">Overview</string>
     <string name="expenses_tab">Expenses</string>
-    <string name="settlements_tab">Settlements</string>
+    <string name="payments_tab">Payments</string>
 
     <string name="you">You</string>
     <string name="participants">Participants</string>
@@ -96,7 +98,7 @@
     <string name="loading_trip_details">Loading Trip Details</string>
     <string name="expense_paid_by">Paid by:</string>
     <string name="expense_paid_for">Paid for:</string>
-    <string name="settlement">Settlement</string>
+    <string name="payment">Payment</string>
     <string name="from">From</string>
     <string name="to">To</string>
 

@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import com.anabars.tripsplit.common.TripSplitConstants
 
 @Entity(
-    tableName = TripSplitConstants.TRIP_SETTLEMENTS_TABLE,
+    tableName = TripSplitConstants.TRIP_PAYMENTS_TABLE,
     foreignKeys = [
         ForeignKey(
             entity = Trip::class,
@@ -31,7 +31,7 @@ import com.anabars.tripsplit.common.TripSplitConstants
     ],
     indices = [Index("tripId", "fromUserId", "toUserId")]
 )
-data class TripSettlement(
+data class TripPayment(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val tripId: Long,
     @ColumnInfo val fromUserId: Long,

@@ -10,10 +10,10 @@ import com.anabars.tripsplit.data.room.dao.TripCurrencyDao
 import com.anabars.tripsplit.data.room.dao.TripDao
 import com.anabars.tripsplit.data.room.dao.TripExpensesDao
 import com.anabars.tripsplit.data.room.dao.TripParticipantDao
-import com.anabars.tripsplit.data.room.dao.TripSettlementDao
+import com.anabars.tripsplit.data.room.dao.TripPaymentDao
 import com.anabars.tripsplit.data.room.entity.ExchangeRate
 import com.anabars.tripsplit.data.room.entity.ExpenseParticipantCrossRef
-import com.anabars.tripsplit.data.room.entity.TripSettlement
+import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripExpense
@@ -25,7 +25,7 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
         TripParticipant::class,
         TripCurrency::class,
         TripExpense::class,
-        TripSettlement::class,
+        TripPayment::class,
         ExchangeRate::class,
         ExpenseParticipantCrossRef::class],
     version = 1,
@@ -37,6 +37,6 @@ abstract class TripSplitDatabase : RoomDatabase() {
     abstract fun tripParticipantDao(): TripParticipantDao
     abstract fun tripCurrencyDao(): TripCurrencyDao
     abstract fun tripExpensesDao(): TripExpensesDao
-    abstract fun tripSettlementDao(): TripSettlementDao
+    abstract fun tripPaymentDao(): TripPaymentDao
     abstract fun exchangeRateDao(): ExchangeRateDao
 }

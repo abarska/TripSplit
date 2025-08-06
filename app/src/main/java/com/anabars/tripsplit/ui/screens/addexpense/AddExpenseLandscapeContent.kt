@@ -16,7 +16,6 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
-import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
@@ -25,7 +24,6 @@ import java.time.LocalDate
 
 @Composable
 fun AddExpenseLandscapeContent(
-    dateCategoryState: AddExpenseDateCategoryState,
     amountCurrencyState: AddExpenseAmountCurrencyState,
     payerParticipantsState: AddExpensePayerParticipantsState,
     onDateSelected: (LocalDate) -> Unit,
@@ -48,7 +46,6 @@ fun AddExpenseLandscapeContent(
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
             ExpenseAmountAndCurrencyCard(
-                dateCategoryState = dateCategoryState,
                 onDateSelected = onDateSelected,
                 onCategoryChanged = onCategoryChange,
                 amountCurrencyState = amountCurrencyState,
@@ -76,7 +73,6 @@ fun AddExpenseLandscapeContent(
 @Composable
 private fun AddExpenseLandscapeContentPreview() {
     AddExpenseLandscapeContent(
-        dateCategoryState = AddExpenseDateCategoryState(),
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         payerParticipantsState = getFakePayerParticipantsState(),
         onDateSelected = {},

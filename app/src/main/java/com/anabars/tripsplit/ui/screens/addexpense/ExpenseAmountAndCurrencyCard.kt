@@ -13,7 +13,6 @@ import com.anabars.tripsplit.ui.components.DateInputSection
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
-import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiStateWithError
@@ -21,7 +20,6 @@ import java.time.LocalDate
 
 @Composable
 fun ExpenseAmountAndCurrencyCard(
-    dateCategoryState: AddExpenseDateCategoryState,
     onDateSelected: (LocalDate) -> Unit,
     onCategoryChanged: (ExpenseCategory) -> Unit,
     amountCurrencyState: AddExpenseAmountCurrencyState,
@@ -40,13 +38,13 @@ fun ExpenseAmountAndCurrencyCard(
         ) {
             DateInputSection(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                selectedDate = dateCategoryState.selectedDate,
+                selectedDate = amountCurrencyState.selectedDate,
                 onDateSelected = onDateSelected,
             )
 
             ExpenseCategoriesRadioGroup(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                selectedCategory = dateCategoryState.selectedCategory,
+                selectedCategory = amountCurrencyState.selectedCategory,
                 onCategoryChanged = onCategoryChanged
             )
 
@@ -69,7 +67,6 @@ fun ExpenseAmountAndCurrencyCard(
 @Composable
 private fun ExpenseAmountAndCurrencyCardPreview() {
     ExpenseAmountAndCurrencyCard(
-        dateCategoryState = AddExpenseDateCategoryState(),
         onDateSelected = {},
         onCategoryChanged = {},
         amountCurrencyState = getFakeAmountCurrencyUiState(),
@@ -84,7 +81,6 @@ private fun ExpenseAmountAndCurrencyCardPreview() {
 @Composable
 private fun ExpenseAmountAndCurrencyCardPreviewWithError() {
     ExpenseAmountAndCurrencyCard(
-        dateCategoryState = AddExpenseDateCategoryState(),
         onDateSelected = {},
         onCategoryChanged = {},
         amountCurrencyState = getFakeAmountCurrencyUiStateWithError(),

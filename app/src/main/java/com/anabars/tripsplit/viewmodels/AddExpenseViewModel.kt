@@ -9,7 +9,6 @@ import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripExpensesRepository
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
-import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
 import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddExpenseUiEffect
 import com.anabars.tripsplit.ui.model.ExpenseCategory
@@ -36,9 +35,6 @@ class AddExpenseViewModel @Inject constructor(
 
     private val tripId: Long = savedStateHandle.get<Long>("tripId")
         ?: throw IllegalStateException("Trip ID is required for AddExpenseViewModel")
-
-    private val _dateCategoryState = MutableStateFlow(AddExpenseDateCategoryState())
-    val dateCategoryState: StateFlow<AddExpenseDateCategoryState> = _dateCategoryState.asStateFlow()
 
     private val _amountCurrencyState = MutableStateFlow(AddExpenseAmountCurrencyState())
     val amountCurrencyState: StateFlow<AddExpenseAmountCurrencyState> =
@@ -99,10 +95,10 @@ class AddExpenseViewModel @Inject constructor(
     }
 
     private fun updateDate(date: LocalDate) =
-        _dateCategoryState.update { it.copy(selectedDate = date) }
+        _amountCurrencyState.update { it.copy(selectedDate = date) }
 
     private fun updateCategory(cat: ExpenseCategory) =
-        _dateCategoryState.update { it.copy(selectedCategory = cat) }
+        _amountCurrencyState.update { it.copy(selectedCategory = cat) }
 
     private fun updateExpenseAmount(amount: String) {
         _amountCurrencyState.update {
@@ -127,7 +123,6 @@ class AddExpenseViewModel @Inject constructor(
             if (!validateExpense()) return@launch
 
             val expense = TripExpense.fromUiState(
-                dateCategoryState = _dateCategoryState.value,
                 amountCurrencyState = _amountCurrencyState.value,
                 payerParticipantsState = _payerParticipantsState.value,
                 tripId = tripId

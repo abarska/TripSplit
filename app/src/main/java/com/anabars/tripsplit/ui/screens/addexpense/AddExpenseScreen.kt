@@ -41,7 +41,6 @@ fun AddExpenseScreen(
     val context = LocalContext.current
     val viewModel: AddExpenseViewModel = hiltViewModel()
 
-    val dateCategoryState by viewModel.dateCategoryState.collectAsState()
     val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
     val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
@@ -98,7 +97,6 @@ fun AddExpenseScreen(
             .padding(16.dp)
         if (isPortrait) {
             AddExpensePortraitContent(
-                dateCategoryState = dateCategoryState,
                 amountCurrencyState = amountCurrencyState,
                 payerParticipantsState = payerParticipantsState,
                 onDateSelected = { viewModel.onIntent(DateSelected(it)) },
@@ -112,7 +110,6 @@ fun AddExpenseScreen(
             )
         } else {
             AddExpenseLandscapeContent(
-                dateCategoryState = dateCategoryState,
                 amountCurrencyState = amountCurrencyState,
                 payerParticipantsState = payerParticipantsState,
                 onDateSelected = { viewModel.onIntent(DateSelected(it)) },

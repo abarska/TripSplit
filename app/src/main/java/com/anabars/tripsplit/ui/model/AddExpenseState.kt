@@ -4,12 +4,9 @@ import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import java.time.LocalDate
 
-data class AddExpenseDateCategoryState(
-    val selectedDate: LocalDate = LocalDate.now(),
-    val selectedCategory: ExpenseCategory = ExpenseCategory.Miscellaneous
-)
-
 data class AddExpenseAmountCurrencyState(
+    val selectedDate: LocalDate = LocalDate.now(),
+    val selectedCategory: ExpenseCategory = ExpenseCategory.Miscellaneous,
     val tripCurrencies: List<TripCurrency> = emptyList(),
     val expenseAmount: String = "",
     val expenseCurrencyCode: String = "",

@@ -15,6 +15,8 @@ import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
+import com.anabars.tripsplit.ui.widgets.TsDateAmountCurrencyCard
+import com.anabars.tripsplit.ui.widgets.UseCase
 import java.time.LocalDate
 
 @Composable
@@ -36,7 +38,8 @@ fun AddExpensePortraitContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
 
-        ExpenseAmountAndCurrencyCard(
+        TsDateAmountCurrencyCard(
+            useCase = UseCase.EXPENSE,
             onDateSelected = onDateSelected,
             onCategoryChanged = onCategoryChange,
             amountCurrencyState = amountCurrencyState,

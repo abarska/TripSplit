@@ -43,23 +43,20 @@ fun AddExpenseLandscapeContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
 
-        ExpenseDateAndCategoryCard(
-            dateCategoryState = dateCategoryState,
-            onDateSelected = onDateSelected,
-            onCategoryChanged = onCategoryChange
-        )
-
         Row(
             modifier = Modifier.height(IntrinsicSize.Min),
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
             ExpenseAmountAndCurrencyCard(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
+                dateCategoryState = dateCategoryState,
+                onDateSelected = onDateSelected,
+                onCategoryChanged = onCategoryChange,
                 amountCurrencyState = amountCurrencyState,
                 onExpenseAmountChanged = onExpenseAmountChanged,
-                onCurrencySelected = onCurrencySelected
+                onCurrencySelected = onCurrencySelected,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
             )
             ExpensePaidByAndPaidForCard(
                 modifier = Modifier

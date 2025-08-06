@@ -9,14 +9,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.anabars.tripsplit.ui.components.DateInputSection
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
+import com.anabars.tripsplit.ui.model.AddExpenseDateCategoryState
+import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiStateWithError
+import java.time.LocalDate
 
 @Composable
 fun ExpenseAmountAndCurrencyCard(
+    dateCategoryState: AddExpenseDateCategoryState,
+    onDateSelected: (LocalDate) -> Unit,
+    onCategoryChanged: (ExpenseCategory) -> Unit,
     amountCurrencyState: AddExpenseAmountCurrencyState,
     onExpenseAmountChanged: (String) -> Unit,
     onCurrencySelected: (String) -> Unit,
@@ -31,6 +38,18 @@ fun ExpenseAmountAndCurrencyCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            DateInputSection(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                selectedDate = dateCategoryState.selectedDate,
+                onDateSelected = onDateSelected,
+            )
+
+            ExpenseCategoriesRadioGroup(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                selectedCategory = dateCategoryState.selectedCategory,
+                onCategoryChanged = onCategoryChanged
+            )
+
             TsExpenseAmountInput(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 value = amountCurrencyState.expenseAmount,
@@ -50,6 +69,9 @@ fun ExpenseAmountAndCurrencyCard(
 @Composable
 private fun ExpenseAmountAndCurrencyCardPreview() {
     ExpenseAmountAndCurrencyCard(
+        dateCategoryState = AddExpenseDateCategoryState(),
+        onDateSelected = {},
+        onCategoryChanged = {},
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         onExpenseAmountChanged = {},
         onCurrencySelected = {},
@@ -62,6 +84,9 @@ private fun ExpenseAmountAndCurrencyCardPreview() {
 @Composable
 private fun ExpenseAmountAndCurrencyCardPreviewWithError() {
     ExpenseAmountAndCurrencyCard(
+        dateCategoryState = AddExpenseDateCategoryState(),
+        onDateSelected = {},
+        onCategoryChanged = {},
         amountCurrencyState = getFakeAmountCurrencyUiStateWithError(),
         onExpenseAmountChanged = {},
         onCurrencySelected = {},

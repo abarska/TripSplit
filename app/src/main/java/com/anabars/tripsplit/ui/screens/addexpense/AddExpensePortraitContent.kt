@@ -38,13 +38,10 @@ fun AddExpensePortraitContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
 
-        ExpenseDateAndCategoryCard(
+        ExpenseAmountAndCurrencyCard(
             dateCategoryState = dateCategoryState,
             onDateSelected = onDateSelected,
-            onCategoryChanged = onCategoryChange
-        )
-
-        ExpenseAmountAndCurrencyCard(
+            onCategoryChanged = onCategoryChange,
             amountCurrencyState = amountCurrencyState,
             onExpenseAmountChanged = onExpenseAmountChanged,
             onCurrencySelected = onCurrencySelected

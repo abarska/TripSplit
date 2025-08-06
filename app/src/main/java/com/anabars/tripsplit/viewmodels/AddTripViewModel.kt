@@ -301,6 +301,9 @@ class AddTripViewModel @Inject constructor(
     private fun saveOrUpdateParticipant() {
         val nameTrimmed = _participantsUiState.value.newParticipantName.trim()
         if (nameTrimmed.isEmpty()) return
+        if (nameTrimmed != _participantsUiState.value.newParticipantName)
+            _participantsUiState.value =
+                _participantsUiState.value.copy(newParticipantName = nameTrimmed)
 
         val participant =
             TripParticipant.fromUiState(

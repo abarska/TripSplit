@@ -1,7 +1,6 @@
 package com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -28,7 +27,6 @@ import com.anabars.tripsplit.viewmodels.TripExpensesViewModel
 fun TripExpensesTab(
     navController: NavController,
     onTabTitleChange: (String) -> Unit,
-    paddingValues: PaddingValues,
     modifier: Modifier = Modifier
 ) {
 
@@ -45,11 +43,7 @@ fun TripExpensesTab(
         onTabTitleChange(screenTitle)
     }
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(bottom = paddingValues.calculateBottomPadding())
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
         when (groupedExpensesResult) {
             is GroupedExpensesResult.Loading ->
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

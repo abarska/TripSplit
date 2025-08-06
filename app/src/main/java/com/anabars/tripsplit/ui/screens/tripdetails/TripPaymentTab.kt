@@ -1,7 +1,6 @@
 package com.anabars.tripsplit.ui.screens.tripdetails
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -23,7 +22,6 @@ import com.anabars.tripsplit.viewmodels.TripPaymentViewModel
 fun TripPaymentTab(
     navController: NavController,
     onTabTitleChange: (String) -> Unit,
-    paddingValues: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     val viewModel: TripPaymentViewModel = hiltViewModel()
@@ -36,11 +34,7 @@ fun TripPaymentTab(
         onTabTitleChange(screenTitle)
     }
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(bottom = paddingValues.calculateBottomPadding())
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
         TsFab(
             modifier = Modifier
                 .padding(16.dp)

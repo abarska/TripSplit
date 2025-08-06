@@ -1,6 +1,10 @@
 package com.anabars.tripsplit.ui.widgets
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.CompareArrows
@@ -21,10 +25,10 @@ import com.anabars.tripsplit.ui.model.TsTab
 
 @Composable
 fun TsBottomTabs(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
-
+    val insets = WindowInsets.navigationBars.asPaddingValues()
     TabRow(
         selectedTabIndex = selectedTabIndex,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().padding(bottom = insets.calculateBottomPadding())
     ) {
         tripDetailsTabs().forEachIndexed { index, tab ->
             val isSelected = selectedTabIndex == index

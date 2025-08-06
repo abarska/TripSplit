@@ -2,6 +2,8 @@ package com.anabars.tripsplit.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -100,8 +102,10 @@ fun AppNavGraph(
             arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { backStackEntry ->
             backStackEntry.arguments?.getLong("id") ?: return@composable
+            val selectedTabIndex by sharedViewModel.selectedTabIndex.collectAsState()
             TripDetailsScreen(
                 navController = navController,
+                selectedTabIndex = selectedTabIndex,
                 onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
                 setToolbarActions = { sharedViewModel.setToolbarActions(it) }
             )

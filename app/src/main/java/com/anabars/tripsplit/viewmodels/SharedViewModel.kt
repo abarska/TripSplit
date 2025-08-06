@@ -28,6 +28,13 @@ class SharedViewModel @Inject constructor() : ViewModel() {
         _toolbarActions.value = actions
     }
 
+    private val _selectedTabIndex = MutableStateFlow(1)
+    val selectedTabIndex: StateFlow<Int> = _selectedTabIndex.asStateFlow()
+
+    fun setSelectedTabIndex(index: Int) {
+        _selectedTabIndex.value = index
+    }
+
     private val _tabTitle = MutableStateFlow<String?>(null)
     val tabTitle: StateFlow<String?> = _tabTitle.asStateFlow()
     fun setTabTitle(title: String?) {

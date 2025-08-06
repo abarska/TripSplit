@@ -14,6 +14,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -23,9 +24,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.anabars.tripsplit.navigation.AppNavGraph
-import com.anabars.tripsplit.ui.theme.AppTheme
 import com.anabars.tripsplit.ui.components.DrawerContent
 import com.anabars.tripsplit.ui.components.TsToolbar
+import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.ui.theme.AppTheme
+import com.anabars.tripsplit.ui.widgets.TsBottomTabs
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -45,13 +48,14 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun MainScreenWithDrawer() {
+
+    val sharedViewModel: SharedViewModel = hiltViewModel()
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-
-    val sharedViewModel: SharedViewModel = hiltViewModel()
+    val selectedTabIndex by sharedViewModel.selectedTabIndex.collectAsState()
 
     Scaffold(
         topBar = {
@@ -61,6 +65,11 @@ fun MainScreenWithDrawer() {
                 coroutineScope = coroutineScope,
                 drawerState = drawerState
             )
+        },
+        bottomBar = {
+            if (currentRoute?.startsWith(AppScreens.ROUTE_TRIP_DETAILS) == true) {
+                TsBottomTabs(selectedTabIndex) { sharedViewModel.setSelectedTabIndex(it) }
+            }
         }
     ) { paddingValues ->
         ModalNavigationDrawer(

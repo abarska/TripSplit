@@ -31,10 +31,8 @@ class TripsViewModel @Inject constructor(private val tripRepository: TripReposit
             tripRepository.getTripsWithStatuses(TripStatus.getActiveStatuses())
                 .distinctUntilChanged()
                 .collect { trips ->
-                    if (trips.isNotEmpty()) {
-                        cachedTrips = trips
-                        updateGroupedTrips(trips)
-                    }
+                    cachedTrips = trips
+                    updateGroupedTrips(trips)
                 }
         }
     }

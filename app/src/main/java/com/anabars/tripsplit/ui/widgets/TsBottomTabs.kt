@@ -6,10 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.CompareArrows
-import androidx.compose.material.icons.outlined.AttachMoney
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Tab
@@ -19,9 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsInfoText
-import com.anabars.tripsplit.ui.model.TsTab
+import com.anabars.tripsplit.ui.model.TripDetailsTabs
 
 @Composable
 fun TsBottomTabs(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
@@ -32,7 +27,7 @@ fun TsBottomTabs(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
             .fillMaxWidth()
             .padding(bottom = insets.calculateBottomPadding())
     ) {
-        tripDetailsTabs().forEachIndexed { index, tab ->
+        TripDetailsTabs.forEachIndexed { index, tab ->
             val isSelected = selectedTabIndex == index
             val contentColor =
                 LocalContentColor.current.copy(alpha = if (isSelected) 1.0f else 0.6f)
@@ -54,24 +49,6 @@ fun TsBottomTabs(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
         }
     }
 }
-
-fun tripDetailsTabs() = listOf(
-    TsTab(
-        icon = Icons.Outlined.Home,
-        titleRes = R.string.overview_tab,
-        contentDescriptionRes = R.string.overview_tab_content_description
-    ),
-    TsTab(
-        icon = Icons.Outlined.AttachMoney,
-        titleRes = R.string.expenses_tab,
-        contentDescriptionRes = R.string.expenses_tab_content_description
-    ),
-    TsTab(
-        icon = Icons.AutoMirrored.Outlined.CompareArrows,
-        titleRes = R.string.payments_tab,
-        contentDescriptionRes = R.string.payments_tab_content_description
-    )
-)
 
 @Preview(showBackground = true)
 @Composable

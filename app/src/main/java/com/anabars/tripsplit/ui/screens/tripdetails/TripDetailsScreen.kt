@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ActionButton
+import com.anabars.tripsplit.ui.model.TripDetailsTabs
 import com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab.TripExpensesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab.TripOverviewTab
-import com.anabars.tripsplit.ui.widgets.tripDetailsTabs
 
 @Composable
 fun TripDetailsScreen(
@@ -29,7 +29,7 @@ fun TripDetailsScreen(
 
     val pagerState = rememberPagerState(
         initialPage = selectedTabIndex,
-        pageCount = { tripDetailsTabs().size }
+        pageCount = { TripDetailsTabs.size }
     )
     val context = LocalContext.current
 
@@ -73,6 +73,6 @@ private fun updateToolbarForTab(context: Context, index: Int, onTabTitleChange: 
 
 private fun getTabTitle(index: Int, context: Context): String {
     val prefixRes = R.string.title_trip_details
-    val suffixRes = tripDetailsTabs()[index].titleRes
+    val suffixRes = TripDetailsTabs[index].titleRes
     return "${context.getString(prefixRes)}: ${context.getString(suffixRes)}"
 }

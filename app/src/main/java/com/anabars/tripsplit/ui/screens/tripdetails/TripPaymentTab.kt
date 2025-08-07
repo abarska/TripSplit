@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -21,18 +19,9 @@ import com.anabars.tripsplit.viewmodels.TripPaymentViewModel
 @Composable
 fun TripPaymentTab(
     navController: NavController,
-    onTabTitleChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: TripPaymentViewModel = hiltViewModel()
-    val screenTitle = String.format(
-        "%s: %s",
-        stringResource(R.string.title_trip_details),
-        stringResource(R.string.title_tab_payments)
-    )
-    LaunchedEffect(Unit) {
-        onTabTitleChange(screenTitle)
-    }
 
     Box(modifier = modifier.fillMaxSize()) {
         TsFab(

@@ -7,12 +7,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -26,22 +24,12 @@ import com.anabars.tripsplit.viewmodels.TripExpensesViewModel
 @Composable
 fun TripExpensesTab(
     navController: NavController,
-    onTabTitleChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val viewModel: TripExpensesViewModel = hiltViewModel()
     val groupedExpensesResult by viewModel.groupedExpensesResult.collectAsState()
     val tripParticipants by viewModel.tripParticipants.collectAsState()
-
-    val screenTitle = String.format(
-        "%s: %s",
-        stringResource(R.string.title_trip_details),
-        stringResource(R.string.title_tab_expenses)
-    )
-    LaunchedEffect(Unit) {
-        onTabTitleChange(screenTitle)
-    }
 
     Box(modifier = modifier.fillMaxSize()) {
         when (groupedExpensesResult) {

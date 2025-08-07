@@ -28,7 +28,9 @@ fun TsBottomTabs(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
     val insets = WindowInsets.navigationBars.asPaddingValues()
     TabRow(
         selectedTabIndex = selectedTabIndex,
-        modifier = Modifier.fillMaxWidth().padding(bottom = insets.calculateBottomPadding())
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = insets.calculateBottomPadding())
     ) {
         tripDetailsTabs().forEachIndexed { index, tab ->
             val isSelected = selectedTabIndex == index
@@ -57,17 +59,17 @@ fun tripDetailsTabs() = listOf(
     TsTab(
         icon = Icons.Outlined.Home,
         titleRes = R.string.overview_tab,
-        contentDescriptionRes = R.string.overview_tab_content_description,
+        contentDescriptionRes = R.string.overview_tab_content_description
     ),
     TsTab(
         icon = Icons.Outlined.AttachMoney,
         titleRes = R.string.expenses_tab,
-        contentDescriptionRes = R.string.expenses_tab_content_description,
+        contentDescriptionRes = R.string.expenses_tab_content_description
     ),
     TsTab(
         icon = Icons.AutoMirrored.Outlined.CompareArrows,
         titleRes = R.string.payments_tab,
-        contentDescriptionRes = R.string.payments_tab_content_description,
+        contentDescriptionRes = R.string.payments_tab_content_description
     )
 )
 

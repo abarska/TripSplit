@@ -106,6 +106,7 @@ fun AppNavGraph(
             TripDetailsScreen(
                 navController = navController,
                 selectedTabIndex = selectedTabIndex,
+                onTabChanged = { index -> sharedViewModel.setSelectedTabIndex(index) },
                 onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
                 setToolbarActions = { sharedViewModel.setToolbarActions(it) }
             )

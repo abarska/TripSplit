@@ -80,6 +80,7 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+    implementation(libs.androidx.foundation)
 
     // material icons
     implementation(libs.androidx.material.icons.extended)

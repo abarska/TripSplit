@@ -23,6 +23,7 @@ import com.anabars.tripsplit.ui.screens.addpayment.AddPaymentScreen
 import com.anabars.tripsplit.ui.screens.archive.ArchiveScreen
 import com.anabars.tripsplit.ui.screens.trips.TripsScreen
 import com.anabars.tripsplit.viewmodels.SharedViewModel
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent
 
 @Composable
 fun AppNavGraph(
@@ -36,11 +37,15 @@ fun AppNavGraph(
         modifier = modifier.fillMaxSize()
     ) {
 
+        val onTabTitleChange: (String) -> Unit = {
+            sharedViewModel.onEvent(SharedUiEvent.SetTabTitle(it))
+        }
+
         composable(route = AppScreens.ROUTE_TRIPS) {
             TripsScreen(
                 navController = navController,
-                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
-                setToolbarActions = { sharedViewModel.setToolbarActions(it) },
+                onTabTitleChange = onTabTitleChange,
+                setToolbarActions = { sharedViewModel.onEvent(SharedUiEvent.SetToolbarActions(it)) },
                 modifier = modifier
             )
         }
@@ -57,7 +62,7 @@ fun AppNavGraph(
         ) {
             AddTripScreen(
                 navController = navController,
-                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                onTabTitleChange = onTabTitleChange,
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }
@@ -69,7 +74,7 @@ fun AppNavGraph(
             backStackEntry.arguments?.getLong("tripId") ?: return@composable
             AddExpenseScreen(
                 navController = navController,
-                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                onTabTitleChange = onTabTitleChange,
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }
@@ -81,21 +86,21 @@ fun AppNavGraph(
             backStackEntry.arguments?.getLong("tripId") ?: return@composable
             AddPaymentScreen(
                 navController = navController,
-                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                onTabTitleChange = onTabTitleChange,
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }
 
         composable(route = AppScreens.ROUTE_SETTINGS) {
             SettingsScreen(
-                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                onTabTitleChange = onTabTitleChange,
                 modifier = modifier
             )
         }
 
         composable(route = AppScreens.ROUTE_ARCHIVE) {
             ArchiveScreen(
-                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                onTabTitleChange = onTabTitleChange,
                 navController = navController,
                 modifier = modifier
             )
@@ -109,23 +114,24 @@ fun AppNavGraph(
             val tripId = backStackEntry.arguments?.getLong("id")
             if (tripId == null) return@composable
 
-            val selectedTabIndex by sharedViewModel.selectedTabIndex.collectAsState()
+            val sharedUiState by sharedViewModel.uiState.collectAsState()
             val onTabActionsChange = { index: Int ->
-                sharedViewModel.setToolbarActions(
-                    if (index == 0) listOf(
-                        ActionButton.ToolbarActionButton(
-                            icon = Icons.Default.Edit,
-                            contentDescriptionRes = R.string.edit_item,
-                            onClick = { navController.navigate("${AppScreens.ROUTE_ADD_TRIP}?tripId=$tripId") }
-                        )
-                    ) else emptyList())
+                sharedViewModel.onEvent(
+                    SharedUiEvent.SetToolbarActions(
+                        if (index == 0) listOf(
+                            ActionButton.ToolbarActionButton(
+                                icon = Icons.Default.Edit,
+                                contentDescriptionRes = R.string.edit_item,
+                                onClick = { navController.navigate("${AppScreens.ROUTE_ADD_TRIP}?tripId=$tripId") }
+                            )
+                        ) else emptyList()))
             }
 
             TripDetailsScreen(
                 navController = navController,
-                selectedTabIndex = selectedTabIndex,
-                onTabChanged = { index -> sharedViewModel.setSelectedTabIndex(index) },
-                onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
+                selectedTabIndex = sharedUiState.selectedTabIndex,
+                onTabChanged = { sharedViewModel.onEvent(SharedUiEvent.SetTabIndex(it)) },
+                onTabTitleChange = onTabTitleChange,
                 onTabActionsChange = onTabActionsChange
             )
         }

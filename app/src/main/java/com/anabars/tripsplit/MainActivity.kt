@@ -55,7 +55,7 @@ fun MainScreenWithDrawer() {
     val coroutineScope = rememberCoroutineScope()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val selectedTabIndex by sharedViewModel.selectedTabIndex.collectAsState()
+    val sharedUiState by sharedViewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -68,7 +68,9 @@ fun MainScreenWithDrawer() {
         },
         bottomBar = {
             if (currentRoute?.startsWith(AppScreens.ROUTE_TRIP_DETAILS) == true) {
-                TsBottomTabs(selectedTabIndex) { sharedViewModel.setSelectedTabIndex(it) }
+                TsBottomTabs(sharedUiState.selectedTabIndex) {
+                    sharedViewModel.onEvent(SharedViewModel.SharedUiEvent.SetTabIndex(it))
+                }
             }
         }
     ) { paddingValues ->

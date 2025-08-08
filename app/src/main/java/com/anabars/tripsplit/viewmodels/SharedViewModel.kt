@@ -6,10 +6,40 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class SharedViewModel @Inject constructor() : ViewModel() {
+
+    data class SharedUiState(
+        val selectedTabIndex: Int = 1,
+        val toolbarActions: List<ActionButton.ToolbarActionButton> = emptyList(),
+        val tabTitle: String? = null,
+    )
+
+    sealed class SharedUiEvent {
+        data class SetTabIndex(val index: Int) : SharedUiEvent()
+        data class SetToolbarActions(val actions: List<ActionButton.ToolbarActionButton>) : SharedUiEvent()
+        data class SetTabTitle(val title: String?) : SharedUiEvent()
+    }
+
+    private val _uiState = MutableStateFlow(SharedUiState())
+    val uiState: StateFlow<SharedUiState> = _uiState.asStateFlow()
+
+    fun onEvent(event: SharedUiEvent) {
+        when (event) {
+            is SharedUiEvent.SetTabIndex -> {
+                _uiState.update { it.copy(selectedTabIndex = event.index) }
+            }
+            is SharedUiEvent.SetToolbarActions -> {
+                _uiState.update { it.copy(toolbarActions = event.actions) }
+            }
+            is SharedUiEvent.SetTabTitle -> {
+                _uiState.update { it.copy(tabTitle = event.title) }
+            }
+        }
+    }
 
     private var _backHandler: (() -> Boolean)? = null
 
@@ -19,25 +49,5 @@ class SharedViewModel @Inject constructor() : ViewModel() {
 
     fun handleBack(): Boolean {
         return _backHandler?.invoke() ?: false
-    }
-
-    private val _toolbarActions = MutableStateFlow<List<ActionButton.ToolbarActionButton>>(emptyList())
-    val toolbarActions: StateFlow<List<ActionButton.ToolbarActionButton>> = _toolbarActions.asStateFlow()
-
-    fun setToolbarActions(actions: List<ActionButton.ToolbarActionButton>) {
-        _toolbarActions.value = actions
-    }
-
-    private val _selectedTabIndex = MutableStateFlow(1)
-    val selectedTabIndex: StateFlow<Int> = _selectedTabIndex.asStateFlow()
-
-    fun setSelectedTabIndex(index: Int) {
-        _selectedTabIndex.value = index
-    }
-
-    private val _tabTitle = MutableStateFlow<String?>(null)
-    val tabTitle: StateFlow<String?> = _tabTitle.asStateFlow()
-    fun setTabTitle(title: String?) {
-        _tabTitle.value = title
     }
 }

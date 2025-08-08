@@ -1,12 +1,17 @@
 package com.anabars.tripsplit.viewmodels
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
-import com.anabars.tripsplit.ui.model.ActionButton
+import androidx.lifecycle.viewModelScope
+import com.anabars.tripsplit.ui.model.ActionButton.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,13 +19,13 @@ class SharedViewModel @Inject constructor() : ViewModel() {
 
     data class SharedUiState(
         val selectedTabIndex: Int = 1,
-        val toolbarActions: List<ActionButton.ToolbarActionButton> = emptyList(),
+        val toolbarActions: List<ToolbarActionButton> = emptyList(),
         val tabTitle: String? = null,
     )
 
     sealed class SharedUiEvent {
         data class SetTabIndex(val index: Int) : SharedUiEvent()
-        data class SetToolbarActions(val actions: List<ActionButton.ToolbarActionButton>) : SharedUiEvent()
+        data class SetToolbarActions(val actions: List<ToolbarActionButton>) : SharedUiEvent()
         data class SetTabTitle(val title: String?) : SharedUiEvent()
     }
 
@@ -32,11 +37,28 @@ class SharedViewModel @Inject constructor() : ViewModel() {
             is SharedUiEvent.SetTabIndex -> {
                 _uiState.update { it.copy(selectedTabIndex = event.index) }
             }
+
             is SharedUiEvent.SetToolbarActions -> {
                 _uiState.update { it.copy(toolbarActions = event.actions) }
             }
+
             is SharedUiEvent.SetTabTitle -> {
                 _uiState.update { it.copy(tabTitle = event.title) }
+            }
+        }
+    }
+
+    sealed class SharedUiEffect {
+        data class ShowSnackBar(@StringRes val resId: Int) : SharedUiEffect()
+    }
+
+    private val _uiEffect = MutableSharedFlow<SharedUiEffect>()
+    val uiEffect = _uiEffect.asSharedFlow()
+
+    fun onEffect(effect: SharedUiEffect) {
+        if (effect is SharedUiEffect.ShowSnackBar) {
+            viewModelScope.launch {
+                _uiEffect.emit(SharedUiEffect.ShowSnackBar(effect.resId))
             }
         }
     }

@@ -15,12 +15,12 @@ import androidx.navigation.navArgument
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.screens.AppScreens
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
-import com.anabars.tripsplit.ui.screens.settings.SettingsScreen
-import com.anabars.tripsplit.ui.screens.tripdetails.TripDetailsScreen
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseScreen
 import com.anabars.tripsplit.ui.screens.addpayment.AddPaymentScreen
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
 import com.anabars.tripsplit.ui.screens.archive.ArchiveScreen
+import com.anabars.tripsplit.ui.screens.settings.SettingsScreen
+import com.anabars.tripsplit.ui.screens.tripdetails.TripDetailsScreen
 import com.anabars.tripsplit.ui.screens.trips.TripsScreen
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent
@@ -75,6 +75,9 @@ fun AppNavGraph(
             AddExpenseScreen(
                 navController = navController,
                 onTabTitleChange = onTabTitleChange,
+                onShowSnackbar = { resId: Int ->
+                    sharedViewModel.onEffect(SharedViewModel.SharedUiEffect.ShowSnackBar(resId))
+                },
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }

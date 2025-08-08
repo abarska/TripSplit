@@ -13,7 +13,14 @@ import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddExpenseUiEffect
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.*
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.AmountChanged
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.CategoryChanged
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.CurrencySelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.DateSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.OnBackPressed
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.ParticipantsSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.PayerSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.SaveExpense
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -160,13 +167,10 @@ class AddExpenseViewModel @Inject constructor(
     }
 
     private fun showError(wrongAmount: Boolean, participantsMissingError: Boolean) {
-        if (wrongAmount) {
-            viewModelScope.launch {
-                _uiEffect.emit(AddExpenseUiEffect.ShowSnackBar(R.string.error_amount_invalid))
-            }
-        } else if (participantsMissingError) {
-            viewModelScope.launch {
-                _uiEffect.emit(AddExpenseUiEffect.ShowSnackBar(R.string.error_participants_not_selected))
+        viewModelScope.launch {
+            when {
+                wrongAmount -> _uiEffect.emit(AddExpenseUiEffect.ShowSnackBar(R.string.error_amount_invalid))
+                participantsMissingError -> _uiEffect.emit(AddExpenseUiEffect.ShowSnackBar(R.string.error_participants_not_selected))
             }
         }
     }

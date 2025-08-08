@@ -1,6 +1,8 @@
 package com.anabars.tripsplit.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -10,6 +12,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
 import com.anabars.tripsplit.ui.screens.settings.SettingsScreen
@@ -101,14 +105,28 @@ fun AppNavGraph(
             route = AppScreens.ROUTE_TRIP_DETAILS + "/{id}",
             arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { backStackEntry ->
-            backStackEntry.arguments?.getLong("id") ?: return@composable
+
+            val tripId = backStackEntry.arguments?.getLong("id")
+            if (tripId == null) return@composable
+
             val selectedTabIndex by sharedViewModel.selectedTabIndex.collectAsState()
+            val onTabActionsChange = { index: Int ->
+                sharedViewModel.setToolbarActions(
+                    if (index == 0) listOf(
+                        ActionButton.ToolbarActionButton(
+                            icon = Icons.Default.Edit,
+                            contentDescriptionRes = R.string.edit_item,
+                            onClick = { navController.navigate("${AppScreens.ROUTE_ADD_TRIP}?tripId=$tripId") }
+                        )
+                    ) else emptyList())
+            }
+
             TripDetailsScreen(
                 navController = navController,
                 selectedTabIndex = selectedTabIndex,
                 onTabChanged = { index -> sharedViewModel.setSelectedTabIndex(index) },
                 onTabTitleChange = { tabTitle -> sharedViewModel.setTabTitle(tabTitle) },
-                setToolbarActions = { sharedViewModel.setToolbarActions(it) }
+                onTabActionsChange = onTabActionsChange
             )
         }
     }

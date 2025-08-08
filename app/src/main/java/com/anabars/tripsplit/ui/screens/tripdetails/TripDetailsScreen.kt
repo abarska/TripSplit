@@ -12,7 +12,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.model.TripDetailsTabs
 import com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab.TripExpensesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab.TripOverviewTab
@@ -23,7 +22,7 @@ fun TripDetailsScreen(
     selectedTabIndex: Int,
     onTabChanged: (Int) -> Unit,
     onTabTitleChange: (String) -> Unit,
-    setToolbarActions: (List<ActionButton.ToolbarActionButton>) -> Unit, // will implement this later
+    onTabActionsChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -37,7 +36,8 @@ fun TripDetailsScreen(
         updateToolbarForTab(
             context = context,
             index = selectedTabIndex,
-            onTabTitleChange = onTabTitleChange
+            onTabTitleChange = onTabTitleChange,
+            onTabActionsChange = onTabActionsChange,
         )
         if (selectedTabIndex != pagerState.currentPage) {
             pagerState.animateScrollToPage(selectedTabIndex)
@@ -67,8 +67,14 @@ fun TripDetailsScreen(
     }
 }
 
-private fun updateToolbarForTab(context: Context, index: Int, onTabTitleChange: (String) -> Unit) {
+private fun updateToolbarForTab(
+    context: Context,
+    index: Int,
+    onTabTitleChange: (String) -> Unit,
+    onTabActionsChange: (Int) -> Unit
+) {
     onTabTitleChange(getTabTitle(index, context))
+    onTabActionsChange(index)
 }
 
 private fun getTabTitle(index: Int, context: Context): String {

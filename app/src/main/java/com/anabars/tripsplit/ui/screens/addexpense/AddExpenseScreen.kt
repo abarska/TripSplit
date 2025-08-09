@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.model.AddExpenseUiEffect
+import com.anabars.tripsplit.ui.model.AddItemUiEffect
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.AmountChanged
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.CategoryChanged
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.CurrencySelected
@@ -27,7 +27,7 @@ import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.OnBackPresse
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.ParticipantsSelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.PayerSelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.SaveExpense
-import com.anabars.tripsplit.viewmodels.AddExpenseViewModel
+import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -38,7 +38,7 @@ fun AddExpenseScreen(
     setBackHandler: ((() -> Boolean)?) -> Unit
 ) {
 
-    val viewModel: AddExpenseViewModel = hiltViewModel()
+    val viewModel: AddItemViewModel = hiltViewModel()
     val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
     val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
     val screenTitle = stringResource(R.string.title_new_expense)
@@ -54,8 +54,8 @@ fun AddExpenseScreen(
     LaunchedEffect(Unit) {
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
-                is AddExpenseUiEffect.NavigateBack -> navController.popBackStack()
-                is AddExpenseUiEffect.ShowSnackBar -> onShowSnackbar(effect.resId)
+                is AddItemUiEffect.NavigateBack -> navController.popBackStack()
+                is AddItemUiEffect.ShowSnackBar -> onShowSnackbar(effect.resId)
             }
         }
     }

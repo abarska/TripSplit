@@ -8,9 +8,9 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.repository.TripExpensesRepository
-import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
-import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
-import com.anabars.tripsplit.ui.model.AddExpenseUiEffect
+import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
+import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
+import com.anabars.tripsplit.ui.model.AddItemUiEffect
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.AmountChanged
@@ -34,7 +34,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class AddExpenseViewModel @Inject constructor(
+class AddItemViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     val tripExpensesRepository: TripExpensesRepository
 ) :
@@ -43,15 +43,15 @@ class AddExpenseViewModel @Inject constructor(
     private val tripId: Long = savedStateHandle.get<Long>("tripId")
         ?: throw IllegalStateException("Trip ID is required for AddExpenseViewModel")
 
-    private val _amountCurrencyState = MutableStateFlow(AddExpenseAmountCurrencyState())
-    val amountCurrencyState: StateFlow<AddExpenseAmountCurrencyState> =
+    private val _amountCurrencyState = MutableStateFlow(AddItemAmountCurrencyState())
+    val amountCurrencyState: StateFlow<AddItemAmountCurrencyState> =
         _amountCurrencyState.asStateFlow()
 
-    private val _payerParticipantsState = MutableStateFlow(AddExpensePayerParticipantsState())
-    val payerParticipantsState: StateFlow<AddExpensePayerParticipantsState> =
+    private val _payerParticipantsState = MutableStateFlow(AddItemPayerParticipantsState())
+    val payerParticipantsState: StateFlow<AddItemPayerParticipantsState> =
         _payerParticipantsState.asStateFlow()
 
-    private val _uiEffect = MutableSharedFlow<AddExpenseUiEffect>()
+    private val _uiEffect = MutableSharedFlow<AddItemUiEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
 
     init {
@@ -96,7 +96,7 @@ class AddExpenseViewModel @Inject constructor(
             is ParticipantsSelected -> updateSelectedParticipants(intent.participants)
             is SaveExpense -> saveExpense()
             is OnBackPressed -> viewModelScope.launch {
-                _uiEffect.emit(AddExpenseUiEffect.NavigateBack)
+                _uiEffect.emit(AddItemUiEffect.NavigateBack)
             }
         }
     }
@@ -137,7 +137,7 @@ class AddExpenseViewModel @Inject constructor(
             val participants = _payerParticipantsState.value.selectedParticipants
             tripExpensesRepository.saveExpenseWithParticipants(expense, participants)
             viewModelScope.launch {
-                _uiEffect.emit(AddExpenseUiEffect.NavigateBack)
+                _uiEffect.emit(AddItemUiEffect.NavigateBack)
             }
         }
     }
@@ -169,8 +169,8 @@ class AddExpenseViewModel @Inject constructor(
     private fun showError(wrongAmount: Boolean, participantsMissingError: Boolean) {
         viewModelScope.launch {
             when {
-                wrongAmount -> _uiEffect.emit(AddExpenseUiEffect.ShowSnackBar(R.string.error_amount_invalid))
-                participantsMissingError -> _uiEffect.emit(AddExpenseUiEffect.ShowSnackBar(R.string.error_participants_not_selected))
+                wrongAmount -> _uiEffect.emit(AddItemUiEffect.ShowSnackBar(R.string.error_amount_invalid))
+                participantsMissingError -> _uiEffect.emit(AddItemUiEffect.ShowSnackBar(R.string.error_participants_not_selected))
             }
         }
     }

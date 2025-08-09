@@ -12,22 +12,21 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.ui.components.DateInputSection
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
-import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
+import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.screens.addexpense.ExpenseCategoriesRadioGroup
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
-import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiStateWithError
 import java.time.LocalDate
 
 @Composable
 fun TsDateAmountCurrencyCard(
     useCase: UseCase,
+    modifier: Modifier = Modifier,
     onDateSelected: (LocalDate) -> Unit,
-    onCategoryChanged: (ExpenseCategory) -> Unit,
-    amountCurrencyState: AddExpenseAmountCurrencyState,
+    onCategoryChanged: (ExpenseCategory) -> Unit = {},
+    amountCurrencyState: AddItemAmountCurrencyState,
     onExpenseAmountChanged: (String) -> Unit,
-    onCurrencySelected: (String) -> Unit,
-    modifier: Modifier = Modifier
+    onCurrencySelected: (String) -> Unit
 ) {
     TsContentCard(
         modifier = modifier,
@@ -75,7 +74,6 @@ private fun TsDateAmountCurrencyCardPreviewExpense() {
     TsDateAmountCurrencyCard(
         useCase = UseCase.EXPENSE,
         onDateSelected = {},
-        onCategoryChanged = {},
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         onExpenseAmountChanged = {},
         onCurrencySelected = {},
@@ -83,21 +81,6 @@ private fun TsDateAmountCurrencyCardPreviewExpense() {
     )
 
 }
-
-@Preview(showBackground = true)
-@Composable
-private fun TsDateAmountCurrencyCardPreviewWithErrorExpense() {
-    TsDateAmountCurrencyCard(
-        useCase = UseCase.EXPENSE,
-        onDateSelected = {},
-        onCategoryChanged = {},
-        amountCurrencyState = getFakeAmountCurrencyUiStateWithError(),
-        onExpenseAmountChanged = {},
-        onCurrencySelected = {},
-        modifier = Modifier.fillMaxWidth()
-    )
-}
-
 
 @Preview(showBackground = true)
 @Composable
@@ -105,25 +88,10 @@ private fun TsDateAmountCurrencyCardPreviewPayment() {
     TsDateAmountCurrencyCard(
         useCase = UseCase.PAYMENT,
         onDateSelected = {},
-        onCategoryChanged = {},
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         onExpenseAmountChanged = {},
         onCurrencySelected = {},
         modifier = Modifier.fillMaxWidth()
     )
 
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TsDateAmountCurrencyCardPreviewWithErrorPayment() {
-    TsDateAmountCurrencyCard(
-        useCase = UseCase.PAYMENT,
-        onDateSelected = {},
-        onCategoryChanged = {},
-        amountCurrencyState = getFakeAmountCurrencyUiStateWithError(),
-        onExpenseAmountChanged = {},
-        onCurrencySelected = {},
-        modifier = Modifier.fillMaxWidth()
-    )
 }

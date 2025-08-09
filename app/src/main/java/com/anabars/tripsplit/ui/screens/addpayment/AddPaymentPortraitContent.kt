@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.screens.addexpense
+package com.anabars.tripsplit.ui.screens.addpayment
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,26 +12,24 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
-import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
+import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
 import com.anabars.tripsplit.ui.widgets.TsDateAmountCurrencyCard
 import com.anabars.tripsplit.ui.widgets.TsPaidByPaidForCard
 import com.anabars.tripsplit.ui.widgets.UseCase
 import java.time.LocalDate
 
 @Composable
-fun AddExpensePortraitContent(
+fun AddPaymentPortraitContent(
     amountCurrencyState: AddItemAmountCurrencyState,
     payerParticipantsState: AddItemPayerParticipantsState,
     onDateSelected: (LocalDate) -> Unit,
-    onCategoryChange: (ExpenseCategory) -> Unit,
     onExpenseAmountChanged: (String) -> Unit,
     onCurrencySelected: (String) -> Unit,
     onPayerSelected: (Long) -> Unit,
     onParticipantsSelected: (Set<TripParticipant>) -> Unit,
-    onSaveExpense: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSavePayment: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -40,37 +38,35 @@ fun AddExpensePortraitContent(
     ) {
 
         TsDateAmountCurrencyCard(
-            useCase = UseCase.EXPENSE,
+            useCase = UseCase.PAYMENT,
             onDateSelected = onDateSelected,
-            onCategoryChanged = onCategoryChange,
             amountCurrencyState = amountCurrencyState,
             onExpenseAmountChanged = onExpenseAmountChanged,
             onCurrencySelected = onCurrencySelected
         )
 
         TsPaidByPaidForCard(
-            useCase = UseCase.EXPENSE,
+            useCase = UseCase.PAYMENT,
             payerParticipantsState = payerParticipantsState,
             onPayerSelected = onPayerSelected,
             onSelectionChanged = onParticipantsSelected
         )
 
-        TsMainButton(textRes = R.string.save) { onSaveExpense() }
+        TsMainButton(textRes = R.string.save) { onSavePayment() }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun AddExpensePortraitContentPreview() {
-    AddExpensePortraitContent(
+private fun AddPaymentPortraitContentPreview() {
+    AddPaymentPortraitContent(
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         payerParticipantsState = getFakePayerParticipantsState(),
         onDateSelected = {},
-        onCategoryChange = {},
         onExpenseAmountChanged = {},
         onCurrencySelected = {},
         onPayerSelected = {},
         onParticipantsSelected = {},
-        onSaveExpense = { }
+        onSavePayment = { }
     )
 }

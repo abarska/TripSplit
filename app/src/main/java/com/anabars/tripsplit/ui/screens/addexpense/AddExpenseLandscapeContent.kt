@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
-import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
-import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
+import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
+import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
 import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
@@ -27,8 +27,8 @@ import java.time.LocalDate
 
 @Composable
 fun AddExpenseLandscapeContent(
-    amountCurrencyState: AddExpenseAmountCurrencyState,
-    payerParticipantsState: AddExpensePayerParticipantsState,
+    amountCurrencyState: AddItemAmountCurrencyState,
+    payerParticipantsState: AddItemPayerParticipantsState,
     onDateSelected: (LocalDate) -> Unit,
     onCategoryChange: (ExpenseCategory) -> Unit,
     onExpenseAmountChanged: (String) -> Unit,

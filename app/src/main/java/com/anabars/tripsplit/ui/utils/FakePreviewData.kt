@@ -6,8 +6,8 @@ import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.data.room.model.TripDetails
-import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
-import com.anabars.tripsplit.ui.model.AddExpensePayerParticipantsState
+import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
+import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
@@ -35,16 +35,11 @@ fun getFakeParticipantsUiState() = AddTripParticipantsUiState(
     tripParticipants = getFakeTripParticipants()
 )
 
-fun getFakeAmountCurrencyUiState() = AddExpenseAmountCurrencyState(
+fun getFakeAmountCurrencyUiState() = AddItemAmountCurrencyState(
     tripCurrencies = getFakeTripCurrencies()
 )
 
-fun getFakeAmountCurrencyUiStateWithError() = AddExpenseAmountCurrencyState(
-    tripCurrencies = getFakeTripCurrencies(),
-    isError = true
-)
-
-fun getFakePayerParticipantsState() = AddExpensePayerParticipantsState(
+fun getFakePayerParticipantsState() = AddItemPayerParticipantsState(
     tripParticipants = getFakeTripParticipants(),
     selectedParticipants = getFakeTripParticipants()
         .take(getFakeTripParticipants().size - 1).toSet()
@@ -59,17 +54,10 @@ fun getFakeTripExpense() = TripExpense(
     tripId = 0
 )
 
-fun getFakeAddExpensePayerParticipantsState() = AddExpensePayerParticipantsState(
+fun getFakeAddExpensePayerParticipantsState() = AddItemPayerParticipantsState(
     tripParticipants = getFakeTripParticipants(),
     expensePayerId = 1,
     selectedParticipants = getFakeTripParticipants().toSet()
-)
-
-fun getFakeAddExpensePayerParticipantsStateWithError() = AddExpensePayerParticipantsState(
-    tripParticipants = getFakeTripParticipants(),
-    expensePayerId = 1,
-    selectedParticipants = getFakeTripParticipants().toSet(),
-    isError = true
 )
 
 fun getFakePieChartData(): MutableMap<ExpenseCategory, Double> {

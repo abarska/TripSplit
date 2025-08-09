@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.screens.addexpense
+package com.anabars.tripsplit.ui.widgets
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -14,7 +14,7 @@ import com.anabars.tripsplit.ui.utils.getFakeTripCurrencies
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
-fun ExpenseCurrenciesRadioGroup(
+fun TsCurrenciesRadioGroup(
     modifier: Modifier = Modifier,
     currencies: List<TripCurrency>,
     expenseCurrencyCode: String,
@@ -39,8 +39,8 @@ fun ExpenseCurrenciesRadioGroup(
 
 @Preview(showBackground = true)
 @Composable
-private fun ExpenseCurrenciesRadioGroupPreview() {
-    ExpenseCurrenciesRadioGroup(
+private fun TsCurrenciesRadioGroupPreview() {
+    TsCurrenciesRadioGroup(
         modifier = Modifier.inputWidthModifier(),
         currencies = getFakeTripCurrencies(),
         expenseCurrencyCode = getFakeTripCurrencies().first().code,

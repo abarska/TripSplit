@@ -1,5 +1,6 @@
-package com.anabars.tripsplit.ui.screens.addexpense
+package com.anabars.tripsplit.ui.widgets
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -18,10 +19,11 @@ import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
-fun ExpensePayerRadioGroup(
+fun TsParticipantsRadioGroup(
+    @StringRes label: Int,
     participants: List<TripParticipant>,
     paidBy: Long,
-    onPayerSelected: (Long) -> Unit,
+    onItemSelected: (Long) -> Unit,
     modifier: Modifier = Modifier,
     itemLabel: (TripParticipant) -> String,
 ) {
@@ -31,11 +33,11 @@ fun ExpensePayerRadioGroup(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        TsInfoText(textRes = R.string.expense_paid_by, fontSize = TsFontSize.MEDIUM)
+        TsInfoText(textRes = label, fontSize = TsFontSize.MEDIUM)
         TsRadioGroup(
             items = participants,
             selectedItem = participants.find { it.id == paidBy } ?: participants.first(),
-            onItemSelected = { onPayerSelected(it.id) },
+            onItemSelected = { onItemSelected(it.id) },
             layout = LayoutType.Column
         ) { participant ->
             TsInfoText(
@@ -49,11 +51,12 @@ fun ExpensePayerRadioGroup(
 
 @Preview(showBackground = true)
 @Composable
-private fun ExpensePayerRadioGroupPreview() {
-    ExpensePayerRadioGroup(
+private fun TsParticipantsRadioGroupPreview() {
+    TsParticipantsRadioGroup(
+        label = R.string.expense_paid_by,
         participants = getFakeTripParticipants(),
         paidBy = getFakeTripParticipants().first().id,
-        onPayerSelected = {},
+        onItemSelected = {},
         modifier = Modifier.inputWidthModifier(),
         itemLabel = { it.name }
     )

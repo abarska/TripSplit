@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.screens.addexpense
+package com.anabars.tripsplit.ui.widgets
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +17,7 @@ import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
-fun ExpenseParticipantsCheckBoxGroup(
+fun TsParticipantsCheckBoxGroup(
     modifier: Modifier = Modifier,
     participants: List<TripParticipant>,
     selectedParticipants: Set<TripParticipant>,
@@ -51,8 +51,8 @@ fun ExpenseParticipantsCheckBoxGroup(
 
 @Preview(showBackground = true)
 @Composable
-private fun ExpenseParticipantsCheckBoxGroupPreview() {
-    ExpenseParticipantsCheckBoxGroup(
+private fun TsParticipantsCheckBoxGroupPreview() {
+    TsParticipantsCheckBoxGroup(
         modifier = Modifier.inputWidthModifier(),
         participants = getFakeTripParticipants(),
         selectedParticipants = getFakeTripParticipants()

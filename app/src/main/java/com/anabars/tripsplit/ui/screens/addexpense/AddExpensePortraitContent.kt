@@ -16,6 +16,7 @@ import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
 import com.anabars.tripsplit.ui.widgets.TsDateAmountCurrencyCard
+import com.anabars.tripsplit.ui.widgets.TsPaidByPaidForCard
 import com.anabars.tripsplit.ui.widgets.UseCase
 import java.time.LocalDate
 
@@ -47,7 +48,8 @@ fun AddExpensePortraitContent(
             onCurrencySelected = onCurrencySelected
         )
 
-        ExpensePaidByAndPaidForCard(
+        TsPaidByPaidForCard(
+            useCase = UseCase.EXPENSE,
             payerParticipantsState = payerParticipantsState,
             onPayerSelected = onPayerSelected,
             onSelectionChanged = onParticipantsSelected

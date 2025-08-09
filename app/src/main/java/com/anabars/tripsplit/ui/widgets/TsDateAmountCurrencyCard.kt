@@ -15,7 +15,6 @@ import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
 import com.anabars.tripsplit.ui.model.AddExpenseAmountCurrencyState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.screens.addexpense.ExpenseCategoriesRadioGroup
-import com.anabars.tripsplit.ui.screens.addexpense.ExpenseCurrenciesRadioGroup
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiStateWithError
 import java.time.LocalDate
@@ -59,7 +58,7 @@ fun TsDateAmountCurrencyCard(
                 currencyPrefix = amountCurrencyState.expenseCurrencyCode,
                 onValueChange = onExpenseAmountChanged
             )
-            ExpenseCurrenciesRadioGroup(
+            TsCurrenciesRadioGroup(
                 currencies = amountCurrencyState.tripCurrencies,
                 expenseCurrencyCode = amountCurrencyState.expenseCurrencyCode,
                 onCurrencySelected = onCurrencySelected,

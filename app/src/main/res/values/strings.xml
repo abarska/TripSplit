@@ -96,6 +96,7 @@
     <string name="currencies">Currencies</string>
     <string name="status">Status</string>
     <string name="loading_trip_details">Loading Trip Details</string>
+    <string name="expense_paid_to">Paid to:</string>
     <string name="expense_paid_by">Paid by:</string>
     <string name="expense_paid_for">Paid for:</string>
     <string name="payment">Payment</string>

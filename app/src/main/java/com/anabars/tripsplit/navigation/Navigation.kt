@@ -40,6 +40,9 @@ fun AppNavGraph(
         val onTabTitleChange: (String) -> Unit = {
             sharedViewModel.onEvent(SharedUiEvent.SetTabTitle(it))
         }
+        val onShowSnackbar: (Int) -> Unit = {
+            sharedViewModel.onEffect(SharedViewModel.SharedUiEffect.ShowSnackBar(it))
+        }
 
         composable(route = AppScreens.ROUTE_TRIPS) {
             TripsScreen(
@@ -75,9 +78,7 @@ fun AppNavGraph(
             AddExpenseScreen(
                 navController = navController,
                 onTabTitleChange = onTabTitleChange,
-                onShowSnackbar = { resId: Int ->
-                    sharedViewModel.onEffect(SharedViewModel.SharedUiEffect.ShowSnackBar(resId))
-                },
+                onShowSnackbar = onShowSnackbar,
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }
@@ -90,6 +91,7 @@ fun AppNavGraph(
             AddPaymentScreen(
                 navController = navController,
                 onTabTitleChange = onTabTitleChange,
+                onShowSnackbar = onShowSnackbar,
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }

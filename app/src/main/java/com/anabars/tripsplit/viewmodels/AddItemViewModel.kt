@@ -1,6 +1,7 @@
 package com.anabars.tripsplit.viewmodels
 
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +23,7 @@ import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.ParticipantsSel
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.PayerSelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.SaveItem
 import com.anabars.tripsplit.ui.widgets.UseCase
+import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -126,9 +128,10 @@ class AddItemViewModel @Inject constructor(
 
     private fun saveItem(useCase: UseCase) {
         viewModelScope.launch {
+            if (!validateItem(useCase = useCase)) return@launch
+
             when (useCase) {
                 UseCase.EXPENSE -> {
-                    if (!validateExpense()) return@launch
                     val expense = TripExpense.fromUiState(
                         amountCurrencyState = _amountCurrencyState.value,
                         payerParticipantsState = _payerParticipantsState.value,
@@ -142,50 +145,48 @@ class AddItemViewModel @Inject constructor(
                 }
 
                 UseCase.PAYMENT -> {
-                    Log.d("anabars", "saveItem: save payment")
+                    Log.d("marysya", "saveItem: save payment")
                     // TODO: anabars implement 
                 }
             }
         }
     }
 
-    private suspend fun validateExpense(): Boolean {
-        val amount = _amountCurrencyState.value.expenseAmount.toDoubleOrNull()
-        val error: AddExpenseError? = when {
-            amount == null || amount <= 0.0 -> AddExpenseError.INVALID_AMOUNT
-            _payerParticipantsState.value.expensePayerId == null -> AddExpenseError.MISSING_PAYER
-            _payerParticipantsState.value.selectedParticipants.isEmpty() -> AddExpenseError.MISSING_PARTICIPANTS
-            else -> null
-        }
+    private suspend fun validateItem(useCase: UseCase): Boolean {
+        val error: AddItemError? = getError(useCase)
         error?.let {
-            showError(it)
             highlightCardWithError(it)
+            _uiEffect.emit(AddItemUiEffect.ShowSnackBar(it.errorMessageId))
         }
         return error == null
     }
 
-    private fun highlightCardWithError(error: AddExpenseError) {
+    private fun getError(useCase: UseCase): AddItemError? {
+        val amount = _amountCurrencyState.value.expenseAmount.toDoubleOrNull()
+        val payer = _payerParticipantsState.value.expensePayerId
+        val payees = _payerParticipantsState.value.selectedParticipants
+        return when {
+            amount == null || amount <= 0.0 -> INVALID_AMOUNT
+            payer == null -> MISSING_PAYER
+            payees.isEmpty() -> if (useCase == UseCase.EXPENSE) MISSING_PARTICIPANTS else MISSING_PAYEE
+            else -> null
+        }
+    }
+
+    private fun highlightCardWithError(error: AddItemError) {
         when (error) {
-            AddExpenseError.INVALID_AMOUNT ->
+            INVALID_AMOUNT ->
                 _amountCurrencyState.update { it.copy(isError = true) }
 
-            AddExpenseError.MISSING_PAYER, AddExpenseError.MISSING_PARTICIPANTS ->
+            MISSING_PAYER, MISSING_PARTICIPANTS, MISSING_PAYEE ->
                 _payerParticipantsState.update { it.copy(isError = true) }
         }
     }
 
-    private suspend fun showError(error: AddExpenseError) {
-        val messageResId = when (error) {
-            AddExpenseError.INVALID_AMOUNT -> R.string.error_amount_invalid
-            AddExpenseError.MISSING_PAYER -> R.string.error_missing_payer
-            AddExpenseError.MISSING_PARTICIPANTS -> R.string.error_missing_participants
-        }
-        _uiEffect.emit(AddItemUiEffect.ShowSnackBar(messageResId))
-    }
-
-    enum class AddExpenseError {
-        INVALID_AMOUNT,
-        MISSING_PAYER,
-        MISSING_PARTICIPANTS
+    enum class AddItemError(@StringRes val errorMessageId: Int) {
+        INVALID_AMOUNT(R.string.error_amount_invalid),
+        MISSING_PAYER(R.string.error_missing_payer),
+        MISSING_PARTICIPANTS(R.string.error_missing_participants),
+        MISSING_PAYEE(R.string.error_missing_payee)
     }
 }

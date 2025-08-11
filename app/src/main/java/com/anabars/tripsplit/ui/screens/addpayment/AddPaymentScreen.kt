@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.model.AddItemUiEffect
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.AmountChanged
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CurrencySelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.DateSelected
@@ -24,11 +25,13 @@ import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.PayerSelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.SaveItem
 import com.anabars.tripsplit.ui.widgets.UseCase
 import com.anabars.tripsplit.viewmodels.AddItemViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddPaymentScreen(
     navController: NavHostController,
     onTabTitleChange: (String) -> Unit,
+    onShowSnackbar: (Int) -> Unit,
     setBackHandler: ((() -> Boolean)?) -> Unit
 ) {
 
@@ -39,6 +42,15 @@ fun AddPaymentScreen(
     val screenTitle = stringResource(R.string.title_new_payment)
     LaunchedEffect(Unit) {
         onTabTitleChange(screenTitle)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEffect.collectLatest { effect ->
+            when (effect) {
+                is AddItemUiEffect.NavigateBack -> navController.popBackStack()
+                is AddItemUiEffect.ShowSnackBar -> onShowSnackbar(effect.resId)
+            }
+        }
     }
 
     val isPortrait =

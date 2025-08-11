@@ -8,7 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.repository.TripExpensesRepository
+import com.anabars.tripsplit.data.room.entity.TripPayment
+import com.anabars.tripsplit.repository.TripItemRepository
 import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddItemUiEffect
@@ -39,7 +40,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddItemViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val tripExpensesRepository: TripExpensesRepository
+    val tripItemRepository: TripItemRepository
 ) :
     ViewModel() {
 
@@ -61,8 +62,8 @@ class AddItemViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val participants =
-                    tripExpensesRepository.getActiveParticipantsByTripId(tripId).first()
-                val currencies = tripExpensesRepository.getActiveCurrenciesByTripId(tripId).first()
+                    tripItemRepository.getActiveParticipantsByTripId(tripId).first()
+                val currencies = tripItemRepository.getActiveCurrenciesByTripId(tripId).first()
 
 //                val initialSelectedParticipants = participants.toSet()
                 val initialSelectedParticipants = emptySet<TripParticipant>()
@@ -139,15 +140,22 @@ class AddItemViewModel @Inject constructor(
                         tripId = tripId
                     )
                     val participants = _payerParticipantsState.value.selectedParticipants
-                    tripExpensesRepository.saveExpenseWithParticipants(expense, participants)
+                    tripItemRepository.saveExpenseWithParticipants(expense, participants)
                     viewModelScope.launch {
                         _uiEffect.emit(AddItemUiEffect.NavigateBack)
                     }
                 }
 
                 UseCase.PAYMENT -> {
-                    Log.d("marysya", "saveItem: save payment")
-                    // TODO: anabars implement 
+                    val payment = TripPayment.fromUiState(
+                        amountCurrencyState = _amountCurrencyState.value,
+                        payerParticipantsState = _payerParticipantsState.value,
+                        tripId = tripId
+                    )
+                    tripItemRepository.savePayment(payment)
+                    viewModelScope.launch {
+                        _uiEffect.emit(AddItemUiEffect.NavigateBack)
+                    }
                 }
             }
         }

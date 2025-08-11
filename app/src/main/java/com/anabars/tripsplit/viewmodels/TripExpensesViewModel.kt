@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.model.ExpenseWithParticipants
-import com.anabars.tripsplit.repository.TripExpensesRepository
+import com.anabars.tripsplit.repository.TripItemRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TripExpensesViewModel @Inject constructor(
-    val tripExpensesRepository: TripExpensesRepository,
+    val tripItemRepository: TripItemRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -28,7 +28,7 @@ class TripExpensesViewModel @Inject constructor(
         ?: throw IllegalStateException("Trip ID is required for TripExpensesViewModel")
 
     val groupedExpensesResult: StateFlow<GroupedExpensesResult> =
-        tripExpensesRepository.getExpensesWithParticipantsByTrip(tripId)
+        tripItemRepository.getExpensesWithParticipantsByTrip(tripId)
             .map { expenses ->
                 if (expenses.isEmpty()) {
                     GroupedExpensesResult.Empty
@@ -50,7 +50,7 @@ class TripExpensesViewModel @Inject constructor(
 
 
     val tripParticipants: StateFlow<List<TripParticipant>> =
-        tripExpensesRepository.getParticipantsByTripId(tripId)
+        tripItemRepository.getParticipantsByTripId(tripId)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
@@ -59,7 +59,7 @@ class TripExpensesViewModel @Inject constructor(
 
     fun deleteExpenseById(expenseId: Long) {
         viewModelScope.launch {
-            tripExpensesRepository.deleteExpenseById(expenseId)
+            tripItemRepository.deleteExpenseById(expenseId)
         }
     }
 }

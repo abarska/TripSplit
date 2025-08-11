@@ -6,6 +6,9 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.anabars.tripsplit.common.TripSplitConstants
+import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
+import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
+import java.time.ZoneId
 
 @Entity(
     tableName = TripSplitConstants.TRIP_PAYMENTS_TABLE,
@@ -39,4 +42,23 @@ data class TripPayment(
     @ColumnInfo val amount: Double = 0.0,
     @ColumnInfo val currency: String,
     @ColumnInfo val timestamp: Long = System.currentTimeMillis()
-)
+) {
+    companion object {
+        fun fromUiState(
+            amountCurrencyState: AddItemAmountCurrencyState,
+            payerParticipantsState: AddItemPayerParticipantsState,
+            tripId: Long
+        ): TripPayment {
+            val timestamp = amountCurrencyState.selectedDate
+                .atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            return TripPayment(
+                tripId = tripId,
+                fromUserId = payerParticipantsState.expensePayerId!!, // non null after validation
+                toUserId = payerParticipantsState.selectedParticipants.first().id,
+                amount = amountCurrencyState.expenseAmount.toDoubleOrNull() ?: 0.0,
+                currency = amountCurrencyState.expenseCurrencyCode,
+                timestamp = timestamp
+            )
+        }
+    }
+}

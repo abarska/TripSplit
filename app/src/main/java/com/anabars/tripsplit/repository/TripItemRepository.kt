@@ -21,6 +21,10 @@ class TripItemRepository @Inject constructor(
         return tripExpensesDao.getExpensesWithParticipantsByTrip(tripId)
     }
 
+    fun getPaymentsByTripId(tripId: Long): Flow<List<TripPayment>> {
+        return tripPaymentDao.getPaymentsByTripId(tripId)
+    }
+
     fun getActiveCurrenciesByTripId(tripId: Long): Flow<List<TripCurrency>> {
         return tripDao.getActiveCurrenciesByTripId(tripId)
     }
@@ -46,5 +50,9 @@ class TripItemRepository @Inject constructor(
 
     suspend fun deleteExpenseById(expenseId: Long) {
         tripExpensesDao.deleteExpenseById(expenseId)
+    }
+
+    suspend fun deletePaymentById(paymentId: Long) {
+        tripPaymentDao.deletePaymentById(paymentId)
     }
 }

@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab
+package com.anabars.tripsplit.ui.screens.tripdetails.trippaymentstab
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,36 +18,35 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsFab
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.widgets.TsPlaceholderView
-import com.anabars.tripsplit.viewmodels.GroupedExpensesResult
+import com.anabars.tripsplit.viewmodels.GroupedPaymentsResult
 import com.anabars.tripsplit.viewmodels.TripItemViewModel
 
 @Composable
-fun TripExpensesTab(
+fun TripPaymentsTab(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-
     val viewModel: TripItemViewModel = hiltViewModel()
-    val groupedExpensesResult by viewModel.groupedExpensesResult.collectAsState()
+    val groupedPaymentsResult by viewModel.groupedPaymentsResult.collectAsState()
     val tripParticipants by viewModel.tripParticipants.collectAsState()
 
     Box(modifier = modifier.fillMaxSize()) {
-        when (groupedExpensesResult) {
-            is GroupedExpensesResult.Loading ->
+        when (groupedPaymentsResult) {
+            is GroupedPaymentsResult.Loading ->
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
 
-            is GroupedExpensesResult.Empty ->
+            is GroupedPaymentsResult.Empty ->
                 TsPlaceholderView(
                     painterRes = R.drawable.empty_wallet_image,
                     contentDescriptionRes = R.string.empty_wallet_image,
-                    textRes = R.string.placeholder_expenses
+                    textRes = R.string.placeholder_payments
                 )
 
-            is GroupedExpensesResult.Success ->
-                TripExpensesData(
-                    groupedExpensesResult = groupedExpensesResult,
+            is GroupedPaymentsResult.Success ->
+                TripPaymentsData(
+                    groupedPaymentsResult = groupedPaymentsResult,
                     tripParticipants = tripParticipants,
-                    onDeleteClick = {expenseId -> viewModel.deleteExpenseById(expenseId) }
+                    onDeleteClick = { paymentId -> viewModel.deletePaymentById(paymentId) }
                 )
         }
 
@@ -56,9 +55,9 @@ fun TripExpensesTab(
                 .padding(16.dp)
                 .align(Alignment.BottomEnd),
             iconVector = Icons.Outlined.Add,
-            contentDescription = R.string.add_a_new_expense,
+            contentDescription = R.string.add_a_new_payment,
         ) {
-            navController.navigate("${AppScreens.ROUTE_ADD_EXPENSE}/${viewModel.tripId}")
+            navController.navigate("${AppScreens.ROUTE_ADD_PAYMENT}/${viewModel.tripId}")
         }
     }
 }

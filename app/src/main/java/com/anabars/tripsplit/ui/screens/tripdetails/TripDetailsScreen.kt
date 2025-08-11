@@ -15,6 +15,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.TripDetailsTabs
 import com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab.TripExpensesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab.TripOverviewTab
+import com.anabars.tripsplit.ui.screens.tripdetails.trippaymentstab.TripPaymentsTab
 
 @Composable
 fun TripDetailsScreen(
@@ -62,7 +63,7 @@ fun TripDetailsScreen(
             )
 
             1 -> TripExpensesTab(navController = navController)
-            2 -> TripPaymentTab(navController = navController)
+            2 -> TripPaymentsTab(navController = navController)
         }
     }
 }

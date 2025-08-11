@@ -33,8 +33,8 @@ import com.anabars.tripsplit.utils.formatAmount
 @Composable
 fun TsPaymentItemRow(
     payment: TripPayment,
-    fromParticipant: TripParticipant,
-    toParticipant: TripParticipant,
+    fromParticipant: TripParticipant?,
+    toParticipant: TripParticipant?,
     modifier: Modifier = Modifier,
     isExpanded: Boolean = false,
     onExpandToggle: () -> Unit,
@@ -61,8 +61,8 @@ fun TsPaymentItemRow(
 @Composable
 private fun VisiblePart(
     payment: TripPayment,
-    fromParticipant: TripParticipant,
-    toParticipant: TripParticipant,
+    fromParticipant: TripParticipant?,
+    toParticipant: TripParticipant?,
     isExpanded: Boolean,
     action: () -> Unit
 ) {
@@ -77,8 +77,8 @@ private fun VisiblePart(
         )
         Column(modifier = Modifier.weight(1f)) {
             TsInfoText(textRes = R.string.payment)
-            TsInfoText(text = "${stringResource(R.string.from)} ${fromParticipant.name}")
-            TsInfoText(text = "${stringResource(R.string.to)} ${toParticipant.name}")
+            fromParticipant?.let { TsInfoText(text = "${stringResource(R.string.from)} ${fromParticipant.name}") }
+            toParticipant?.let { TsInfoText(text = "${stringResource(R.string.to)} ${toParticipant.name}") }
         }
         Column(
             verticalArrangement = Arrangement.SpaceBetween,

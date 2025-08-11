@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.data.room.model.ExpenseWithParticipants
 import com.anabars.tripsplit.repository.TripItemRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
-class TripExpensesViewModel @Inject constructor(
+class TripItemViewModel @Inject constructor(
     val tripItemRepository: TripItemRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -48,6 +49,26 @@ class TripExpensesViewModel @Inject constructor(
                 initialValue = GroupedExpensesResult.Loading
             )
 
+    val groupedPaymentsResult: StateFlow<GroupedPaymentsResult> =
+        tripItemRepository.getPaymentsByTripId(tripId)
+            .map { payments ->
+                if (payments.isEmpty()) {
+                    GroupedPaymentsResult.Empty
+                } else {
+                    val grouped = payments.groupBy {
+                        Instant.ofEpochMilli(it.timestamp)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                    }.toSortedMap(compareByDescending { it })
+                    GroupedPaymentsResult.Success(data = grouped)
+                }
+            }
+            .onStart { emit(GroupedPaymentsResult.Loading) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = GroupedPaymentsResult.Loading
+            )
 
     val tripParticipants: StateFlow<List<TripParticipant>> =
         tripItemRepository.getParticipantsByTripId(tripId)
@@ -62,6 +83,12 @@ class TripExpensesViewModel @Inject constructor(
             tripItemRepository.deleteExpenseById(expenseId)
         }
     }
+
+    fun deletePaymentById(paymentId: Long) {
+        viewModelScope.launch {
+            tripItemRepository.deletePaymentById(paymentId)
+        }
+    }
 }
 
 sealed class GroupedExpensesResult {
@@ -69,4 +96,11 @@ sealed class GroupedExpensesResult {
     object Empty : GroupedExpensesResult()
     data class Success(val data: Map<LocalDate, List<ExpenseWithParticipants>>) :
         GroupedExpensesResult()
+}
+
+sealed class GroupedPaymentsResult {
+    object Loading : GroupedPaymentsResult()
+    object Empty : GroupedPaymentsResult()
+    data class Success(val data: Map<LocalDate, List<TripPayment>>) :
+        GroupedPaymentsResult()
 }

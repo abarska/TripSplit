@@ -64,7 +64,8 @@ class AddItemViewModel @Inject constructor(
                     tripExpensesRepository.getActiveParticipantsByTripId(tripId).first()
                 val currencies = tripExpensesRepository.getActiveCurrenciesByTripId(tripId).first()
 
-                val initialSelectedParticipants = participants.toSet()
+//                val initialSelectedParticipants = participants.toSet()
+                val initialSelectedParticipants = emptySet<TripParticipant>()
                 val initialCurrencyCode = currencies.firstOrNull()?.code
 
                 _amountCurrencyState.update { currentState ->

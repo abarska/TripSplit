@@ -31,11 +31,10 @@ fun TsPaidByPaidForCard(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             TsParticipantsRadioGroup(
-                useCase = useCase,
                 label = R.string.expense_paid_by,
                 modifier = Modifier.weight(1f),
                 participants = payerParticipantsState.tripParticipants,
-                paidBy = payerParticipantsState.expensePayerId,
+                selectedItemId = payerParticipantsState.expensePayerId,
                 onItemSelected = onPayerSelected,
                 itemLabel = { it.chipDisplayLabelName() }
             )
@@ -52,12 +51,16 @@ fun TsPaidByPaidForCard(
 
                 UseCase.PAYMENT ->
                     TsParticipantsRadioGroup(
-                        useCase = useCase,
                         label = R.string.expense_paid_to,
                         modifier = Modifier.weight(1f),
                         participants = payerParticipantsState.tripParticipants,
-                        paidBy = payerParticipantsState.expensePayerId,
-                        onItemSelected = onPayerSelected,
+                        selectedItemId = payerParticipantsState.selectedParticipants.firstOrNull()?.id,
+                        onItemSelected = { selectedItemId ->
+                            val selectedParticipant =
+                                payerParticipantsState.tripParticipants.find { it.id == selectedItemId }
+                            val newSelection = selectedParticipant?.let { setOf(it) } ?: emptySet()
+                            onSelectionChanged(newSelection)
+                        },
                         itemLabel = { it.chipDisplayLabelName() }
                     )
             }

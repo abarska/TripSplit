@@ -20,10 +20,9 @@ import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 @Composable
 fun TsParticipantsRadioGroup(
     modifier: Modifier = Modifier,
-    useCase: UseCase,
     @StringRes label: Int,
     participants: List<TripParticipant>,
-    paidBy: Long? = null,
+    selectedItemId: Long? = null,
     onItemSelected: (Long) -> Unit,
     itemLabel: (TripParticipant) -> String,
 ) {
@@ -36,7 +35,7 @@ fun TsParticipantsRadioGroup(
         TsInfoText(textRes = label, fontSize = TsFontSize.MEDIUM)
         TsRadioGroup(
             items = participants,
-            selectedItem = participants.find { it.id == paidBy },
+            selectedItem = participants.find { it.id == selectedItemId },
             onItemSelected = { onItemSelected(it.id) },
             layout = LayoutType.Column
         ) { participant ->
@@ -53,10 +52,9 @@ fun TsParticipantsRadioGroup(
 @Composable
 private fun TsParticipantsRadioGroupPreview() {
     TsParticipantsRadioGroup(
-        useCase = UseCase.EXPENSE,
         label = R.string.expense_paid_by,
         participants = getFakeTripParticipants(),
-        paidBy = getFakeTripParticipants().first().id,
+        selectedItemId = getFakeTripParticipants().first().id,
         onItemSelected = {},
         itemLabel = { it.name }
     )

@@ -12,15 +12,16 @@ import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddItemUiEffect
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.AmountChanged
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.CategoryChanged
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.CurrencySelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.DateSelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.OnBackPressed
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.ParticipantsSelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.PayerSelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.SaveExpense
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.AmountChanged
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CategoryChanged
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CurrencySelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.DateSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.OnBackPressed
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.ParticipantsSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.PayerSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.SaveItem
+import com.anabars.tripsplit.ui.widgets.UseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -86,15 +87,15 @@ class AddItemViewModel @Inject constructor(
         }
     }
 
-    fun onIntent(intent: AddExpenseIntent) {
+    fun onIntent(intent: AddItemIntent) {
         when (intent) {
             is DateSelected -> updateDate(intent.date)
             is CategoryChanged -> updateCategory(intent.category)
-            is AmountChanged -> updateExpenseAmount(intent.amount)
+            is AmountChanged -> updateAmount(intent.amount)
             is CurrencySelected -> updateCurrencyCode(intent.code)
             is PayerSelected -> updatePayerId(intent.id)
             is ParticipantsSelected -> updateSelectedParticipants(intent.participants)
-            is SaveExpense -> saveExpense()
+            is SaveItem -> saveItem(intent.useCase)
             is OnBackPressed -> viewModelScope.launch {
                 _uiEffect.emit(AddItemUiEffect.NavigateBack)
             }
@@ -107,7 +108,7 @@ class AddItemViewModel @Inject constructor(
     private fun updateCategory(cat: ExpenseCategory) =
         _amountCurrencyState.update { it.copy(selectedCategory = cat) }
 
-    private fun updateExpenseAmount(amount: String) {
+    private fun updateAmount(amount: String) {
         _amountCurrencyState.update {
             it.copy(expenseAmount = amount, isError = false)
         }
@@ -125,19 +126,27 @@ class AddItemViewModel @Inject constructor(
         }
     }
 
-    private fun saveExpense() {
+    private fun saveItem(useCase: UseCase) {
         viewModelScope.launch {
-            if (!validateExpense()) return@launch
+            when (useCase) {
+                UseCase.EXPENSE -> {
+                    if (!validateExpense()) return@launch
+                    val expense = TripExpense.fromUiState(
+                        amountCurrencyState = _amountCurrencyState.value,
+                        payerParticipantsState = _payerParticipantsState.value,
+                        tripId = tripId
+                    )
+                    val participants = _payerParticipantsState.value.selectedParticipants
+                    tripExpensesRepository.saveExpenseWithParticipants(expense, participants)
+                    viewModelScope.launch {
+                        _uiEffect.emit(AddItemUiEffect.NavigateBack)
+                    }
+                }
 
-            val expense = TripExpense.fromUiState(
-                amountCurrencyState = _amountCurrencyState.value,
-                payerParticipantsState = _payerParticipantsState.value,
-                tripId = tripId
-            )
-            val participants = _payerParticipantsState.value.selectedParticipants
-            tripExpensesRepository.saveExpenseWithParticipants(expense, participants)
-            viewModelScope.launch {
-                _uiEffect.emit(AddItemUiEffect.NavigateBack)
+                UseCase.PAYMENT -> {
+                    Log.d("anabars", "saveItem: save payment")
+                    // TODO: anabars implement 
+                }
             }
         }
     }

@@ -7,6 +7,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -14,6 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.AmountChanged
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CurrencySelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.DateSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.ParticipantsSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.PayerSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.SaveItem
+import com.anabars.tripsplit.ui.widgets.UseCase
 import com.anabars.tripsplit.viewmodels.AddItemViewModel
 
 @Composable
@@ -24,6 +33,8 @@ fun AddPaymentScreen(
 ) {
 
     val viewModel: AddItemViewModel = hiltViewModel()
+    val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
+    val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
 
     val screenTitle = stringResource(R.string.title_new_payment)
     LaunchedEffect(Unit) {
@@ -37,29 +48,29 @@ fun AddPaymentScreen(
         .fillMaxSize()
         .verticalScroll(scrollState)
         .padding(16.dp)
-//    if (isPortrait) {
-//        AddPaymentPortraitContent(
-//            modifier = modifier,
-//            amountCurrencyState = TODO(),
-//            payerParticipantsState = TODO(),
-//            onDateSelected = TODO(),
-//            onExpenseAmountChanged = TODO(),
-//            onCurrencySelected = TODO(),
-//            onPayerSelected = TODO(),
-//            onParticipantsSelected = TODO(),
-//            onSavePayment = TODO()
-//        )
-//    } else {
-//        AddPaymentLandscapeContent(
-//            modifier = modifier,
-//            amountCurrencyState = TODO(),
-//            payerParticipantsState = TODO(),
-//            onDateSelected = TODO(),
-//            onExpenseAmountChanged = TODO(),
-//            onCurrencySelected = TODO(),
-//            onPayerSelected = TODO(),
-//            onParticipantsSelected = TODO(),
-//            onSavePayment = TODO()
-//        )
-//    }
+    if (isPortrait) {
+        AddPaymentPortraitContent(
+            modifier = modifier,
+            amountCurrencyState = amountCurrencyState,
+            payerParticipantsState = payerParticipantsState,
+            onDateSelected = { viewModel.onIntent(DateSelected(it)) },
+            onExpenseAmountChanged = { viewModel.onIntent(AmountChanged(it)) },
+            onCurrencySelected = { viewModel.onIntent(CurrencySelected(it)) },
+            onPayerSelected = { viewModel.onIntent(PayerSelected(it)) },
+            onParticipantsSelected = { viewModel.onIntent(ParticipantsSelected(it)) },
+            onSavePayment = { viewModel.onIntent(SaveItem(UseCase.PAYMENT)) }
+        )
+    } else {
+        AddPaymentLandscapeContent(
+            modifier = modifier,
+            amountCurrencyState = amountCurrencyState,
+            payerParticipantsState = payerParticipantsState,
+            onDateSelected = { viewModel.onIntent(DateSelected(it)) },
+            onExpenseAmountChanged = { viewModel.onIntent(AmountChanged(it)) },
+            onCurrencySelected = { viewModel.onIntent(CurrencySelected(it)) },
+            onPayerSelected = { viewModel.onIntent(PayerSelected(it)) },
+            onParticipantsSelected = { viewModel.onIntent(ParticipantsSelected(it)) },
+            onSavePayment = { viewModel.onIntent(SaveItem(UseCase.PAYMENT)) }
+        )
+    }
 }

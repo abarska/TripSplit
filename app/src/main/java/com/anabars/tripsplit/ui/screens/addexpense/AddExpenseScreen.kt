@@ -19,14 +19,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.AddItemUiEffect
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.AmountChanged
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.CategoryChanged
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.CurrencySelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.DateSelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.OnBackPressed
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.ParticipantsSelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.PayerSelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseIntent.SaveExpense
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.AmountChanged
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CategoryChanged
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CurrencySelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.DateSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.OnBackPressed
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.ParticipantsSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.PayerSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.SaveItem
+import com.anabars.tripsplit.ui.widgets.UseCase
 import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -85,7 +86,7 @@ fun AddExpenseScreen(
             onCurrencySelected = { viewModel.onIntent(CurrencySelected(it)) },
             onPayerSelected = { viewModel.onIntent(PayerSelected(it)) },
             onParticipantsSelected = { viewModel.onIntent(ParticipantsSelected(it)) },
-            onSaveExpense = { viewModel.onIntent(SaveExpense) },
+            onSaveExpense = { viewModel.onIntent(SaveItem(UseCase.EXPENSE)) },
             modifier = modifier
         )
     } else {
@@ -98,7 +99,7 @@ fun AddExpenseScreen(
             onCurrencySelected = { viewModel.onIntent(CurrencySelected(it)) },
             onPayerSelected = { viewModel.onIntent(PayerSelected(it)) },
             onParticipantsSelected = { viewModel.onIntent(ParticipantsSelected(it)) },
-            onSaveExpense = { viewModel.onIntent(SaveExpense) },
+            onSaveExpense = { viewModel.onIntent(SaveItem(UseCase.EXPENSE)) },
             modifier = modifier
         )
     }

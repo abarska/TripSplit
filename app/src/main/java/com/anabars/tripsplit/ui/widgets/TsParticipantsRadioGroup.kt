@@ -11,20 +11,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
-import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.LayoutType
+import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsRadioGroup
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
-import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
 @Composable
 fun TsParticipantsRadioGroup(
+    modifier: Modifier = Modifier,
+    useCase: UseCase,
     @StringRes label: Int,
     participants: List<TripParticipant>,
-    paidBy: Long,
+    paidBy: Long? = null,
     onItemSelected: (Long) -> Unit,
-    modifier: Modifier = Modifier,
     itemLabel: (TripParticipant) -> String,
 ) {
     if (participants.isEmpty()) return
@@ -36,7 +36,7 @@ fun TsParticipantsRadioGroup(
         TsInfoText(textRes = label, fontSize = TsFontSize.MEDIUM)
         TsRadioGroup(
             items = participants,
-            selectedItem = participants.find { it.id == paidBy } ?: participants.first(),
+            selectedItem = participants.find { it.id == paidBy },
             onItemSelected = { onItemSelected(it.id) },
             layout = LayoutType.Column
         ) { participant ->
@@ -53,11 +53,11 @@ fun TsParticipantsRadioGroup(
 @Composable
 private fun TsParticipantsRadioGroupPreview() {
     TsParticipantsRadioGroup(
+        useCase = UseCase.EXPENSE,
         label = R.string.expense_paid_by,
         participants = getFakeTripParticipants(),
         paidBy = getFakeTripParticipants().first().id,
         onItemSelected = {},
-        modifier = Modifier.inputWidthModifier(),
         itemLabel = { it.name }
     )
 }

@@ -15,7 +15,7 @@ data class AddItemAmountCurrencyState(
 
 data class AddItemPayerParticipantsState (
     val tripParticipants: List<TripParticipant> = emptyList(),
-    val expensePayerId: Long = -1L,
+    val expensePayerId: Long? = null,
     val selectedParticipants: Set<TripParticipant> = emptySet(),
     val isError: Boolean = false
 )

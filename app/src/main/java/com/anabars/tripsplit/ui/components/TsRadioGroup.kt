@@ -17,7 +17,7 @@ import com.anabars.tripsplit.R
 fun <T> TsRadioGroup(
     modifier: Modifier = Modifier,
     items: List<T>,
-    selectedItem: T,
+    selectedItem: T? = null,
     onItemSelected: (T) -> Unit,
     layout: LayoutType = LayoutType.Row,
     itemWidth: Dp? = null,
@@ -72,7 +72,7 @@ fun <T> TsRadioGroup(
 @Composable
 private fun <T> TsRadioGroupItems(
     items: List<T>,
-    selectedItem: T,
+    selectedItem: T?,
     onItemSelected: (T) -> Unit,
     itemWidth: Dp? = null,
     itemContent: @Composable (T) -> Unit

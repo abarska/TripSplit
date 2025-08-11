@@ -31,6 +31,7 @@ fun TsPaidByPaidForCard(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             TsParticipantsRadioGroup(
+                useCase = useCase,
                 label = R.string.expense_paid_by,
                 modifier = Modifier.weight(1f),
                 participants = payerParticipantsState.tripParticipants,
@@ -51,6 +52,7 @@ fun TsPaidByPaidForCard(
 
                 UseCase.PAYMENT ->
                     TsParticipantsRadioGroup(
+                        useCase = useCase,
                         label = R.string.expense_paid_to,
                         modifier = Modifier.weight(1f),
                         participants = payerParticipantsState.tripParticipants,

@@ -63,7 +63,6 @@ class AddItemViewModel @Inject constructor(
                 val currencies = tripExpensesRepository.getActiveCurrenciesByTripId(tripId).first()
 
                 val initialSelectedParticipants = participants.toSet()
-                val initialPayerId = participants.firstOrNull()?.id
                 val initialCurrencyCode = currencies.firstOrNull()?.code
 
                 _amountCurrencyState.update { currentState ->
@@ -78,7 +77,6 @@ class AddItemViewModel @Inject constructor(
                     currentState.copy(
                         tripParticipants = participants,
                         selectedParticipants = initialSelectedParticipants,
-                        expensePayerId = initialPayerId ?: currentState.expensePayerId,
                     )
                 }
             } catch (e: Exception) {
@@ -151,36 +149,43 @@ class AddItemViewModel @Inject constructor(
         }
     }
 
-    private fun validateExpense(): Boolean {
+    private suspend fun validateExpense(): Boolean {
         val amount = _amountCurrencyState.value.expenseAmount.toDoubleOrNull()
-        val wrongAmount = amount == null || amount <= 0.0
-        val participantsMissingError = _payerParticipantsState.value.selectedParticipants.isEmpty()
-        if (wrongAmount || participantsMissingError) {
-            showError(
-                wrongAmount = wrongAmount,
-                participantsMissingError = participantsMissingError
-            )
-            highlightCardWithError(
-                wrongAmount = wrongAmount,
-                participantsMissingError = participantsMissingError
-            )
+        val error: AddExpenseError? = when {
+            amount == null || amount <= 0.0 -> AddExpenseError.INVALID_AMOUNT
+            _payerParticipantsState.value.expensePayerId == null -> AddExpenseError.MISSING_PAYER
+            _payerParticipantsState.value.selectedParticipants.isEmpty() -> AddExpenseError.MISSING_PARTICIPANTS
+            else -> null
         }
-        return !wrongAmount && !participantsMissingError
+        error?.let {
+            showError(it)
+            highlightCardWithError(it)
+        }
+        return error == null
     }
 
-    private fun highlightCardWithError(wrongAmount: Boolean, participantsMissingError: Boolean) {
-        if (wrongAmount)
-            _amountCurrencyState.update { it.copy(isError = true) }
-        if (participantsMissingError)
-            _payerParticipantsState.update { it.copy(isError = true) }
+    private fun highlightCardWithError(error: AddExpenseError) {
+        when (error) {
+            AddExpenseError.INVALID_AMOUNT ->
+                _amountCurrencyState.update { it.copy(isError = true) }
+
+            AddExpenseError.MISSING_PAYER, AddExpenseError.MISSING_PARTICIPANTS ->
+                _payerParticipantsState.update { it.copy(isError = true) }
+        }
     }
 
-    private fun showError(wrongAmount: Boolean, participantsMissingError: Boolean) {
-        viewModelScope.launch {
-            when {
-                wrongAmount -> _uiEffect.emit(AddItemUiEffect.ShowSnackBar(R.string.error_amount_invalid))
-                participantsMissingError -> _uiEffect.emit(AddItemUiEffect.ShowSnackBar(R.string.error_participants_not_selected))
-            }
+    private suspend fun showError(error: AddExpenseError) {
+        val messageResId = when (error) {
+            AddExpenseError.INVALID_AMOUNT -> R.string.error_amount_invalid
+            AddExpenseError.MISSING_PAYER -> R.string.error_missing_payer
+            AddExpenseError.MISSING_PARTICIPANTS -> R.string.error_missing_participants
         }
+        _uiEffect.emit(AddItemUiEffect.ShowSnackBar(messageResId))
+    }
+
+    enum class AddExpenseError {
+        INVALID_AMOUNT,
+        MISSING_PAYER,
+        MISSING_PARTICIPANTS
     }
 }

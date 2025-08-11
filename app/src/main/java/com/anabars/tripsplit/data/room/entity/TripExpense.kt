@@ -47,7 +47,7 @@ data class TripExpense(
             val timestamp = amountCurrencyState.selectedDate
                 .atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
             return TripExpense(
-                paidById = payerParticipantsState.expensePayerId,
+                paidById = payerParticipantsState.expensePayerId!!, // non null after validation
                 amount = amountCurrencyState.expenseAmount.toDoubleOrNull() ?: 0.0,
                 currency = amountCurrencyState.expenseCurrencyCode,
                 category = amountCurrencyState.selectedCategory,

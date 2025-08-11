@@ -16,11 +16,12 @@ import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.screens.addexpense.ExpenseCategoriesRadioGroup
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
+import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import java.time.LocalDate
 
 @Composable
 fun TsDateAmountCurrencyCard(
-    useCase: UseCase,
+    useCase: AddItemViewModel.UseCase,
     modifier: Modifier = Modifier,
     onDateSelected: (LocalDate) -> Unit,
     onCategoryChanged: (ExpenseCategory) -> Unit = {},
@@ -43,7 +44,7 @@ fun TsDateAmountCurrencyCard(
                 onDateSelected = onDateSelected,
             )
 
-            if (useCase == UseCase.EXPENSE) {
+            if (useCase == AddItemViewModel.UseCase.EXPENSE) {
                 ExpenseCategoriesRadioGroup(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     selectedCategory = amountCurrencyState.selectedCategory,
@@ -66,13 +67,11 @@ fun TsDateAmountCurrencyCard(
     }
 }
 
-enum class UseCase { EXPENSE, PAYMENT }
-
 @Preview(showBackground = true)
 @Composable
 private fun TsDateAmountCurrencyCardPreviewExpense() {
     TsDateAmountCurrencyCard(
-        useCase = UseCase.EXPENSE,
+        useCase = AddItemViewModel.UseCase.EXPENSE,
         onDateSelected = {},
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         onExpenseAmountChanged = {},
@@ -86,7 +85,7 @@ private fun TsDateAmountCurrencyCardPreviewExpense() {
 @Composable
 private fun TsDateAmountCurrencyCardPreviewPayment() {
     TsDateAmountCurrencyCard(
-        useCase = UseCase.PAYMENT,
+        useCase = AddItemViewModel.UseCase.PAYMENT,
         onDateSelected = {},
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         onExpenseAmountChanged = {},

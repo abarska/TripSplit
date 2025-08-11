@@ -23,7 +23,6 @@ import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.OnBackPressed
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.ParticipantsSelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.PayerSelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.SaveItem
-import com.anabars.tripsplit.ui.widgets.UseCase
 import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -45,7 +44,11 @@ class AddItemViewModel @Inject constructor(
     ViewModel() {
 
     private val tripId: Long = savedStateHandle.get<Long>("tripId")
-        ?: throw IllegalStateException("Trip ID is required for AddExpenseViewModel")
+        ?: throw IllegalStateException("Trip ID is required for AddItemViewModel")
+
+    val useCase: UseCase = savedStateHandle.get<String>("useCase")
+        ?.let { UseCase.valueOf(it) }
+        ?: throw IllegalStateException("UseCase is required for AddItemViewModel")
 
     private val _amountCurrencyState = MutableStateFlow(AddItemAmountCurrencyState())
     val amountCurrencyState: StateFlow<AddItemAmountCurrencyState> =
@@ -65,8 +68,9 @@ class AddItemViewModel @Inject constructor(
                     tripItemRepository.getActiveParticipantsByTripId(tripId).first()
                 val currencies = tripItemRepository.getActiveCurrenciesByTripId(tripId).first()
 
-//                val initialSelectedParticipants = participants.toSet()
-                val initialSelectedParticipants = emptySet<TripParticipant>()
+                val initialSelectedParticipants =
+                    if (useCase == UseCase.EXPENSE) participants.toSet()
+                    else emptySet()
                 val initialCurrencyCode = currencies.firstOrNull()?.code
 
                 _amountCurrencyState.update { currentState ->
@@ -97,7 +101,7 @@ class AddItemViewModel @Inject constructor(
             is CurrencySelected -> updateCurrencyCode(intent.code)
             is PayerSelected -> updatePayerId(intent.id)
             is ParticipantsSelected -> updateSelectedParticipants(intent.participants)
-            is SaveItem -> saveItem(intent.useCase)
+            is SaveItem -> saveItem()
             is OnBackPressed -> viewModelScope.launch {
                 _uiEffect.emit(AddItemUiEffect.NavigateBack)
             }
@@ -128,9 +132,9 @@ class AddItemViewModel @Inject constructor(
         }
     }
 
-    private fun saveItem(useCase: UseCase) {
+    private fun saveItem() {
         viewModelScope.launch {
-            if (!validateItem(useCase = useCase)) return@launch
+            if (!validateItem()) return@launch
 
             when (useCase) {
                 UseCase.EXPENSE -> {
@@ -161,8 +165,8 @@ class AddItemViewModel @Inject constructor(
         }
     }
 
-    private suspend fun validateItem(useCase: UseCase): Boolean {
-        val error: AddItemError? = getError(useCase)
+    private suspend fun validateItem(): Boolean {
+        val error: AddItemError? = getError()
         error?.let {
             highlightCardWithError(it)
             _uiEffect.emit(AddItemUiEffect.ShowSnackBar(it.errorMessageId))
@@ -170,7 +174,7 @@ class AddItemViewModel @Inject constructor(
         return error == null
     }
 
-    private fun getError(useCase: UseCase): AddItemError? {
+    private fun getError(): AddItemError? {
         val amount = _amountCurrencyState.value.expenseAmount.toDoubleOrNull()
         val payer = _payerParticipantsState.value.expensePayerId
         val payees = _payerParticipantsState.value.selectedParticipants
@@ -198,4 +202,6 @@ class AddItemViewModel @Inject constructor(
         MISSING_PARTICIPANTS(R.string.error_missing_participants),
         MISSING_PAYEE(R.string.error_missing_payee)
     }
+
+    enum class UseCase { EXPENSE, PAYMENT }
 }

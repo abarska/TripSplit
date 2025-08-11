@@ -27,7 +27,6 @@ import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.OnBackPressed
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.ParticipantsSelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.PayerSelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.SaveItem
-import com.anabars.tripsplit.ui.widgets.UseCase
 import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -86,7 +85,7 @@ fun AddExpenseScreen(
             onCurrencySelected = { viewModel.onIntent(CurrencySelected(it)) },
             onPayerSelected = { viewModel.onIntent(PayerSelected(it)) },
             onParticipantsSelected = { viewModel.onIntent(ParticipantsSelected(it)) },
-            onSaveExpense = { viewModel.onIntent(SaveItem(UseCase.EXPENSE)) },
+            onSaveExpense = { viewModel.onIntent(SaveItem) },
             modifier = modifier
         )
     } else {
@@ -99,7 +98,7 @@ fun AddExpenseScreen(
             onCurrencySelected = { viewModel.onIntent(CurrencySelected(it)) },
             onPayerSelected = { viewModel.onIntent(PayerSelected(it)) },
             onParticipantsSelected = { viewModel.onIntent(ParticipantsSelected(it)) },
-            onSaveExpense = { viewModel.onIntent(SaveItem(UseCase.EXPENSE)) },
+            onSaveExpense = { viewModel.onIntent(SaveItem) },
             modifier = modifier
         )
     }

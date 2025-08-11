@@ -18,6 +18,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsFab
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.widgets.TsPlaceholderView
+import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import com.anabars.tripsplit.viewmodels.GroupedExpensesResult
 import com.anabars.tripsplit.viewmodels.TripItemViewModel
 
@@ -47,7 +48,7 @@ fun TripExpensesTab(
                 TripExpensesData(
                     groupedExpensesResult = groupedExpensesResult,
                     tripParticipants = tripParticipants,
-                    onDeleteClick = {expenseId -> viewModel.deleteExpenseById(expenseId) }
+                    onDeleteClick = { expenseId -> viewModel.deleteExpenseById(expenseId) }
                 )
         }
 
@@ -58,7 +59,9 @@ fun TripExpensesTab(
             iconVector = Icons.Outlined.Add,
             contentDescription = R.string.add_a_new_expense,
         ) {
-            navController.navigate("${AppScreens.ROUTE_ADD_EXPENSE}/${viewModel.tripId}")
+            navController.navigate(
+                "${AppScreens.ROUTE_ADD_EXPENSE}/${viewModel.tripId}/${AddItemViewModel.UseCase.EXPENSE.name}"
+            )
         }
     }
 }

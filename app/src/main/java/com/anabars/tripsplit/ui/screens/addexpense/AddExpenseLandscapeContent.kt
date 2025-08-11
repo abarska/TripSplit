@@ -22,7 +22,7 @@ import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
 import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
 import com.anabars.tripsplit.ui.widgets.TsDateAmountCurrencyCard
 import com.anabars.tripsplit.ui.widgets.TsPaidByPaidForCard
-import com.anabars.tripsplit.ui.widgets.UseCase
+import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import java.time.LocalDate
 
 @Composable
@@ -49,7 +49,7 @@ fun AddExpenseLandscapeContent(
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
             TsDateAmountCurrencyCard(
-                useCase = UseCase.EXPENSE,
+                useCase = AddItemViewModel.UseCase.EXPENSE,
                 onDateSelected = onDateSelected,
                 onCategoryChanged = onCategoryChange,
                 amountCurrencyState = amountCurrencyState,
@@ -63,7 +63,7 @@ fun AddExpenseLandscapeContent(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                useCase = UseCase.EXPENSE,
+                useCase = AddItemViewModel.UseCase.EXPENSE,
                 payerParticipantsState = payerParticipantsState,
                 onPayerSelected = onPayerSelected,
                 onSelectionChanged = onParticipantsSelected

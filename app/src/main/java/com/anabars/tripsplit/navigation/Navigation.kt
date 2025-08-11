@@ -71,10 +71,12 @@ fun AppNavGraph(
         }
 
         composable(
-            route = AppScreens.ROUTE_ADD_EXPENSE + "/{tripId}",
-            arguments = listOf(navArgument("tripId") { type = NavType.LongType })
+            route = AppScreens.ROUTE_ADD_EXPENSE + "/{tripId}/{useCase}",
+            arguments = listOf(
+                navArgument(name = "tripId") { type = NavType.LongType },
+                navArgument("useCase") { type = NavType.StringType }
+            )
         ) { backStackEntry ->
-            backStackEntry.arguments?.getLong("tripId") ?: return@composable
             AddExpenseScreen(
                 navController = navController,
                 onTabTitleChange = onTabTitleChange,
@@ -84,10 +86,12 @@ fun AppNavGraph(
         }
 
         composable(
-            route = AppScreens.ROUTE_ADD_PAYMENT + "/{tripId}",
-            arguments = listOf(navArgument("tripId") { type = NavType.LongType })
+            route = AppScreens.ROUTE_ADD_PAYMENT + "/{tripId}/{useCase}",
+            arguments = listOf(
+                navArgument("tripId") { type = NavType.LongType },
+                navArgument("useCase") { type = NavType.StringType }
+            )
         ) { backStackEntry ->
-            backStackEntry.arguments?.getLong("tripId") ?: return@composable
             AddPaymentScreen(
                 navController = navController,
                 onTabTitleChange = onTabTitleChange,

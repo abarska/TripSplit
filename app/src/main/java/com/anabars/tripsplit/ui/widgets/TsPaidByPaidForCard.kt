@@ -13,10 +13,11 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
 import com.anabars.tripsplit.ui.utils.getFakeAddExpensePayerParticipantsState
+import com.anabars.tripsplit.viewmodels.AddItemViewModel
 
 @Composable
 fun TsPaidByPaidForCard(
-    useCase: UseCase,
+    useCase: AddItemViewModel.UseCase,
     payerParticipantsState: AddItemPayerParticipantsState,
     onPayerSelected: (Long) -> Unit,
     onSelectionChanged: (Set<TripParticipant>) -> Unit,
@@ -41,7 +42,7 @@ fun TsPaidByPaidForCard(
 
             when (useCase) {
 
-                UseCase.EXPENSE ->
+                AddItemViewModel.UseCase.EXPENSE ->
                     TsParticipantsCheckBoxGroup(
                         modifier = Modifier.weight(1f),
                         participants = payerParticipantsState.tripParticipants,
@@ -49,7 +50,7 @@ fun TsPaidByPaidForCard(
                         onSelectionChanged = onSelectionChanged
                     )
 
-                UseCase.PAYMENT ->
+                AddItemViewModel.UseCase.PAYMENT ->
                     TsParticipantsRadioGroup(
                         label = R.string.expense_paid_to,
                         modifier = Modifier.weight(1f),
@@ -72,7 +73,7 @@ fun TsPaidByPaidForCard(
 @Composable
 private fun TsPaidByPaidForCardPreviewExpense() {
     TsPaidByPaidForCard(
-        useCase = UseCase.EXPENSE,
+        useCase = AddItemViewModel.UseCase.EXPENSE,
         payerParticipantsState = getFakeAddExpensePayerParticipantsState(),
         onPayerSelected = {},
         onSelectionChanged = {},
@@ -84,7 +85,7 @@ private fun TsPaidByPaidForCardPreviewExpense() {
 @Composable
 private fun TsPaidByPaidForCardPreviewPayment() {
     TsPaidByPaidForCard(
-        useCase = UseCase.PAYMENT,
+        useCase = AddItemViewModel.UseCase.PAYMENT,
         payerParticipantsState = getFakeAddExpensePayerParticipantsState(),
         onPayerSelected = {},
         onSelectionChanged = {},

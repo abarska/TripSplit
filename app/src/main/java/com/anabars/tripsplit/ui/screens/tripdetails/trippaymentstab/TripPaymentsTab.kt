@@ -18,6 +18,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsFab
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.widgets.TsPlaceholderView
+import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import com.anabars.tripsplit.viewmodels.GroupedPaymentsResult
 import com.anabars.tripsplit.viewmodels.TripItemViewModel
 
@@ -57,7 +58,9 @@ fun TripPaymentsTab(
             iconVector = Icons.Outlined.Add,
             contentDescription = R.string.add_a_new_payment,
         ) {
-            navController.navigate("${AppScreens.ROUTE_ADD_PAYMENT}/${viewModel.tripId}")
+            navController.navigate(
+                "${AppScreens.ROUTE_ADD_PAYMENT}/${viewModel.tripId}/${AddItemViewModel.UseCase.PAYMENT.name}"
+            )
         }
     }
 }

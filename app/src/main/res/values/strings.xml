@@ -34,6 +34,7 @@
     <string name="overview_tab_content_description">Trip Overview</string>
     <string name="expenses_tab_content_description">Trip Expenses</string>
     <string name="payments_tab_content_description">Trip Payments</string>
+    <string name="balances_tab_content_description">Trip Balances</string>
     <string name="expense_category_icon">Expense Category Icon</string>
     <string name="payment_icon">Payment Icon</string>
     <string name="expand_card_icon">Expand Card</string>
@@ -92,6 +93,7 @@
     <string name="overview_tab">Overview</string>
     <string name="expenses_tab">Expenses</string>
     <string name="payments_tab">Payments</string>
+    <string name="balances_tab">Balances</string>
 
     <string name="you">You</string>
     <string name="participants">Participants</string>
@@ -124,6 +126,7 @@
     <string name="archived">Archived</string>
 
     // missing data placeholders
+    <string name="under_construction">Under Construction</string>
     <string name="placeholder_expenses">Your expenses will be shown here</string>
     <string name="placeholder_payments">Your payments will be shown here</string>
     <string name="placeholder_statistics">Statistics will be shown here when available</string>

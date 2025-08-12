@@ -5,6 +5,7 @@ sealed class AppScreens(val route: String) {
     data object AddTripScreen : AppScreens(ROUTE_ADD_TRIP)
     data object AddExpenseScreen : AppScreens(ROUTE_ADD_EXPENSE)
     data object AddPaymentScreen : AppScreens(ROUTE_ADD_PAYMENT)
+    data object BalancesScreen : AppScreens(ROUTE_BALANCES)
     data object SettingsScreen : AppScreens(ROUTE_SETTINGS)
     data object ArchiveScreen : AppScreens(ROUTE_ARCHIVE)
     data object TripDetailsScreen : AppScreens(ROUTE_TRIP_DETAILS)
@@ -14,6 +15,7 @@ sealed class AppScreens(val route: String) {
         const val ROUTE_ADD_TRIP = "add_trip"
         const val ROUTE_ADD_EXPENSE = "add_expense"
         const val ROUTE_ADD_PAYMENT = "add_payment"
+        const val ROUTE_BALANCES = "balances"
         const val ROUTE_SETTINGS = "settings"
         const val ROUTE_ARCHIVE = "archive"
         const val ROUTE_TRIP_DETAILS = "trip_details"
@@ -23,6 +25,7 @@ sealed class AppScreens(val route: String) {
             AddTripScreen,
             AddExpenseScreen,
             AddPaymentScreen,
+            BalancesScreen,
             SettingsScreen,
             ArchiveScreen,
             TripDetailsScreen

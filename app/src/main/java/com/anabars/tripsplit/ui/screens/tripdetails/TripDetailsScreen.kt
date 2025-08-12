@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.TripDetailsTabs
+import com.anabars.tripsplit.ui.screens.tripdetails.tripbalancestab.TripBalancesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab.TripExpensesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab.TripOverviewTab
 import com.anabars.tripsplit.ui.screens.tripdetails.trippaymentstab.TripPaymentsTab
@@ -64,6 +65,7 @@ fun TripDetailsScreen(
 
             1 -> TripExpensesTab(navController = navController)
             2 -> TripPaymentsTab(navController = navController)
+            3 -> TripBalancesTab(navController = navController)
         }
     }
 }

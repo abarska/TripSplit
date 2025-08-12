@@ -12,11 +12,13 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.model.TripDetailsTabs
+import com.anabars.tripsplit.utils.isLandscapeSmallOrAnyBig
 
 @Composable
 fun TsBottomTabs(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
@@ -27,6 +29,7 @@ fun TsBottomTabs(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
             .fillMaxWidth()
             .padding(bottom = insets.calculateBottomPadding())
     ) {
+        val enoughSpace = isLandscapeSmallOrAnyBig(LocalConfiguration.current)
         TripDetailsTabs.forEachIndexed { index, tab ->
             val isSelected = selectedTabIndex == index
             val contentColor =
@@ -35,14 +38,14 @@ fun TsBottomTabs(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                 selected = isSelected,
                 onClick = { onTabSelected(index) },
                 text = {
-                    TsInfoText(textRes = tab.titleRes, textColor = contentColor)
+                    if (enoughSpace) TsInfoText(textRes = tab.titleRes, textColor = contentColor)
                 },
                 icon = {
                     Icon(
                         imageVector = tab.icon,
                         contentDescription = stringResource(tab.contentDescriptionRes),
                         tint = contentColor,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(if (enoughSpace) 24.dp else 32.dp)
                     )
                 }
             )

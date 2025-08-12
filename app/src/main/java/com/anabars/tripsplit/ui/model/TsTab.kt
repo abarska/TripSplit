@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.CompareArrows
 import androidx.compose.material.icons.outlined.AttachMoney
+import androidx.compose.material.icons.outlined.Balance
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.anabars.tripsplit.R
@@ -30,5 +31,10 @@ val TripDetailsTabs = listOf(
         icon = Icons.AutoMirrored.Outlined.CompareArrows,
         titleRes = R.string.payments_tab,
         contentDescriptionRes = R.string.payments_tab_content_description
+    ),
+    TsTab(
+        icon = Icons.Outlined.Balance,
+        titleRes = R.string.balances_tab,
+        contentDescriptionRes = R.string.balances_tab_content_description
     )
 )

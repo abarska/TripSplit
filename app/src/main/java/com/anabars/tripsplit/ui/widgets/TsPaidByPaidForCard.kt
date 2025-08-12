@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,28 +43,35 @@ fun TsPaidByPaidForCard(
 
             when (useCase) {
 
-                AddItemViewModel.UseCase.EXPENSE ->
+                AddItemViewModel.UseCase.EXPENSE -> {
                     TsParticipantsCheckBoxGroup(
                         modifier = Modifier.weight(1f),
                         participants = payerParticipantsState.tripParticipants,
                         selectedParticipants = payerParticipantsState.selectedParticipants,
                         onSelectionChanged = onSelectionChanged
                     )
+                }
 
-                AddItemViewModel.UseCase.PAYMENT ->
+                AddItemViewModel.UseCase.PAYMENT -> {
+                    val payerId = payerParticipantsState.expensePayerId
+                    val participants = payerParticipantsState.tripParticipants
+                    val allowedPayees =
+                        remember(payerId, participants) {
+                            participants.filter { it.id != payerId }
+                        }
                     TsParticipantsRadioGroup(
                         label = R.string.expense_paid_to,
                         modifier = Modifier.weight(1f),
-                        participants = payerParticipantsState.tripParticipants,
+                        participants = allowedPayees,
                         selectedItemId = payerParticipantsState.selectedParticipants.firstOrNull()?.id,
                         onItemSelected = { selectedItemId ->
-                            val selectedParticipant =
-                                payerParticipantsState.tripParticipants.find { it.id == selectedItemId }
+                            val selectedParticipant = participants.find { it.id == selectedItemId }
                             val newSelection = selectedParticipant?.let { setOf(it) } ?: emptySet()
                             onSelectionChanged(newSelection)
                         },
                         itemLabel = { it.chipDisplayLabelName() }
                     )
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab
+package com.anabars.tripsplit.ui.screens.tripdetails.trippaymentstab
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,17 +15,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.data.room.entity.TripParticipant
+import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.ui.components.TsOutlinedButton
-import com.anabars.tripsplit.ui.listitems.TsExpenseItemRow
+import com.anabars.tripsplit.ui.listitems.TsPaymentItemRow
 import com.anabars.tripsplit.utils.formatters.formatDate
-import com.anabars.tripsplit.viewmodels.GroupedExpensesResult
+import com.anabars.tripsplit.viewmodels.GroupedResult
 
 @Composable
-fun TripExpensesData(
-    groupedExpensesResult: GroupedExpensesResult,
+fun TripPaymentsContent(
+    modifier: Modifier = Modifier,
+    result: GroupedResult<TripPayment>,
     tripParticipants: List<TripParticipant>,
-    onDeleteClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    onDeleteClick: (Long) -> Unit
 ) {
     val savedMap: Map<Long, Boolean> =
         rememberSaveable { mutableStateOf(emptyMap<Long, Boolean>()) }.value
@@ -39,31 +40,29 @@ fun TripExpensesData(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val groupedExpenses =
-            (groupedExpensesResult as GroupedExpensesResult.Success).data
-        groupedExpenses.forEach { (date, group) ->
+        val groupedPayments = (result as GroupedResult.Success).data
+        groupedPayments.forEach { (date, group) ->
             item {
                 TsOutlinedButton(
                     text = formatDate(date),
                     modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally)
                 ) {}
             }
-            items(group) { expenseWithParticipants ->
-                val expenseId = expenseWithParticipants.expense.id
-                val isExpanded = expandedMap[expenseId] ?: false
-                TsExpenseItemRow(
-                    expense = expenseWithParticipants.expense,
-                    paidFor = expenseWithParticipants.participants,
-                    tripParticipants = tripParticipants,
+            items(items = group) { payment ->
+                val isExpanded = expandedMap[payment.id] ?: false
+                TsPaymentItemRow(
+                    payment = payment,
+                    fromParticipant = tripParticipants.firstOrNull { it.id == payment.fromUserId },
+                    toParticipant = tripParticipants.firstOrNull { it.id == payment.toUserId },
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                     isExpanded = isExpanded,
                     onExpandToggle = {
-                        expandedMap[expenseId] = !isExpanded
+                        expandedMap[payment.id] = !isExpanded
                     },
                     onDeleteClick = {
-                        expandedMap.remove(expenseId)
-                        onDeleteClick(expenseId)
-                    },
+                        expandedMap.remove(payment.id)
+                        onDeleteClick(payment.id)
+                    }
                 )
             }
         }

@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TripItemViewModel @Inject constructor(
-    val tripItemRepository: TripItemRepository,
+    private val tripItemRepository: TripItemRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -78,15 +78,22 @@ class TripItemViewModel @Inject constructor(
                 initialValue = emptyList()
             )
 
-    fun deleteExpenseById(expenseId: Long) {
+    private fun deleteExpenseById(expenseId: Long) {
         viewModelScope.launch {
             tripItemRepository.deleteExpenseById(expenseId)
         }
     }
 
-    fun deletePaymentById(paymentId: Long) {
+    private fun deletePaymentById(paymentId: Long) {
         viewModelScope.launch {
             tripItemRepository.deletePaymentById(paymentId)
+        }
+    }
+
+    fun onIntent(intent: DeleteItemIntent) {
+        when (intent) {
+            is DeleteItemIntent.DeleteExpenseItem -> deleteExpenseById(intent.id)
+            is DeleteItemIntent.DeletePaymentItem -> deletePaymentById(intent.id)
         }
     }
 }
@@ -96,4 +103,9 @@ sealed class GroupedResult<out T> {
     object Loading : GroupedResult<Nothing>()
     object Empty : GroupedResult<Nothing>()
     data class Success<T>(val data: Map<LocalDate, List<T>>) : GroupedResult<T>()
+}
+
+sealed class DeleteItemIntent(open val id: Long) {
+    data class DeletePaymentItem(override val id: Long) : DeleteItemIntent(id)
+    data class DeleteExpenseItem(override val id: Long) : DeleteItemIntent(id)
 }

@@ -10,6 +10,7 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.widgets.TripItemTabContent
 import com.anabars.tripsplit.viewmodels.AddItemViewModel
+import com.anabars.tripsplit.viewmodels.DeleteItemIntent
 import com.anabars.tripsplit.viewmodels.GroupedResult
 import com.anabars.tripsplit.viewmodels.TripItemViewModel
 
@@ -31,7 +32,7 @@ fun TripPaymentsTab(
             TripPaymentsContent(
                 result = GroupedResult.Success(data),
                 tripParticipants = tripParticipants,
-                onDeleteClick = { viewModel.deletePaymentById(it) }
+                onDeleteClick = { viewModel.onIntent(DeleteItemIntent.DeletePaymentItem(it)) }
             )
         },
         navController = navController,

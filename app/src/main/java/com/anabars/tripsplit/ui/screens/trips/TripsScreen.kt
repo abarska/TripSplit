@@ -30,7 +30,6 @@ import com.anabars.tripsplit.navigation.Routes
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsItemRowActionButton
 import com.anabars.tripsplit.ui.components.TsOutlinedButton
-import com.anabars.tripsplit.ui.components.TsPlusFab
 import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.utils.TsFontSize
@@ -123,19 +122,6 @@ fun TripsScreen(
                         }
                     }
                 }
-            }
-        }
-        TsPlusFab(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-        ) {
-            navController.navigate(Routes.ROUTE_ADD_TRIP) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
             }
         }
     }

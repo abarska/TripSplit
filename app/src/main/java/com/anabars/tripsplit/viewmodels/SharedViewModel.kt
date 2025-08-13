@@ -50,14 +50,18 @@ class SharedViewModel @Inject constructor() : ViewModel() {
 
     sealed class SharedUiEffect {
         data class ShowSnackBar(@StringRes val resId: Int) : SharedUiEffect()
+        data class NavigateTo(val route: String) : SharedUiEffect()
     }
 
     private val _uiEffect = MutableSharedFlow<SharedUiEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
 
     fun onEffect(effect: SharedUiEffect) {
-        if (effect is SharedUiEffect.ShowSnackBar) {
-            viewModelScope.launch {
+        when (effect) {
+            is SharedUiEffect.NavigateTo -> viewModelScope.launch {
+                _uiEffect.emit(SharedUiEffect.NavigateTo(effect.route))
+            }
+            is SharedUiEffect.ShowSnackBar -> viewModelScope.launch {
                 _uiEffect.emit(SharedUiEffect.ShowSnackBar(effect.resId))
             }
         }

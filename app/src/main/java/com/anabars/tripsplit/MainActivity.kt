@@ -33,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.anabars.tripsplit.navigation.AppNavGraph
 import com.anabars.tripsplit.navigation.Routes
 import com.anabars.tripsplit.ui.components.DrawerContent
+import com.anabars.tripsplit.ui.components.TsPlusFab
 import com.anabars.tripsplit.ui.components.TsToolbar
 import com.anabars.tripsplit.ui.theme.AppTheme
 import com.anabars.tripsplit.ui.widgets.TsBottomTabs
@@ -101,7 +102,9 @@ fun MainScreenWithDrawer() {
             }
         },
         floatingActionButton = {
-
+            if (currentRoute?.startsWith(Routes.ROUTE_TRIPS) == true) {
+                TsPlusFab { navController.navigate(Routes.ROUTE_ADD_TRIP) }
+            }
         }
     ) { paddingValues ->
         ModalNavigationDrawer(

@@ -1,7 +1,6 @@
 package com.anabars.tripsplit.ui.screens.trips
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -71,55 +70,53 @@ fun TripsScreen(
         }
     }
 
-    Box(
-        modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding))
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(dimensionResource(R.dimen.full_screen_padding)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            tripsGrouped.forEach { (status, trips) ->
-                item(key = "status_${status.name}") {
-                    TsOutlinedButton(
-                        text = stringResource(id = status.labelRes),
-                        modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally)
-                    ) {}
-                }
-                items(
-                    items = trips,
-                    key = { trip -> trip.id }
-                ) { trip ->
-                    TsItemRow(
-                        modifier = modifier.inputWidthModifier(),
-                        onItemClick = {
-                            navController.navigate(Routes.ROUTE_TRIP_DETAILS + "/${trip.id}")
-                        }
+        tripsGrouped.forEach { (status, trips) ->
+            item(key = "status_${status.name}") {
+                TsOutlinedButton(
+                    text = stringResource(id = status.labelRes),
+                    modifier = modifier.wrapContentWidth(Alignment.CenterHorizontally)
+                ) {}
+            }
+            items(
+                items = trips,
+                key = { trip -> trip.id }
+            ) { trip ->
+                TsItemRow(
+                    modifier = modifier.inputWidthModifier(),
+                    onItemClick = {
+                        navController.navigate(Routes.ROUTE_TRIP_DETAILS + "/${trip.id}")
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                        TsInfoText(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .weight(1f),
+                            text = trip.title,
+                            fontSize = TsFontSize.MEDIUM
+                        )
+                        val button = ActionButton.ChipActionButton(
+                            icon = Icons.Outlined.Archive,
+                            iconSize = 32.dp,
+                            contentDescriptionRes = R.string.archive_item,
                         ) {
-                            TsInfoText(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .weight(1f),
-                                text = trip.title,
-                                fontSize = TsFontSize.MEDIUM
+                            tripsViewModel.updateTripStatus(
+                                id = trip.id,
+                                status = TripStatus.ARCHIVED
                             )
-                            val button = ActionButton.ChipActionButton(
-                                icon = Icons.Outlined.Archive,
-                                iconSize = 32.dp,
-                                contentDescriptionRes = R.string.archive_item,
-                            ) {
-                                tripsViewModel.updateTripStatus(
-                                    id = trip.id,
-                                    status = TripStatus.ARCHIVED
-                                )
-                            }
-                            TsItemRowActionButton(button)
                         }
+                        TsItemRowActionButton(button)
                     }
                 }
             }

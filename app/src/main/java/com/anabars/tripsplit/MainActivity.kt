@@ -70,8 +70,14 @@ fun MainScreenWithDrawer() {
 
     LaunchedEffect(Unit) {
         sharedViewModel.uiEffect.collectLatest { effect ->
-            if (effect is SharedViewModel.SharedUiEffect.ShowSnackBar) {
-                snackbarHostState.showSnackbar(context.getString(effect.resId))
+            when (effect) {
+                is SharedViewModel.SharedUiEffect.NavigateTo -> {
+                    navController.navigate(effect.route)
+                }
+
+                is SharedViewModel.SharedUiEffect.ShowSnackBar -> {
+                    snackbarHostState.showSnackbar(context.getString(effect.resId))
+                }
             }
         }
     }
@@ -103,7 +109,11 @@ fun MainScreenWithDrawer() {
         },
         floatingActionButton = {
             if (currentRoute?.startsWith(Routes.ROUTE_TRIPS) == true) {
-                TsPlusFab { navController.navigate(Routes.ROUTE_ADD_TRIP) }
+                TsPlusFab {
+                    sharedViewModel.onEffect(
+                        SharedViewModel.SharedUiEffect.NavigateTo(Routes.ROUTE_ADD_TRIP)
+                    )
+                }
             }
         }
     ) { paddingValues ->

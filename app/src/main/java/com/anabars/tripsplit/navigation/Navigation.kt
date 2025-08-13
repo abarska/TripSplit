@@ -48,6 +48,7 @@ fun AppNavGraph(
                 navController = navController,
                 onTabTitleChange = onTabTitleChange,
                 setToolbarActions = { sharedViewModel.onEvent(SharedUiEvent.SetToolbarActions(it)) },
+                setFabVisibility = { sharedViewModel.onEvent(SharedUiEvent.SetFabVisibility(it)) },
                 modifier = modifier
             )
         }

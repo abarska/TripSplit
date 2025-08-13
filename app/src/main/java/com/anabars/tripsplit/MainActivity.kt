@@ -108,7 +108,7 @@ fun MainScreenWithDrawer() {
             }
         },
         floatingActionButton = {
-            if (currentRoute?.startsWith(Routes.ROUTE_TRIPS) == true) {
+            if (sharedUiState.fabVisible) {
                 TsPlusFab {
                     sharedViewModel.onEffect(
                         SharedViewModel.SharedUiEffect.NavigateTo(Routes.ROUTE_ADD_TRIP)

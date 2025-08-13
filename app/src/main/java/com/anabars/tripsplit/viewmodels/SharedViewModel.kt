@@ -21,12 +21,14 @@ class SharedViewModel @Inject constructor() : ViewModel() {
         val selectedTabIndex: Int = 1,
         val toolbarActions: List<ToolbarActionButton> = emptyList(),
         val tabTitle: String? = null,
+        val fabVisible: Boolean = false
     )
 
     sealed class SharedUiEvent {
         data class SetTabIndex(val index: Int) : SharedUiEvent()
         data class SetToolbarActions(val actions: List<ToolbarActionButton>) : SharedUiEvent()
         data class SetTabTitle(val title: String?) : SharedUiEvent()
+        data class SetFabVisibility(val visible: Boolean) : SharedUiEvent()
     }
 
     private val _uiState = MutableStateFlow(SharedUiState())
@@ -34,17 +36,17 @@ class SharedViewModel @Inject constructor() : ViewModel() {
 
     fun onEvent(event: SharedUiEvent) {
         when (event) {
-            is SharedUiEvent.SetTabIndex -> {
+            is SharedUiEvent.SetTabIndex ->
                 _uiState.update { it.copy(selectedTabIndex = event.index) }
-            }
 
-            is SharedUiEvent.SetToolbarActions -> {
+            is SharedUiEvent.SetToolbarActions ->
                 _uiState.update { it.copy(toolbarActions = event.actions) }
-            }
 
-            is SharedUiEvent.SetTabTitle -> {
+            is SharedUiEvent.SetTabTitle ->
                 _uiState.update { it.copy(tabTitle = event.title) }
-            }
+
+            is SharedUiEvent.SetFabVisibility ->
+                _uiState.update { it.copy(fabVisible = event.visible) }
         }
     }
 
@@ -61,6 +63,7 @@ class SharedViewModel @Inject constructor() : ViewModel() {
             is SharedUiEffect.NavigateTo -> viewModelScope.launch {
                 _uiEffect.emit(SharedUiEffect.NavigateTo(effect.route))
             }
+
             is SharedUiEffect.ShowSnackBar -> viewModelScope.launch {
                 _uiEffect.emit(SharedUiEffect.ShowSnackBar(effect.resId))
             }

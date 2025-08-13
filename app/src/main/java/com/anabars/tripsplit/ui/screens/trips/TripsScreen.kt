@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -27,10 +26,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripStatus
-import com.anabars.tripsplit.ui.components.TsFab
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsItemRowActionButton
 import com.anabars.tripsplit.ui.components.TsOutlinedButton
+import com.anabars.tripsplit.ui.components.TsPlusFab
 import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.screens.AppScreens
@@ -126,12 +125,10 @@ fun TripsScreen(
                 }
             }
         }
-        TsFab(
+        TsPlusFab(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            iconVector = Icons.Outlined.Add,
-            contentDescription = R.string.add_a_new_trip,
+                .padding(16.dp)
         ) {
             navController.navigate(AppScreens.ROUTE_ADD_TRIP) {
                 popUpTo(navController.graph.startDestinationId) {

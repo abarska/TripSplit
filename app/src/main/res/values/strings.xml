@@ -21,7 +21,6 @@
     // used for content description
     <string name="toolbar_action_button">Toolbar action button</string>
     <string name="chip_action_button">Chip action button</string>
-    <string name="floating_action_button">Floating action button</string>
     <string name="plus_button">Plus button</string>
     <string name="add_a_new_trip">Add new trip</string>
     <string name="add_a_new_expense">Add new expense</string>

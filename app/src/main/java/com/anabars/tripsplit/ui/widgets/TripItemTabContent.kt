@@ -3,8 +3,6 @@ package com.anabars.tripsplit.ui.widgets
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.components.TsFab
+import com.anabars.tripsplit.ui.components.TsPlusFab
 import com.anabars.tripsplit.viewmodels.GroupedResult
 import java.time.LocalDate
 
@@ -20,7 +18,6 @@ import java.time.LocalDate
 fun <T> TripItemTabContent(
     result: GroupedResult<T>,
     placeholderTextRes: Int,
-    fabDescriptionRes: Int,
     fabClickRoute: String,
     successContent: @Composable (data: Map<LocalDate, List<T>>) -> Unit,
     navController: NavController,
@@ -42,12 +39,10 @@ fun <T> TripItemTabContent(
                 successContent(result.data)
         }
 
-        TsFab(
+        TsPlusFab(
             modifier = Modifier
                 .padding(16.dp)
-                .align(Alignment.BottomEnd),
-            iconVector = Icons.Outlined.Add,
-            contentDescription = fabDescriptionRes,
+                .align(Alignment.BottomEnd)
         ) {
             navController.navigate(fabClickRoute)
         }

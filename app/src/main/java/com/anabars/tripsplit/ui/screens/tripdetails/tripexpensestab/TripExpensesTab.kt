@@ -26,7 +26,6 @@ fun TripExpensesTab(
     TripItemTabContent(
         result = groupedExpensesResult,
         placeholderTextRes = R.string.placeholder_expenses,
-        fabDescriptionRes = R.string.add_a_new_expense,
         fabClickRoute = "${AppScreens.ROUTE_ADD_EXPENSE}/${viewModel.tripId}/${AddItemViewModel.UseCase.EXPENSE.name}",
         successContent = { data ->
             TripExpensesContent(

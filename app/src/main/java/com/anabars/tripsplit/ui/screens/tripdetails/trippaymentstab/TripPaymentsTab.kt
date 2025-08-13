@@ -26,7 +26,6 @@ fun TripPaymentsTab(
     TripItemTabContent(
         result = groupedPaymentsResult,
         placeholderTextRes = R.string.placeholder_payments,
-        fabDescriptionRes = R.string.add_a_new_payment,
         fabClickRoute = "${AppScreens.ROUTE_ADD_PAYMENT}/${viewModel.tripId}/${AddItemViewModel.UseCase.PAYMENT.name}",
         successContent = { data ->
             TripPaymentsContent(

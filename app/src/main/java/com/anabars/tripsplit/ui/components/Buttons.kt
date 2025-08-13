@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.ui.components
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -26,10 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
@@ -37,16 +34,14 @@ import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
+@Preview(showBackground = true)
 @Composable
-fun TsFab(
+fun TsPlusFab(
     modifier: Modifier = Modifier,
-    iconVector: ImageVector? = null,
-    @DrawableRes iconRes: Int = 0,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    @StringRes contentDescription: Int = R.string.floating_action_button,
     isEnabled: Boolean = true,
-    onClick: () -> Unit
+    onClick: () -> Unit = {}
 ) {
     FloatingActionButton(
         onClick = { if (isEnabled) onClick() },
@@ -61,21 +56,12 @@ fun TsFab(
             hoveredElevation = 4.dp
         )
     ) {
-        val icon = if (iconRes != 0) ImageVector.vectorResource(id = iconRes) else iconVector
-        icon?.let {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                imageVector = it,
-                contentDescription = stringResource(contentDescription)
-            )
-        }
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            imageVector = Icons.Outlined.Add,
+            contentDescription = stringResource(R.string.plus_button)
+        )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TsFabPreview() {
-    TsFab(iconVector = Icons.Outlined.Add) {}
 }
 
 @Composable

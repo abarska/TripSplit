@@ -9,14 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 
 @Composable
-fun TripBalancesTab(
-    navController: NavController,
-    modifier: Modifier = Modifier
-) {
+fun TripBalancesTab(modifier: Modifier = Modifier) {
     Text(
         text = stringResource(R.string.under_construction),
         modifier = Modifier

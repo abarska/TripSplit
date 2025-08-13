@@ -42,13 +42,16 @@ fun AppNavGraph(
         val onShowSnackbar: (Int) -> Unit = {
             sharedViewModel.onEffect(SharedViewModel.SharedUiEffect.ShowSnackBar(it))
         }
+        val onUpdateFabVisibility: (Boolean) -> Unit = {
+            sharedViewModel.onEvent(SharedUiEvent.SetFabVisibility(it))
+        }
 
         composable(route = Routes.ROUTE_TRIPS) {
             TripsScreen(
                 navController = navController,
                 onTabTitleChange = onTabTitleChange,
                 setToolbarActions = { sharedViewModel.onEvent(SharedUiEvent.SetToolbarActions(it)) },
-                setFabVisibility = { sharedViewModel.onEvent(SharedUiEvent.SetFabVisibility(it)) },
+                onUpdateFabVisibility = onUpdateFabVisibility,
                 modifier = modifier
             )
         }
@@ -137,11 +140,11 @@ fun AppNavGraph(
             }
 
             TripDetailsScreen(
-                navController = navController,
                 selectedTabIndex = sharedUiState.selectedTabIndex,
                 onTabChanged = { sharedViewModel.onEvent(SharedUiEvent.SetTabIndex(it)) },
                 onTabTitleChange = onTabTitleChange,
-                onTabActionsChange = onTabActionsChange
+                onTabActionsChange = onTabActionsChange,
+                onUpdateFabVisibility = onUpdateFabVisibility
             )
         }
     }

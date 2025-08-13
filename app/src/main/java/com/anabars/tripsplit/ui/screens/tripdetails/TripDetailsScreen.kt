@@ -10,7 +10,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.TripDetailsTabs
 import com.anabars.tripsplit.ui.screens.tripdetails.tripbalancestab.TripBalancesTab
@@ -20,11 +19,11 @@ import com.anabars.tripsplit.ui.screens.tripdetails.trippaymentstab.TripPayments
 
 @Composable
 fun TripDetailsScreen(
-    navController: NavController,
     selectedTabIndex: Int,
     onTabChanged: (Int) -> Unit,
     onTabTitleChange: (String) -> Unit,
     onTabActionsChange: (Int) -> Unit,
+    onUpdateFabVisibility: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -40,6 +39,10 @@ fun TripDetailsScreen(
             index = selectedTabIndex,
             onTabTitleChange = onTabTitleChange,
             onTabActionsChange = onTabActionsChange,
+        )
+        updateFabVisibility(
+            index = selectedTabIndex,
+            onUpdateFabVisibility = onUpdateFabVisibility
         )
         if (selectedTabIndex != pagerState.currentPage) {
             pagerState.animateScrollToPage(selectedTabIndex)
@@ -63,11 +66,16 @@ fun TripDetailsScreen(
                     .padding(all = 16.dp)
             )
 
-            1 -> TripExpensesTab(navController = navController)
-            2 -> TripPaymentsTab(navController = navController)
-            3 -> TripBalancesTab(navController = navController)
+            1 -> TripExpensesTab()
+            2 -> TripPaymentsTab()
+            3 -> TripBalancesTab()
         }
     }
+}
+
+private fun updateFabVisibility(index: Int, onUpdateFabVisibility: (Boolean) -> Unit) {
+    val isVisible = index == 1 || index == 2
+    onUpdateFabVisibility(isVisible)
 }
 
 private fun updateToolbarForTab(

@@ -40,7 +40,7 @@ fun TripsScreen(
     navController: NavController,
     onTabTitleChange: (String) -> Unit,
     setToolbarActions: (List<ActionButton.ToolbarActionButton>) -> Unit,
-    setFabVisibility: (Boolean) -> Unit,
+    onUpdateFabVisibility: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -50,12 +50,8 @@ fun TripsScreen(
     val screenTitle = stringResource(R.string.title_trips)
 
     LaunchedEffect(Unit) {
-        setFabVisibility(true)
+        onUpdateFabVisibility(true)
         onTabTitleChange(screenTitle)
-    }
-
-    DisposableEffect(Unit) {
-        onDispose { setFabVisibility(false) }
     }
 
     LaunchedEffect(ascendingOrder) {

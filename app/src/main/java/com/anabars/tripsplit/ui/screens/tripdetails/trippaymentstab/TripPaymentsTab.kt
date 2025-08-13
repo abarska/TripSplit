@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.navigation.Routes
 import com.anabars.tripsplit.ui.widgets.TripItemTabContent
 import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import com.anabars.tripsplit.viewmodels.DeleteItemIntent
@@ -26,7 +26,7 @@ fun TripPaymentsTab(
     TripItemTabContent(
         result = groupedPaymentsResult,
         placeholderTextRes = R.string.placeholder_payments,
-        fabClickRoute = "${AppScreens.ROUTE_ADD_PAYMENT}/${viewModel.tripId}/${AddItemViewModel.UseCase.PAYMENT.name}",
+        fabClickRoute = "${Routes.ROUTE_ADD_PAYMENT}/${viewModel.tripId}/${AddItemViewModel.UseCase.PAYMENT.name}",
         successContent = { data ->
             TripPaymentsContent(
                 result = GroupedResult.Success(data),

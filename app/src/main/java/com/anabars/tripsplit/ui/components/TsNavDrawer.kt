@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavHostController
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.ui.screens.AppScreens
+import com.anabars.tripsplit.navigation.Routes
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -38,7 +38,7 @@ fun DrawerContent(
     ) {
         DrawerNavItem(
             R.string.title_trips,
-            AppScreens.ROUTE_TRIPS,
+            Routes.ROUTE_TRIPS,
             currentRoute,
             navController,
             coroutineScope,
@@ -46,7 +46,7 @@ fun DrawerContent(
         )
         DrawerNavItem(
             R.string.title_settings,
-            AppScreens.ROUTE_SETTINGS,
+            Routes.ROUTE_SETTINGS,
             currentRoute,
             navController,
             coroutineScope,
@@ -54,7 +54,7 @@ fun DrawerContent(
         )
         DrawerNavItem(
             R.string.title_archive,
-            AppScreens.ROUTE_ARCHIVE,
+            Routes.ROUTE_ARCHIVE,
             currentRoute,
             navController,
             coroutineScope,

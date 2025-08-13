@@ -31,9 +31,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.anabars.tripsplit.navigation.AppNavGraph
+import com.anabars.tripsplit.navigation.Routes
 import com.anabars.tripsplit.ui.components.DrawerContent
 import com.anabars.tripsplit.ui.components.TsToolbar
-import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.theme.AppTheme
 import com.anabars.tripsplit.ui.widgets.TsBottomTabs
 import com.anabars.tripsplit.viewmodels.SharedViewModel
@@ -94,11 +94,14 @@ fun MainScreenWithDrawer() {
             )
         },
         bottomBar = {
-            if (currentRoute?.startsWith(AppScreens.ROUTE_TRIP_DETAILS) == true) {
+            if (currentRoute?.startsWith(Routes.ROUTE_TRIP_DETAILS) == true) {
                 TsBottomTabs(sharedUiState.selectedTabIndex) {
                     sharedViewModel.onEvent(SharedViewModel.SharedUiEvent.SetTabIndex(it))
                 }
             }
+        },
+        floatingActionButton = {
+
         }
     ) { paddingValues ->
         ModalNavigationDrawer(

@@ -26,13 +26,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripStatus
+import com.anabars.tripsplit.navigation.Routes
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsItemRowActionButton
 import com.anabars.tripsplit.ui.components.TsOutlinedButton
 import com.anabars.tripsplit.ui.components.TsPlusFab
 import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
-import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 import com.anabars.tripsplit.viewmodels.TripsViewModel
@@ -94,7 +94,7 @@ fun TripsScreen(
                     TsItemRow(
                         modifier = modifier.inputWidthModifier(),
                         onItemClick = {
-                            navController.navigate(AppScreens.ROUTE_TRIP_DETAILS + "/${trip.id}")
+                            navController.navigate(Routes.ROUTE_TRIP_DETAILS + "/${trip.id}")
                         }
                     ) {
                         Row(
@@ -130,7 +130,7 @@ fun TripsScreen(
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
         ) {
-            navController.navigate(AppScreens.ROUTE_ADD_TRIP) {
+            navController.navigate(Routes.ROUTE_ADD_TRIP) {
                 popUpTo(navController.graph.startDestinationId) {
                     saveState = true
                 }

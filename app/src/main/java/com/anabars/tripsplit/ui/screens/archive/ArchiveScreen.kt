@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.navigation.Routes
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.listitems.TsItemRow
-import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 import com.anabars.tripsplit.viewmodels.ArchiveViewModel
@@ -50,7 +50,7 @@ fun ArchiveScreen(
             TsItemRow(
                 modifier = modifier.inputWidthModifier(),
                 onItemClick = {
-                    navController.navigate(AppScreens.ROUTE_TRIP_DETAILS + "/${trip.id}")
+                    navController.navigate(Routes.ROUTE_TRIP_DETAILS + "/${trip.id}")
                 }
             ) {
                 TsInfoText(

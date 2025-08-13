@@ -14,7 +14,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ActionButton
-import com.anabars.tripsplit.ui.screens.AppScreens
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseScreen
 import com.anabars.tripsplit.ui.screens.addpayment.AddPaymentScreen
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
@@ -33,7 +32,7 @@ fun AppNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AppScreens.ROUTE_TRIPS,
+        startDestination = Routes.ROUTE_TRIPS,
         modifier = modifier.fillMaxSize()
     ) {
 
@@ -44,7 +43,7 @@ fun AppNavGraph(
             sharedViewModel.onEffect(SharedViewModel.SharedUiEffect.ShowSnackBar(it))
         }
 
-        composable(route = AppScreens.ROUTE_TRIPS) {
+        composable(route = Routes.ROUTE_TRIPS) {
             TripsScreen(
                 navController = navController,
                 onTabTitleChange = onTabTitleChange,
@@ -54,7 +53,7 @@ fun AppNavGraph(
         }
 
         composable(
-            route = "${AppScreens.ROUTE_ADD_TRIP}?tripId={tripId}", // optional parameter
+            route = "${Routes.ROUTE_ADD_TRIP}?tripId={tripId}", // optional parameter
             arguments = listOf(
                 navArgument("tripId") {
                     type = NavType.StringType // passing a string because long arg is not nullable
@@ -71,7 +70,7 @@ fun AppNavGraph(
         }
 
         composable(
-            route = AppScreens.ROUTE_ADD_EXPENSE + "/{tripId}/{useCase}",
+            route = Routes.ROUTE_ADD_EXPENSE + "/{tripId}/{useCase}",
             arguments = listOf(
                 navArgument(name = "tripId") { type = NavType.LongType },
                 navArgument("useCase") { type = NavType.StringType }
@@ -86,7 +85,7 @@ fun AppNavGraph(
         }
 
         composable(
-            route = AppScreens.ROUTE_ADD_PAYMENT + "/{tripId}/{useCase}",
+            route = Routes.ROUTE_ADD_PAYMENT + "/{tripId}/{useCase}",
             arguments = listOf(
                 navArgument("tripId") { type = NavType.LongType },
                 navArgument("useCase") { type = NavType.StringType }
@@ -100,14 +99,14 @@ fun AppNavGraph(
             )
         }
 
-        composable(route = AppScreens.ROUTE_SETTINGS) {
+        composable(route = Routes.ROUTE_SETTINGS) {
             SettingsScreen(
                 onTabTitleChange = onTabTitleChange,
                 modifier = modifier
             )
         }
 
-        composable(route = AppScreens.ROUTE_ARCHIVE) {
+        composable(route = Routes.ROUTE_ARCHIVE) {
             ArchiveScreen(
                 onTabTitleChange = onTabTitleChange,
                 navController = navController,
@@ -116,7 +115,7 @@ fun AppNavGraph(
         }
 
         composable(
-            route = AppScreens.ROUTE_TRIP_DETAILS + "/{id}",
+            route = Routes.ROUTE_TRIP_DETAILS + "/{id}",
             arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { backStackEntry ->
 
@@ -131,7 +130,7 @@ fun AppNavGraph(
                             ActionButton.ToolbarActionButton(
                                 icon = Icons.Default.Edit,
                                 contentDescriptionRes = R.string.edit_item,
-                                onClick = { navController.navigate("${AppScreens.ROUTE_ADD_TRIP}?tripId=$tripId") }
+                                onClick = { navController.navigate("${Routes.ROUTE_ADD_TRIP}?tripId=$tripId") }
                             )
                         ) else emptyList()))
             }

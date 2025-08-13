@@ -22,10 +22,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripStatus
-import com.anabars.tripsplit.navigation.Routes
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsItemRowActionButton
 import com.anabars.tripsplit.ui.components.TsOutlinedButton
@@ -37,7 +35,7 @@ import com.anabars.tripsplit.viewmodels.TripsViewModel
 
 @Composable
 fun TripsScreen(
-    navController: NavController,
+    onTripSelected: (Long?) -> Unit,
     onTabTitleChange: (String) -> Unit,
     setToolbarActions: (List<ActionButton.ToolbarActionButton>) -> Unit,
     modifier: Modifier = Modifier
@@ -49,6 +47,7 @@ fun TripsScreen(
     val screenTitle = stringResource(R.string.title_trips)
 
     LaunchedEffect(Unit) {
+        onTripSelected(null)
         onTabTitleChange(screenTitle)
     }
 
@@ -90,9 +89,7 @@ fun TripsScreen(
             ) { trip ->
                 TsItemRow(
                     modifier = modifier.inputWidthModifier(),
-                    onItemClick = {
-                        navController.navigate(Routes.ROUTE_TRIP_DETAILS + "/${trip.id}")
-                    }
+                    onItemClick = { onTripSelected(trip.id) }
                 ) {
                     Row(
                         modifier = Modifier.padding(horizontal = 16.dp),

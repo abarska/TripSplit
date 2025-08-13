@@ -24,10 +24,7 @@ import com.anabars.tripsplit.ui.screens.settings.SettingsScreen
 import com.anabars.tripsplit.ui.screens.tripdetails.TripDetailsScreen
 import com.anabars.tripsplit.ui.screens.trips.TripsScreen
 import com.anabars.tripsplit.viewmodels.SharedViewModel
-import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetFabVisibility
-import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabIndex
-import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabTitle
-import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetToolbarActions
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.*
 
 @Composable
 fun AppNavGraph(
@@ -40,14 +37,16 @@ fun AppNavGraph(
     val currentRoute = navBackStackEntry?.destination?.route
     val sharedUiState by sharedViewModel.uiState.collectAsState()
 
-    LaunchedEffect(currentRoute, sharedUiState.selectedTabIndex) {
-        val fabVisible = when {
-            currentRoute == Routes.ROUTE_TRIPS -> true
-            currentRoute?.startsWith(Routes.ROUTE_TRIP_DETAILS) == true ->
-                sharedUiState.selectedTabIndex in listOf(1, 2) // expenses or payments tabs
-            else -> false
+    LaunchedEffect(sharedUiState.currentTripId) {
+        sharedUiState.currentTripId?.let {
+            navController.navigate(Routes.ROUTE_TRIP_DETAILS + "/$it")
         }
-        sharedViewModel.onEvent(SetFabVisibility(fabVisible))
+    }
+
+    LaunchedEffect(currentRoute, sharedUiState.selectedTabIndex) {
+        updateFabVisibility(currentRoute, sharedUiState.selectedTabIndex) {
+            sharedViewModel.onEvent(SetFabVisibility(it))
+        }
     }
 
     NavHost(
@@ -65,7 +64,7 @@ fun AppNavGraph(
 
         composable(route = Routes.ROUTE_TRIPS) {
             TripsScreen(
-                navController = navController,
+                onTripSelected = { sharedViewModel.onEvent(SetCurrentTrip(it)) },
                 onTabTitleChange = onTabTitleChange,
                 setToolbarActions = { sharedViewModel.onEvent(SetToolbarActions(it)) },
                 modifier = modifier
@@ -163,4 +162,17 @@ fun AppNavGraph(
             )
         }
     }
+}
+
+private fun updateFabVisibility(
+    currentRoute: String?,
+    index: Int,
+    updateFabVisibility: (Boolean) -> Unit
+) {
+    val fabVisible = when {
+        currentRoute == Routes.ROUTE_TRIPS -> true
+        currentRoute?.startsWith(Routes.ROUTE_TRIP_DETAILS) == true -> index in listOf(1, 2)
+        else -> false
+    }
+    updateFabVisibility(fabVisible)
 }

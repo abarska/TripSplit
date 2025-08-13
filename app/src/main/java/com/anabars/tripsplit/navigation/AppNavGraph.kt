@@ -46,7 +46,6 @@ fun AppNavGraph(
 ) {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
     val sharedUiState by sharedViewModel.uiState.collectAsState()
     val context = LocalContext.current
 
@@ -56,11 +55,21 @@ fun AppNavGraph(
         }
     }
 
-    LaunchedEffect(currentRoute, sharedUiState.selectedTabIndex) {
-        updateFabVisibility(currentRoute, sharedUiState.selectedTabIndex) {
+    LaunchedEffect(
+        key1 = navBackStackEntry?.destination?.route,
+        key2 = sharedUiState.selectedTabIndex
+    ) {
+        updateFabVisibility(
+            navBackStackEntry = navBackStackEntry,
+            index = sharedUiState.selectedTabIndex
+        ) {
             sharedViewModel.onEvent(SetFabVisibility(it))
         }
-        updateScreenTitle(navBackStackEntry = navBackStackEntry, sharedUiState.selectedTabIndex, context) {
+        updateScreenTitle(
+            navBackStackEntry = navBackStackEntry,
+            index = sharedUiState.selectedTabIndex,
+            context = context
+        ) {
             sharedViewModel.onEvent(SetTabTitle(it))
         }
     }
@@ -235,10 +244,11 @@ private fun updateScreenTitle(
 }
 
 private fun updateFabVisibility(
-    currentRoute: String?,
+    navBackStackEntry: NavBackStackEntry?,
     index: Int?,
     updateFabVisibility: (Boolean) -> Unit
 ) {
+    val currentRoute = navBackStackEntry?.destination?.route
     val fabVisible = when {
         currentRoute == AppScreens.TRIPS.route -> true
         currentRoute?.startsWith(AppScreens.TRIP_DETAILS.route) == true -> index in listOf(1, 2)

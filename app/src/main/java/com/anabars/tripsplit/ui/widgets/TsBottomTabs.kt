@@ -21,10 +21,10 @@ import com.anabars.tripsplit.ui.model.TripDetailsTabs
 import com.anabars.tripsplit.utils.isLandscapeSmallOrAnyBig
 
 @Composable
-fun TsBottomTabs(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
+fun TsBottomTabs(selectedTabIndex: Int?, onTabSelected: (Int) -> Unit) {
     val insets = WindowInsets.navigationBars.asPaddingValues()
     TabRow(
-        selectedTabIndex = selectedTabIndex,
+        selectedTabIndex = selectedTabIndex ?: 1,
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = insets.calculateBottomPadding())

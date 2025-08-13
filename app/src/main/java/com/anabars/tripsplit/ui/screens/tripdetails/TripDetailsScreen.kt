@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,15 +20,15 @@ import com.anabars.tripsplit.ui.screens.tripdetails.trippaymentstab.TripPayments
 
 @Composable
 fun TripDetailsScreen(
-    selectedTabIndex: Int,
-    onTabChanged: (Int) -> Unit,
+    selectedTabIndex: Int?,
+    onTabChanged: (Int?) -> Unit,
     onTabTitleChange: (String) -> Unit,
     onTabActionsChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val pagerState = rememberPagerState(
-        initialPage = selectedTabIndex,
+        initialPage = selectedTabIndex ?: 1,
         pageCount = { TripDetailsTabs.size }
     )
     val context = LocalContext.current
@@ -40,7 +41,7 @@ fun TripDetailsScreen(
             onTabActionsChange = onTabActionsChange,
         )
         if (selectedTabIndex != pagerState.currentPage) {
-            pagerState.animateScrollToPage(selectedTabIndex)
+            pagerState.animateScrollToPage(selectedTabIndex ?: 1)
         }
     }
 
@@ -48,6 +49,10 @@ fun TripDetailsScreen(
         if (selectedTabIndex != pagerState.currentPage) {
             onTabChanged(pagerState.currentPage)
         }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { onTabChanged(null) }
     }
 
     HorizontalPager(
@@ -70,12 +75,12 @@ fun TripDetailsScreen(
 
 private fun updateToolbarForTab(
     context: Context,
-    index: Int,
+    index: Int?,
     onTabTitleChange: (String) -> Unit,
     onTabActionsChange: (Int) -> Unit
 ) {
-    onTabTitleChange(getTabTitle(index, context))
-    onTabActionsChange(index)
+    onTabTitleChange(getTabTitle(index ?: 1, context))
+    onTabActionsChange(index ?: 1)
 }
 
 private fun getTabTitle(index: Int, context: Context): String {

@@ -23,8 +23,16 @@ import com.anabars.tripsplit.ui.screens.archive.ArchiveScreen
 import com.anabars.tripsplit.ui.screens.settings.SettingsScreen
 import com.anabars.tripsplit.ui.screens.tripdetails.TripDetailsScreen
 import com.anabars.tripsplit.ui.screens.trips.TripsScreen
+import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
-import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.*
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.FabClicked
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.ShowSnackBar
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetCurrentTrip
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetFabVisibility
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabIndex
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabTitle
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetToolbarActions
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AppNavGraph(
@@ -49,6 +57,18 @@ fun AppNavGraph(
         }
     }
 
+    LaunchedEffect(Unit) {
+        sharedViewModel.uiEffect.collectLatest {
+            if (it is FabClicked) {
+                onFabClicked(
+                    navController = navController,
+                    currentTripId = sharedViewModel.uiState.value.currentTripId,
+                    index = sharedUiState.selectedTabIndex
+                )
+            }
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = Routes.ROUTE_TRIPS,
@@ -59,7 +79,7 @@ fun AppNavGraph(
             sharedViewModel.onEvent(SetTabTitle(it))
         }
         val onShowSnackbar: (Int) -> Unit = {
-            sharedViewModel.onEffect(SharedViewModel.SharedUiEffect.ShowSnackBar(it))
+            sharedViewModel.onEffect(ShowSnackBar(it))
         }
 
         composable(route = Routes.ROUTE_TRIPS) {
@@ -164,9 +184,30 @@ fun AppNavGraph(
     }
 }
 
+private fun onFabClicked(navController: NavHostController, currentTripId: Long?, index: Int?) {
+    val currentRoute = navController.currentBackStackEntry?.destination?.route
+        ?: navController.graph.startDestinationRoute
+    currentRoute?.let { currentRoute ->
+        val destinationRoute = when {
+            currentRoute.startsWith(Routes.ROUTE_TRIPS) -> Routes.ROUTE_ADD_TRIP
+
+            currentRoute.startsWith(Routes.ROUTE_TRIP_DETAILS) -> {
+                when (index) {
+                    1 -> "${Routes.ROUTE_ADD_EXPENSE}/${currentTripId}/${AddItemViewModel.UseCase.EXPENSE.name}"
+                    2 -> "${Routes.ROUTE_ADD_PAYMENT}/${currentTripId}/${AddItemViewModel.UseCase.PAYMENT.name}"
+                    else -> null
+                }
+            }
+
+            else -> null
+        }
+        destinationRoute?.let { route -> navController.navigate(route = route) }
+    }
+}
+
 private fun updateFabVisibility(
     currentRoute: String?,
-    index: Int,
+    index: Int?,
     updateFabVisibility: (Boolean) -> Unit
 ) {
     val fabVisible = when {

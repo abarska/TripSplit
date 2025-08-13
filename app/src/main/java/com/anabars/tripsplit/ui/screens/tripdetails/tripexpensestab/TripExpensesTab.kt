@@ -6,9 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.navigation.Routes
 import com.anabars.tripsplit.ui.widgets.TripItemTabContent
-import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import com.anabars.tripsplit.viewmodels.DeleteItemIntent
 import com.anabars.tripsplit.viewmodels.GroupedResult
 import com.anabars.tripsplit.viewmodels.TripItemViewModel
@@ -18,7 +16,6 @@ fun TripExpensesTab(modifier: Modifier = Modifier) {
     val viewModel: TripItemViewModel = hiltViewModel()
     val groupedExpensesResult by viewModel.groupedExpensesResult.collectAsState()
     val tripParticipants by viewModel.tripParticipants.collectAsState()
-    val route = "${Routes.ROUTE_ADD_EXPENSE}/${viewModel.tripId}/${AddItemViewModel.UseCase.EXPENSE.name}"
 
     TripItemTabContent(
         result = groupedExpensesResult,

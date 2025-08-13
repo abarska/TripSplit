@@ -38,6 +38,8 @@ import com.anabars.tripsplit.ui.components.TsToolbar
 import com.anabars.tripsplit.ui.theme.AppTheme
 import com.anabars.tripsplit.ui.widgets.TsBottomTabs
 import com.anabars.tripsplit.viewmodels.SharedViewModel
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.FabClicked
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.ShowSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -70,14 +72,8 @@ fun MainScreenWithDrawer() {
 
     LaunchedEffect(Unit) {
         sharedViewModel.uiEffect.collectLatest { effect ->
-            when (effect) {
-                is SharedViewModel.SharedUiEffect.NavigateTo -> {
-                    navController.navigate(effect.route)
-                }
-
-                is SharedViewModel.SharedUiEffect.ShowSnackBar -> {
-                    snackbarHostState.showSnackbar(context.getString(effect.resId))
-                }
+            if (effect is ShowSnackBar) {
+                snackbarHostState.showSnackbar(context.getString(effect.resId))
             }
         }
     }
@@ -109,11 +105,7 @@ fun MainScreenWithDrawer() {
         },
         floatingActionButton = {
             if (sharedUiState.fabVisible) {
-                TsPlusFab {
-                    sharedViewModel.onEffect(
-                        SharedViewModel.SharedUiEffect.NavigateTo(Routes.ROUTE_ADD_TRIP)
-                    )
-                }
+                TsPlusFab { sharedViewModel.onEffect(FabClicked) }
             }
         }
     ) { paddingValues ->

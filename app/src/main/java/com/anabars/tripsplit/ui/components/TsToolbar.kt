@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.navigation.Routes
+import com.anabars.tripsplit.navigation.AppScreens
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +31,7 @@ fun TsToolbar(
     coroutineScope: CoroutineScope,
     drawerState: DrawerState
 ) {
-    val startDestination = Routes.ROUTE_TRIPS
+    val startDestination = AppScreens.TRIPS.route
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val sharedUiState by sharedViewModel.uiState.collectAsState()

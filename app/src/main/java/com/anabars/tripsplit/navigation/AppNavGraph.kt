@@ -47,7 +47,7 @@ fun AppNavGraph(
 
     LaunchedEffect(sharedUiState.currentTripId) {
         sharedUiState.currentTripId?.let {
-            navController.navigate(Routes.ROUTE_TRIP_DETAILS + "/$it")
+            navController.navigate(AppScreens.TRIP_DETAILS.route + "/$it")
         }
     }
 
@@ -71,7 +71,7 @@ fun AppNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.ROUTE_TRIPS,
+        startDestination = AppScreens.TRIPS.route,
         modifier = modifier.fillMaxSize()
     ) {
 
@@ -82,7 +82,7 @@ fun AppNavGraph(
             sharedViewModel.onEffect(ShowSnackBar(it))
         }
 
-        composable(route = Routes.ROUTE_TRIPS) {
+        composable(route = AppScreens.TRIPS.route) {
             TripsScreen(
                 onTripSelected = { sharedViewModel.onEvent(SetCurrentTrip(it)) },
                 onTabTitleChange = onTabTitleChange,
@@ -92,7 +92,7 @@ fun AppNavGraph(
         }
 
         composable(
-            route = "${Routes.ROUTE_ADD_TRIP}?tripId={tripId}", // optional parameter
+            route = "${AppScreens.ADD_TRIP.route}?tripId={tripId}", // optional parameter
             arguments = listOf(
                 navArgument("tripId") {
                     type = NavType.StringType // passing a string because long arg is not nullable
@@ -109,7 +109,7 @@ fun AppNavGraph(
         }
 
         composable(
-            route = Routes.ROUTE_ADD_EXPENSE + "/{tripId}/{useCase}",
+            route = AppScreens.ADD_EXPENSE.route + "/{tripId}/{useCase}",
             arguments = listOf(
                 navArgument(name = "tripId") { type = NavType.LongType },
                 navArgument("useCase") { type = NavType.StringType }
@@ -124,7 +124,7 @@ fun AppNavGraph(
         }
 
         composable(
-            route = Routes.ROUTE_ADD_PAYMENT + "/{tripId}/{useCase}",
+            route = AppScreens.ADD_PAYMENT.route + "/{tripId}/{useCase}",
             arguments = listOf(
                 navArgument("tripId") { type = NavType.LongType },
                 navArgument("useCase") { type = NavType.StringType }
@@ -138,14 +138,14 @@ fun AppNavGraph(
             )
         }
 
-        composable(route = Routes.ROUTE_SETTINGS) {
+        composable(route = AppScreens.SETTINGS.route) {
             SettingsScreen(
                 onTabTitleChange = onTabTitleChange,
                 modifier = modifier
             )
         }
 
-        composable(route = Routes.ROUTE_ARCHIVE) {
+        composable(route = AppScreens.ARCHIVE.route) {
             ArchiveScreen(
                 onTabTitleChange = onTabTitleChange,
                 navController = navController,
@@ -154,7 +154,7 @@ fun AppNavGraph(
         }
 
         composable(
-            route = Routes.ROUTE_TRIP_DETAILS + "/{id}",
+            route = AppScreens.TRIP_DETAILS.route + "/{id}",
             arguments = listOf(navArgument("id") { type = NavType.LongType })
         ) { backStackEntry ->
 
@@ -169,7 +169,7 @@ fun AppNavGraph(
                             ActionButton.ToolbarActionButton(
                                 icon = Icons.Default.Edit,
                                 contentDescriptionRes = R.string.edit_item,
-                                onClick = { navController.navigate("${Routes.ROUTE_ADD_TRIP}?tripId=$tripId") }
+                                onClick = { navController.navigate("${AppScreens.ADD_TRIP.route}?tripId=$tripId") }
                             )
                         ) else emptyList()))
             }
@@ -189,12 +189,12 @@ private fun onFabClicked(navController: NavHostController, currentTripId: Long?,
         ?: navController.graph.startDestinationRoute
     currentRoute?.let { currentRoute ->
         val destinationRoute = when {
-            currentRoute.startsWith(Routes.ROUTE_TRIPS) -> Routes.ROUTE_ADD_TRIP
+            currentRoute.startsWith(AppScreens.TRIPS.route) -> AppScreens.ADD_TRIP.route
 
-            currentRoute.startsWith(Routes.ROUTE_TRIP_DETAILS) -> {
+            currentRoute.startsWith(AppScreens.TRIP_DETAILS.route) -> {
                 when (index) {
-                    1 -> "${Routes.ROUTE_ADD_EXPENSE}/${currentTripId}/${AddItemViewModel.UseCase.EXPENSE.name}"
-                    2 -> "${Routes.ROUTE_ADD_PAYMENT}/${currentTripId}/${AddItemViewModel.UseCase.PAYMENT.name}"
+                    1 -> "${AppScreens.ADD_EXPENSE.route}/${currentTripId}/${AddItemViewModel.UseCase.EXPENSE.name}"
+                    2 -> "${AppScreens.ADD_PAYMENT.route}/${currentTripId}/${AddItemViewModel.UseCase.PAYMENT.name}"
                     else -> null
                 }
             }
@@ -211,8 +211,8 @@ private fun updateFabVisibility(
     updateFabVisibility: (Boolean) -> Unit
 ) {
     val fabVisible = when {
-        currentRoute == Routes.ROUTE_TRIPS -> true
-        currentRoute?.startsWith(Routes.ROUTE_TRIP_DETAILS) == true -> index in listOf(1, 2)
+        currentRoute == AppScreens.TRIPS.route -> true
+        currentRoute?.startsWith(AppScreens.TRIP_DETAILS.route) == true -> index in listOf(1, 2)
         else -> false
     }
     updateFabVisibility(fabVisible)

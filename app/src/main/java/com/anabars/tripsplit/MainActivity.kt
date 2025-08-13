@@ -31,7 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.anabars.tripsplit.navigation.AppNavGraph
-import com.anabars.tripsplit.navigation.Routes
+import com.anabars.tripsplit.navigation.AppScreens
 import com.anabars.tripsplit.ui.components.DrawerContent
 import com.anabars.tripsplit.ui.components.TsPlusFab
 import com.anabars.tripsplit.ui.components.TsToolbar
@@ -97,7 +97,7 @@ fun MainScreenWithDrawer() {
             )
         },
         bottomBar = {
-            if (currentRoute?.startsWith(Routes.ROUTE_TRIP_DETAILS) == true) {
+            if (currentRoute?.startsWith(AppScreens.TRIP_DETAILS.route) == true) {
                 TsBottomTabs(sharedUiState.selectedTabIndex) {
                     sharedViewModel.onEvent(SharedViewModel.SharedUiEvent.SetTabIndex(it))
                 }

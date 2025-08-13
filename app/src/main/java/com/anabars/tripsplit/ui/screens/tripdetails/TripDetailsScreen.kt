@@ -23,7 +23,6 @@ fun TripDetailsScreen(
     onTabChanged: (Int) -> Unit,
     onTabTitleChange: (String) -> Unit,
     onTabActionsChange: (Int) -> Unit,
-    onUpdateFabVisibility: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -39,10 +38,6 @@ fun TripDetailsScreen(
             index = selectedTabIndex,
             onTabTitleChange = onTabTitleChange,
             onTabActionsChange = onTabActionsChange,
-        )
-        updateFabVisibility(
-            index = selectedTabIndex,
-            onUpdateFabVisibility = onUpdateFabVisibility
         )
         if (selectedTabIndex != pagerState.currentPage) {
             pagerState.animateScrollToPage(selectedTabIndex)
@@ -71,11 +66,6 @@ fun TripDetailsScreen(
             3 -> TripBalancesTab()
         }
     }
-}
-
-private fun updateFabVisibility(index: Int, onUpdateFabVisibility: (Boolean) -> Unit) {
-    val isVisible = index == 1 || index == 2
-    onUpdateFabVisibility(isVisible)
 }
 
 private fun updateToolbarForTab(

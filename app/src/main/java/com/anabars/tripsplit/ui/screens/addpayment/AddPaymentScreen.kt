@@ -11,11 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.AddItemUiEffect
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.AmountChanged
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CurrencySelected
@@ -29,7 +27,6 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun AddPaymentScreen(
     navController: NavHostController,
-    onTabTitleChange: (String) -> Unit,
     onShowSnackbar: (Int) -> Unit,
     setBackHandler: ((() -> Boolean)?) -> Unit
 ) {
@@ -37,11 +34,6 @@ fun AddPaymentScreen(
     val viewModel: AddItemViewModel = hiltViewModel()
     val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
     val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
-
-    val screenTitle = stringResource(R.string.title_new_payment)
-    LaunchedEffect(Unit) {
-        onTabTitleChange(screenTitle)
-    }
 
     LaunchedEffect(Unit) {
         viewModel.uiEffect.collectLatest { effect ->

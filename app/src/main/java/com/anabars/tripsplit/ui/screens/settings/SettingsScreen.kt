@@ -4,13 +4,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.anabars.tripsplit.R
@@ -19,21 +17,12 @@ import com.anabars.tripsplit.ui.utils.inputWidthModifier
 import com.anabars.tripsplit.viewmodels.SettingsViewModel
 
 @Composable
-fun SettingsScreen(
-    modifier: Modifier = Modifier,
-    onTabTitleChange: (String) -> Unit
-) {
+fun SettingsScreen(modifier: Modifier = Modifier) {
 
     val viewModel: SettingsViewModel = hiltViewModel()
     val localCurrency by viewModel.localCurrencyFlow.collectAsState()
     val currencies by viewModel.currencies.collectAsState()
-    val onCurrencySelected: (String) -> Unit =
-        { currency -> viewModel.saveCurrency(currency) }
-
-    val screenTitle = stringResource(R.string.title_settings)
-    LaunchedEffect(Unit) {
-        onTabTitleChange(screenTitle)
-    }
+    val onCurrencySelected: (String) -> Unit = { currency -> viewModel.saveCurrency(currency) }
 
     Column(
         modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding)),
@@ -56,8 +45,5 @@ fun SettingsScreen(
 @Preview(showBackground = true)
 @Composable
 private fun SettingsScreenPreview() {
-    SettingsScreen(
-        modifier = Modifier.inputWidthModifier(),
-        onTabTitleChange = {}
-    )
+    SettingsScreen(modifier = Modifier.inputWidthModifier())
 }

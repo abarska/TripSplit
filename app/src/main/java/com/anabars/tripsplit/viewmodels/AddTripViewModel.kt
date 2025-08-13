@@ -17,19 +17,33 @@ import com.anabars.tripsplit.ui.model.AddTripDialogState
 import com.anabars.tripsplit.ui.model.AddTripNameUiState
 import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.*
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddCurrencyClicked
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddDefaultParticipant
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddParticipantClicked
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.CurrencyAdded
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.CurrencyDeleted
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DismissAddParticipantDialog
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DismissCurrencyDialog
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DuplicateNameDialogConfirmed
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.NewParticipantMultiplicatorChanged
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.NewParticipantNameChanged
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.OnBackPressed
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantDeleted
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantEditRequested
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantInputSaved
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.SaveTripClicked
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.TripNameChanged
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.TripStatusChanged
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.validCurrencyCodesCached
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -63,8 +77,6 @@ class AddTripViewModel @Inject constructor(
 
     private val _shouldNavigateBack = MutableSharedFlow<Boolean>()
     val shouldNavigateBack = _shouldNavigateBack.asSharedFlow()
-
-    val isEditModeFlow: Flow<Boolean> = flowOf(tripId != null)
 
     init {
         viewModelScope.launch(Dispatchers.IO) {

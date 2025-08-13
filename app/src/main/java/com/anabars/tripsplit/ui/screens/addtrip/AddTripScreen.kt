@@ -18,15 +18,29 @@ import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
 import com.anabars.tripsplit.ui.dialogs.TsUserInputDialog
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.*
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddCurrencyClicked
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddDefaultParticipant
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddParticipantClicked
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.CurrencyAdded
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.CurrencyDeleted
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DismissAddParticipantDialog
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DismissCurrencyDialog
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DuplicateNameDialogConfirmed
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.NewParticipantMultiplicatorChanged
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.NewParticipantNameChanged
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.OnBackPressed
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantDeleted
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantEditRequested
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantInputSaved
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.SaveTripClicked
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.TripNameChanged
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.TripStatusChanged
 import com.anabars.tripsplit.viewmodels.AddTripViewModel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 
 @Composable
 fun AddTripScreen(
     navController: NavController,
-    onTabTitleChange: (String) -> Unit,
     setBackHandler: ((() -> Boolean)?) -> Unit
 ) {
 
@@ -42,11 +56,8 @@ fun AddTripScreen(
     }
 
     val defaultParticipantName = stringResource(R.string.you)
-    val addScreenTitle = stringResource(R.string.title_new_trip)
-    val editScreenTitle = stringResource(R.string.title_edit_trip)
 
     LaunchedEffect(Unit) {
-        onTabTitleChange(if (viewModel.isEditModeFlow.first()) editScreenTitle else addScreenTitle)
         viewModel.onIntent(AddDefaultParticipant(defaultParticipantName))
         viewModel.shouldNavigateBack.collectLatest { navigateBack ->
             if (navigateBack) navController.popBackStack()

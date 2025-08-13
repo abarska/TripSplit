@@ -36,7 +36,6 @@ import com.anabars.tripsplit.viewmodels.TripsViewModel
 @Composable
 fun TripsScreen(
     onTripSelected: (Long?) -> Unit,
-    onTabTitleChange: (String) -> Unit,
     setToolbarActions: (List<ActionButton.ToolbarActionButton>) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -44,11 +43,9 @@ fun TripsScreen(
     val tripsViewModel: TripsViewModel = hiltViewModel()
     val tripsGrouped by tripsViewModel.tripsGroupedByStatus.collectAsState()
     val ascendingOrder by tripsViewModel.ascendingOrder.collectAsState()
-    val screenTitle = stringResource(R.string.title_trips)
 
     LaunchedEffect(Unit) {
         onTripSelected(null)
-        onTabTitleChange(screenTitle)
     }
 
     LaunchedEffect(ascendingOrder) {

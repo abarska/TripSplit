@@ -1,5 +1,6 @@
 package com.anabars.tripsplit.navigation
 
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -8,6 +9,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -16,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ActionButton
+import com.anabars.tripsplit.ui.model.TripDetailsTabs
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseScreen
 import com.anabars.tripsplit.ui.screens.addpayment.AddPaymentScreen
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
@@ -44,6 +48,7 @@ fun AppNavGraph(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val sharedUiState by sharedViewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(sharedUiState.currentTripId) {
         sharedUiState.currentTripId?.let {
@@ -54,6 +59,9 @@ fun AppNavGraph(
     LaunchedEffect(currentRoute, sharedUiState.selectedTabIndex) {
         updateFabVisibility(currentRoute, sharedUiState.selectedTabIndex) {
             sharedViewModel.onEvent(SetFabVisibility(it))
+        }
+        updateScreenTitle(navBackStackEntry = navBackStackEntry, sharedUiState.selectedTabIndex, context) {
+            sharedViewModel.onEvent(SetTabTitle(it))
         }
     }
 
@@ -75,9 +83,6 @@ fun AppNavGraph(
         modifier = modifier.fillMaxSize()
     ) {
 
-        val onTabTitleChange: (String) -> Unit = {
-            sharedViewModel.onEvent(SetTabTitle(it))
-        }
         val onShowSnackbar: (Int) -> Unit = {
             sharedViewModel.onEffect(ShowSnackBar(it))
         }
@@ -85,7 +90,6 @@ fun AppNavGraph(
         composable(route = AppScreens.TRIPS.route) {
             TripsScreen(
                 onTripSelected = { sharedViewModel.onEvent(SetCurrentTrip(it)) },
-                onTabTitleChange = onTabTitleChange,
                 setToolbarActions = { sharedViewModel.onEvent(SetToolbarActions(it)) },
                 modifier = modifier
             )
@@ -103,7 +107,6 @@ fun AppNavGraph(
         ) {
             AddTripScreen(
                 navController = navController,
-                onTabTitleChange = onTabTitleChange,
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }
@@ -117,7 +120,6 @@ fun AppNavGraph(
         ) { backStackEntry ->
             AddExpenseScreen(
                 navController = navController,
-                onTabTitleChange = onTabTitleChange,
                 onShowSnackbar = onShowSnackbar,
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
@@ -132,22 +134,17 @@ fun AppNavGraph(
         ) { backStackEntry ->
             AddPaymentScreen(
                 navController = navController,
-                onTabTitleChange = onTabTitleChange,
                 onShowSnackbar = onShowSnackbar,
                 setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
             )
         }
 
         composable(route = AppScreens.SETTINGS.route) {
-            SettingsScreen(
-                onTabTitleChange = onTabTitleChange,
-                modifier = modifier
-            )
+            SettingsScreen(modifier = modifier)
         }
 
         composable(route = AppScreens.ARCHIVE.route) {
             ArchiveScreen(
-                onTabTitleChange = onTabTitleChange,
                 navController = navController,
                 modifier = modifier
             )
@@ -177,7 +174,6 @@ fun AppNavGraph(
             TripDetailsScreen(
                 selectedTabIndex = sharedUiState.selectedTabIndex,
                 onTabChanged = { sharedViewModel.onEvent(SetTabIndex(it)) },
-                onTabTitleChange = onTabTitleChange,
                 onTabActionsChange = onTabActionsChange
             )
         }
@@ -202,6 +198,39 @@ private fun onFabClicked(navController: NavHostController, currentTripId: Long?,
             else -> null
         }
         destinationRoute?.let { route -> navController.navigate(route = route) }
+    }
+}
+
+private fun updateScreenTitle(
+    navBackStackEntry: NavBackStackEntry?,
+    index: Int?,
+    context: Context,
+    onTabTitleChange: (String) -> Unit
+) {
+    val currentRoute = navBackStackEntry?.destination?.route
+    val tripIdArg = navBackStackEntry?.arguments?.getString("tripId")
+    currentRoute?.let { route ->
+        val screenTitle = when {
+            route.startsWith(AppScreens.TRIPS.route) -> context.getString(R.string.title_trips)
+            route.startsWith(AppScreens.ADD_EXPENSE.route) -> context.getString(R.string.title_new_expense)
+            route.startsWith(AppScreens.ADD_PAYMENT.route) -> context.getString(R.string.title_new_payment)
+            route.startsWith(AppScreens.SETTINGS.route) -> context.getString(R.string.title_settings)
+            route.startsWith(AppScreens.ARCHIVE.route) -> context.getString(R.string.title_archive)
+
+            route.startsWith(AppScreens.ADD_TRIP.route) -> {
+                if (tripIdArg.isNullOrEmpty()) context.getString(R.string.title_new_trip)
+                else context.getString(R.string.title_edit_trip)
+            }
+
+            route.startsWith(AppScreens.TRIP_DETAILS.route) -> {
+                val prefixRes = R.string.title_trip_details
+                val suffixRes = TripDetailsTabs[index ?: 1].titleRes
+                "${context.getString(prefixRes)}: ${context.getString(suffixRes)}"
+            }
+
+            else -> throw IllegalStateException("Unknown route: $route")
+        }
+        onTabTitleChange(screenTitle)
     }
 }
 

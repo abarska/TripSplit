@@ -1,6 +1,5 @@
 package com.anabars.tripsplit.ui.screens.tripdetails
 
-import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -9,9 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.TripDetailsTabs
 import com.anabars.tripsplit.ui.screens.tripdetails.tripbalancestab.TripBalancesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab.TripExpensesTab
@@ -22,7 +19,6 @@ import com.anabars.tripsplit.ui.screens.tripdetails.trippaymentstab.TripPayments
 fun TripDetailsScreen(
     selectedTabIndex: Int?,
     onTabChanged: (Int?) -> Unit,
-    onTabTitleChange: (String) -> Unit,
     onTabActionsChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -31,13 +27,10 @@ fun TripDetailsScreen(
         initialPage = selectedTabIndex ?: 1,
         pageCount = { TripDetailsTabs.size }
     )
-    val context = LocalContext.current
 
     LaunchedEffect(selectedTabIndex) {
         updateToolbarForTab(
-            context = context,
             index = selectedTabIndex,
-            onTabTitleChange = onTabTitleChange,
             onTabActionsChange = onTabActionsChange,
         )
         if (selectedTabIndex != pagerState.currentPage) {
@@ -74,17 +67,8 @@ fun TripDetailsScreen(
 }
 
 private fun updateToolbarForTab(
-    context: Context,
     index: Int?,
-    onTabTitleChange: (String) -> Unit,
     onTabActionsChange: (Int) -> Unit
 ) {
-    onTabTitleChange(getTabTitle(index ?: 1, context))
     onTabActionsChange(index ?: 1)
-}
-
-private fun getTabTitle(index: Int, context: Context): String {
-    val prefixRes = R.string.title_trip_details
-    val suffixRes = TripDetailsTabs[index].titleRes
-    return "${context.getString(prefixRes)}: ${context.getString(suffixRes)}"
 }

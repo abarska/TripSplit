@@ -9,7 +9,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.anabars.tripsplit.ui.model.TripDetailsTabs
+import com.anabars.tripsplit.ui.model.TabItem
 import com.anabars.tripsplit.ui.screens.tripdetails.tripbalancestab.TripBalancesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab.TripExpensesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab.TripOverviewTab
@@ -17,30 +17,31 @@ import com.anabars.tripsplit.ui.screens.tripdetails.trippaymentstab.TripPayments
 
 @Composable
 fun TripDetailsScreen(
-    selectedTabIndex: Int?,
-    onTabChanged: (Int?) -> Unit,
+    selectedTabItem: TabItem,
+    onTabChanged: (TabItem) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val pagerState = rememberPagerState(
-        initialPage = selectedTabIndex ?: 1,
-        pageCount = { TripDetailsTabs.size }
+        initialPage = selectedTabItem.ordinal,
+        pageCount = { TabItem.allTabs().size }
     )
 
-    LaunchedEffect(selectedTabIndex) {
-        if (selectedTabIndex != pagerState.currentPage) {
-            pagerState.animateScrollToPage(selectedTabIndex ?: 1)
+    LaunchedEffect(selectedTabItem) {
+        if (selectedTabItem.ordinal != pagerState.currentPage) {
+            pagerState.animateScrollToPage(selectedTabItem.ordinal)
         }
     }
 
     LaunchedEffect(pagerState.currentPage) {
-        if (selectedTabIndex != pagerState.currentPage) {
-            onTabChanged(pagerState.currentPage)
+        if (selectedTabItem.ordinal != pagerState.currentPage) {
+            val newTab = TabItem.allTabs().firstOrNull { it.ordinal == pagerState.currentPage }
+            onTabChanged(newTab ?: TabItem.Expenses)
         }
     }
 
     DisposableEffect(Unit) {
-        onDispose { onTabChanged(null) }
+        onDispose { onTabChanged(TabItem.Expenses) }
     }
 
     HorizontalPager(

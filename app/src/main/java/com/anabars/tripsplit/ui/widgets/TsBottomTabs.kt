@@ -17,26 +17,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.ui.components.TsInfoText
-import com.anabars.tripsplit.ui.model.TripDetailsTabs
+import com.anabars.tripsplit.ui.model.TabItem
 import com.anabars.tripsplit.utils.isLandscapeSmallOrAnyBig
 
 @Composable
-fun TsBottomTabs(selectedTabIndex: Int?, onTabSelected: (Int) -> Unit) {
+fun TsBottomTabs(selectedTabItem: TabItem, onTabSelected: (TabItem) -> Unit) {
     val insets = WindowInsets.navigationBars.asPaddingValues()
     TabRow(
-        selectedTabIndex = selectedTabIndex ?: 1,
+        selectedTabIndex = selectedTabItem.ordinal,
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = insets.calculateBottomPadding())
     ) {
         val enoughSpace = isLandscapeSmallOrAnyBig(LocalConfiguration.current)
-        TripDetailsTabs.forEachIndexed { index, tab ->
-            val isSelected = selectedTabIndex == index
+        TabItem.allTabs().forEach { tab: TabItem ->
+            val isSelected = tab == selectedTabItem
             val contentColor =
                 LocalContentColor.current.copy(alpha = if (isSelected) 1.0f else 0.6f)
             Tab(
                 selected = isSelected,
-                onClick = { onTabSelected(index) },
+                onClick = { onTabSelected(tab) },
                 text = {
                     if (enoughSpace) TsInfoText(textRes = tab.titleRes, textColor = contentColor)
                 },
@@ -57,7 +57,7 @@ fun TsBottomTabs(selectedTabIndex: Int?, onTabSelected: (Int) -> Unit) {
 @Composable
 private fun TsBottomTabsPreview() {
     TsBottomTabs(
-        selectedTabIndex = 0,
+        selectedTabItem = TabItem.Expenses,
         onTabSelected = { }
     )
 }

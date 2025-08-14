@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.ui.model.ActionButton.*
+import com.anabars.tripsplit.ui.model.TabItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ class SharedViewModel @Inject constructor() : ViewModel() {
 
     data class SharedUiState(
         val currentTripId: Long? = null,
-        val selectedTabIndex: Int? = null,
+        val selectedTabItem: TabItem = TabItem.Expenses,
         val toolbarActions: List<ToolbarActionButton> = emptyList(),
         val tabTitle: String? = null,
         val fabVisible: Boolean = false
@@ -27,7 +28,7 @@ class SharedViewModel @Inject constructor() : ViewModel() {
 
     sealed class SharedUiEvent {
         data class SetCurrentTrip(val tripId: Long?) : SharedUiEvent()
-        data class SetTabIndex(val index: Int?) : SharedUiEvent()
+        data class SetTabItem(val tabItem: TabItem) : SharedUiEvent()
         data class SetToolbarActions(val actions: List<ToolbarActionButton>) : SharedUiEvent()
         data class SetTabTitle(val title: String?) : SharedUiEvent()
         data class SetFabVisibility(val visible: Boolean) : SharedUiEvent()
@@ -41,8 +42,8 @@ class SharedViewModel @Inject constructor() : ViewModel() {
             is SharedUiEvent.SetCurrentTrip ->
                 _uiState.update { it.copy(currentTripId = event.tripId) }
 
-            is SharedUiEvent.SetTabIndex ->
-                _uiState.update { it.copy(selectedTabIndex = event.index) }
+            is SharedUiEvent.SetTabItem ->
+                _uiState.update { it.copy(selectedTabItem = event.tabItem) }
 
             is SharedUiEvent.SetToolbarActions ->
                 _uiState.update { it.copy(toolbarActions = event.actions) }

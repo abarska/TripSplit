@@ -18,7 +18,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ActionButton
-import com.anabars.tripsplit.ui.model.TripDetailsTabs
+import com.anabars.tripsplit.ui.model.TabItem
 import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseScreen
 import com.anabars.tripsplit.ui.screens.addpayment.AddPaymentScreen
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
@@ -32,7 +32,7 @@ import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.FabClicke
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.ShowSnackBar
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetCurrentTrip
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetFabVisibility
-import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabIndex
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabItem
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabTitle
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetToolbarActions
 import kotlinx.coroutines.flow.collectLatest
@@ -56,12 +56,12 @@ fun AppNavGraph(
 
     LaunchedEffect(
         key1 = navBackStackEntry?.destination?.route,
-        key2 = sharedUiState.selectedTabIndex
+        key2 = sharedUiState.selectedTabItem
     ) {
 
         updateFabVisibility(
             currentRoute = navBackStackEntry?.destination?.route,
-            index = sharedUiState.selectedTabIndex
+            selectedTabItem = sharedUiState.selectedTabItem
         ) {
             sharedViewModel.onEvent(SetFabVisibility(it))
         }
@@ -69,7 +69,7 @@ fun AppNavGraph(
         updateScreenTitle(
             currentRoute = navBackStackEntry?.destination?.route,
             tripId = navBackStackEntry?.arguments?.getString("tripId"),
-            index = sharedUiState.selectedTabIndex,
+            selectedTabItem = sharedUiState.selectedTabItem,
             context = context
         ) {
             sharedViewModel.onEvent(SetTabTitle(it))
@@ -77,7 +77,7 @@ fun AppNavGraph(
 
         updateToolbarActions(
             currentRoute = navBackStackEntry?.destination?.route,
-            index = sharedUiState.selectedTabIndex,
+            selectedTabItem = sharedUiState.selectedTabItem,
             navController = navController,
             tripId = sharedViewModel.uiState.value.currentTripId
         ) {
@@ -91,7 +91,7 @@ fun AppNavGraph(
                 onFabClicked(
                     navController = navController,
                     currentTripId = sharedViewModel.uiState.value.currentTripId,
-                    index = sharedUiState.selectedTabIndex
+                    selectedTabItem = sharedUiState.selectedTabItem
                 )
             }
         }
@@ -175,14 +175,18 @@ fun AppNavGraph(
             val sharedUiState by sharedViewModel.uiState.collectAsState()
 
             TripDetailsScreen(
-                selectedTabIndex = sharedUiState.selectedTabIndex,
-                onTabChanged = { sharedViewModel.onEvent(SetTabIndex(it)) }
+                selectedTabItem = sharedUiState.selectedTabItem,
+                onTabChanged = { sharedViewModel.onEvent(SetTabItem(it)) }
             )
         }
     }
 }
 
-private fun onFabClicked(navController: NavHostController, currentTripId: Long?, index: Int?) {
+private fun onFabClicked(
+    navController: NavHostController,
+    currentTripId: Long?,
+    selectedTabItem: TabItem
+) {
     val currentRoute = navController.currentBackStackEntry?.destination?.route
         ?: navController.graph.startDestinationRoute
     currentRoute?.let { currentRoute ->
@@ -190,9 +194,13 @@ private fun onFabClicked(navController: NavHostController, currentTripId: Long?,
             currentRoute.startsWith(AppScreens.TRIPS.route) -> AppScreens.ADD_TRIP.route
 
             currentRoute.startsWith(AppScreens.TRIP_DETAILS.route) -> {
-                when (index) {
-                    1 -> "${AppScreens.ADD_EXPENSE.route}/${currentTripId}/${AddItemViewModel.UseCase.EXPENSE.name}"
-                    2 -> "${AppScreens.ADD_PAYMENT.route}/${currentTripId}/${AddItemViewModel.UseCase.PAYMENT.name}"
+                when (selectedTabItem) {
+                    TabItem.Expenses ->
+                        "${AppScreens.ADD_EXPENSE.route}/${currentTripId}/${AddItemViewModel.UseCase.EXPENSE.name}"
+
+                    TabItem.Payments ->
+                        "${AppScreens.ADD_PAYMENT.route}/${currentTripId}/${AddItemViewModel.UseCase.PAYMENT.name}"
+
                     else -> null
                 }
             }
@@ -205,7 +213,7 @@ private fun onFabClicked(navController: NavHostController, currentTripId: Long?,
 
 private fun updateToolbarActions(
     currentRoute: String?,
-    index: Int?,
+    selectedTabItem: TabItem,
     navController: NavHostController,
     tripId: Long?,
     onTabActionsChange: (List<ActionButton.ToolbarActionButton>) -> Unit,
@@ -213,8 +221,11 @@ private fun updateToolbarActions(
     currentRoute?.let {
         val actions = when {
             currentRoute.startsWith(AppScreens.TRIP_DETAILS.route) -> {
-                if (index == 0) getActionsForTripDetailsOverviewTab(tripId, navController)
-                else emptyList()
+                if (selectedTabItem == TabItem.Overview) {
+                    getActionsForTripDetailsOverviewTab(tripId, navController)
+                } else {
+                    emptyList()
+                }
             }
 
             else -> emptyList()
@@ -236,7 +247,7 @@ private fun getActionsForTripDetailsOverviewTab(tripId: Long?, navController: Na
 private fun updateScreenTitle(
     currentRoute: String?,
     tripId: String?,
-    index: Int?,
+    selectedTabItem: TabItem,
     context: Context,
     onTabTitleChange: (String) -> Unit
 ) {
@@ -255,7 +266,7 @@ private fun updateScreenTitle(
 
             route.startsWith(AppScreens.TRIP_DETAILS.route) -> {
                 val prefixRes = R.string.title_trip_details
-                val suffixRes = TripDetailsTabs[index ?: 1].titleRes
+                val suffixRes = selectedTabItem.titleRes
                 "${context.getString(prefixRes)}: ${context.getString(suffixRes)}"
             }
 
@@ -267,12 +278,14 @@ private fun updateScreenTitle(
 
 private fun updateFabVisibility(
     currentRoute: String?,
-    index: Int?,
+    selectedTabItem: TabItem,
     updateFabVisibility: (Boolean) -> Unit
 ) {
     val fabVisible = when {
         currentRoute == AppScreens.TRIPS.route -> true
-        currentRoute?.startsWith(AppScreens.TRIP_DETAILS.route) == true -> index in listOf(1, 2)
+        currentRoute?.startsWith(AppScreens.TRIP_DETAILS.route) == true ->
+            selectedTabItem in setOf(TabItem.Expenses, TabItem.Payments)
+
         else -> false
     }
     updateFabVisibility(fabVisible)

@@ -98,8 +98,8 @@ fun MainScreenWithDrawer() {
         },
         bottomBar = {
             if (currentRoute?.startsWith(AppScreens.TRIP_DETAILS.route) == true) {
-                TsBottomTabs(sharedUiState.selectedTabIndex) {
-                    sharedViewModel.onEvent(SharedViewModel.SharedUiEvent.SetTabIndex(it))
+                TsBottomTabs(selectedTabItem = sharedUiState.selectedTabItem) {
+                    sharedViewModel.onEvent(SharedViewModel.SharedUiEvent.SetTabItem(it))
                 }
             }
         },

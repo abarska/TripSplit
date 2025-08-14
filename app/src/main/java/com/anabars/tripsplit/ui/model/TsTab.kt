@@ -12,8 +12,7 @@ import com.anabars.tripsplit.R
 data class TsTab(
     val icon: ImageVector,
     @StringRes val titleRes: Int,
-    @StringRes val contentDescriptionRes: Int,
-    val actions: List<ActionButton.ToolbarActionButton> = emptyList()
+    @StringRes val contentDescriptionRes: Int
 )
 
 val TripDetailsTabs = listOf(

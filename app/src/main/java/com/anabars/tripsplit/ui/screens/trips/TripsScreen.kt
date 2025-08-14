@@ -8,11 +8,8 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,34 +33,14 @@ import com.anabars.tripsplit.viewmodels.TripsViewModel
 @Composable
 fun TripsScreen(
     onTripSelected: (Long?) -> Unit,
-    setToolbarActions: (List<ActionButton.ToolbarActionButton>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val tripsViewModel: TripsViewModel = hiltViewModel()
     val tripsGrouped by tripsViewModel.tripsGroupedByStatus.collectAsState()
-    val ascendingOrder by tripsViewModel.ascendingOrder.collectAsState()
 
     LaunchedEffect(Unit) {
         onTripSelected(null)
-    }
-
-    LaunchedEffect(ascendingOrder) {
-        setToolbarActions(
-            listOf(
-                ActionButton.ToolbarActionButton(
-                    icon = if (ascendingOrder) Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward,
-                    contentDescriptionRes = if (ascendingOrder) R.string.arrow_down else R.string.arrow_up,
-                    onClick = { tripsViewModel.toggleSorting() }
-                )
-            )
-        )
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            setToolbarActions(emptyList())
-        }
     }
 
     LazyColumn(

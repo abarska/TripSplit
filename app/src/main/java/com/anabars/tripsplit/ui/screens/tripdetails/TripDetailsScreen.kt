@@ -19,7 +19,6 @@ import com.anabars.tripsplit.ui.screens.tripdetails.trippaymentstab.TripPayments
 fun TripDetailsScreen(
     selectedTabIndex: Int?,
     onTabChanged: (Int?) -> Unit,
-    onTabActionsChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -29,10 +28,6 @@ fun TripDetailsScreen(
     )
 
     LaunchedEffect(selectedTabIndex) {
-        updateToolbarForTab(
-            index = selectedTabIndex,
-            onTabActionsChange = onTabActionsChange,
-        )
         if (selectedTabIndex != pagerState.currentPage) {
             pagerState.animateScrollToPage(selectedTabIndex ?: 1)
         }
@@ -64,11 +59,4 @@ fun TripDetailsScreen(
             3 -> TripBalancesTab()
         }
     }
-}
-
-private fun updateToolbarForTab(
-    index: Int?,
-    onTabActionsChange: (Int) -> Unit
-) {
-    onTabActionsChange(index ?: 1)
 }

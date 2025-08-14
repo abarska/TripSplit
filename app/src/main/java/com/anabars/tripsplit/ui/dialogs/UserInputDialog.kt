@@ -18,13 +18,13 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsShortInput
 import com.anabars.tripsplit.ui.listitems.TsItemRow
-import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
+import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.utils.TsFontSize
-import com.anabars.tripsplit.ui.utils.getFakeParticipantsUiState
+import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
 
 @Composable
 fun TsUserInputDialog(
-    tripParticipantsUiState: AddTripParticipantsUiState,
+    uiState: AddTripUiState,
     onInputChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     onMultiplicatorChange: (Int) -> Unit = {},
@@ -57,7 +57,7 @@ fun TsUserInputDialog(
         ) {
             TsShortInput(
                 modifier = Modifier.fillMaxWidth(),
-                value = tripParticipantsUiState.newParticipantName,
+                value = uiState.newParticipantName,
                 onValueChanged = onInputChange,
                 label = labelValue
             )
@@ -70,9 +70,9 @@ fun TsUserInputDialog(
                 )
             ) {
                 TsItemRow(
-                    highlighted = tripParticipantsUiState.newParticipantMultiplicator > 1,
-                    enabled = tripParticipantsUiState.newParticipantMultiplicator > 1,
-                    onItemClick = { onMultiplicatorChange(tripParticipantsUiState.newParticipantMultiplicator - 1) }
+                    highlighted = uiState.newParticipantMultiplicator > 1,
+                    enabled = uiState.newParticipantMultiplicator > 1,
+                    onItemClick = { onMultiplicatorChange(uiState.newParticipantMultiplicator - 1) }
                 ) {
                     Row(
                         modifier = Modifier
@@ -89,13 +89,13 @@ fun TsUserInputDialog(
                 TsInfoText(
                     text = stringResource(
                         R.string.pays_for_format,
-                        tripParticipantsUiState.newParticipantMultiplicator
+                        uiState.newParticipantMultiplicator
                     ),
                     fontSize = TsFontSize.MEDIUM
                 )
                 TsItemRow(
                     highlighted = true,
-                    onItemClick = { onMultiplicatorChange(tripParticipantsUiState.newParticipantMultiplicator + 1) }
+                    onItemClick = { onMultiplicatorChange(uiState.newParticipantMultiplicator + 1) }
                 ) {
                     Row(
                         modifier = Modifier
@@ -118,7 +118,7 @@ fun TsUserInputDialog(
 @Composable
 private fun TsUserInputDialogPreview() {
     TsUserInputDialog(
-        tripParticipantsUiState = getFakeParticipantsUiState(),
+        uiState = getFakeAddTripUiState(),
         onInputChange = {},
         titleRes = R.string.add_participant,
         labelRes = R.string.participant_name_hint,

@@ -40,11 +40,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun AddTripScreen(navController: NavController, onShowSnackbar: (Int) -> Unit) {
 
     val viewModel: AddTripViewModel = hiltViewModel()
-    val dialogUiState by viewModel.dialogUiState.collectAsState()
-    val nameUiState by viewModel.nameUiState.collectAsState()
-    val tripStatusUiState by viewModel.statusUiState.collectAsState()
-    val participantsUiState by viewModel.participantsUiState.collectAsState()
-    val currenciesUiState by viewModel.currenciesUiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     BackHandler {
         if (viewModel.existingTripDataChanged() || viewModel.newTripHasUnsavedInput()) {
@@ -62,11 +58,11 @@ fun AddTripScreen(navController: NavController, onShowSnackbar: (Int) -> Unit) {
         }
     }
 
-    when (dialogUiState.activeDialog) {
+    when (uiState.activeDialog) {
         ActiveDialog.CHOOSER -> {
             val expanded = remember { mutableStateOf(true) }
             TsCurrencyPicker(
-                currencies = currenciesUiState.availableCurrencies,
+                currencies = uiState.availableCurrencies,
                 expanded = expanded,
                 onCurrencySelected = { viewModel.onIntent(CurrencyAdded(it)) },
                 onDismissAddCurrencyDialog = { viewModel.onIntent(DismissCurrencyDialog) }
@@ -75,14 +71,14 @@ fun AddTripScreen(navController: NavController, onShowSnackbar: (Int) -> Unit) {
 
         ActiveDialog.USER_INPUT -> {
             TsUserInputDialog(
-                tripParticipantsUiState = participantsUiState,
+                uiState = uiState,
                 onInputChange = { viewModel.onIntent(NewParticipantNameChanged(it)) },
                 onMultiplicatorChange = { viewModel.onIntent(NewParticipantMultiplicatorChanged(it)) },
                 onConfirm = { viewModel.onIntent(ParticipantInputSaved) },
                 onDismiss = { viewModel.onIntent(DismissAddParticipantDialog) },
-                titleRes = if (participantsUiState.isEditParticipant) R.string.edit_participant else R.string.add_participant,
+                titleRes = if (uiState.isEditParticipant) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
-                positiveTextRes = if (participantsUiState.isEditParticipant) R.string.save else R.string.add,
+                positiveTextRes = if (uiState.isEditParticipant) R.string.save else R.string.add,
                 negativeTextRes = R.string.cancel
             )
         }
@@ -112,10 +108,7 @@ fun AddTripScreen(navController: NavController, onShowSnackbar: (Int) -> Unit) {
                 LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
             if (isPortrait)
                 AddTripPortraitContent(
-                    tripNameUiState = nameUiState,
-                    tripStatusUiState = tripStatusUiState,
-                    tripParticipants = participantsUiState.tripParticipants,
-                    tripCurrencies = currenciesUiState.tripCurrencyCodes,
+                    uiState = uiState,
                     onTripNameChanged = { viewModel.onIntent(TripNameChanged(it)) },
                     onTripStatusChanged = { viewModel.onIntent(TripStatusChanged(it)) },
                     onAddParticipantButtonClick = { viewModel.onIntent(AddParticipantClicked) },
@@ -127,10 +120,7 @@ fun AddTripScreen(navController: NavController, onShowSnackbar: (Int) -> Unit) {
                 )
             else
                 AddTripLandscapeContent(
-                    tripNameUiState = nameUiState,
-                    tripStatusUiState = tripStatusUiState,
-                    tripParticipants = participantsUiState.tripParticipants,
-                    tripCurrencies = currenciesUiState.tripCurrencyCodes,
+                    uiState = uiState,
                     onTripNameChanged = { viewModel.onIntent(TripNameChanged(it)) },
                     onTripStatusChanged = { viewModel.onIntent(TripStatusChanged(it)) },
                     onAddParticipantButtonClick = { viewModel.onIntent(AddParticipantClicked) },

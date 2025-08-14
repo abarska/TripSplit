@@ -22,18 +22,13 @@ import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.components.TsRadioGroup
-import com.anabars.tripsplit.ui.model.AddTripNameUiState
+import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.utils.TsFontSize
-import com.anabars.tripsplit.ui.utils.getFakeTripCurrencies
-import com.anabars.tripsplit.ui.utils.getFakeTripNameUiState
-import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
+import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
 
 @Composable
 fun AddTripPortraitContent(
-    tripNameUiState: AddTripNameUiState,
-    tripStatusUiState: TripStatus,
-    tripParticipants: List<TripParticipant>,
-    tripCurrencies: List<String>,
+    uiState: AddTripUiState,
     onTripNameChanged: (String) -> Unit,
     onTripStatusChanged: (TripStatus) -> Unit,
     onAddParticipantButtonClick: () -> Unit,
@@ -52,7 +47,7 @@ fun AddTripPortraitContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
         InputSection(
-            tripNameUiState = tripNameUiState,
+            uiState = uiState,
             onTripNameChanged = onTripNameChanged
         )
 
@@ -60,7 +55,7 @@ fun AddTripPortraitContent(
             TsRadioGroup(
                 modifier = modifier.padding(16.dp),
                 items = TripStatus.getInitialStatuses(),
-                selectedItem = tripStatusUiState,
+                selectedItem = uiState.tripStatus,
                 onItemSelected = onTripStatusChanged,
                 layout = LayoutType.Row,
             ) { status ->
@@ -75,7 +70,7 @@ fun AddTripPortraitContent(
         TsContentCard {
             ChipsSection(
                 leadingIcon = Icons.Default.CurrencyExchange,
-                items = tripCurrencies,
+                items = uiState.tripCurrencyCodes,
                 onAddItemButtonClick = onAddCurrencyButtonClick,
                 onDeleteItemButtonClick = onDeleteCurrency,
                 itemLabel = { it }
@@ -85,7 +80,7 @@ fun AddTripPortraitContent(
         TsContentCard {
             ChipsSection(
                 leadingIcon = Icons.Outlined.People,
-                items = tripParticipants,
+                items = uiState.tripParticipants,
                 onAddItemButtonClick = onAddParticipantButtonClick,
                 onItemClick = onEditParticipantButtonClick,
                 onDeleteItemButtonClick = onDeleteParticipant,
@@ -101,10 +96,7 @@ fun AddTripPortraitContent(
 @Composable
 private fun AddTripPortraitContentPreview() {
     AddTripPortraitContent(
-        tripNameUiState = getFakeTripNameUiState(),
-        tripStatusUiState = TripStatus.PLANNED,
-        tripParticipants = getFakeTripParticipants(),
-        tripCurrencies = getFakeTripCurrencies().map { it.code },
+        uiState = getFakeAddTripUiState(),
         onTripNameChanged = {},
         onTripStatusChanged = {},
         onAddParticipantButtonClick = {},

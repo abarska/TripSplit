@@ -8,8 +8,7 @@ import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.data.room.model.TripDetails
 import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
 import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
-import com.anabars.tripsplit.ui.model.AddTripNameUiState
-import com.anabars.tripsplit.ui.model.AddTripParticipantsUiState
+import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.viewmodels.ExpenseCategorizationResult
 
@@ -27,12 +26,10 @@ fun getFakeTripCurrencies() = listOf(
     TripCurrency(code = "UAH", tripId = 0)
 )
 
-fun getFakeTripNameUiState() = AddTripNameUiState(
-    tripName = "Placeholder"
-)
-
-fun getFakeParticipantsUiState() = AddTripParticipantsUiState(
-    tripParticipants = getFakeTripParticipants()
+fun getFakeAddTripUiState() = AddTripUiState(
+    tripName = "Placeholder",
+    tripParticipants = getFakeTripParticipants(),
+    tripCurrencyCodes = getFakeTripCurrencies().map { it.code }
 )
 
 fun getFakeAmountCurrencyUiState() = AddItemAmountCurrencyState(

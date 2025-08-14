@@ -13,22 +13,7 @@ import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddCurrencyClicked
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddDefaultParticipant
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddParticipantClicked
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.CurrencyAdded
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.CurrencyDeleted
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DismissAddParticipantDialog
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DismissCurrencyDialog
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DuplicateNameDialogConfirmed
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.NewParticipantMultiplicatorChanged
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.NewParticipantNameChanged
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantDeleted
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantEditRequested
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantInputSaved
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.SaveTripClicked
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.TripNameChanged
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.TripStatusChanged
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.*
 import com.anabars.tripsplit.utils.getCurrencyDisplayList
 import com.anabars.tripsplit.utils.validCurrencyCodesCached
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,8 +42,8 @@ class AddTripViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AddTripUiState())
     val uiState: StateFlow<AddTripUiState> = _uiState.asStateFlow()
 
-    private val _shouldNavigateBack = MutableSharedFlow<Boolean>()
-    val shouldNavigateBack = _shouldNavigateBack.asSharedFlow()
+    private val _navigateBackWithWarning = MutableSharedFlow<Boolean>()
+    val navigateBackWithWarning = _navigateBackWithWarning.asSharedFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -206,7 +191,7 @@ class AddTripViewModel @Inject constructor(
                 if (tripNameTrimmed.isNotEmpty()) {
                     saveTrip(tripName = tripNameTrimmed)
                     viewModelScope.launch {
-                        _shouldNavigateBack.emit(true)
+                        _navigateBackWithWarning.emit(false)
                     }
                 } else {
                     _uiState.update {
@@ -262,10 +247,20 @@ class AddTripViewModel @Inject constructor(
                     }
                 }
             }
+
+            is BackPressed -> {
+                viewModelScope.launch {
+                    if (newTripHasUnsavedInput() || existingTripDataChanged()) {
+                        _navigateBackWithWarning.emit(true)
+                    } else {
+                        _navigateBackWithWarning.emit(false)
+                    }
+                }
+            }
         }
     }
 
-    fun existingTripDataChanged(): Boolean {
+    private fun existingTripDataChanged(): Boolean {
         return tripId != null &&
                 (_uiState.value.tripName != tripDetails?.trip?.title ||
                         _uiState.value.tripStatus != tripDetails?.trip?.status ||
@@ -273,7 +268,7 @@ class AddTripViewModel @Inject constructor(
                         _uiState.value.tripCurrencyCodes != tripDetails?.activeCurrencies?.map { it.code })
     }
 
-    fun newTripHasUnsavedInput(): Boolean {
+    private fun newTripHasUnsavedInput(): Boolean {
         return tripId == null &&
                 (_uiState.value.tripName.isNotBlank() ||
                         _uiState.value.tripParticipants.size > 1 ||

@@ -43,18 +43,16 @@ fun AddTripScreen(navController: NavController, onShowSnackbar: (Int) -> Unit) {
     val uiState by viewModel.uiState.collectAsState()
 
     BackHandler {
-        if (viewModel.existingTripDataChanged() || viewModel.newTripHasUnsavedInput()) {
-            onShowSnackbar(R.string.changes_discarded_warning)
-        }
-        navController.popBackStack()
+        viewModel.onIntent(AddTripIntent.BackPressed)
     }
 
     val defaultParticipantName = stringResource(R.string.you)
 
     LaunchedEffect(Unit) {
         viewModel.onIntent(AddDefaultParticipant(defaultParticipantName))
-        viewModel.shouldNavigateBack.collectLatest { navigateBack ->
-            if (navigateBack) navController.popBackStack()
+        viewModel.navigateBackWithWarning.collectLatest { showWarning ->
+            if (showWarning) onShowSnackbar(R.string.changes_discarded_warning)
+            navController.popBackStack()
         }
     }
 
@@ -83,18 +81,7 @@ fun AddTripScreen(navController: NavController, onShowSnackbar: (Int) -> Unit) {
             )
         }
 
-        ActiveDialog.CONFIRMATION -> {
-            TsConfirmationDialog(
-                onDismiss = { navController.popBackStack() },
-                onConfirm = { viewModel.onIntent(SaveTripClicked) },
-                titleRes = R.string.save_changes_dialog_title,
-                questionRes = R.string.save_changes_dialog_question,
-                positiveTextRes = R.string.save,
-                negativeTextRes = R.string.discard
-            )
-        }
-
-        ActiveDialog.WARNING -> {
+        ActiveDialog.CONFIRMATION, ActiveDialog.WARNING -> {
             TsConfirmationDialog(
                 onConfirm = { viewModel.onIntent(DuplicateNameDialogConfirmed) },
                 titleRes = R.string.duplicate_name_dialog_title,

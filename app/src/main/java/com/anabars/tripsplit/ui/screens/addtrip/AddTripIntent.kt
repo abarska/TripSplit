@@ -20,5 +20,4 @@ sealed class AddTripIntent {
     data object DismissAddParticipantDialog : AddTripIntent()
     data object SaveTripClicked : AddTripIntent()
     data object ParticipantInputSaved : AddTripIntent()
-    data object OnBackPressed : AddTripIntent()
 }

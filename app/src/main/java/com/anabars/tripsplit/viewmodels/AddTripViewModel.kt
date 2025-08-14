@@ -27,7 +27,6 @@ import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DismissCurrencyDia
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DuplicateNameDialogConfirmed
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.NewParticipantMultiplicatorChanged
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.NewParticipantNameChanged
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.OnBackPressed
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantDeleted
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantEditRequested
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantInputSaved
@@ -288,15 +287,6 @@ class AddTripViewModel @Inject constructor(
                 }
             }
 
-            is OnBackPressed -> {
-                if (newTripHasUnsavedInput() || existingTripDataChanged())
-                    updateActiveDialog(ActiveDialog.CONFIRMATION)
-                else
-                    viewModelScope.launch {
-                        _shouldNavigateBack.emit(true)
-                    }
-            }
-
             is ParticipantInputSaved -> {
                 saveOrUpdateParticipant()
             }
@@ -337,7 +327,7 @@ class AddTripViewModel @Inject constructor(
         updateActiveDialog(dialog)
     }
 
-    private fun existingTripDataChanged(): Boolean {
+    fun existingTripDataChanged(): Boolean {
         return tripId != null &&
                 (_nameUiState.value.tripName != tripDetails?.trip?.title ||
                         _statusUiState.value != tripDetails?.trip?.status ||
@@ -345,7 +335,7 @@ class AddTripViewModel @Inject constructor(
                         _currenciesUiState.value.tripCurrencyCodes != tripDetails?.activeCurrencies?.map { it.code })
     }
 
-    private fun newTripHasUnsavedInput(): Boolean {
+    fun newTripHasUnsavedInput(): Boolean {
         return tripId == null &&
                 (_nameUiState.value.tripName.isNotBlank() ||
                         _participantsUiState.value.tripParticipants.size > 1 ||

@@ -124,7 +124,7 @@ fun AppNavGraph(
                 }
             )
         ) {
-            AddTripScreen(navController = navController)
+            AddTripScreen(navController = navController, onShowSnackbar = onShowSnackbar)
         }
 
         composable(

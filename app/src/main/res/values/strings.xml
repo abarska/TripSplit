@@ -82,6 +82,7 @@
     <string name="save_changes_dialog_question">Do you want to save changes?</string>
     <string name="duplicate_name_dialog_title">Duplicate name</string>
     <string name="duplicate_name_dialog_warning">Looks like that name is already in use. Try another one!</string>
+    <string name="changes_discarded_warning">Changes were discarded</string>
 
     // used for settings
     <string name="local_currency">Local Currency</string>

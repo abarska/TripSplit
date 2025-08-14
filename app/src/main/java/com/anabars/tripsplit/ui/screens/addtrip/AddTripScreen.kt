@@ -27,7 +27,6 @@ import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DismissCurrencyDia
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DuplicateNameDialogConfirmed
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.NewParticipantMultiplicatorChanged
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.NewParticipantNameChanged
-import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.OnBackPressed
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantDeleted
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantEditRequested
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.ParticipantInputSaved
@@ -38,7 +37,7 @@ import com.anabars.tripsplit.viewmodels.AddTripViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun AddTripScreen(navController: NavController) {
+fun AddTripScreen(navController: NavController, onShowSnackbar: (Int) -> Unit) {
 
     val viewModel: AddTripViewModel = hiltViewModel()
     val dialogUiState by viewModel.dialogUiState.collectAsState()
@@ -47,8 +46,11 @@ fun AddTripScreen(navController: NavController) {
     val participantsUiState by viewModel.participantsUiState.collectAsState()
     val currenciesUiState by viewModel.currenciesUiState.collectAsState()
 
-    BackHandler(enabled = true) {
-        viewModel.onIntent(OnBackPressed)
+    BackHandler {
+        if (viewModel.existingTripDataChanged() || viewModel.newTripHasUnsavedInput()) {
+            onShowSnackbar(R.string.changes_discarded_warning)
+        }
+        navController.popBackStack()
     }
 
     val defaultParticipantName = stringResource(R.string.you)

@@ -3,6 +3,7 @@ package com.anabars.tripsplit.ui.screens.addtrip
 import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,7 +38,11 @@ import com.anabars.tripsplit.viewmodels.AddTripViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun AddTripScreen(navController: NavController, onShowSnackbar: (Int) -> Unit) {
+fun AddTripScreen(
+    navController: NavController,
+    onShowSnackbar: (Int) -> Unit,
+    updateUpButtonAction: ((() -> Unit)?) -> Unit
+) {
 
     val viewModel: AddTripViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -50,10 +55,15 @@ fun AddTripScreen(navController: NavController, onShowSnackbar: (Int) -> Unit) {
 
     LaunchedEffect(Unit) {
         viewModel.onIntent(AddDefaultParticipant(defaultParticipantName))
+        updateUpButtonAction { viewModel.onIntent(AddTripIntent.BackPressed) }
         viewModel.navigateBackWithWarning.collectLatest { showWarning ->
             if (showWarning) onShowSnackbar(R.string.changes_discarded_warning)
             navController.popBackStack()
         }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { updateUpButtonAction(null) }
     }
 
     when (uiState.activeDialog) {

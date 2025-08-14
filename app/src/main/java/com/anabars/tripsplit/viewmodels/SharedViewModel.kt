@@ -3,7 +3,7 @@ package com.anabars.tripsplit.viewmodels
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anabars.tripsplit.ui.model.ActionButton.*
+import com.anabars.tripsplit.ui.model.ActionButton.ToolbarActionButton
 import com.anabars.tripsplit.ui.model.TabItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,7 +23,8 @@ class SharedViewModel @Inject constructor() : ViewModel() {
         val selectedTabItem: TabItem = TabItem.Expenses,
         val toolbarActions: List<ToolbarActionButton> = emptyList(),
         val tabTitle: String? = null,
-        val fabVisible: Boolean = false
+        val fabVisible: Boolean = false,
+        val upButtonAction: (() -> Unit)? = null
     )
 
     sealed class SharedUiEvent {
@@ -32,6 +33,7 @@ class SharedViewModel @Inject constructor() : ViewModel() {
         data class SetToolbarActions(val actions: List<ToolbarActionButton>) : SharedUiEvent()
         data class SetTabTitle(val title: String?) : SharedUiEvent()
         data class SetFabVisibility(val visible: Boolean) : SharedUiEvent()
+        data class UpdateUpButtonAction(val action: (() -> Unit)?) : SharedUiEvent()
     }
 
     private val _uiState = MutableStateFlow(SharedUiState())
@@ -53,6 +55,10 @@ class SharedViewModel @Inject constructor() : ViewModel() {
 
             is SharedUiEvent.SetFabVisibility ->
                 _uiState.update { it.copy(fabVisible = event.visible) }
+
+            is SharedUiEvent.UpdateUpButtonAction -> {
+                _uiState.update { it.copy(upButtonAction = event.action) }
+            }
         }
     }
 

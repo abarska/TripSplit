@@ -35,6 +35,7 @@ import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetFabVisi
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabItem
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabTitle
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetToolbarActions
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.UpdateUpButtonAction
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -124,7 +125,11 @@ fun AppNavGraph(
                 }
             )
         ) {
-            AddTripScreen(navController = navController, onShowSnackbar = onShowSnackbar)
+            AddTripScreen(
+                navController = navController,
+                onShowSnackbar = onShowSnackbar,
+                updateUpButtonAction = { sharedViewModel.onEvent(UpdateUpButtonAction(it)) }
+            )
         }
 
         composable(

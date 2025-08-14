@@ -114,10 +114,7 @@ fun AppNavGraph(
                 }
             )
         ) {
-            AddTripScreen(
-                navController = navController,
-                setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
-            )
+            AddTripScreen(navController = navController)
         }
 
         composable(
@@ -129,8 +126,7 @@ fun AppNavGraph(
         ) { backStackEntry ->
             AddExpenseScreen(
                 navController = navController,
-                onShowSnackbar = onShowSnackbar,
-                setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
+                onShowSnackbar = onShowSnackbar
             )
         }
 
@@ -143,8 +139,7 @@ fun AppNavGraph(
         ) { backStackEntry ->
             AddPaymentScreen(
                 navController = navController,
-                onShowSnackbar = onShowSnackbar,
-                setBackHandler = { action -> sharedViewModel.setBackHandler(action) }
+                onShowSnackbar = onShowSnackbar
             )
         }
 

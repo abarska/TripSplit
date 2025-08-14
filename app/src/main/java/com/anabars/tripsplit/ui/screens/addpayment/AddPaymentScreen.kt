@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.collectLatest
 fun AddPaymentScreen(
     navController: NavHostController,
     onShowSnackbar: (Int) -> Unit,
-    setBackHandler: ((() -> Boolean)?) -> Unit
 ) {
 
     val viewModel: AddItemViewModel = hiltViewModel()

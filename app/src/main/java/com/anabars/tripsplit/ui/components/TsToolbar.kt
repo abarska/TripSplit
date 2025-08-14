@@ -21,20 +21,21 @@ import com.anabars.tripsplit.navigation.AppScreens
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TsToolbar(
     navController: NavController,
-    sharedViewModel: SharedViewModel,
+    sharedState: StateFlow<SharedViewModel.SharedUiState>,
     coroutineScope: CoroutineScope,
     drawerState: DrawerState
 ) {
     val startDestination = AppScreens.TRIPS.route
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val sharedUiState by sharedViewModel.uiState.collectAsState()
+    val sharedUiState by sharedState.collectAsState()
 
     TopAppBar(
         title = {
@@ -63,11 +64,7 @@ fun TsToolbar(
                     )
                 }
             } else {
-                IconButton(onClick = {
-                    if (!sharedViewModel.handleBack()) {
-                        navController.navigateUp()
-                    }
-                }) {
+                IconButton(onClick = { navController.navigateUp() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back)

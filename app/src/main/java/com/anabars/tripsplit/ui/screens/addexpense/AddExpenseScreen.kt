@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,20 +30,12 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun AddExpenseScreen(
     navController: NavHostController,
-    onShowSnackbar: (Int) -> Unit,
-    setBackHandler: ((() -> Boolean)?) -> Unit
+    onShowSnackbar: (Int) -> Unit
 ) {
 
     val viewModel: AddItemViewModel = hiltViewModel()
     val amountCurrencyState by viewModel.amountCurrencyState.collectAsState()
     val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
-
-    LaunchedEffect(Unit) {
-        setBackHandler {
-            viewModel.onIntent(OnBackPressed)
-            true
-        }
-    }
 
     LaunchedEffect(Unit) {
         viewModel.uiEffect.collectLatest { effect ->
@@ -53,10 +44,6 @@ fun AddExpenseScreen(
                 is AddItemUiEffect.ShowSnackBar -> onShowSnackbar(effect.resId)
             }
         }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose { setBackHandler(null) }
     }
 
     BackHandler(enabled = true) {

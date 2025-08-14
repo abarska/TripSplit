@@ -91,7 +91,7 @@ fun MainScreenWithDrawer() {
         topBar = {
             TsToolbar(
                 navController = navController,
-                sharedViewModel = sharedViewModel,
+                sharedState = sharedViewModel.uiState,
                 coroutineScope = coroutineScope,
                 drawerState = drawerState
             )

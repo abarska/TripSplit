@@ -1,29 +1,34 @@
-package com.anabars.tripsplit.ui.screens.addexpense
+package com.anabars.tripsplit.ui.screens.additem
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
-import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
-import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
+import com.anabars.tripsplit.ui.model.AmountCurrencyState
+import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
+import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
 import com.anabars.tripsplit.ui.widgets.TsDateAmountCurrencyCard
 import com.anabars.tripsplit.ui.widgets.TsPaidByPaidForCard
 import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import java.time.LocalDate
 
 @Composable
-fun AddExpensePortraitContent(
-    amountCurrencyState: AddItemAmountCurrencyState,
-    payerParticipantsState: AddItemPayerParticipantsState,
+fun AddExpenseLandscapeContent(
+    amountCurrencyState: AmountCurrencyState,
+    payerParticipantsState: PayerParticipantsState,
     onDateSelected: (LocalDate) -> Unit,
     onCategoryChange: (ExpenseCategory) -> Unit,
     onExpenseAmountChanged: (String) -> Unit,
@@ -39,21 +44,31 @@ fun AddExpensePortraitContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
     ) {
 
-        TsDateAmountCurrencyCard(
-            useCase = AddItemViewModel.UseCase.EXPENSE,
-            onDateSelected = onDateSelected,
-            onCategoryChanged = onCategoryChange,
-            amountCurrencyState = amountCurrencyState,
-            onExpenseAmountChanged = onExpenseAmountChanged,
-            onCurrencySelected = onCurrencySelected
-        )
-
-        TsPaidByPaidForCard(
-            useCase = AddItemViewModel.UseCase.EXPENSE,
-            payerParticipantsState = payerParticipantsState,
-            onPayerSelected = onPayerSelected,
-            onSelectionChanged = onParticipantsSelected
-        )
+        Row(
+            modifier = Modifier.height(IntrinsicSize.Min),
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
+        ) {
+            TsDateAmountCurrencyCard(
+                useCase = AddItemViewModel.UseCase.EXPENSE,
+                onDateSelected = onDateSelected,
+                onCategoryChanged = onCategoryChange,
+                amountCurrencyState = amountCurrencyState,
+                onExpenseAmountChanged = onExpenseAmountChanged,
+                onCurrencySelected = onCurrencySelected,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            )
+            TsPaidByPaidForCard(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                useCase = AddItemViewModel.UseCase.EXPENSE,
+                payerParticipantsState = payerParticipantsState,
+                onPayerSelected = onPayerSelected,
+                onSelectionChanged = onParticipantsSelected
+            )
+        }
 
         TsMainButton(textRes = R.string.save) { onSaveExpense() }
     }
@@ -61,8 +76,8 @@ fun AddExpensePortraitContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun AddExpensePortraitContentPreview() {
-    AddExpensePortraitContent(
+private fun AddExpenseLandscapeContentPreview() {
+    AddExpenseLandscapeContent(
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         payerParticipantsState = getFakePayerParticipantsState(),
         onDateSelected = {},

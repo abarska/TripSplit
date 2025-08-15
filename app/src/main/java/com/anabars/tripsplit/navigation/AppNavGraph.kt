@@ -19,8 +19,8 @@ import androidx.navigation.navArgument
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.model.TabItem
-import com.anabars.tripsplit.ui.screens.addexpense.AddExpenseScreen
-import com.anabars.tripsplit.ui.screens.addpayment.AddPaymentScreen
+import com.anabars.tripsplit.ui.screens.additem.AddExpenseScreen
+import com.anabars.tripsplit.ui.screens.additem.AddPaymentScreen
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
 import com.anabars.tripsplit.ui.screens.archive.ArchiveScreen
 import com.anabars.tripsplit.ui.screens.settings.SettingsScreen

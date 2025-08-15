@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.screens.addexpense
+package com.anabars.tripsplit.ui.screens.additem
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,9 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsMainButton
-import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
-import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
-import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.ui.model.AmountCurrencyState
+import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
 import com.anabars.tripsplit.ui.utils.getFakePayerParticipantsState
 import com.anabars.tripsplit.ui.widgets.TsDateAmountCurrencyCard
@@ -26,17 +25,16 @@ import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import java.time.LocalDate
 
 @Composable
-fun AddExpenseLandscapeContent(
-    amountCurrencyState: AddItemAmountCurrencyState,
-    payerParticipantsState: AddItemPayerParticipantsState,
+fun AddPaymentLandscapeContent(
+    amountCurrencyState: AmountCurrencyState,
+    payerParticipantsState: PayerParticipantsState,
     onDateSelected: (LocalDate) -> Unit,
-    onCategoryChange: (ExpenseCategory) -> Unit,
     onExpenseAmountChanged: (String) -> Unit,
     onCurrencySelected: (String) -> Unit,
     onPayerSelected: (Long) -> Unit,
     onParticipantsSelected: (Set<TripParticipant>) -> Unit,
-    onSaveExpense: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSavePayment: () -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -49,43 +47,41 @@ fun AddExpenseLandscapeContent(
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
             TsDateAmountCurrencyCard(
-                useCase = AddItemViewModel.UseCase.EXPENSE,
-                onDateSelected = onDateSelected,
-                onCategoryChanged = onCategoryChange,
-                amountCurrencyState = amountCurrencyState,
-                onExpenseAmountChanged = onExpenseAmountChanged,
-                onCurrencySelected = onCurrencySelected,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-            )
-            TsPaidByPaidForCard(
+                useCase = AddItemViewModel.UseCase.PAYMENT,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight(),
-                useCase = AddItemViewModel.UseCase.EXPENSE,
+                onDateSelected = onDateSelected,
+                amountCurrencyState = amountCurrencyState,
+                onExpenseAmountChanged = onExpenseAmountChanged,
+                onCurrencySelected = onCurrencySelected
+            )
+            TsPaidByPaidForCard(
+                useCase = AddItemViewModel.UseCase.PAYMENT,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
                 payerParticipantsState = payerParticipantsState,
                 onPayerSelected = onPayerSelected,
                 onSelectionChanged = onParticipantsSelected
             )
         }
 
-        TsMainButton(textRes = R.string.save) { onSaveExpense() }
+        TsMainButton(textRes = R.string.save) { onSavePayment() }
     }
 }
 
-@Preview(showBackground = true)
+@Preview (showBackground = true)
 @Composable
-private fun AddExpenseLandscapeContentPreview() {
-    AddExpenseLandscapeContent(
+private fun AddPaymentLandscapeContentPreview() {
+    AddPaymentLandscapeContent(
         amountCurrencyState = getFakeAmountCurrencyUiState(),
         payerParticipantsState = getFakePayerParticipantsState(),
         onDateSelected = {},
-        onCategoryChange = {},
         onExpenseAmountChanged = {},
         onCurrencySelected = {},
         onPayerSelected = {},
         onParticipantsSelected = {},
-        onSaveExpense = { }
+        onSavePayment = { }
     )
 }

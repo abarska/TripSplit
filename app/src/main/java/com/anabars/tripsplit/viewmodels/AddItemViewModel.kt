@@ -10,19 +10,19 @@ import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.repository.TripItemRepository
-import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
-import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
+import com.anabars.tripsplit.ui.model.AmountCurrencyState
+import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddItemUiEffect
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent
-import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.AmountChanged
-import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CategoryChanged
-import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CurrencySelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.DateSelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.OnBackPressed
-import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.ParticipantsSelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.PayerSelected
-import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.SaveItem
+import com.anabars.tripsplit.ui.screens.additem.AddItemIntent
+import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.AmountChanged
+import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.CategoryChanged
+import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.CurrencySelected
+import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.DateSelected
+import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.OnBackPressed
+import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.ParticipantsSelected
+import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.PayerSelected
+import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.SaveItem
 import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -50,12 +50,11 @@ class AddItemViewModel @Inject constructor(
         ?.let { UseCase.valueOf(it) }
         ?: throw IllegalStateException("UseCase is required for AddItemViewModel")
 
-    private val _amountCurrencyState = MutableStateFlow(AddItemAmountCurrencyState())
-    val amountCurrencyState: StateFlow<AddItemAmountCurrencyState> =
-        _amountCurrencyState.asStateFlow()
+    private val _amountCurrencyState = MutableStateFlow(AmountCurrencyState())
+    val amountCurrencyState: StateFlow<AmountCurrencyState> = _amountCurrencyState.asStateFlow()
 
-    private val _payerParticipantsState = MutableStateFlow(AddItemPayerParticipantsState())
-    val payerParticipantsState: StateFlow<AddItemPayerParticipantsState> =
+    private val _payerParticipantsState = MutableStateFlow(PayerParticipantsState())
+    val payerParticipantsState: StateFlow<PayerParticipantsState> =
         _payerParticipantsState.asStateFlow()
 
     private val _uiEffect = MutableSharedFlow<AddItemUiEffect>()

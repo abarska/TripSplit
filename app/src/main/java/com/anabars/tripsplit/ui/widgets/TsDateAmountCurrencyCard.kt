@@ -12,9 +12,9 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.ui.components.DateInputSection
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
-import com.anabars.tripsplit.ui.model.AddItemAmountCurrencyState
+import com.anabars.tripsplit.ui.model.AmountCurrencyState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.ui.screens.addexpense.ExpenseCategoriesRadioGroup
+import com.anabars.tripsplit.ui.screens.additem.ExpenseCategoriesRadioGroup
 import com.anabars.tripsplit.ui.utils.getFakeAmountCurrencyUiState
 import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import java.time.LocalDate
@@ -25,7 +25,7 @@ fun TsDateAmountCurrencyCard(
     modifier: Modifier = Modifier,
     onDateSelected: (LocalDate) -> Unit,
     onCategoryChanged: (ExpenseCategory) -> Unit = {},
-    amountCurrencyState: AddItemAmountCurrencyState,
+    amountCurrencyState: AmountCurrencyState,
     onExpenseAmountChanged: (String) -> Unit,
     onCurrencySelected: (String) -> Unit
 ) {

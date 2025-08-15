@@ -12,14 +12,14 @@ import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsContentCard
-import com.anabars.tripsplit.ui.model.AddItemPayerParticipantsState
+import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.ui.utils.getFakeAddExpensePayerParticipantsState
 import com.anabars.tripsplit.viewmodels.AddItemViewModel
 
 @Composable
 fun TsPaidByPaidForCard(
     useCase: AddItemViewModel.UseCase,
-    payerParticipantsState: AddItemPayerParticipantsState,
+    payerParticipantsState: PayerParticipantsState,
     onPayerSelected: (Long) -> Unit,
     onSelectionChanged: (Set<TripParticipant>) -> Unit,
     modifier: Modifier = Modifier

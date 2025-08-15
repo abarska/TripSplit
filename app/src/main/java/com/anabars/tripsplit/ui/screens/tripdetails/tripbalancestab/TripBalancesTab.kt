@@ -9,10 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.viewmodels.ParticipantBalanceViewModel
 
 @Composable
 fun TripBalancesTab(modifier: Modifier = Modifier) {
+    val viewModel: ParticipantBalanceViewModel = hiltViewModel()
+
     Text(
         text = stringResource(R.string.under_construction),
         modifier = Modifier

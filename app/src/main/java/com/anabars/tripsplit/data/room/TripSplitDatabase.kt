@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.anabars.tripsplit.data.room.converters.DateConverter
 import com.anabars.tripsplit.data.room.converters.ExpenseCategoryConverter
 import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
-import com.anabars.tripsplit.data.room.dao.ParticipantBalanceDao
+import com.anabars.tripsplit.data.room.dao.BalanceDao
 import com.anabars.tripsplit.data.room.dao.TripCurrencyDao
 import com.anabars.tripsplit.data.room.dao.TripDao
 import com.anabars.tripsplit.data.room.dao.TripExpensesDao
@@ -41,6 +41,6 @@ abstract class TripSplitDatabase : RoomDatabase() {
     abstract fun tripCurrencyDao(): TripCurrencyDao
     abstract fun tripExpensesDao(): TripExpensesDao
     abstract fun tripPaymentDao(): TripPaymentDao
-    abstract fun participantBalanceDao(): ParticipantBalanceDao
+    abstract fun balanceDao(): BalanceDao
     abstract fun exchangeRateDao(): ExchangeRateDao
 }

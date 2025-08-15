@@ -10,10 +10,10 @@ import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.repository.TripItemRepository
-import com.anabars.tripsplit.ui.model.AmountCurrencyState
-import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddItemUiEffect
+import com.anabars.tripsplit.ui.model.AmountCurrencyState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.ui.screens.additem.AddItemIntent
 import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.AmountChanged
 import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.CategoryChanged
@@ -23,7 +23,10 @@ import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.OnBackPressed
 import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.ParticipantsSelected
 import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.PayerSelected
 import com.anabars.tripsplit.ui.screens.additem.AddItemIntent.SaveItem
-import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.*
+import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.INVALID_AMOUNT
+import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.MISSING_PARTICIPANTS
+import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.MISSING_PAYEE
+import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.MISSING_PAYER
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +42,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddItemViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val tripItemRepository: TripItemRepository
+    private val tripItemRepository: TripItemRepository
 ) :
     ViewModel() {
 

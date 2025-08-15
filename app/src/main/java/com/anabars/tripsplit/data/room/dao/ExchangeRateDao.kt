@@ -15,6 +15,9 @@ interface ExchangeRateDao {
     @Query("SELECT * FROM ${TripSplitConstants.EXCHANGE_RATE_TABLE}")
     fun getExchangeRatesFlow(): Flow<List<ExchangeRate>>
 
+    @Query("SELECT * FROM ${TripSplitConstants.EXCHANGE_RATE_TABLE} WHERE currencyCode = :currencyCode")
+    suspend fun getExchangeRateForCurrency(currencyCode: String): ExchangeRate
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(rates: List<ExchangeRate>)
 

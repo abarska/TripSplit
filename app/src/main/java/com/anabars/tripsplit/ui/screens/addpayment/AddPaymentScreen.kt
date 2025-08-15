@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun AddPaymentScreen(
     navController: NavHostController,
     onShowSnackbar: (Int) -> Unit,
+    updateUpButtonAction: ((() -> Unit)?) -> Unit
 ) {
 
     val viewModel: AddItemViewModel = hiltViewModel()
@@ -38,6 +40,7 @@ fun AddPaymentScreen(
     val payerParticipantsState by viewModel.payerParticipantsState.collectAsState()
 
     LaunchedEffect(Unit) {
+        updateUpButtonAction { viewModel.onIntent(OnBackPressed) }
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
                 is AddItemUiEffect.NavigateBack -> {
@@ -52,6 +55,10 @@ fun AddPaymentScreen(
 
     BackHandler(enabled = true) {
         viewModel.onIntent(OnBackPressed)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { updateUpButtonAction(null) }
     }
 
     val isPortrait =

@@ -49,6 +49,9 @@ fun AppNavGraph(
     val sharedUiState by sharedViewModel.uiState.collectAsState()
     val context = LocalContext.current
 
+    val updateUpButtonAction: ((() -> Unit)?) -> Unit =
+        { sharedViewModel.onEvent(UpdateUpButtonAction(it)) }
+
     LaunchedEffect(sharedUiState.currentTripId) {
         sharedUiState.currentTripId?.let {
             navController.navigate(AppScreens.TRIP_DETAILS.route + "/$it")
@@ -128,7 +131,7 @@ fun AppNavGraph(
             AddTripScreen(
                 navController = navController,
                 onShowSnackbar = onShowSnackbar,
-                updateUpButtonAction = { sharedViewModel.onEvent(UpdateUpButtonAction(it)) }
+                updateUpButtonAction = updateUpButtonAction
             )
         }
 
@@ -141,7 +144,8 @@ fun AppNavGraph(
         ) { backStackEntry ->
             AddExpenseScreen(
                 navController = navController,
-                onShowSnackbar = onShowSnackbar
+                onShowSnackbar = onShowSnackbar,
+                updateUpButtonAction = updateUpButtonAction
             )
         }
 
@@ -154,7 +158,8 @@ fun AppNavGraph(
         ) { backStackEntry ->
             AddPaymentScreen(
                 navController = navController,
-                onShowSnackbar = onShowSnackbar
+                onShowSnackbar = onShowSnackbar,
+                updateUpButtonAction = updateUpButtonAction
             )
         }
 

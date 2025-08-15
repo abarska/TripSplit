@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.AddItemUiEffect
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.AmountChanged
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CategoryChanged
@@ -40,7 +41,10 @@ fun AddExpenseScreen(
     LaunchedEffect(Unit) {
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
-                is AddItemUiEffect.NavigateBack -> navController.popBackStack()
+                is AddItemUiEffect.NavigateBack -> {
+                    if (effect.showWarning) onShowSnackbar(R.string.changes_discarded_warning)
+                    navController.popBackStack()
+                }
                 is AddItemUiEffect.ShowSnackBar -> onShowSnackbar(effect.resId)
             }
         }

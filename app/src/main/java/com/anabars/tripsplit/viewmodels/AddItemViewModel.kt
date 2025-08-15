@@ -103,7 +103,8 @@ class AddItemViewModel @Inject constructor(
             is ParticipantsSelected -> updateSelectedParticipants(intent.participants)
             is SaveItem -> saveItem()
             is OnBackPressed -> viewModelScope.launch {
-                _uiEffect.emit(AddItemUiEffect.NavigateBack)
+                if (hasUnsavedChanges()) _uiEffect.emit(AddItemUiEffect.NavigateBack(true))
+                else _uiEffect.emit(AddItemUiEffect.NavigateBack(false))
             }
         }
     }
@@ -146,7 +147,7 @@ class AddItemViewModel @Inject constructor(
                     val participants = _payerParticipantsState.value.selectedParticipants
                     tripItemRepository.saveExpenseWithParticipants(expense, participants)
                     viewModelScope.launch {
-                        _uiEffect.emit(AddItemUiEffect.NavigateBack)
+                        _uiEffect.emit(AddItemUiEffect.NavigateBack(false))
                     }
                 }
 
@@ -158,7 +159,7 @@ class AddItemViewModel @Inject constructor(
                     )
                     tripItemRepository.savePayment(payment)
                     viewModelScope.launch {
-                        _uiEffect.emit(AddItemUiEffect.NavigateBack)
+                        _uiEffect.emit(AddItemUiEffect.NavigateBack(false))
                     }
                 }
             }
@@ -193,6 +194,21 @@ class AddItemViewModel @Inject constructor(
 
             MISSING_PAYER, MISSING_PARTICIPANTS, MISSING_PAYEE ->
                 _payerParticipantsState.update { it.copy(isError = true) }
+        }
+    }
+
+    private fun hasUnsavedChanges(): Boolean {
+        val commonPart =
+            _amountCurrencyState.value.expenseAmount.isNotBlank() ||
+                    _payerParticipantsState.value.expensePayerId != null
+
+        return when (useCase) {
+            UseCase.PAYMENT -> commonPart
+                    || _payerParticipantsState.value.selectedParticipants.isNotEmpty()
+
+            UseCase.EXPENSE -> commonPart
+                    || _payerParticipantsState.value.selectedParticipants.size != _payerParticipantsState.value.tripParticipants.size
+                    || _amountCurrencyState.value.selectedCategory != ExpenseCategory.Miscellaneous
         }
     }
 

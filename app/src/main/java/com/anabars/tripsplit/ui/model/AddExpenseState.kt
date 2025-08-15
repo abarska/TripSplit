@@ -21,6 +21,6 @@ data class AddItemPayerParticipantsState (
 )
 
 sealed class AddItemUiEffect {
-    data object NavigateBack : AddItemUiEffect()
+    data class NavigateBack(val showWarning: Boolean) : AddItemUiEffect()
     data class ShowSnackBar(val resId: Int) : AddItemUiEffect()
 }

@@ -1,6 +1,7 @@
 package com.anabars.tripsplit.ui.screens.addpayment
 
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -14,10 +15,12 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.model.AddItemUiEffect
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.AmountChanged
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.CurrencySelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.DateSelected
+import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.OnBackPressed
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.ParticipantsSelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.PayerSelected
 import com.anabars.tripsplit.ui.screens.addexpense.AddItemIntent.SaveItem
@@ -37,10 +40,18 @@ fun AddPaymentScreen(
     LaunchedEffect(Unit) {
         viewModel.uiEffect.collectLatest { effect ->
             when (effect) {
-                is AddItemUiEffect.NavigateBack -> navController.popBackStack()
+                is AddItemUiEffect.NavigateBack -> {
+                    if (effect.showWarning) onShowSnackbar(R.string.changes_discarded_warning)
+                    navController.popBackStack()
+                }
+
                 is AddItemUiEffect.ShowSnackBar -> onShowSnackbar(effect.resId)
             }
         }
+    }
+
+    BackHandler(enabled = true) {
+        viewModel.onIntent(OnBackPressed)
     }
 
     val isPortrait =

@@ -9,6 +9,7 @@ object BalanceCalculator {
 
     fun calculateDeltas(
         expense: TripExpense,
+        exchangeRate: Double,
         participants: Set<TripParticipant>
     ): List<BalanceDelta> {
         val deltas = mutableListOf<BalanceDelta>()
@@ -18,7 +19,7 @@ object BalanceCalculator {
             BalanceDelta(
                 tripId = expense.tripId,
                 participantId = expense.paidById,
-                deltaUsd = expense.amount.toBigDecimal()
+                deltaUsd = (expense.amount / exchangeRate).toBigDecimal()
                     .setScale(2, RoundingMode.HALF_UP)
             )
         )
@@ -28,7 +29,7 @@ object BalanceCalculator {
         val singleShare = expense.amount / splitFactor
 
         participants.forEach { participant ->
-            val deltaUsd = (singleShare * participant.multiplicator * -1)
+            val deltaUsd = (-1 * singleShare / exchangeRate * participant.multiplicator)
                 .toBigDecimal()
                 .setScale(2, RoundingMode.HALF_UP)
 

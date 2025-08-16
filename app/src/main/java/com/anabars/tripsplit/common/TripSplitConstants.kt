@@ -20,4 +20,6 @@ object TripSplitConstants {
     // workers
     const val CURRENCY_SYNC_IMMEDIATE_WORK_NAME = "immediate_currency_sync"
     const val CURRENCY_SYNC_PERIODIC_WORK_NAME = "periodic_currency_sync"
+
+    const val BASE_CURRENCY = "USD"
 }

@@ -2,7 +2,9 @@ package com.anabars.tripsplit.repository
 
 import androidx.room.withTransaction
 import com.anabars.tripsplit.BalanceCalculator
+import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.TripSplitDatabase
+import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
 import com.anabars.tripsplit.data.room.dao.TripDao
 import com.anabars.tripsplit.data.room.dao.TripExpensesDao
 import com.anabars.tripsplit.data.room.dao.TripPaymentDao
@@ -21,6 +23,7 @@ class TripItemRepository @Inject constructor(
     private val db: TripSplitDatabase,
     private val tripExpensesDao: TripExpensesDao,
     private val tripPaymentDao: TripPaymentDao,
+    private val exchangeRateDao: ExchangeRateDao,
     private val tripDao: TripDao
 ) {
 
@@ -47,9 +50,13 @@ class TripItemRepository @Inject constructor(
         expense: TripExpense,
         participants: Set<TripParticipant>
     ) {
+        val exchangeRate =
+            if (expense.currency == TripSplitConstants.BASE_CURRENCY) 1.0
+            else exchangeRateDao.getExchangeRateForCurrency(expense.currency).rate
+
         // calculate deltas for updating per participant balance
         val deltas = withContext(Dispatchers.Default) {
-            BalanceCalculator.calculateDeltas(expense, participants)
+            BalanceCalculator.calculateDeltas(expense, exchangeRate, participants)
         }
 
         // save expense, cross refs and deltas in a single transaction

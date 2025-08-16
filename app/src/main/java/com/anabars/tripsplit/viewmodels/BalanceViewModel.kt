@@ -31,7 +31,8 @@ class BalanceViewModel @Inject constructor(
         viewModelScope.launch {
             val homeCurrency = dataStore.data
                 .map { prefs ->
-                    prefs[stringPreferencesKey(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY)] ?: "USD"
+                    prefs[stringPreferencesKey(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY)]
+                        ?: TripSplitConstants.BASE_CURRENCY
                 }
                 .first()
 

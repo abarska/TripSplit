@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +42,7 @@ class BalanceViewModel @Inject constructor(
                     _uiState.value = balances.map {
                         BalanceUiModel(
                             participantId = it.participantId,
-                            amountHomeCurrency = it.amountUsd * homeRate,
+                            amountHomeCurrency = it.amountUsd.multiply(BigDecimal(homeRate)),
                             currency = homeCurrency
                         )
                     }
@@ -52,6 +53,6 @@ class BalanceViewModel @Inject constructor(
 
 data class BalanceUiModel(
     val participantId: Long,
-    val amountHomeCurrency: Double,
+    val amountHomeCurrency: BigDecimal,
     val currency: String
 )

@@ -7,14 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.viewmodels.GroupedResult
-import java.time.LocalDate
+import com.anabars.tripsplit.data.model.GroupedResult
 
 @Composable
-fun <T> TripItemTabContent(
-    result: GroupedResult<T>,
+fun <K, V> TripItemTabContent(
+    result: GroupedResult<K, V>,
     placeholderTextRes: Int,
-    successContent: @Composable (data: Map<LocalDate, List<T>>) -> Unit,
+    successContent: @Composable (data: Map<K, List<V>>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier.fillMaxSize()) {

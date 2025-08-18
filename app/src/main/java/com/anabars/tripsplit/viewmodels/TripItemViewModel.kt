@@ -3,6 +3,7 @@ package com.anabars.tripsplit.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anabars.tripsplit.data.model.GroupedResult
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.data.room.model.ExpenseWithParticipants
@@ -28,46 +29,46 @@ class TripItemViewModel @Inject constructor(
     val tripId: Long = savedStateHandle.get<Long>("id")
         ?: throw IllegalStateException("Trip ID is required for TripExpensesViewModel")
 
-    val groupedExpensesResult: StateFlow<GroupedResult<ExpenseWithParticipants>> =
+    val groupedExpensesResult: StateFlow<GroupedResult<LocalDate, ExpenseWithParticipants>> =
         tripItemRepository.getExpensesWithParticipantsByTrip(tripId)
             .map { expenses ->
                 if (expenses.isEmpty()) {
-                    GroupedResult.Empty
+                    GroupedResult.Empty<LocalDate, ExpenseWithParticipants>()
                 } else {
                     val grouped = expenses.groupBy {
                         Instant.ofEpochMilli(it.expense.timestamp)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
                     }.toSortedMap(compareByDescending { it })
-                    GroupedResult.Success(data = grouped)
+                    GroupedResult.Success(grouped)
                 }
             }
-            .onStart { emit(GroupedResult.Loading) }
+            .onStart { emit(GroupedResult.Loading()) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
-                initialValue = GroupedResult.Loading
+                initialValue = GroupedResult.Loading()
             )
 
-    val groupedPaymentsResult: StateFlow<GroupedResult<TripPayment>> =
+    val groupedPaymentsResult: StateFlow<GroupedResult<LocalDate, TripPayment>> =
         tripItemRepository.getPaymentsByTripId(tripId)
             .map { payments ->
                 if (payments.isEmpty()) {
-                    GroupedResult.Empty
+                    GroupedResult.Empty<LocalDate, TripPayment>()
                 } else {
                     val grouped = payments.groupBy {
                         Instant.ofEpochMilli(it.timestamp)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
                     }.toSortedMap(compareByDescending { it })
-                    GroupedResult.Success(data = grouped)
+                    GroupedResult.Success(grouped)
                 }
             }
-            .onStart { emit(GroupedResult.Loading) }
+            .onStart { emit(GroupedResult.Loading()) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
-                initialValue = GroupedResult.Loading
+                initialValue = GroupedResult.Loading()
             )
 
     val tripParticipants: StateFlow<List<TripParticipant>> =
@@ -96,13 +97,6 @@ class TripItemViewModel @Inject constructor(
             is DeleteItemIntent.DeletePaymentItem -> deletePaymentById(intent.id)
         }
     }
-}
-
-// thank you to Advanced Kotlin by Marcin Moskala, I'm happy I can apply this knowledge
-sealed class GroupedResult<out T> {
-    object Loading : GroupedResult<Nothing>()
-    object Empty : GroupedResult<Nothing>()
-    data class Success<T>(val data: Map<LocalDate, List<T>>) : GroupedResult<T>()
 }
 
 sealed class DeleteItemIntent(open val id: Long) {

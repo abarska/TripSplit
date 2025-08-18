@@ -25,4 +25,6 @@ fun TripBalancesTab(modifier: Modifier = Modifier) {
         style = MaterialTheme.typography.headlineLarge,
         textAlign = TextAlign.Center
     )
+
+//    val groupedBalancesResult by viewModel.groupedExpensesResult.collectAsState()
 }

@@ -6,9 +6,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.data.model.GroupedResult
 import com.anabars.tripsplit.ui.widgets.TripItemTabContent
 import com.anabars.tripsplit.viewmodels.DeleteItemIntent
-import com.anabars.tripsplit.viewmodels.GroupedResult
 import com.anabars.tripsplit.viewmodels.TripItemViewModel
 
 @Composable

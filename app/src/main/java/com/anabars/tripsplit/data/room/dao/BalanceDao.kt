@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.entity.ParticipantBalance
+import com.anabars.tripsplit.data.room.model.BalanceWithNameAndStatus
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 
@@ -29,4 +30,17 @@ interface BalanceDao {
                 "(tripId, participantId, amountUsd) VALUES (:tripId, :participantId, :deltaUsd)"
     )
     suspend fun insertBalance(tripId: Long, participantId: Long, deltaUsd: BigDecimal)
+
+    @Query(
+        """
+        SELECT tp.name AS participantName,
+               tp.status AS participantStatus,
+               pb.amountUsd AS amountUsd
+        FROM ${TripSplitConstants.PARTICIPANT_BALANCES_TABLE} pb
+        INNER JOIN ${TripSplitConstants.TRIP_PARTICIPANTS_TABLE} tp
+               ON pb.participantId = tp.id
+        WHERE pb.tripId = :tripId
+        """
+    )
+    fun getBalancesWithNameAndStatus(tripId: Long): Flow<List<BalanceWithNameAndStatus>>
 }

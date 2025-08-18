@@ -38,12 +38,12 @@ class BalanceViewModel @Inject constructor(
 
             val homeRate = exchangeRateDao.getExchangeRateForCurrency(homeCurrency).rate
 
-            balanceRepository.getBalancesForTrip(tripId)
+            balanceRepository.getBalancesWithNameAndStatus(tripId)
                 .collect { balances ->
                     _uiState.value = balances.map {
                         BalanceUiModel(
-                            participantId = it.participantId,
-                            amountHomeCurrency = it.amountUsd.multiply(BigDecimal(homeRate)),
+                            participantName = it.participantName,
+                            amount = it.amountUsd.multiply(BigDecimal(homeRate)),
                             currency = homeCurrency
                         )
                     }
@@ -53,7 +53,7 @@ class BalanceViewModel @Inject constructor(
 }
 
 data class BalanceUiModel(
-    val participantId: Long,
-    val amountHomeCurrency: BigDecimal,
+    val participantName: String,
+    val amount: BigDecimal,
     val currency: String
 )

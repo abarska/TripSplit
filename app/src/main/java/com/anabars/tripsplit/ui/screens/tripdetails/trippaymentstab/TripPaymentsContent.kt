@@ -14,17 +14,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.anabars.tripsplit.data.model.GroupedResult
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.ui.components.TsOutlinedButton
 import com.anabars.tripsplit.ui.listitems.TsPaymentItemRow
 import com.anabars.tripsplit.utils.formatters.formatDate
-import com.anabars.tripsplit.viewmodels.GroupedResult
+import java.time.LocalDate
 
 @Composable
 fun TripPaymentsContent(
     modifier: Modifier = Modifier,
-    result: GroupedResult<TripPayment>,
+    result: GroupedResult<LocalDate, TripPayment>,
     tripParticipants: List<TripParticipant>,
     onDeleteClick: (Long) -> Unit
 ) {

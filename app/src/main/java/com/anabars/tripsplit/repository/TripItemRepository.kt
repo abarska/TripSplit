@@ -6,8 +6,9 @@ import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.TripSplitDatabase
 import com.anabars.tripsplit.data.room.dao.BalanceDao
 import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
-import com.anabars.tripsplit.data.room.dao.TripDao
+import com.anabars.tripsplit.data.room.dao.TripCurrencyDao
 import com.anabars.tripsplit.data.room.dao.TripExpensesDao
+import com.anabars.tripsplit.data.room.dao.TripParticipantDao
 import com.anabars.tripsplit.data.room.dao.TripPaymentDao
 import com.anabars.tripsplit.data.room.entity.ExpenseParticipantCrossRef
 import com.anabars.tripsplit.data.room.entity.TripCurrency
@@ -23,11 +24,12 @@ import javax.inject.Inject
 
 class TripItemRepository @Inject constructor(
     private val db: TripSplitDatabase,
+    private val tripCurrencyDao: TripCurrencyDao,
+    private val tripParticipantDao: TripParticipantDao,
     private val tripExpensesDao: TripExpensesDao,
     private val tripPaymentDao: TripPaymentDao,
     private val balanceDao: BalanceDao,
-    private val exchangeRateDao: ExchangeRateDao,
-    private val tripDao: TripDao
+    private val exchangeRateDao: ExchangeRateDao
 ) {
 
     fun getExpensesWithParticipantsByTrip(tripId: Long): Flow<List<ExpenseWithParticipants>> =
@@ -37,13 +39,13 @@ class TripItemRepository @Inject constructor(
         tripPaymentDao.getPaymentsByTripId(tripId)
 
     fun getActiveCurrenciesByTripId(tripId: Long): Flow<List<TripCurrency>> =
-        tripDao.getActiveCurrenciesByTripId(tripId)
+        tripCurrencyDao.getActiveCurrenciesByTripId(tripId)
 
     fun getParticipantsByTripId(tripId: Long): Flow<List<TripParticipant>> =
-        tripDao.getParticipantsByTripId(tripId)
+        tripParticipantDao.getParticipantsByTripIdAsFlow(tripId)
 
     fun getActiveParticipantsByTripId(tripId: Long): Flow<List<TripParticipant>> =
-        tripDao.getActiveParticipantsByTripId(tripId)
+        tripParticipantDao.getActiveParticipantsByTripId(tripId)
 
     suspend fun savePayment(payment: TripPayment) {
         // calculate deltas for updating per participant balance

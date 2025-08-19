@@ -55,7 +55,7 @@ class TripRepository @Inject constructor(
         tripId: Long,
         incomingCurrencyCodes: List<String>
     ) {
-        val existingCurrencies = currencyDao.getCurrenciesByTripId(tripId)
+        val existingCurrencies = currencyDao.getCurrenciesByTripIdAsList(tripId)
         val existingCurrenciesMap = existingCurrencies.associateBy { it.code }
         val incomingCurrencyCodesSet = incomingCurrencyCodes.toSet()
         val currenciesToUpsert = mutableListOf<TripCurrency>()
@@ -77,7 +77,7 @@ class TripRepository @Inject constructor(
         tripId: Long,
         incomingParticipants: List<TripParticipant>
     ) {
-        val existingParticipants = participantDao.getParticipantsByTripId(tripId)
+        val existingParticipants = participantDao.getParticipantsByTripIdAsList(tripId)
         val existingParticipantsMap = existingParticipants.associateBy { it.name }
         val participantsToUpsert = mutableListOf<TripParticipant>()
 

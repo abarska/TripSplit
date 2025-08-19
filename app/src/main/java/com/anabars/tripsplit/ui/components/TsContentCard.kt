@@ -1,15 +1,17 @@
 package com.anabars.tripsplit.ui.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,11 +27,20 @@ fun TsContentCard(
     isError: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    OutlinedCard(
-        modifier = modifier.border(
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius)),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = dimensionResource(R.dimen.card_elevation)
+        ),
+        colors = CardDefaults.cardColors().copy(
+            containerColor = Color.Transparent
+        ),
+        border = CardDefaults.outlinedCardBorder().copy(
             width = if (isError) 2.dp else 0.dp,
-            color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline,
-            shape = RoundedCornerShape(dimensionResource(R.dimen.chip_corner_radius))
+            brush =
+                if (isError) SolidColor(MaterialTheme.colorScheme.error)
+                else SolidColor(Color.Transparent)
         ),
     ) {
         content()

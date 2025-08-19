@@ -30,7 +30,7 @@ fun TsItemRow(
 ) {
     ElevatedCard(
         modifier = modifier,
-        shape = RoundedCornerShape(dimensionResource(R.dimen.chip_corner_radius)),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius)),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         enabled = enabled,
         onClick = onItemClick,

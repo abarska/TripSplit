@@ -29,7 +29,7 @@ fun <T> TripSplitRadioButton(
         modifier = modifier
             .padding(4.dp)
             .clickable { onItemClick(value) },
-        shape = RoundedCornerShape(dimensionResource(R.dimen.chip_corner_radius)),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius)),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.elevatedCardColors(
             containerColor = backgroundColor

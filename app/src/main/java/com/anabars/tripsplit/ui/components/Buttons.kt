@@ -75,7 +75,7 @@ fun TsMainButton(
     Button(
         onClick = onClick,
         enabled = enabled,
-        shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius)),
         elevation = ButtonDefaults.elevatedButtonElevation(
             defaultElevation = 4.dp,
             pressedElevation = 0.dp,
@@ -140,6 +140,7 @@ fun TsOutlinedButton(
         modifier = modifier,
         enabled = enabled,
         border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.primary),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius)),
         onClick = onClick
     ) {
         TsInfoText(

@@ -5,6 +5,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -27,6 +28,7 @@ fun TsShortInput(
     onValueChanged: (String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val backgroundColor = MaterialTheme.colorScheme.primaryContainer
     TextField(
         modifier = modifier,
         maxLines = 1,
@@ -47,6 +49,10 @@ fun TsShortInput(
             onDone = { keyboardController?.hide() }
         ),
         textStyle = textStyle,
+        colors = TextFieldDefaults.colors().copy(
+            focusedContainerColor = backgroundColor,
+            unfocusedContainerColor = backgroundColor
+        ),
         prefix = prefix,
         onValueChange = onValueChanged
     )

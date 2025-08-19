@@ -35,6 +35,7 @@ fun TsDialog(
         onDismissRequest = onDismiss,
         title = { if (titleValue.isNotEmpty()) TsInfoText(text = titleValue, fontSize = TsFontSize.LARGE) },
         text = { content() },
+        containerColor = MaterialTheme.colorScheme.surface,
         confirmButton = {
             if (positiveTextValue.isNotEmpty()) {
                 TextButton(onClick = onConfirm) {

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,10 +37,6 @@ fun TripDetailsScreen(
             val newTab = TabItem.allTabs().firstOrNull { it.ordinal == pagerState.currentPage }
             onTabChanged(newTab ?: TabItem.Expenses)
         }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose { onTabChanged(TabItem.Expenses) }
     }
 
     HorizontalPager(

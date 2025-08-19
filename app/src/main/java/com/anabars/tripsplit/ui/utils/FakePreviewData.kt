@@ -10,7 +10,9 @@ import com.anabars.tripsplit.ui.model.AmountCurrencyState
 import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.viewmodels.BalanceUiState
 import com.anabars.tripsplit.viewmodels.ExpenseCategorizationResult
+import java.math.BigDecimal
 
 fun getFakeTripParticipants() = listOf(
     TripParticipant(id = 1, name = "Harry", multiplicator = 1),
@@ -96,4 +98,10 @@ fun getFakePayment() = TripPayment(
     amount = 30.00,
     currency = "EUR",
     timestamp = System.currentTimeMillis()
+)
+
+fun getFakeBalanceUiState(amount: Double) = BalanceUiState(
+    participantName = getFakeTripParticipants()[0].name,
+    amount = BigDecimal(amount),
+    currency = getFakeTripCurrencies()[0].code
 )

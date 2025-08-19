@@ -3,6 +3,7 @@ package com.anabars.tripsplit.viewmodels
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.common.TripSplitConstants
@@ -21,13 +22,21 @@ import javax.inject.Inject
 class BalanceViewModel @Inject constructor(
     private val balanceRepository: BalanceRepository,
     private val exchangeRateDao: ExchangeRateDao,
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<List<BalanceUiModel>>(emptyList())
-    val uiState: StateFlow<List<BalanceUiModel>> = _uiState
+    val tripId: Long = savedStateHandle.get<Long>("id")
+        ?: throw IllegalStateException("Trip ID is required for BalanceViewModel")
 
-    fun loadBalances(tripId: Long) {
+    private val _uiState = MutableStateFlow<List<BalanceUiState>>(emptyList())
+    val uiState: StateFlow<List<BalanceUiState>> = _uiState
+
+    init {
+        loadBalances()
+    }
+
+    fun loadBalances() {
         viewModelScope.launch {
             val homeCurrency = dataStore.data
                 .map { prefs ->
@@ -41,7 +50,7 @@ class BalanceViewModel @Inject constructor(
             balanceRepository.getBalancesWithNameAndStatus(tripId)
                 .collect { balances ->
                     _uiState.value = balances.map {
-                        BalanceUiModel(
+                        BalanceUiState(
                             participantName = it.participantName,
                             amount = it.amountUsd.multiply(BigDecimal(homeRate)),
                             currency = homeCurrency
@@ -52,7 +61,7 @@ class BalanceViewModel @Inject constructor(
     }
 }
 
-data class BalanceUiModel(
+data class BalanceUiState(
     val participantName: String,
     val amount: BigDecimal,
     val currency: String

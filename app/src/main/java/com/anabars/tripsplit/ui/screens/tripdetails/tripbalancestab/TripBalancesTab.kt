@@ -1,30 +1,36 @@
 package com.anabars.tripsplit.ui.screens.tripdetails.tripbalancestab
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.utils.inputWidthModifier
+import com.anabars.tripsplit.ui.widgets.TsBalanceItem
 import com.anabars.tripsplit.viewmodels.BalanceViewModel
 
 @Composable
 fun TripBalancesTab(modifier: Modifier = Modifier) {
+
     val viewModel: BalanceViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsState()
 
-    Text(
-        text = stringResource(R.string.under_construction),
-        modifier = Modifier
-            .fillMaxSize()
+    LazyColumn(
+        modifier = modifier
+            .inputWidthModifier()
             .padding(16.dp),
-        style = MaterialTheme.typography.headlineLarge,
-        textAlign = TextAlign.Center
-    )
-
-//    val groupedBalancesResult by viewModel.groupedExpensesResult.collectAsState()
+        verticalArrangement = Arrangement.Top
+    ) {
+        item { HorizontalDivider() }
+        items(items = uiState) {
+            TsBalanceItem(uiState = it)
+            HorizontalDivider()
+        }
+    }
 }

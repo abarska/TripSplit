@@ -98,7 +98,9 @@ class TripItemRepository @Inject constructor(
     }
 
     suspend fun deleteExpenseById(expenseId: Long) {
-        tripExpensesDao.deleteExpenseById(expenseId)
+        db.withTransaction {
+            tripExpensesDao.deleteExpenseWithCrossRefs(expenseId)
+        }
     }
 
     suspend fun deletePaymentById(paymentId: Long) {

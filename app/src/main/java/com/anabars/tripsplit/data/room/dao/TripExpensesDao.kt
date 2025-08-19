@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.anabars.tripsplit.common.TripSplitConstants.CROSS_TABLE_EXPENSE_PARTICIPANT
 import com.anabars.tripsplit.common.TripSplitConstants.TRIP_EXPENSES_TABLE
 import com.anabars.tripsplit.data.room.entity.ExpenseParticipantCrossRef
 import com.anabars.tripsplit.data.room.entity.TripExpense
@@ -29,4 +30,13 @@ interface TripExpensesDao {
 
     @Query("DELETE FROM $TRIP_EXPENSES_TABLE WHERE id = :expenseId")
     suspend fun deleteExpenseById(expenseId: Long)
+
+    @Query("DELETE FROM $CROSS_TABLE_EXPENSE_PARTICIPANT WHERE expenseId = :expenseId")
+    suspend fun deleteCrossRefsForExpense(expenseId: Long)
+
+    @Transaction
+    suspend fun deleteExpenseWithCrossRefs(expenseId: Long) {
+        deleteCrossRefsForExpense(expenseId)
+        deleteExpenseById(expenseId)
+    }
 }

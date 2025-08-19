@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripStatus
+import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsItemRowActionButton
 import com.anabars.tripsplit.ui.components.TsOutlinedButton
-import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
@@ -61,7 +61,7 @@ fun TripsScreen(
                 items = trips,
                 key = { trip -> trip.id }
             ) { trip ->
-                TsItemRow(
+                TsContentCard(
                     modifier = modifier.inputWidthModifier(),
                     onItemClick = { onTripSelected(trip.id) }
                 ) {

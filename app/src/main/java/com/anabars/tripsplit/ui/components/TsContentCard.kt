@@ -25,23 +25,30 @@ import com.anabars.tripsplit.ui.utils.inputWidthModifier
 fun TsContentCard(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
+    isEnabled: Boolean = true,
+    isHighlighted: Boolean = false,
+    onItemClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
+    val backgroundColor =
+        if (isHighlighted) MaterialTheme.colorScheme.primaryContainer
+        else Color.Transparent
+    val strokeColor =
+        if (isError) SolidColor(MaterialTheme.colorScheme.error)
+        else SolidColor(Color.Transparent)
     Card(
         modifier = modifier,
+        enabled = isEnabled,
         shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius)),
         elevation = CardDefaults.elevatedCardElevation(
             defaultElevation = dimensionResource(R.dimen.card_elevation)
         ),
-        colors = CardDefaults.cardColors().copy(
-            containerColor = Color.Transparent
-        ),
+        colors = CardDefaults.cardColors().copy(containerColor = backgroundColor),
         border = CardDefaults.outlinedCardBorder().copy(
             width = if (isError) 2.dp else 0.dp,
-            brush =
-                if (isError) SolidColor(MaterialTheme.colorScheme.error)
-                else SolidColor(Color.Transparent)
+            brush = strokeColor
         ),
+        onClick = onItemClick,
     ) {
         content()
     }

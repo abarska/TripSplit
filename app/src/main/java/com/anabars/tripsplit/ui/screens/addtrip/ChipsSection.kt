@@ -17,9 +17,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsItemRowActionButton
-import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.getFakeTripCurrencies
@@ -50,7 +50,7 @@ fun <T> ChipsSection(
                     icon = Icons.Default.Close,
                     contentDescriptionRes = R.string.delete_item,
                 ) { onDeleteItemButtonClick(value) }
-                TsItemRow(onItemClick = { onItemClick(value) }) {
+                TsContentCard(onItemClick = { onItemClick(value) }) {
                     Row(
                         modifier = Modifier.padding(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -62,7 +62,7 @@ fun <T> ChipsSection(
                     }
                 }
             }
-            TsItemRow(highlighted = true, onItemClick = onAddItemButtonClick) {
+            TsContentCard(isHighlighted = true, onItemClick = onAddItemButtonClick) {
                 val button = ActionButton.ChipActionButton(
                     icon = leadingIcon,
                     contentDescriptionRes = R.string.add_item,

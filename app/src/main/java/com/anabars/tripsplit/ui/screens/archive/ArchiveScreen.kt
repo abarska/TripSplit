@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.anabars.tripsplit.navigation.AppScreens
+import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
-import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 import com.anabars.tripsplit.viewmodels.ArchiveViewModel
@@ -38,7 +38,7 @@ fun ArchiveScreen(
             items = archivedTrips,
             key = { trip -> trip.id }
         ) { trip ->
-            TsItemRow(
+            TsContentCard(
                 modifier = modifier.inputWidthModifier(),
                 onItemClick = {
                     navController.navigate(AppScreens.TRIP_DETAILS.route + "/${trip.id}")

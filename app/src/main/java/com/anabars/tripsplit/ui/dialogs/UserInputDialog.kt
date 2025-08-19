@@ -15,9 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsShortInput
-import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
@@ -69,9 +69,9 @@ fun TsUserInputDialog(
                     Alignment.CenterHorizontally
                 )
             ) {
-                TsItemRow(
-                    highlighted = uiState.newParticipantMultiplicator > 1,
-                    enabled = uiState.newParticipantMultiplicator > 1,
+                TsContentCard (
+                    isHighlighted = uiState.newParticipantMultiplicator > 1,
+                    isEnabled = uiState.newParticipantMultiplicator > 1,
                     onItemClick = { onMultiplicatorChange(uiState.newParticipantMultiplicator - 1) }
                 ) {
                     Row(
@@ -93,8 +93,8 @@ fun TsUserInputDialog(
                     ),
                     fontSize = TsFontSize.MEDIUM
                 )
-                TsItemRow(
-                    highlighted = true,
+                TsContentCard(
+                    isHighlighted = true,
                     onItemClick = { onMultiplicatorChange(uiState.newParticipantMultiplicator + 1) }
                 ) {
                     Row(

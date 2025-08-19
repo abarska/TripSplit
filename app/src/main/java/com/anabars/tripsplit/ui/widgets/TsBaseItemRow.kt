@@ -21,8 +21,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
+import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
-import com.anabars.tripsplit.ui.listitems.TsItemRow
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
@@ -33,7 +33,7 @@ fun TsBaseItemRow(
     onDeleteClick: () -> Unit = {},
     visiblePart: @Composable ColumnScope.() -> Unit
 ) {
-    TsItemRow(modifier = modifier.inputWidthModifier()) {
+    TsContentCard(modifier = modifier.inputWidthModifier()) {
         Column(modifier = modifier.fillMaxWidth()) {
             visiblePart()
             AnimatedVisibility(visible = isExpanded) {

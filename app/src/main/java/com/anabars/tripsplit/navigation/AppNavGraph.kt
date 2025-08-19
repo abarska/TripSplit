@@ -54,7 +54,9 @@ fun AppNavGraph(
 
     LaunchedEffect(sharedUiState.currentTripId) {
         sharedUiState.currentTripId?.let {
-            navController.navigate(AppScreens.TRIP_DETAILS.route + "/$it")
+            navController.navigate(AppScreens.TRIP_DETAILS.route + "/$it"){
+                launchSingleTop = true
+            }
         }
     }
 

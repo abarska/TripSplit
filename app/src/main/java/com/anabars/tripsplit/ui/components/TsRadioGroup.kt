@@ -78,7 +78,7 @@ private fun <T> TsRadioGroupItems(
     itemContent: @Composable (T) -> Unit
 ) {
     items.forEach { item ->
-        TripSplitRadioButton(
+        TsRadioButton(
             modifier = itemWidth?.let { Modifier.width(it) } ?: Modifier,
             value = item,
             isSelected = item == selectedItem,

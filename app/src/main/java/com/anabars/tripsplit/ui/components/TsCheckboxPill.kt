@@ -20,7 +20,7 @@ fun <T> TsCheckboxPill(
     onItemClick: (T) -> Unit,
     content: @Composable () -> Unit
 ) {
-    TripSplitRadioButton(
+    TsRadioButton(
         modifier = modifier,
         value = value,
         onItemClick = { onItemClick(value) },

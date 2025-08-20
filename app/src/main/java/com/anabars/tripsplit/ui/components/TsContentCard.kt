@@ -35,17 +35,14 @@ fun TsContentCard(
         else Color.Transparent
     val strokeColor =
         if (isError) SolidColor(MaterialTheme.colorScheme.error)
-        else SolidColor(Color.Transparent)
+        else SolidColor(MaterialTheme.colorScheme.outline)
     Card(
         modifier = modifier,
         enabled = isEnabled,
         shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius)),
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = dimensionResource(R.dimen.card_elevation)
-        ),
         colors = CardDefaults.cardColors().copy(containerColor = backgroundColor),
         border = CardDefaults.outlinedCardBorder().copy(
-            width = if (isError) 2.dp else 0.dp,
+            width = if (isError) 2.dp else 1.dp,
             brush = strokeColor
         ),
         onClick = onItemClick,

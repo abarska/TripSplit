@@ -1,39 +1,20 @@
 package com.anabars.tripsplit.ui.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.dp
-import com.anabars.tripsplit.R
 
 @Composable
-fun <T> TripSplitRadioButton(
+fun <T> TsRadioButton(
     value: T,
     isSelected: Boolean,
     modifier: Modifier = Modifier,
     onItemClick: (T) -> Unit,
     content: @Composable () -> Unit
 ) {
-
-    val backgroundColor =
-        if (isSelected) MaterialTheme.colorScheme.primaryContainer
-        else MaterialTheme.colorScheme.surfaceContainer
-
-    ElevatedCard(
-        modifier = modifier
-            .padding(4.dp)
-            .clickable { onItemClick(value) },
-        shape = RoundedCornerShape(dimensionResource(R.dimen.corner_radius)),
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.elevatedCardColors(
-            containerColor = backgroundColor
-        )
+    TsContentCard(
+        modifier = modifier,
+        isHighlighted = isSelected,
+        onItemClick = { onItemClick(value) },
     ) {
         content()
     }

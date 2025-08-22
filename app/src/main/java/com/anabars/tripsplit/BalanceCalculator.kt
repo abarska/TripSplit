@@ -33,6 +33,15 @@ object BalanceCalculator {
         deltas.addAll(participantDeltas)
 
         return deltas
+            .groupBy { it.participantId }
+            .map { (id, entries) ->
+                BalanceDelta(
+                    tripId = expense.tripId,
+                    participantId = id,
+                    deltaUsd = entries.sumOf { it.deltaUsd }
+                )
+            }
+
     }
 
     fun calculateDeltasForPayment(

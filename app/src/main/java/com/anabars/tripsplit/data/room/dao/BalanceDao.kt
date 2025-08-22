@@ -35,7 +35,8 @@ interface BalanceDao {
         """
         SELECT tp.name AS participantName,
                tp.status AS participantStatus,
-               pb.amountUsd AS amountUsd
+               pb.amountUsd AS amount,
+               '${TripSplitConstants.BASE_CURRENCY}' AS amountCurrency
         FROM ${TripSplitConstants.PARTICIPANT_BALANCES_TABLE} pb
         INNER JOIN ${TripSplitConstants.TRIP_PARTICIPANTS_TABLE} tp
                ON pb.participantId = tp.id

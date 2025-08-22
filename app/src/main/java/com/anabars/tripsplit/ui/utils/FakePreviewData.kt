@@ -5,12 +5,12 @@ import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripPayment
+import com.anabars.tripsplit.data.room.model.BalanceWithNameAndStatus
 import com.anabars.tripsplit.data.room.model.TripDetails
-import com.anabars.tripsplit.ui.model.AmountCurrencyState
-import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.ui.model.AddTripUiState
+import com.anabars.tripsplit.ui.model.AmountCurrencyState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import com.anabars.tripsplit.viewmodels.BalanceUiState
+import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.viewmodels.ExpenseCategorizationResult
 import java.math.BigDecimal
 
@@ -100,8 +100,9 @@ fun getFakePayment() = TripPayment(
     timestamp = System.currentTimeMillis()
 )
 
-fun getFakeBalanceUiState(amount: Double) = BalanceUiState(
-    participantName = getFakeTripParticipants()[0].name,
-    amount = BigDecimal(amount),
-    currency = getFakeTripCurrencies()[0].code
-)
+fun getFakeBalanceWithNameAndStatus(amount: Int) =
+    BalanceWithNameAndStatus(
+        participantName = getFakeTripParticipants().first().name,
+        participantStatus = getFakeTripParticipants().first().status,
+        amount = BigDecimal(amount)
+    )

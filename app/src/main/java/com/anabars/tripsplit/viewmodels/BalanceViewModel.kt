@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
+import com.anabars.tripsplit.data.room.model.BalancesAndCurrencies
 import com.anabars.tripsplit.repository.BalanceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +30,10 @@ class BalanceViewModel @Inject constructor(
     val tripId: Long = savedStateHandle.get<Long>("id")
         ?: throw IllegalStateException("Trip ID is required for BalanceViewModel")
 
-    private val _uiState = MutableStateFlow<List<BalanceUiState>>(emptyList())
-    val uiState: StateFlow<List<BalanceUiState>> = _uiState
+    private val _uiState = MutableStateFlow(
+        BalancesAndCurrencies(emptyList(), emptyList())
+    )
+    val uiState: StateFlow<BalancesAndCurrencies> = _uiState
 
     init {
         loadBalances()
@@ -47,22 +50,19 @@ class BalanceViewModel @Inject constructor(
 
             val homeRate = exchangeRateDao.getExchangeRateForCurrency(homeCurrency).rate
 
-            balanceRepository.getBalancesWithNameAndStatus(tripId)
-                .collect { balances ->
-                    _uiState.value = balances.map {
-                        BalanceUiState(
-                            participantName = it.participantName,
-                            amount = it.amountUsd.multiply(BigDecimal(homeRate)),
-                            currency = homeCurrency
-                        )
-                    }
+            balanceRepository.getBalancesAndCurrencies(tripId)
+                .map { balancesAndCurrencies ->
+                    val updatedBalances =
+                        balancesAndCurrencies.balances.map { balance ->
+                            balance.copy(
+                                amount = balance.amount.multiply(BigDecimal(homeRate)),
+                                amountCurrency = homeCurrency
+                            )
+                        }
+                    balancesAndCurrencies.copy(balances = updatedBalances)
+                }.collect { transformed ->
+                    _uiState.value = transformed
                 }
         }
     }
 }
-
-data class BalanceUiState(
-    val participantName: String,
-    val amount: BigDecimal,
-    val currency: String
-)

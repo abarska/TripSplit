@@ -20,4 +20,6 @@ interface TripPaymentDao {
     @Query("DELETE FROM $TRIP_PAYMENTS_TABLE WHERE id = :paymentId")
     suspend fun deletePaymentById(paymentId: Long)
 
+    @Query("SELECT * FROM $TRIP_PAYMENTS_TABLE WHERE id = :paymentId")
+    suspend fun getPaymentById(paymentId: Long): TripPayment?
 }

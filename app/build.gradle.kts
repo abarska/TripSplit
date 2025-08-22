@@ -97,6 +97,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.play.services)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Firebase
     implementation(libs.firebase.auth)

@@ -9,5 +9,5 @@ data class ExchangeRate(
     @PrimaryKey val currencyCode: String,
     val baseCurrency: String,
     val rate: Double = 0.0,
-    val date: String
+    val date: String = System.currentTimeMillis().toString()
 )

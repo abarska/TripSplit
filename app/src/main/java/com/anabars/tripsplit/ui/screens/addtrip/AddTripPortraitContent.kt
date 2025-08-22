@@ -44,7 +44,7 @@ fun AddTripPortraitContent(
         modifier = modifier
             .padding(dimensionResource(R.dimen.full_screen_padding))
             .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_normal))
     ) {
         InputSection(
             uiState = uiState,

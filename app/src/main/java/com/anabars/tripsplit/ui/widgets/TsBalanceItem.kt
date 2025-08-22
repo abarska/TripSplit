@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.model.BalanceWithNameAndStatus
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.utils.TsFontSize
@@ -19,7 +21,7 @@ fun TsBalanceItem(modifier: Modifier = Modifier, balance: BalanceWithNameAndStat
     Row(
         modifier = modifier
             .inputWidthModifier()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = dimensionResource(R.dimen.padding_small)),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val amountDouble = balance.amount.toDouble()

@@ -24,7 +24,7 @@ fun <T> TsRadioGroup(
     itemContent: @Composable (item: T) -> Unit
 ) {
     val arrangement = Arrangement.spacedBy(
-        dimensionResource(R.dimen.vertical_spacer_small),
+        dimensionResource(R.dimen.padding_small),
         Alignment.CenterHorizontally
     )
 

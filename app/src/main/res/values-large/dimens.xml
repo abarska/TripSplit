@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="vertical_spacer_small">8dp</dimen>
-    <dimen name="vertical_spacer_normal">16dp</dimen>
-    <dimen name="vertical_spacer_large">24dp</dimen>
-    <dimen name="vertical_spacer_double">48dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_normal">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+    <dimen name="padding_double">48dp</dimen>
     <dimen name="placeholder_image_size">300dp</dimen>
 </resources>

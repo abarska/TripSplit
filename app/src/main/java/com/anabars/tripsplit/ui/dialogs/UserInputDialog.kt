@@ -53,7 +53,7 @@ fun TsUserInputDialog(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_normal))
         ) {
             TsShortInput(
                 modifier = Modifier.fillMaxWidth(),
@@ -65,7 +65,7 @@ fun TsUserInputDialog(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(
-                    dimensionResource(R.dimen.vertical_spacer_normal),
+                    dimensionResource(R.dimen.padding_normal),
                     Alignment.CenterHorizontally
                 )
             ) {

@@ -30,7 +30,7 @@ fun <T> TsCheckboxPill(
             modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(
-                dimensionResource(R.dimen.vertical_spacer_small),
+                dimensionResource(R.dimen.padding_small),
                 Alignment.CenterHorizontally
             )
         ) {

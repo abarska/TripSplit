@@ -54,7 +54,7 @@ fun TsBaseVisiblePart(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_normal))
     ) {
         Icon(
             imageVector = icon,

@@ -27,7 +27,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.padding(dimensionResource(R.dimen.full_screen_padding)),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_normal))
     ) {
 
         TsContentCard(modifier = Modifier.inputWidthModifier()) {

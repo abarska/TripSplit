@@ -36,7 +36,7 @@ fun AddExpensePortraitContent(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_normal))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_normal))
     ) {
 
         TsDateAmountCurrencyCard(

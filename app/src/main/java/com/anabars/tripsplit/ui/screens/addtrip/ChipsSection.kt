@@ -43,7 +43,7 @@ fun <T> ChipsSection(
     ) {
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.vertical_spacer_small))
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
         ) {
             items.forEach { value ->
                 val button = ActionButton.ChipActionButton(

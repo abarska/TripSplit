@@ -83,6 +83,33 @@ class TripItemRepository @Inject constructor(
         }
     }
 
+    suspend fun deleteExpenseById(expenseId: Long) {
+        db.withTransaction {
+            // load expense with participants as it was saved
+            val expenseWithParticipants = tripExpensesDao.getExpenseWithParticipantsById(expenseId)
+                ?: return@withTransaction
+            val expense = expenseWithParticipants.expense
+            val participants = expenseWithParticipants.participants.toSet()
+
+            // calculate deltas for this expense
+            val exchangeRate = getExchangeRateForCurrency(expense.currency)
+            val deltas = withContext(Dispatchers.Default) {
+                BalanceCalculator.calculateDeltasForExpense(expense, exchangeRate, participants)
+            }
+
+            // invert deltas and update balances
+            val inverted = deltas.map { it.copy(deltaUsd = it.deltaUsd.negate()) }
+            saveBalanceDeltas(inverted)
+
+            // delete expense and cross-refs
+            tripExpensesDao.deleteExpenseWithCrossRefs(expenseId)
+        }
+    }
+
+    suspend fun deletePaymentById(paymentId: Long) {
+        tripPaymentDao.deletePaymentById(paymentId)
+    }
+
     private suspend fun getExchangeRateForCurrency(currency: String): Double =
         if (currency == TripSplitConstants.BASE_CURRENCY) 1.0
         else exchangeRateDao.getExchangeRateForCurrency(currency).rate
@@ -95,15 +122,5 @@ class TripItemRepository @Inject constructor(
                 balanceDao.insertBalance(delta.tripId, delta.participantId, delta.deltaUsd)
             }
         }
-    }
-
-    suspend fun deleteExpenseById(expenseId: Long) {
-        db.withTransaction {
-            tripExpensesDao.deleteExpenseWithCrossRefs(expenseId)
-        }
-    }
-
-    suspend fun deletePaymentById(paymentId: Long) {
-        tripPaymentDao.deletePaymentById(paymentId)
     }
 }

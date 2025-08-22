@@ -115,7 +115,7 @@
 
     // formatters
     <string name="date_picker_format" translatable="false">dd.MM.yyyy</string>
-    <string name="currency_format" translatable="false">#0.00</string>
+    <string name="currency_formatting_pattern" translatable="false">#0.00</string>
     <string name="pays_for_format">Pays for %d</string>
 
     // trip status labels

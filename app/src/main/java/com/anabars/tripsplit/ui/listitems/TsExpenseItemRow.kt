@@ -14,7 +14,7 @@ import com.anabars.tripsplit.ui.utils.getFakeTripExpense
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.widgets.TsBaseItemRow
 import com.anabars.tripsplit.ui.widgets.TsBaseVisiblePart
-import com.anabars.tripsplit.utils.formatAmount
+import com.anabars.tripsplit.utils.formatters.formatAsCurrency
 
 @Composable
 fun TsExpenseItemRow(
@@ -31,8 +31,8 @@ fun TsExpenseItemRow(
         isExpanded = isExpanded,
         onDeleteClick = onDeleteClick
     ) {
-        val amountText = "${expense.currency} " +
-                formatAmount(expense.amount, stringResource(R.string.currency_format))
+        val pattern = stringResource(R.string.currency_formatting_pattern)
+        val amountText = "${expense.currency} ${expense.amount.formatAsCurrency(pattern)}"
         TsBaseVisiblePart(
             icon = expense.category.icon,
             iconContentDescription = stringResource(R.string.expense_category_icon),

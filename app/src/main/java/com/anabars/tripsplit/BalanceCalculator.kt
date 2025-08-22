@@ -4,8 +4,8 @@ import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.ui.model.BalanceDelta
+import com.anabars.tripsplit.utils.formatters.formatAsCurrency
 import java.math.BigDecimal
-import java.math.RoundingMode
 
 object BalanceCalculator {
 
@@ -48,7 +48,7 @@ object BalanceCalculator {
     )
 
     private fun toUsd(amount: Double, exchangeRate: Double): BigDecimal =
-        (amount / exchangeRate).toBigDecimal().setScale(2, RoundingMode.HALF_UP)
+        (amount / exchangeRate).toBigDecimal().formatAsCurrency()
 
     private fun delta(
         tripId: Long,

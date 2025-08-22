@@ -16,7 +16,7 @@ import com.anabars.tripsplit.ui.utils.getFakePayment
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.widgets.TsBaseItemRow
 import com.anabars.tripsplit.ui.widgets.TsBaseVisiblePart
-import com.anabars.tripsplit.utils.formatAmount
+import com.anabars.tripsplit.utils.formatters.formatAsCurrency
 
 @Composable
 fun TsPaymentItemRow(
@@ -33,8 +33,8 @@ fun TsPaymentItemRow(
         isExpanded = isExpanded,
         onDeleteClick = onDeleteClick
     ) {
-        val amountText = "${payment.currency} " +
-                formatAmount(payment.amount, stringResource(R.string.currency_format))
+        val pattern = stringResource(R.string.currency_formatting_pattern)
+        val amountText = "${payment.currency} ${payment.amount.formatAsCurrency(pattern)}"
         TsBaseVisiblePart(
             icon = Icons.AutoMirrored.Outlined.CompareArrows,
             iconContentDescription = stringResource(R.string.payment),

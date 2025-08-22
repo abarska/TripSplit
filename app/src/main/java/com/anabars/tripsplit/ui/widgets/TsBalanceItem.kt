@@ -15,6 +15,7 @@ import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.getFakeBalanceWithNameAndStatus
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
+import com.anabars.tripsplit.utils.formatters.formatAsCurrency
 
 @Composable
 fun TsBalanceItem(modifier: Modifier = Modifier, balance: BalanceWithNameAndStatus) {
@@ -24,19 +25,21 @@ fun TsBalanceItem(modifier: Modifier = Modifier, balance: BalanceWithNameAndStat
             .padding(horizontal = 16.dp, vertical = dimensionResource(R.dimen.padding_small)),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        val amountDouble = balance.amount.toDouble()
+        val amount = balance.amount.toDouble()
+        val amountTextColor = when {
+            amount > 0 -> MaterialTheme.colorScheme.primary
+            amount < 0 -> MaterialTheme.colorScheme.error
+            else -> MaterialTheme.colorScheme.onSurface
+        }
+        val formattedAmount = balance.amount.formatAsCurrency()
         TsInfoText(
             text = balance.participantName,
             fontSize = TsFontSize.MEDIUM
         )
         TsInfoText(
-            text = "USD $amountDouble",
+            text = "${balance.amountCurrency} $formattedAmount",
             fontSize = TsFontSize.MEDIUM,
-            textColor = when {
-                amountDouble > 0 -> MaterialTheme.colorScheme.primary
-                amountDouble < 0 -> MaterialTheme.colorScheme.error
-                else -> MaterialTheme.colorScheme.onSurface
-            }
+            textColor = amountTextColor
         )
     }
 }

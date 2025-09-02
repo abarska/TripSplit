@@ -18,6 +18,7 @@ import com.anabars.tripsplit.ui.components.TsCurrencyPicker
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
 import com.anabars.tripsplit.ui.dialogs.TsUserInputDialog
+import com.anabars.tripsplit.ui.model.AddTripActions
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddCurrencyClicked
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddDefaultParticipant
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddParticipantClicked
@@ -103,30 +104,18 @@ fun AddTripScreen(
         ActiveDialog.NONE -> {
             val isPortrait =
                 LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
-            if (isPortrait)
-                AddTripPortraitContent(
-                    uiState = uiState,
-                    onTripNameChanged = { viewModel.onIntent(TripNameChanged(it)) },
-                    onTripStatusChanged = { viewModel.onIntent(TripStatusChanged(it)) },
-                    onAddParticipantButtonClick = { viewModel.onIntent(AddParticipantClicked) },
-                    onEditParticipantButtonClick = { viewModel.onIntent(ParticipantEditRequested(it)) },
-                    onDeleteParticipant = { viewModel.onIntent(ParticipantDeleted(it)) },
-                    onAddCurrencyButtonClick = { viewModel.onIntent(AddCurrencyClicked) },
-                    onDeleteCurrency = { viewModel.onIntent(CurrencyDeleted(it)) },
-                    onSaveTrip = { viewModel.onIntent(SaveTripClicked) }
-                )
-            else
-                AddTripLandscapeContent(
-                    uiState = uiState,
-                    onTripNameChanged = { viewModel.onIntent(TripNameChanged(it)) },
-                    onTripStatusChanged = { viewModel.onIntent(TripStatusChanged(it)) },
-                    onAddParticipantButtonClick = { viewModel.onIntent(AddParticipantClicked) },
-                    onEditParticipantButtonClick = { viewModel.onIntent(ParticipantEditRequested(it)) },
-                    onDeleteParticipant = { viewModel.onIntent(ParticipantDeleted(it)) },
-                    onAddCurrencyButtonClick = { viewModel.onIntent(AddCurrencyClicked) },
-                    onDeleteCurrency = { viewModel.onIntent(CurrencyDeleted(it)) },
-                    onSaveTrip = { viewModel.onIntent(SaveTripClicked) }
-                )
+            val actions = AddTripActions(
+                onTripNameChanged = { viewModel.onIntent(TripNameChanged(it)) },
+                onTripStatusChanged = { viewModel.onIntent(TripStatusChanged(it)) },
+                onAddParticipantButtonClick = { viewModel.onIntent(AddParticipantClicked) },
+                onEditParticipantButtonClick = { viewModel.onIntent(ParticipantEditRequested(it)) },
+                onDeleteParticipant = { viewModel.onIntent(ParticipantDeleted(it)) },
+                onAddCurrencyButtonClick = { viewModel.onIntent(AddCurrencyClicked) },
+                onDeleteCurrency = { viewModel.onIntent(CurrencyDeleted(it)) },
+                onSaveTrip = { viewModel.onIntent(SaveTripClicked) }
+            )
+            if (isPortrait) AddTripPortraitContent(uiState = uiState, actions = actions)
+            else AddTripLandscapeContent(uiState = uiState, actions = actions)
         }
     }
 }

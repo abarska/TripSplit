@@ -16,13 +16,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anabars.tripsplit.R
-import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripStatus
 import com.anabars.tripsplit.ui.components.LayoutType
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsMainButton
 import com.anabars.tripsplit.ui.components.TsRadioGroup
+import com.anabars.tripsplit.ui.model.AddTripActions
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
@@ -31,14 +31,7 @@ import com.anabars.tripsplit.ui.utils.inputWidthModifier
 @Composable
 fun AddTripLandscapeContent(
     uiState: AddTripUiState,
-    onTripNameChanged: (String) -> Unit,
-    onTripStatusChanged: (TripStatus) -> Unit,
-    onAddParticipantButtonClick: () -> Unit,
-    onEditParticipantButtonClick: (TripParticipant) -> Unit,
-    onDeleteParticipant: (TripParticipant) -> Unit,
-    onAddCurrencyButtonClick: () -> Unit,
-    onDeleteCurrency: (String) -> Unit,
-    onSaveTrip: () -> Unit,
+    actions: AddTripActions,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -53,7 +46,7 @@ fun AddTripLandscapeContent(
         InputSection(
             modifier = Modifier.inputWidthModifier(),
             uiState = uiState,
-            onTripNameChanged = onTripNameChanged
+            onTripNameChanged = actions.onTripNameChanged
         )
 
         TsContentCard {
@@ -63,7 +56,7 @@ fun AddTripLandscapeContent(
                     .padding(16.dp),
                 items = TripStatus.getInitialStatuses(),
                 selectedItem = uiState.tripStatus,
-                onItemSelected = onTripStatusChanged,
+                onItemSelected = actions.onTripStatusChanged,
                 layout = LayoutType.Row,
             ) { status ->
                 TsInfoText(
@@ -78,8 +71,8 @@ fun AddTripLandscapeContent(
             ChipsSection(
                 leadingIcon = Icons.Default.CurrencyExchange,
                 items = uiState.tripCurrencyCodes,
-                onAddItemButtonClick = onAddCurrencyButtonClick,
-                onDeleteItemButtonClick = onDeleteCurrency,
+                onAddItemButtonClick = actions.onAddCurrencyButtonClick,
+                onDeleteItemButtonClick = actions.onDeleteCurrency,
                 itemLabel = { it }
             )
         }
@@ -88,9 +81,9 @@ fun AddTripLandscapeContent(
             ChipsSection(
                 leadingIcon = Icons.Outlined.People,
                 items = uiState.tripParticipants,
-                onAddItemButtonClick = onAddParticipantButtonClick,
-                onItemClick = onEditParticipantButtonClick,
-                onDeleteItemButtonClick = onDeleteParticipant,
+                onAddItemButtonClick = actions.onAddParticipantButtonClick,
+                onItemClick = actions.onEditParticipantButtonClick,
+                onDeleteItemButtonClick = actions.onDeleteParticipant,
                 itemLabel = { it.chipDisplayLabelNameWithMultiplicator() }
             )
         }
@@ -98,7 +91,7 @@ fun AddTripLandscapeContent(
         TsMainButton(
             modifier = modifier.inputWidthModifier(),
             textRes = R.string.save
-        ) { onSaveTrip() }
+        ) { actions.onSaveTrip() }
     }
 }
 
@@ -107,13 +100,6 @@ fun AddTripLandscapeContent(
 private fun AddTripLandscapeContentPreview() {
     AddTripLandscapeContent(
         uiState = getFakeAddTripUiState(),
-        onTripNameChanged = {},
-        onTripStatusChanged = {},
-        onAddParticipantButtonClick = {},
-        onEditParticipantButtonClick = {},
-        onDeleteParticipant = {},
-        onAddCurrencyButtonClick = {},
-        onDeleteCurrency = {},
-        onSaveTrip = {}
+        actions = AddTripActions()
     )
 }

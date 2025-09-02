@@ -19,17 +19,15 @@ import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsInfoText
 import com.anabars.tripsplit.ui.components.TsShortInput
 import com.anabars.tripsplit.ui.model.AddTripUiState
+import com.anabars.tripsplit.ui.model.UserInputActions
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.getFakeAddTripUiState
 
 @Composable
 fun TsUserInputDialog(
     uiState: AddTripUiState,
-    onInputChange: (String) -> Unit,
+    actions: UserInputActions,
     modifier: Modifier = Modifier,
-    onMultiplicatorChange: (Int) -> Unit = {},
-    onConfirm: () -> Unit = {},
-    onDismiss: () -> Unit = {},
     @StringRes titleRes: Int = 0,
     title: String = "",
     @StringRes labelRes: Int = 0,
@@ -42,8 +40,8 @@ fun TsUserInputDialog(
     val labelValue = if (labelRes != 0) stringResource(labelRes) else label
     TsDialog(
         modifier = modifier,
-        onDismiss = onDismiss,
-        onConfirm = onConfirm,
+        onDismiss = actions.onDismiss,
+        onConfirm = actions.onConfirm,
         titleRes = titleRes,
         title = title,
         positiveTextRes = positiveTextRes,
@@ -58,7 +56,7 @@ fun TsUserInputDialog(
             TsShortInput(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.newParticipantName,
-                onValueChanged = onInputChange,
+                onValueChanged = actions.onInputChange,
                 label = labelValue
             )
             Row(
@@ -72,7 +70,7 @@ fun TsUserInputDialog(
                 TsContentCard (
                     isHighlighted = uiState.newParticipantMultiplicator > 1,
                     isEnabled = uiState.newParticipantMultiplicator > 1,
-                    onItemClick = { onMultiplicatorChange(uiState.newParticipantMultiplicator - 1) }
+                    onItemClick = { actions.onMultiplicatorChange(uiState.newParticipantMultiplicator - 1) }
                 ) {
                     Row(
                         modifier = Modifier
@@ -95,7 +93,7 @@ fun TsUserInputDialog(
                 )
                 TsContentCard(
                     isHighlighted = true,
-                    onItemClick = { onMultiplicatorChange(uiState.newParticipantMultiplicator + 1) }
+                    onItemClick = { actions.onMultiplicatorChange(uiState.newParticipantMultiplicator + 1) }
                 ) {
                     Row(
                         modifier = Modifier
@@ -119,7 +117,7 @@ fun TsUserInputDialog(
 private fun TsUserInputDialogPreview() {
     TsUserInputDialog(
         uiState = getFakeAddTripUiState(),
-        onInputChange = {},
+        actions = UserInputActions(),
         titleRes = R.string.add_participant,
         labelRes = R.string.participant_name_hint,
         positiveTextRes = R.string.add,

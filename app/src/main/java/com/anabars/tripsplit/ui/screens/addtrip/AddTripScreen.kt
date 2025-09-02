@@ -19,6 +19,7 @@ import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.dialogs.TsConfirmationDialog
 import com.anabars.tripsplit.ui.dialogs.TsUserInputDialog
 import com.anabars.tripsplit.ui.model.AddTripActions
+import com.anabars.tripsplit.ui.model.UserInputActions
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddCurrencyClicked
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddDefaultParticipant
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddParticipantClicked
@@ -79,12 +80,15 @@ fun AddTripScreen(
         }
 
         ActiveDialog.USER_INPUT -> {
-            TsUserInputDialog(
-                uiState = uiState,
+            val actions = UserInputActions(
                 onInputChange = { viewModel.onIntent(NewParticipantNameChanged(it)) },
                 onMultiplicatorChange = { viewModel.onIntent(NewParticipantMultiplicatorChanged(it)) },
                 onConfirm = { viewModel.onIntent(ParticipantInputSaved) },
-                onDismiss = { viewModel.onIntent(DismissAddParticipantDialog) },
+                onDismiss = { viewModel.onIntent(DismissAddParticipantDialog) }
+            )
+            TsUserInputDialog(
+                uiState = uiState,
+                actions = actions,
                 titleRes = if (uiState.isEditParticipant) R.string.edit_participant else R.string.add_participant,
                 labelRes = R.string.participant_name_hint,
                 positiveTextRes = if (uiState.isEditParticipant) R.string.save else R.string.add,

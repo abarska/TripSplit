@@ -11,7 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
@@ -21,26 +20,24 @@ import com.anabars.tripsplit.navigation.AppScreens
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TsToolbar(
     navController: NavController,
-    sharedState: StateFlow<SharedViewModel.SharedUiState>,
+    sharedState: SharedViewModel.SharedUiState,
     coroutineScope: CoroutineScope,
     drawerState: DrawerState
 ) {
     val startDestination = AppScreens.TRIPS.route
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val sharedUiState by sharedState.collectAsState()
 
     TopAppBar(
         title = {
             TsInfoText(
-                text = sharedUiState.tabTitle ?: stringResource(R.string.app_name),
+                text = sharedState.tabTitle ?: stringResource(R.string.app_name),
                 fontSize = TsFontSize.MEDIUM
             )
         },
@@ -65,7 +62,7 @@ fun TsToolbar(
                 }
             } else {
                 IconButton(onClick = {
-                    sharedUiState.upButtonAction?.invoke() ?: navController.navigateUp()
+                    sharedState.upButtonAction?.invoke() ?: navController.navigateUp()
                 }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -75,7 +72,7 @@ fun TsToolbar(
             }
         },
         actions = {
-            sharedUiState.toolbarActions.forEach { action ->
+            sharedState.toolbarActions.forEach { action ->
                 IconButton(onClick = action.onClick) {
                     Icon(
                         imageVector = action.icon,

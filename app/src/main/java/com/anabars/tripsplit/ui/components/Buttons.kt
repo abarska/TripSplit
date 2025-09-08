@@ -2,21 +2,16 @@ package com.anabars.tripsplit.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -24,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,35 +28,6 @@ import com.anabars.tripsplit.ui.model.ActionButton
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.ui.utils.inputWidthModifier
 
-@Preview(showBackground = true)
-@Composable
-fun TsPlusFab(
-    modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    isEnabled: Boolean = true,
-    onClick: () -> Unit = {}
-) {
-    FloatingActionButton(
-        onClick = { if (isEnabled) onClick() },
-        modifier = modifier.size(56.dp),
-        shape = CircleShape,
-        containerColor = containerColor,
-        contentColor = contentColor,
-        elevation = FloatingActionButtonDefaults.elevation(
-            defaultElevation = 4.dp,
-            pressedElevation = 0.dp,
-            focusedElevation = 4.dp,
-            hoveredElevation = 4.dp
-        )
-    ) {
-        Image(
-            modifier = Modifier.fillMaxSize(),
-            imageVector = Icons.Outlined.Add,
-            contentDescription = stringResource(R.string.plus_button)
-        )
-    }
-}
 
 @Composable
 fun TsMainButton(

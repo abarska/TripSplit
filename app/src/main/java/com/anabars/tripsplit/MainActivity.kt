@@ -20,14 +20,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.anabars.tripsplit.navigation.AppNavGraph
-import com.anabars.tripsplit.navigation.AppScreens
+import com.anabars.tripsplit.navigation.AppScreens.Companion.isTripDetailsRoute
 import com.anabars.tripsplit.ui.components.DrawerContent
 import com.anabars.tripsplit.ui.components.TsPlusFab
 import com.anabars.tripsplit.ui.components.TsToolbar
@@ -52,9 +52,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun MainScreenWithDrawer() {
+private fun MainScreenWithDrawer() {
 
     val sharedViewModel: SharedViewModel = hiltViewModel()
     val navController = rememberNavController()
@@ -64,36 +63,29 @@ fun MainScreenWithDrawer() {
     val currentRoute = navBackStackEntry?.destination?.route
     val sharedUiState by sharedViewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
+    val context by rememberUpdatedState(LocalContext.current)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(sharedViewModel.uiEffect) {
         sharedViewModel.uiEffect.collectLatest { effect ->
-            if (effect is ShowSnackBar) {
-                snackbarHostState.showSnackbar(context.getString(effect.resId))
+            when (effect) {
+                is ShowSnackBar -> snackbarHostState.showSnackbar(context.getString(effect.resId))
+                is FabClicked -> {} // already handled via FAB
             }
         }
     }
 
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) { data ->
-                Snackbar(
-                    snackbarData = data,
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError
-                )
-            }
-        },
+        snackbarHost = { ErrorSnackbarHost(snackbarHostState) },
         topBar = {
             TsToolbar(
                 navController = navController,
-                sharedState = sharedViewModel.uiState,
+                sharedState = sharedUiState,
                 coroutineScope = coroutineScope,
                 drawerState = drawerState
             )
         },
         bottomBar = {
-            if (currentRoute?.startsWith(AppScreens.TRIP_DETAILS.route) == true) {
+            if (currentRoute.isTripDetailsRoute()) {
                 TsBottomTabs(selectedTabItem = sharedUiState.selectedTabItem) {
                     sharedViewModel.onEvent(SharedViewModel.SharedUiEvent.SetTabItem(it))
                 }
@@ -125,5 +117,16 @@ fun MainScreenWithDrawer() {
                     .padding(paddingValues)
             )
         }
+    }
+}
+
+@Composable
+private fun ErrorSnackbarHost(hostState: SnackbarHostState) {
+    SnackbarHost(hostState = hostState) { data ->
+        Snackbar(
+            snackbarData = data,
+            containerColor = MaterialTheme.colorScheme.error,
+            contentColor = MaterialTheme.colorScheme.onError
+        )
     }
 }

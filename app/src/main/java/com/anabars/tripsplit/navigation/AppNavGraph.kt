@@ -1,7 +1,6 @@
 package com.anabars.tripsplit.navigation
 
 import android.content.Context
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
@@ -106,7 +105,7 @@ fun AppNavGraph(
     NavHost(
         navController = navController,
         startDestination = AppScreens.TRIPS.route,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
     ) {
 
         val onShowSnackbar: (Int) -> Unit = {
@@ -115,8 +114,7 @@ fun AppNavGraph(
 
         composable(route = AppScreens.TRIPS.route) {
             TripsScreen(
-                onTripSelected = { sharedViewModel.onEvent(SetCurrentTrip(it)) },
-                modifier = modifier
+                onTripSelected = { sharedViewModel.onEvent(SetCurrentTrip(it)) }
             )
         }
 
@@ -166,14 +164,11 @@ fun AppNavGraph(
         }
 
         composable(route = AppScreens.SETTINGS.route) {
-            SettingsScreen(modifier = modifier)
+            SettingsScreen()
         }
 
         composable(route = AppScreens.ARCHIVE.route) {
-            ArchiveScreen(
-                navController = navController,
-                modifier = modifier
-            )
+            ArchiveScreen(navController = navController)
         }
 
         composable(

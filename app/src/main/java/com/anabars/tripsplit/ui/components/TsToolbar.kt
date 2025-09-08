@@ -1,34 +1,29 @@
 package com.anabars.tripsplit.ui.components
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anabars.tripsplit.R
 import com.anabars.tripsplit.navigation.AppScreens
 import com.anabars.tripsplit.ui.utils.TsFontSize
 import com.anabars.tripsplit.viewmodels.SharedViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TsToolbar(
     navController: NavController,
     sharedState: SharedViewModel.SharedUiState,
-    coroutineScope: CoroutineScope,
-    drawerState: DrawerState
+    onDrawerToggle: () -> Unit
 ) {
     val startDestination = AppScreens.TRIPS.route
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -42,34 +37,14 @@ fun TsToolbar(
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp)
         ),
         navigationIcon = {
-            if (currentRoute == startDestination) {
-                IconButton(onClick = {
-                    coroutineScope.launch {
-                        if (drawerState.isClosed) {
-                            drawerState.open()
-                        } else {
-                            drawerState.close()
-                        }
-                    }
-                }) {
-                    Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = stringResource(R.string.menu)
-                    )
-                }
-            } else {
-                IconButton(onClick = {
-                    sharedState.upButtonAction?.invoke() ?: navController.navigateUp()
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back)
-                    )
-                }
-            }
+            TsNavigationIcon(
+                isStartDestination = currentRoute == startDestination,
+                onMenuClick = onDrawerToggle,
+                onBackClick = { sharedState.upButtonAction?.invoke() ?: navController.navigateUp() }
+            )
         },
         actions = {
             sharedState.toolbarActions.forEach { action ->

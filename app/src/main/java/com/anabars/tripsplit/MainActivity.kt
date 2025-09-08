@@ -7,11 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -29,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.anabars.tripsplit.navigation.AppNavGraph
 import com.anabars.tripsplit.navigation.AppScreens.Companion.isTripDetailsRoute
 import com.anabars.tripsplit.ui.components.DrawerContent
+import com.anabars.tripsplit.ui.components.TsErrorSnackbarHost
 import com.anabars.tripsplit.ui.components.TsPlusFab
 import com.anabars.tripsplit.ui.components.TsToolbar
 import com.anabars.tripsplit.ui.theme.AppTheme
@@ -38,6 +36,7 @@ import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.FabClicke
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.ShowSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -75,13 +74,18 @@ private fun MainScreenWithDrawer() {
     }
 
     Scaffold(
-        snackbarHost = { ErrorSnackbarHost(snackbarHostState) },
+        snackbarHost = {
+            TsErrorSnackbarHost(snackbarHostState)
+        },
         topBar = {
             TsToolbar(
                 navController = navController,
                 sharedState = sharedUiState,
-                coroutineScope = coroutineScope,
-                drawerState = drawerState
+                onDrawerToggle = {
+                    coroutineScope.launch {
+                        if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                    }
+                }
             )
         },
         bottomBar = {
@@ -117,16 +121,5 @@ private fun MainScreenWithDrawer() {
                     .padding(paddingValues)
             )
         }
-    }
-}
-
-@Composable
-private fun ErrorSnackbarHost(hostState: SnackbarHostState) {
-    SnackbarHost(hostState = hostState) { data ->
-        Snackbar(
-            snackbarData = data,
-            containerColor = MaterialTheme.colorScheme.error,
-            contentColor = MaterialTheme.colorScheme.onError
-        )
     }
 }

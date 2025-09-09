@@ -29,7 +29,7 @@ fun TripDetailsScreen(
     LaunchedEffect(selectedTabItem) {
         val targetPage = allTabs.indexOf(selectedTabItem).coerceAtLeast(0)
         if (targetPage != pagerState.currentPage) {
-            pagerState.animateScrollToPage(targetPage)
+            pagerState.scrollToPage(targetPage)
         }
     }
 

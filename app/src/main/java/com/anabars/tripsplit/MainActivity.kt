@@ -24,13 +24,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.anabars.tripsplit.navigation.AppNavGraph
-import com.anabars.tripsplit.navigation.AppScreens.Companion.isTripDetailsRoute
 import com.anabars.tripsplit.ui.components.DrawerContent
 import com.anabars.tripsplit.ui.components.TsErrorSnackbarHost
 import com.anabars.tripsplit.ui.components.TsPlusFab
 import com.anabars.tripsplit.ui.components.TsToolbar
 import com.anabars.tripsplit.ui.theme.AppTheme
 import com.anabars.tripsplit.ui.widgets.TsBottomTabs
+import com.anabars.tripsplit.utils.isAtStartDestination
+import com.anabars.tripsplit.utils.startsWithTripDetailsRoute
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.FabClicked
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.ShowSnackBar
@@ -64,7 +65,7 @@ private fun MainScreenWithDrawer() {
     val snackbarHostState = remember { SnackbarHostState() }
     val context by rememberUpdatedState(LocalContext.current)
 
-    LaunchedEffect(sharedViewModel.uiEffect) {
+    LaunchedEffect(Unit) {
         sharedViewModel.uiEffect.collectLatest { effect ->
             when (effect) {
                 is ShowSnackBar -> snackbarHostState.showSnackbar(context.getString(effect.resId))
@@ -79,7 +80,8 @@ private fun MainScreenWithDrawer() {
         },
         topBar = {
             TsToolbar(
-                navController = navController,
+                isAtStartDestination = navController.isAtStartDestination(),
+                onUpButtonClicked = { navController.navigateUp() },
                 sharedState = sharedUiState,
                 onDrawerToggle = {
                     coroutineScope.launch {
@@ -89,7 +91,7 @@ private fun MainScreenWithDrawer() {
             )
         },
         bottomBar = {
-            if (currentRoute.isTripDetailsRoute()) {
+            if (currentRoute.startsWithTripDetailsRoute()) {
                 TsBottomTabs(selectedTabItem = sharedUiState.selectedTabItem) {
                     sharedViewModel.onEvent(SharedViewModel.SharedUiEvent.SetTabItem(it))
                 }

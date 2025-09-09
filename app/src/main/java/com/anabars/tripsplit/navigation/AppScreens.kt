@@ -11,6 +11,5 @@ enum class AppScreens(val route: String) {
 
     companion object {
         fun getAll() = entries.map { it.route }.toTypedArray()
-        fun String?.isTripDetailsRoute(): Boolean = this?.startsWith(TRIP_DETAILS.route) == true
     }
 }

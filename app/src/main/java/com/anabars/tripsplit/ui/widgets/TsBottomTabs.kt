@@ -22,7 +22,7 @@ import com.anabars.tripsplit.ui.model.TabItem
 fun TsBottomTabs(selectedTabItem: TabItem, onTabSelected: (TabItem) -> Unit) {
     val insets = WindowInsets.navigationBars.asPaddingValues()
     TabRow(
-        selectedTabIndex = selectedTabItem.ordinal,
+        selectedTabIndex = TabItem.allTabs().indexOf(selectedTabItem),
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = insets.calculateBottomPadding())

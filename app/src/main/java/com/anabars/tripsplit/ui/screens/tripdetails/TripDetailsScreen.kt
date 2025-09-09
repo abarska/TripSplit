@@ -5,6 +5,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.anabars.tripsplit.ui.model.TabItem
 import com.anabars.tripsplit.ui.screens.tripdetails.tripbalancestab.TripBalancesTab
@@ -18,21 +19,24 @@ fun TripDetailsScreen(
     modifier: Modifier = Modifier
 ) {
 
+    val allTabs = remember { TabItem.allTabs() }
+
     val pagerState = rememberPagerState(
-        initialPage = selectedTabItem.ordinal,
-        pageCount = { TabItem.allTabs().size }
+        initialPage = allTabs.indexOf(selectedTabItem).coerceAtLeast(0),
+        pageCount = { allTabs.size }
     )
 
     LaunchedEffect(selectedTabItem) {
-        if (selectedTabItem.ordinal != pagerState.currentPage) {
-            pagerState.animateScrollToPage(selectedTabItem.ordinal)
+        val targetPage = allTabs.indexOf(selectedTabItem).coerceAtLeast(0)
+        if (targetPage != pagerState.currentPage) {
+            pagerState.animateScrollToPage(targetPage)
         }
     }
 
     LaunchedEffect(pagerState.currentPage) {
-        if (selectedTabItem.ordinal != pagerState.currentPage) {
-            val newTab = TabItem.allTabs().firstOrNull { it.ordinal == pagerState.currentPage }
-            onTabChanged(newTab ?: TabItem.Expenses)
+        val newTab = allTabs.getOrNull(pagerState.currentPage)
+        if (newTab != null && newTab != selectedTabItem) {
+            onTabChanged(newTab)
         }
     }
 
@@ -40,10 +44,10 @@ fun TripDetailsScreen(
         state = pagerState,
         modifier = modifier.fillMaxSize()
     ) { page ->
-        when (page) {
-            TabItem.Expenses.ordinal -> TripExpensesTab()
-            TabItem.Payments.ordinal -> TripPaymentsTab()
-            TabItem.Balances.ordinal -> TripBalancesTab()
+        when (allTabs[page]) {
+            TabItem.Expenses -> TripExpensesTab()
+            TabItem.Payments -> TripPaymentsTab()
+            TabItem.Balances -> TripBalancesTab()
         }
     }
 }

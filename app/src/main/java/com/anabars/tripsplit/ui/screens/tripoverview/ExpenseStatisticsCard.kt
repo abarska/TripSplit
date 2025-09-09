@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab
+package com.anabars.tripsplit.ui.screens.tripoverview
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

@@ -7,6 +7,7 @@
     <string name="title_trips">Trips</string>
     <string name="title_new_trip">New Trip</string>
     <string name="title_edit_trip">Edit Trip</string>
+    <string name="title_overview">Trip Overview</string>
     <string name="title_new_expense">New Expense</string>
     <string name="title_new_payment">New Payment</string>
     <string name="title_settings">Settings</string>
@@ -30,7 +31,6 @@
     <string name="archive_item">Archive item</string>
     <string name="edit_item">Edit item</string>
     <string name="search_currency">Search currency</string>
-    <string name="overview_tab_content_description">Trip Overview</string>
     <string name="expenses_tab_content_description">Trip Expenses</string>
     <string name="payments_tab_content_description">Trip Payments</string>
     <string name="balances_tab_content_description">Trip Balances</string>
@@ -89,7 +89,6 @@
     <string name="local_currency_summary">Home country currency (will be used for conversions)</string>
 
     // used for tabs in TripDetails
-    <string name="overview_tab">Overview</string>
     <string name="expenses_tab">Expenses</string>
     <string name="payments_tab">Payments</string>
     <string name="balances_tab">Balances</string>

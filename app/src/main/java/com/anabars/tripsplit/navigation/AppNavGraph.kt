@@ -1,14 +1,17 @@
 package com.anabars.tripsplit.navigation
 
 import android.content.Context
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -24,6 +27,7 @@ import com.anabars.tripsplit.ui.screens.addtrip.AddTripScreen
 import com.anabars.tripsplit.ui.screens.archive.ArchiveScreen
 import com.anabars.tripsplit.ui.screens.settings.SettingsScreen
 import com.anabars.tripsplit.ui.screens.tripdetails.TripDetailsScreen
+import com.anabars.tripsplit.ui.screens.tripoverview.TripOverviewScreen
 import com.anabars.tripsplit.ui.screens.trips.TripsScreen
 import com.anabars.tripsplit.viewmodels.AddItemViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel
@@ -53,7 +57,7 @@ fun AppNavGraph(
 
     LaunchedEffect(sharedUiState.currentTripId) {
         sharedUiState.currentTripId?.let {
-            navController.navigate(AppScreens.TRIP_DETAILS.route + "/$it"){
+            navController.navigate(AppScreens.TRIP_DETAILS.route + "/$it") {
                 launchSingleTop = true
             }
         }
@@ -82,7 +86,6 @@ fun AppNavGraph(
 
         updateToolbarActions(
             currentRoute = navBackStackEntry?.destination?.route,
-            selectedTabItem = sharedUiState.selectedTabItem,
             navController = navController,
             tripId = sharedViewModel.uiState.value.currentTripId
         ) {
@@ -186,6 +189,16 @@ fun AppNavGraph(
                 onTabChanged = { sharedViewModel.onEvent(SetTabItem(it)) }
             )
         }
+
+        composable(
+            route = AppScreens.TRIP_OVERVIEW.route + "/{id}",
+            arguments = listOf(navArgument(name = "id") { type = NavType.LongType })
+        )
+        { backStackEntry ->
+            val tripId = backStackEntry.arguments?.getLong("id")
+            if (tripId == null) return@composable
+            TripOverviewScreen(modifier = Modifier.padding(16.dp))
+        }
     }
 }
 
@@ -220,20 +233,17 @@ private fun onFabClicked(
 
 private fun updateToolbarActions(
     currentRoute: String?,
-    selectedTabItem: TabItem,
     navController: NavHostController,
     tripId: Long?,
     onTabActionsChange: (List<ActionButton.ToolbarActionButton>) -> Unit,
 ) {
     currentRoute?.let {
         val actions = when {
-            currentRoute.startsWith(AppScreens.TRIP_DETAILS.route) -> {
-                if (selectedTabItem == TabItem.Overview) {
-                    getActionsForTripDetailsOverviewTab(tripId, navController)
-                } else {
-                    emptyList()
-                }
-            }
+            currentRoute.startsWith(AppScreens.TRIP_DETAILS.route) ->
+                getActionsForTripDetails(tripId, navController)
+
+            currentRoute.startsWith(AppScreens.TRIP_OVERVIEW.route) ->
+                getActionsForTripOverview(tripId, navController)
 
             else -> emptyList()
         }
@@ -241,15 +251,25 @@ private fun updateToolbarActions(
     }
 }
 
-private fun getActionsForTripDetailsOverviewTab(tripId: Long?, navController: NavHostController) =
+private fun getActionsForTripDetails(tripId: Long?, navController: NavHostController) =
+    listOf(
+        ActionButton.ToolbarActionButton(
+            icon = Icons.Outlined.Info,
+            contentDescriptionRes = R.string.title_overview,
+            onClick = {
+                tripId?.let { navController.navigate("${AppScreens.TRIP_OVERVIEW.route}/$it") }
+            }
+        ))
+
+private fun getActionsForTripOverview(tripId: Long?, navController: NavHostController) =
     listOf(
         ActionButton.ToolbarActionButton(
             icon = Icons.Default.Edit,
             contentDescriptionRes = R.string.edit_item,
             onClick = {
                 tripId?.let { navController.navigate("${AppScreens.ADD_TRIP.route}?tripId=$it") }
-            }
-        ))
+            })
+    )
 
 private fun updateScreenTitle(
     currentRoute: String?,
@@ -265,6 +285,7 @@ private fun updateScreenTitle(
             route.startsWith(AppScreens.ADD_PAYMENT.route) -> context.getString(R.string.title_new_payment)
             route.startsWith(AppScreens.SETTINGS.route) -> context.getString(R.string.title_settings)
             route.startsWith(AppScreens.ARCHIVE.route) -> context.getString(R.string.title_archive)
+            route.startsWith(AppScreens.TRIP_OVERVIEW.route) -> context.getString(R.string.title_overview)
 
             route.startsWith(AppScreens.ADD_TRIP.route) -> {
                 if (tripId.isNullOrEmpty()) context.getString(R.string.title_new_trip)

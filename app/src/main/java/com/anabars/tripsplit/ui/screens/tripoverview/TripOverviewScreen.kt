@@ -1,4 +1,4 @@
-package com.anabars.tripsplit.ui.screens.tripdetails.tripoverviewtab
+package com.anabars.tripsplit.ui.screens.tripoverview
 
 import android.content.res.Configuration
 import androidx.compose.runtime.Composable
@@ -10,7 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.anabars.tripsplit.viewmodels.TripOverviewViewModel
 
 @Composable
-fun TripOverviewTab(modifier: Modifier = Modifier) {
+fun TripOverviewScreen(modifier: Modifier = Modifier) {
 
     val viewModel: TripOverviewViewModel = hiltViewModel()
     val tripDetails by viewModel.tripDetails.collectAsState()

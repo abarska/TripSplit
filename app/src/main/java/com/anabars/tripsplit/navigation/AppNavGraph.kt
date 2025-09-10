@@ -23,7 +23,6 @@ import com.anabars.tripsplit.ui.screens.tripoverview.TripOverviewScreen
 import com.anabars.tripsplit.ui.screens.trips.TripsScreen
 import com.anabars.tripsplit.viewmodels.SharedViewModel
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.ShowSnackBar
-import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetCurrentTrip
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabItem
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.UpdateUpButtonAction
 
@@ -40,7 +39,6 @@ fun AppNavGraph(
     CollectNavigationEffects(
         navController = navController,
         sharedViewModel = sharedViewModel,
-        sharedUiState = sharedUiState,
         snackbarHostState = snackbarHostState
     )
 
@@ -58,7 +56,9 @@ fun AppNavGraph(
 
         composable(route = AppScreens.TRIPS.route) {
             TripsScreen(
-                onTripSelected = { sharedViewModel.onEvent(SetCurrentTrip(it)) }
+                onTripSelected = { tripId ->
+                    navController.navigate("${AppScreens.TRIP_DETAILS.route}/$tripId")
+                }
             )
         }
 
@@ -122,8 +122,6 @@ fun AppNavGraph(
 
             val tripId = backStackEntry.arguments?.getLong("id")
             if (tripId == null) return@composable
-
-            val sharedUiState by sharedViewModel.uiState.collectAsState()
 
             TripDetailsScreen(
                 selectedTabItem = sharedUiState.selectedTabItem,

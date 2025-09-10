@@ -19,7 +19,6 @@ import javax.inject.Inject
 class SharedViewModel @Inject constructor() : ViewModel() {
 
     data class SharedUiState(
-        val currentTripId: Long? = null,
         val selectedTabItem: TabItem = TabItem.Expenses,
         val toolbarActions: List<ToolbarActionButton> = emptyList(),
         val tabTitle: String? = null,
@@ -28,7 +27,6 @@ class SharedViewModel @Inject constructor() : ViewModel() {
     )
 
     sealed class SharedUiEvent {
-        data class SetCurrentTrip(val tripId: Long?) : SharedUiEvent()
         data class SetTabItem(val tabItem: TabItem) : SharedUiEvent()
         data class SetToolbarActions(val actions: List<ToolbarActionButton>) : SharedUiEvent()
         data class SetTabTitle(val title: String?) : SharedUiEvent()
@@ -41,9 +39,6 @@ class SharedViewModel @Inject constructor() : ViewModel() {
 
     fun onEvent(event: SharedUiEvent) {
         when (event) {
-            is SharedUiEvent.SetCurrentTrip ->
-                _uiState.update { it.copy(currentTripId = event.tripId) }
-
             is SharedUiEvent.SetTabItem ->
                 _uiState.update { it.copy(selectedTabItem = event.tabItem) }
 

@@ -3,13 +3,14 @@ package com.anabars.tripsplit.navigation
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anabars.tripsplit.viewmodels.SharedViewModel
-import com.anabars.tripsplit.viewmodels.SharedViewModel.*
-import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.*
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.FabClicked
+import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEffect.ShowSnackBar
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetFabVisibility
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetTabTitle
 import com.anabars.tripsplit.viewmodels.SharedViewModel.SharedUiEvent.SetToolbarActions
@@ -19,19 +20,10 @@ import kotlinx.coroutines.flow.collectLatest
 fun CollectNavigationEffects(
     navController: NavHostController,
     sharedViewModel: SharedViewModel,
-    sharedUiState: SharedUiState,
     snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
-
-    // Navigate when tripId changes
-    LaunchedEffect(sharedUiState.currentTripId) {
-        sharedUiState.currentTripId?.let {
-            navController.navigate(AppScreens.TRIP_DETAILS.route + "/$it") {
-                launchSingleTop = true
-            }
-        }
-    }
+    val sharedUiState by sharedViewModel.uiState.collectAsState()
 
     // Update FAB, title, and toolbar actions
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -50,7 +42,7 @@ fun CollectNavigationEffects(
             sharedViewModel.onEvent(SetTabTitle(it))
         }
 
-        updateToolbarActions(currentRoute, navController, sharedUiState.currentTripId) {
+        updateToolbarActions(currentRoute, navController, tripId?.toLongOrNull()) {
             sharedViewModel.onEvent(SetToolbarActions(it))
         }
     }
@@ -65,7 +57,6 @@ fun CollectNavigationEffects(
 
                 is FabClicked -> onFabClicked(
                     navController = navController,
-                    currentTripId = sharedUiState.currentTripId,
                     selectedTabItem = sharedUiState.selectedTabItem
                 )
             }

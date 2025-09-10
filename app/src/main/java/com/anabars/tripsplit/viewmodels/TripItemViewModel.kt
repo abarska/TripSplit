@@ -26,7 +26,7 @@ class TripItemViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val tripId: Long = savedStateHandle.get<Long>("id")
+    val tripId: Long = savedStateHandle.get<Long>("tripId")
         ?: throw IllegalStateException("Trip ID is required for TripExpensesViewModel")
 
     val groupedExpensesResult: StateFlow<GroupedResult<LocalDate, ExpenseWithParticipants>> =

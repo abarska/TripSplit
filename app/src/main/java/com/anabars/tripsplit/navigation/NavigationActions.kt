@@ -9,7 +9,7 @@ fun onFabClicked(
     selectedTabItem: TabItem
 ) {
     val backStackEntry = navController.currentBackStackEntry
-    val tripId = backStackEntry?.arguments?.getLong("id")
+    val tripId = backStackEntry?.arguments?.getLong("tripId")
 
     val currentRoute = backStackEntry?.destination?.route
         ?: navController.graph.startDestinationRoute

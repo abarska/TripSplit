@@ -62,15 +62,17 @@ fun AppNavGraph(
             )
         }
 
-        composable(
-            route = "${AppScreens.ADD_TRIP.route}?tripId={tripId}", // optional parameter
-            arguments = listOf(
-                navArgument("tripId") {
-                    type = NavType.StringType // passing a string because long arg is not nullable
-                    nullable = true
-                    defaultValue = null
-                }
+        composable(route = AppScreens.ADD_TRIP.route) {
+            AddTripScreen(
+                navController = navController,
+                onShowSnackbar = onShowSnackbar,
+                updateUpButtonAction = updateUpButtonAction
             )
+        }
+
+        composable(
+            route = AppScreens.ADD_TRIP.route + "/{tripId}",
+            arguments = listOf(navArgument("tripId") { type = NavType.LongType })
         ) {
             AddTripScreen(
                 navController = navController,
@@ -116,11 +118,11 @@ fun AppNavGraph(
         }
 
         composable(
-            route = AppScreens.TRIP_DETAILS.route + "/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.LongType })
+            route = AppScreens.TRIP_DETAILS.route + "/{tripId}",
+            arguments = listOf(navArgument("tripId") { type = NavType.LongType })
         ) { backStackEntry ->
 
-            val tripId = backStackEntry.arguments?.getLong("id")
+            val tripId = backStackEntry.arguments?.getLong("tripId")
             if (tripId == null) return@composable
 
             TripDetailsScreen(
@@ -130,11 +132,11 @@ fun AppNavGraph(
         }
 
         composable(
-            route = AppScreens.TRIP_OVERVIEW.route + "/{id}",
-            arguments = listOf(navArgument(name = "id") { type = NavType.LongType })
+            route = AppScreens.TRIP_OVERVIEW.route + "/{tripId}",
+            arguments = listOf(navArgument(name = "tripId") { type = NavType.LongType })
         )
         { backStackEntry ->
-            val tripId = backStackEntry.arguments?.getLong("id")
+            val tripId = backStackEntry.arguments?.getLong("tripId")
             if (tripId == null) return@composable
             TripOverviewScreen(modifier = Modifier.padding(16.dp))
         }

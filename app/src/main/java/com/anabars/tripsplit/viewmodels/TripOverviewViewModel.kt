@@ -30,7 +30,7 @@ class TripOverviewViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val tripId: Long = savedStateHandle.get<Long>("id")
+    private val tripId: Long = savedStateHandle.get<Long>("tripId")
         ?: throw IllegalStateException("Trip ID is required for TripOverviewViewModel")
 
     private val _tripDetails = MutableStateFlow<TripDetails?>(null)

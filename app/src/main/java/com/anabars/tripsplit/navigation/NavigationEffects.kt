@@ -32,7 +32,7 @@ fun CollectNavigationEffects(
         key2 = sharedUiState.selectedTabItem
     ) {
         val currentRoute = navBackStackEntry?.destination?.route
-        val tripId = navBackStackEntry?.arguments?.getString("tripId")
+        val tripId = navBackStackEntry?.arguments?.getLong("tripId")
 
         updateFabVisibility(currentRoute, sharedUiState.selectedTabItem) {
             sharedViewModel.onEvent(SetFabVisibility(it))
@@ -42,7 +42,7 @@ fun CollectNavigationEffects(
             sharedViewModel.onEvent(SetTabTitle(it))
         }
 
-        updateToolbarActions(currentRoute, navController, tripId?.toLongOrNull()) {
+        updateToolbarActions(currentRoute, navController, tripId) {
             sharedViewModel.onEvent(SetToolbarActions(it))
         }
     }

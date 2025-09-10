@@ -26,7 +26,7 @@ fun updateFabVisibility(
 
 fun updateScreenTitle(
     currentRoute: String?,
-    tripId: String?,
+    tripId: Long?,
     selectedTabItem: TabItem,
     context: Context,
     onTabTitleChange: (String) -> Unit
@@ -41,7 +41,7 @@ fun updateScreenTitle(
             route.startsWith(AppScreens.TRIP_OVERVIEW.route) -> context.getString(R.string.title_overview)
 
             route.startsWith(AppScreens.ADD_TRIP.route) -> {
-                if (tripId.isNullOrEmpty()) context.getString(R.string.title_new_trip)
+                if (tripId == null || tripId == 0L) context.getString(R.string.title_new_trip)
                 else context.getString(R.string.title_edit_trip)
             }
 
@@ -93,6 +93,6 @@ private fun getActionsForTripOverview(tripId: Long?, navController: NavHostContr
             icon = Icons.Default.Edit,
             contentDescriptionRes = R.string.edit_item,
             onClick = {
-                tripId?.let { navController.navigate("${AppScreens.ADD_TRIP.route}?tripId=$it") }
+                tripId?.let { navController.navigate("${AppScreens.ADD_TRIP.route}/$it") }
             })
     )

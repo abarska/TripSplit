@@ -36,7 +36,7 @@ class AddTripViewModel @Inject constructor(
     private val currencyPreference: CurrencyPreference
 ) : ViewModel() {
 
-    private val tripId: Long? = savedStateHandle.get<String>("tripId")?.toLongOrNull()
+    private val tripId: Long? = savedStateHandle.get<Long>("tripId")
     private var tripDetails: TripDetails? = null
 
     private val _uiState = MutableStateFlow(AddTripUiState())

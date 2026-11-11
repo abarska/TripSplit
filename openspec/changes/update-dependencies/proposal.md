@@ -12,6 +12,7 @@ The build carries dependencies the app never uses (Firebase and its supporting p
   - `androidx-foundation` as an explicit dependency, pinned to 1.9.0 outside the Compose BOM; the BOM-managed foundation arrives transitively via Material3.
   - `androidx-hilt-common`, which is provided transitively by `hilt-work`. Nothing imports it directly.
   - The local, gitignored `app/google-services.json` is no longer read by the build.
+  - Removing these libraries also drops the `INTERNET` permission the app inherited through manifest merging. `AndroidManifest.xml` now declares it explicitly, because the Retrofit currency sync needs it.
 - Bump every remaining dependency, plugin and tool to the latest **stable** release (no alpha/beta/rc) published on or before **2026-10-11** (one month before 2026-11-11). Coupled groups move together: Kotlin + KSP + Compose compiler plugin; AGP + Gradle wrapper; Hilt + `androidx.hilt`; Compose BOM; Room; Retrofit + Moshi.
 - Fix only the source changes the bumps force to compile and pass tests. No functional changes.
 - Remove the unused `Trip.ownerId` field (`Trip.kt`). It was meant to link a trip to a Firebase user, is never set (always `""`) and never read. Whether and how authentication arrives, with Firebase or otherwise, is decided in a later change, which can add an owner field back with the right type.
@@ -28,6 +29,7 @@ None. No user-visible behavior changes, so the change sets `skip_specs: true` (t
 ## Impact
 
 - `gradle/libs.versions.toml`, `build.gradle.kts`, `app/build.gradle.kts`, `gradle/wrapper/gradle-wrapper.properties`.
+- `app/src/main/AndroidManifest.xml` (explicit `INTERNET` permission, previously merged in from Firebase/Play Services).
 - `app/src/main/java/com/anabars/tripsplit/data/room/entity/Trip.kt` (field removal); the only reference to `ownerId` in `app/src`.
 - Possible small source edits where a bumped library deprecates or removes an API (Compose, Navigation, Room, Hilt, Retrofit 3, Moshi are the likeliest).
 - `openspec/current-state.md`: Trip fields, Firebase and `ownerId` mentions (audit items 1 and 6).

@@ -24,6 +24,7 @@ Dependencies are declared in `gradle/libs.versions.toml` and consumed in `app/bu
 6. **Firebase removal includes the plugin.** Dropping `google-services` also drops the requirement for `app/google-services.json` at build time. `current-state.md` should be updated accordingly (see tasks).
 7. **Remove `Trip.ownerId`, reset the DB instead of migrating.** The field is dead (no reads or writes beyond its declaration). Dropping it changes the Room identity hash while `version` stays 1, so an existing database fails to open (`IllegalStateException`). Chosen handling: no migration and no code workaround; dev devices uninstall and reinstall. This is acceptable because the app is unreleased (`versionCode = 1`).
 8. **KSP versioning:** KSP 2.x versions track Kotlin independently of the Kotlin version prefix; choose the KSP release that explicitly supports the chosen Kotlin, rather than assuming a matching prefix.
+9. **Declare `INTERNET` explicitly.** The app manifest never declared it; Firebase and Play Services supplied it via manifest merge. Without it, OkHttp throws `SecurityException` on the first network call (currency sync). Fix: add `<uses-permission android:name="android.permission.INTERNET" />` to the app manifest (commit `5584fdf`).
 
 ## Risks / Trade-offs
 
@@ -32,4 +33,5 @@ Dependencies are declared in `gradle/libs.versions.toml` and consumed in `app/bu
 - [Compose or Navigation API deprecations become errors] → fix minimally; defer non-forced migrations to separate changes.
 - [No UI tests to catch runtime regressions] → manual smoke test on an emulator across trips list, add/edit trip, add expense/payment, balances tab, settings, rotation (landscape layouts exist), and a currency sync.
 - [Removing `ownerId` makes old local databases unopenable] → accepted; the app is assumed unreleased. If a build with real user data exists, stop and switch to a `Migration(1,2)` before shipping. Future schema changes need real migrations (audit item 11).
+- [Removing a library also drops permissions it contributed via manifest merge] → compare the merged manifest's permissions before and after removals. `INTERNET` went missing this way, was caught on a device, and was fixed in `5584fdf`.
 - [Cutoff leaves some libs a release behind newest] → accepted by design; the stated goal is stability over recency.

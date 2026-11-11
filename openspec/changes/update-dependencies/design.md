@@ -1,0 +1,35 @@
+# Design
+
+## Context
+
+Dependencies are declared in `gradle/libs.versions.toml` and consumed in `app/build.gradle.kts`. Kotlin is 2.0.21 with KSP `2.0.21-1.0.28`, AGP 8.12.0, Compose BOM 2025.08.00. Tests are two JVM unit-test classes plus the template `ExampleUnitTest`/`ExampleInstrumentedTest`; there is no UI test coverage, so the compiler and a manual run are the main safety nets. See proposal.md for motivation and scope.
+
+## Goals / Non-Goals
+
+**Goals:**
+- Every remaining catalog entry is used by the build; every version satisfies the cutoff rule.
+- Each step leaves the project building, so any breakage can be bisected.
+
+**Non-Goals:**
+- Migrating to new APIs for their own sake, restructuring modules, or touching behavior.
+- Moving to a newer JDK target (stays 11) or changing `minSdk`/`compileSdk` unless a bump demands it.
+
+## Decisions
+
+1. **Cutoff rule: latest stable release dated on or before 2026-10-11.** Release dates are read from Google Maven / Maven Central metadata, not from memory.
+2. **Order: removals first, then bumps in dependency groups, one commit per step.** Removals are verified in isolation so a failing build is attributable. Bump groups: (a) Gradle wrapper + AGP, (b) Kotlin + KSP + Hilt, (c) Compose BOM, Material3 stack, Activity, Navigation, Lifecycle, (d) Room, DataStore, WorkManager, `androidx.hilt`, (e) Retrofit, Moshi, coroutines, (f) test libraries.
+3. **Remove `androidx-foundation` rather than bump it.** Its own version pin bypasses the BOM, which defeats the BOM's purpose. Material3 pulls the BOM-aligned foundation transitively, and the sources import `androidx.compose.foundation.*`, so a compile verifies this. If the compile fails, restore it *without* a version so the BOM governs.
+4. **Remove `androidx-hilt-common` explicit dependency.** `hilt-work` depends on it. If the build disagrees, restore it.
+5. **Keep test infrastructure that has no current test using it** (`ui-test-junit4`, Espresso, `ui-test-manifest`). They are standard scaffolding, not dead runtime weight, and removing them would only be re-added when UI tests arrive.
+6. **Firebase removal includes the plugin.** Dropping `google-services` also drops the requirement for `app/google-services.json` at build time. `current-state.md` should be updated accordingly (see tasks).
+7. **Remove `Trip.ownerId`, reset the DB instead of migrating.** The field is dead (no reads or writes beyond its declaration). Dropping it changes the Room identity hash while `version` stays 1, so an existing database fails to open (`IllegalStateException`). Chosen handling: no migration and no code workaround; dev devices uninstall and reinstall. This is acceptable because the app is unreleased (`versionCode = 1`).
+8. **KSP versioning:** KSP 2.x versions track Kotlin independently of the Kotlin version prefix; choose the KSP release that explicitly supports the chosen Kotlin, rather than assuming a matching prefix.
+
+## Risks / Trade-offs
+
+- [Kotlin/KSP/Hilt/Room mismatch breaks annotation processing] → bump them in one step with a clean build and run unit tests; fall back to the newest mutually compatible set under the cutoff.
+- [Retrofit 3 / Moshi / `converter-moshi` version skew] → bump Retrofit and its converter together; `NetworkModule.kt` is the only call site, so check it explicitly.
+- [Compose or Navigation API deprecations become errors] → fix minimally; defer non-forced migrations to separate changes.
+- [No UI tests to catch runtime regressions] → manual smoke test on an emulator across trips list, add/edit trip, add expense/payment, balances tab, settings, rotation (landscape layouts exist), and a currency sync.
+- [Removing `ownerId` makes old local databases unopenable] → accepted; the app is assumed unreleased. If a build with real user data exists, stop and switch to a `Migration(1,2)` before shipping. Future schema changes need real migrations (audit item 11).
+- [Cutoff leaves some libs a release behind newest] → accepted by design; the stated goal is stability over recency.

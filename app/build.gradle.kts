@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.google.services)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -79,7 +78,6 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(libs.androidx.foundation)
 
     // material icons
     implementation(libs.androidx.material.icons.extended)
@@ -96,12 +94,7 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.coroutines.play.services)
     testImplementation(libs.kotlinx.coroutines.test)
-
-    // Firebase
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -115,7 +108,6 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose.v120)
-    implementation(libs.androidx.hilt.common)
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)

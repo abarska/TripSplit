@@ -2,13 +2,13 @@
 
 ## 1. Remove unused dependencies
 
-- [ ] 1.1 Record a baseline: run `./gradlew clean testDebugUnitTest assembleDebug` and confirm it passes before any edit
-- [ ] 1.2 Remove `firebase-auth`, `firebase-firestore`, the `google-services` plugin (root and app `build.gradle.kts`) and their catalog entries; verify `grep -r "com.google.firebase" app/src` is empty and `assembleDebug` passes
-- [ ] 1.3 Remove `kotlinx-coroutines-play-services` and its catalog/version entries; verify the build passes
-- [ ] 1.4 Remove explicit `androidx-foundation` (and `foundation` version) and `androidx-hilt-common` (and `hiltCommon` use if no longer needed); verify `assembleDebug` passes, restoring either entry (BOM-managed, no version) only if the compile requires it
+- [x] 1.1 Record a baseline: run `./gradlew clean testDebugUnitTest assembleDebug` and confirm it passes before any edit
+- [x] 1.2 Remove `firebase-auth`, `firebase-firestore`, the `google-services` plugin (root and app `build.gradle.kts`) and their catalog entries; verify `grep -r "com.google.firebase" app/src` is empty and `assembleDebug` passes
+- [x] 1.3 Remove `kotlinx-coroutines-play-services` and its catalog/version entries; verify the build passes
+- [x] 1.4 Remove explicit `androidx-foundation` (and `foundation` version) and `androidx-hilt-common` (and `hiltCommon` use if no longer needed); verify `assembleDebug` passes, restoring either entry (BOM-managed, no version) only if the compile requires it
 - [ ] 1.5 Remove `ownerId` from `Trip.kt`; verify `grep -ri "ownerId" app/src` is empty, `assembleDebug` and unit tests pass, and after uninstalling the old app the fresh install launches and can create a trip
-- [ ] 1.6 Check every remaining catalog entry and version key is referenced from a `build.gradle.kts`; verify with a script or grep that no orphans remain
-- [ ] 1.7 Run `./gradlew testDebugUnitTest assembleDebug` and commit the removals
+- [x] 1.6 Check every remaining catalog entry and version key is referenced from a `build.gradle.kts`; verify with a script or grep that no orphans remain
+- [x] 1.7 Run `./gradlew testDebugUnitTest assembleDebug` and commit the removals
 
 ## 2. Resolve target versions
 

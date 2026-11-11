@@ -13,8 +13,8 @@
 
 ## 2. Resolve target versions
 
-- [ ] 2.1 For each remaining dependency, plugin and the Gradle wrapper, look up the latest stable release dated on or before 2026-10-11 and record the table (name, current, target, release date) in this change folder as `versions.md`; verify no target is an alpha/beta/rc/dev build and every date is on or before the cutoff
-- [ ] 2.2 Check compatibility across coupled groups (AGP/Gradle, Kotlin/KSP/Compose plugin, Hilt/androidx.hilt, Retrofit/converter-moshi, Room/KSP) and adjust targets to the newest compatible set; note any adjustment in `versions.md`
+- [x] 2.1 For each remaining dependency, plugin and the Gradle wrapper, look up the latest stable release dated on or before 2026-10-11 and record the table (name, current, target, release date) in this change folder as `versions.md`; verify no target is an alpha/beta/rc/dev build and every date is on or before the cutoff
+- [x] 2.2 Check compatibility across coupled groups (AGP/Gradle, Kotlin/KSP/Compose plugin, Hilt/androidx.hilt, Retrofit/converter-moshi, Room/KSP) and adjust targets to the newest compatible set; note any adjustment in `versions.md`
 
 ## 3. Apply version bumps
 

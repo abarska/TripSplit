@@ -18,7 +18,7 @@
 
 ## 3. Apply version bumps
 
-- [ ] 3.1 Bump Gradle wrapper and AGP; verify `./gradlew assembleDebug` passes, then commit
+- [x] 3.1 Bump Gradle wrapper and AGP; verify `./gradlew assembleDebug` passes, then commit
 - [ ] 3.2 Bump Kotlin, KSP and Hilt together; verify `./gradlew clean testDebugUnitTest assembleDebug` passes (annotation processing works), then commit
 - [ ] 3.3 Bump the Compose BOM and the Compose-related AndroidX libs (activity-compose, navigation-compose, lifecycle, hilt-navigation-compose, ui-text-google-fonts, material-icons-extended); fix only forced API breakages; verify the build and unit tests pass, then commit
 - [ ] 3.4 Bump Room, DataStore, WorkManager and `androidx.hilt` (work, compiler); verify the build passes and `./gradlew assembleDebug` generates Room code with no new warnings-as-errors, then commit

@@ -21,7 +21,7 @@
 - [x] 3.1 Bump Gradle wrapper to 9.8.1, AGP to 9.4.1, Kotlin, KSP and Hilt together and migrate to built-in Kotlin: remove the `org.jetbrains.kotlin.android` plugin (catalog entry, root and app `build.gradle.kts`), keep the Compose compiler plugin and KSP, fix only forced build-script changes; verify `./gradlew clean testDebugUnitTest assembleDebug` passes, then commit
 - [x] 3.2 Verify annotation processing and dexing after 3.1: Hilt and Room sources are generated, the build logs no D8 Kotlin-metadata warnings, and the app launches on a device; commit any fixes
 - [x] 3.3 Bump the Compose BOM and the Compose-related AndroidX libs (activity-compose, navigation-compose, lifecycle, hilt-navigation-compose, ui-text-google-fonts, material-icons-extended); fix only forced API breakages; verify the build and unit tests pass, then commit
-- [ ] 3.4 Bump Room, DataStore, WorkManager and `androidx.hilt` (work, compiler); verify the build passes and `./gradlew assembleDebug` generates Room code with no new warnings-as-errors, then commit
+- [x] 3.4 Bump Room, DataStore, WorkManager and `androidx.hilt` (work, compiler); verify the build passes and `./gradlew assembleDebug` generates Room code with no new warnings-as-errors, then commit
 - [ ] 3.5 Bump Retrofit, converter-moshi, Moshi (kotlin + codegen) and kotlinx-coroutines; verify the build passes and `NetworkModule.kt` compiles unchanged or with a minimal fix, then commit
 - [ ] 3.6 Bump core-ktx, desugar_jdk_libs and test libraries (JUnit, Mockito, mockito-kotlin, Truth, Espresso, androidx-junit, coroutines-test); verify `./gradlew testDebugUnitTest` passes, then commit
 

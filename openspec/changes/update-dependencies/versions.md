@@ -4,8 +4,8 @@ Cutoff: latest stable release dated on or before 2026-10-11. Dates are `Last-Mod
 
 | Name | Current | Target | Release date |
 |---|---|---|---|
-| Gradle wrapper | 8.14.2 | 8.14.6 | 2026-10-08 |
-| AGP | 8.12.0 | 8.13.2 | 2025-12-11 |
+| Gradle wrapper | 8.14.2 | 9.8.1 | 2026-10-07 |
+| AGP | 8.12.0 | 9.4.1 | 2026-09-18 |
 | Kotlin (+ Compose compiler plugin) | 2.0.21 | 2.4.21 | 2026-10-08 |
 | KSP | 2.0.21-1.0.28 | 2.3.12 | 2026-09-09 |
 | Hilt (dagger, plugin) | 2.57 | 2.60.1 | 2026-07-06 |
@@ -36,9 +36,10 @@ Cutoff: latest stable release dated on or before 2026-10-11. Dates are `Last-Mod
 
 Checked from artifact metadata only; the real proof is the per-group builds in section 3.
 
-- AGP target is the newest 8.x (8.13.2), not 9.4.1: AGP 9.x has built-in Kotlin and would force dropping `org.jetbrains.kotlin.android`, which is a migration outside this change (decision by user). Gradle 9.8.1 / AGP 9.4.1 are the newest overall and belong in a separate change. Gradle 8.14.6 is the newest 8.x and is within AGP 8.13's supported range.
-- KSP 2.3.12 is built against Kotlin 2.3.20. Kotlin 2.4.21 is newer than that, so KSP/Kotlin compatibility is unconfirmed until the build in step 3.2.
-- Hilt 2.60.1 plugin is built against Kotlin 2.3.21 / kotlin-stdlib 2.1.0 compile scope; same unconfirmed status as KSP.
-- Fallback if step 3.2 fails: Kotlin 2.3.x (KSP 2.3.12's build target) with the same KSP and Hilt, then re-check the Compose compiler plugin, which tracks the Kotlin version.
-- Kotlin 2.4.21 with AGP 8.13.2: AGP 8.x is outside the newest KGP-tested range only if the build warns; confirm in step 3.2.
+- AGP target is the newest overall, 9.4.1 (decision by user, reversing an earlier choice of 8.13.2). AGP 9 has built-in Kotlin, so `org.jetbrains.kotlin.android` is dropped (see design decision 10). AGP 9.4.1 compiles against `gradle-api` 9.4.1, so it needs Gradle 9.4.1 or newer; Gradle 9.8.1 is the newest stable under the cutoff. JDK 17 (the project's JDK) runs both.
+- Gradle, AGP, Kotlin, KSP and Hilt move in one step: AGP 9's built-in Kotlin is expected to need a recent Kotlin Gradle plugin, KSP `2.0.21-1.0.28` does not work with Kotlin 2.4.x, and Hilt 2.59+ requires AGP 9.
+- KSP 2.3.12 is built against Kotlin 2.3.20. Kotlin 2.4.21 is newer than that, so KSP/Kotlin compatibility is unconfirmed until the build in step 3.1.
+- Hilt 2.60.1 plugin is built against Kotlin 2.3.21 / kotlin-stdlib 2.1.0 compile scope; same unconfirmed status as KSP. The Hilt Gradle plugin refuses to apply below AGP 9.0.0 (Hilt 2.59 and later); that requirement is met by AGP 9.4.1.
+- Fallback if step 3.1 fails on Kotlin/KSP: Kotlin 2.3.x (KSP 2.3.12's build target) with the same KSP and Hilt, then re-check the Compose compiler plugin, which tracks the Kotlin version.
+- Recorded fallback, tested on a device: AGP 8.13.2 + Gradle 8.14.6 + Hilt 2.58 (newest Hilt for AGP 8) + KSP 2.3.12 + Kotlin 2.4.21 builds, passes unit tests and launches, but AGP 8.13.2's D8 logs about 409 "Unexpected error during rewriting of Kotlin metadata" warnings. That build also needs `kotlinOptions { jvmTarget }` migrated to `kotlin { compilerOptions }`. Use it only if the AGP 9 migration fails.
 - Retrofit 3.0.0 and converter-moshi 3.0.0, Room 2.8.5 with KSP: no mismatch visible.

@@ -27,7 +27,7 @@ kotlin {
 
 android {
     namespace = "com.anabars.tripsplit"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.anabars.tripsplit"

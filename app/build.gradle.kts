@@ -2,7 +2,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
@@ -19,6 +18,12 @@ if (localPropertiesFile.exists()) {
 }
 val currencyFreaksApiKey = localProperties.getProperty("CURRENCY_FREAKS_API_KEY")
     ?: error("CURRENCY_FREAKS_API_KEY not found in local.properties")
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+    }
+}
 
 android {
     namespace = "com.anabars.tripsplit"
@@ -50,9 +55,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
-    }
-    kotlinOptions {
-        jvmTarget = "11"
     }
     buildFeatures {
         buildConfig = true

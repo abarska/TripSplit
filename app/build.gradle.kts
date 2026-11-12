@@ -21,7 +21,7 @@ val currencyFreaksApiKey = localProperties.getProperty("CURRENCY_FREAKS_API_KEY"
 
 android {
     namespace = "com.anabars.tripsplit"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.anabars.tripsplit"

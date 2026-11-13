@@ -29,4 +29,4 @@
 
 - [x] 4.1 Run `./gradlew clean testDebugUnitTest assembleDebug assembleRelease` and verify all succeed with no new deprecation warnings that were not present at baseline
 - [x] 4.2 Smoke test on an emulator: trips list, add and edit trip, add expense and payment, balances tab, settings, rotation to landscape, and a currency sync; verify no crashes and `adb logcat` shows no new errors from missing classes, and the merged manifest still contains every permission the app needs
-- [ ] 4.3 Update `openspec/current-state.md`: Build row (new AGP/Kotlin versions), build-prerequisites note (`google-services.json` no longer required), Trip fields (no `ownerId`), audit item 1 resolved and item 6 reduced to `tag`/`createdAt`; verify `grep -i "firebase\|ownerId" openspec/current-state.md` shows only historical notes, if any
+- [x] 4.3 Update `openspec/current-state.md`: Build row (new AGP/Kotlin versions), build-prerequisites note (`google-services.json` no longer required), Trip fields (no `ownerId`), audit item 1 resolved and item 6 reduced to `tag`/`createdAt`; verify `grep -i "firebase\|ownerId" openspec/current-state.md` shows only historical notes, if any

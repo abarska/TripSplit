@@ -6,6 +6,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anabars.tripsplit.viewmodels.SharedViewModel
@@ -23,6 +24,7 @@ fun CollectNavigationEffects(
     snackbarHostState: SnackbarHostState
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val sharedUiState by sharedViewModel.uiState.collectAsState()
 
     // Update FAB, title, and toolbar actions
@@ -52,7 +54,7 @@ fun CollectNavigationEffects(
         sharedViewModel.uiEffect.collectLatest { effect ->
             when (effect) {
                 is ShowSnackBar -> snackbarHostState.showSnackbar(
-                    context.getString(effect.resId)
+                    resources.getString(effect.resId)
                 )
 
                 is FabClicked -> onFabClicked(

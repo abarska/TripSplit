@@ -30,3 +30,10 @@
 - [x] 4.1 Run `./gradlew clean testDebugUnitTest assembleDebug assembleRelease` and verify all succeed with no new deprecation warnings that were not present at baseline
 - [x] 4.2 Smoke test on an emulator: trips list, add and edit trip, add expense and payment, balances tab, settings, rotation to landscape, and a currency sync; verify no crashes and `adb logcat` shows no new errors from missing classes, and the merged manifest still contains every permission the app needs
 - [x] 4.3 Update `openspec/current-state.md`: Build row (new AGP/Kotlin versions), build-prerequisites note (`google-services.json` no longer required), Trip fields (no `ownerId`), audit item 1 resolved and item 6 reduced to `tag`/`createdAt`; verify `grep -i "firebase\|ownerId" openspec/current-state.md` shows only historical notes, if any
+
+## 5. Tidy dependency declarations
+
+- [x] 5.1 Remove the `uiTextGoogleFonts` version key so the Compose BOM governs `ui-text-google-fonts` (design decision 12)
+- [x] 5.2 Replace `androidx-hilt-navigation-compose-v120` with `androidx-hilt-lifecycle-viewmodel-compose` on the `hiltCommon` key, remove the `hiltNavigationCompose` key, and update `app/build.gradle.kts` and the DI row in `openspec/current-state.md` (design decision 11)
+- [x] 5.3 Regenerate the Gradle wrapper with `./gradlew wrapper --gradle-version 9.8.1 --distribution-type bin` (design decision 13)
+- [x] 5.4 Verify `./gradlew clean assembleDebug testDebugUnitTest lint` passes, `ui-text-google-fonts` resolves 1.12.1, `hilt-lifecycle-viewmodel-compose` resolves 1.4.0 and `hilt-navigation-compose` is no longer in `debugRuntimeClasspath`

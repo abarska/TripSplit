@@ -4,16 +4,16 @@ Cutoff: latest stable release dated on or before 2026-10-11. Dates are `Last-Mod
 
 | Name | Current | Target | Release date |
 |---|---|---|---|
-| Gradle wrapper | 8.14.2 | 9.8.1 | 2026-10-07 |
+| Gradle wrapper | 8.14.2 | 9.8.1 (scripts and jar regenerated; design decision 13) | 2026-10-07 |
 | AGP | 8.12.0 | 9.4.1 | 2026-09-18 |
 | Kotlin (+ Compose compiler plugin) | 2.0.21 | 2.4.21 | 2026-10-08 |
 | KSP | 2.0.21-1.0.28 | 2.3.12 | 2026-09-09 |
 | Hilt (dagger, plugin) | 2.57 | 2.60.1 | 2026-07-06 |
 | androidx.hilt (work, compiler) | 1.2.0 | 1.4.0 | 2026-07-01 |
-| hilt-navigation-compose | 1.2.0 | 1.4.0 | 2026-07-01 |
+| hilt-navigation-compose → hilt-lifecycle-viewmodel-compose | 1.2.0 | 1.4.0 (artifact replaced, `hiltCommon` key; design decision 11) | 2026-07-01 |
 | Compose BOM | 2025.08.00 | 2026.09.00 | 2026-09-09 |
 | material-icons-extended | 1.7.8 | 1.7.8 (already newest) | 2025-02-12 |
-| ui-text-google-fonts | 1.9.0 | 1.12.1 | 2026-09-09 |
+| ui-text-google-fonts | 1.9.0 | 1.12.1 (via Compose BOM, own pin removed; design decision 12) | 2026-09-09 |
 | activity-compose | 1.10.1 | 1.13.0 | 2026-03-11 |
 | navigation-compose | 2.9.3 | 2.10.2 | 2026-09-23 |
 | lifecycle-runtime-ktx | 2.9.2 | 2.11.0 | 2026-06-17 |

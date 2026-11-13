@@ -12,7 +12,7 @@ A single-module, offline-first Android app (Kotlin, Jetpack Compose, Material 3)
 |---|---|
 | UI | Compose BOM 2026.09.00, Material 3, Navigation Compose 2.10.2, Google Fonts |
 | Architecture | MVVM with a partial MVI style (`onIntent`, `UiState`, `UiEffect`). ViewModels talk to repositories, repositories talk to DAOs |
-| DI | Hilt 2.60.1, `androidx.hilt` 1.4.0 (`hilt-work`, `hilt-navigation-compose`) |
+| DI | Hilt 2.60.1, `androidx.hilt` 1.4.0 (`hilt-work`, `hilt-lifecycle-viewmodel-compose`) |
 | Persistence | Room 2.8.5 (DB v1, `exportSchema=false`, `fallbackToDestructiveMigration(false)`), DataStore Preferences 1.2.1 |
 | Network | Retrofit 3.0.0 + Moshi 1.15.2 to CurrencyFreaks (`v2.0/rates/latest`) |
 | Background | WorkManager 2.12.0 (custom `Configuration.Provider` with `HiltWorkerFactory`) |

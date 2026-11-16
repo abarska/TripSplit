@@ -1,6 +1,6 @@
 package com.anabars.tripsplit.navigation
 
-import android.content.Context
+import android.content.res.Resources
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Info
@@ -28,27 +28,27 @@ fun updateScreenTitle(
     currentRoute: String?,
     tripId: Long?,
     selectedTabItem: TabItem,
-    context: Context,
+    resources: Resources,
     onTabTitleChange: (String) -> Unit
 ) {
     currentRoute?.let { route ->
         val screenTitle = when {
-            route.startsWith(AppScreens.TRIPS.route) -> context.getString(R.string.title_trips)
-            route.startsWith(AppScreens.ADD_EXPENSE.route) -> context.getString(R.string.title_new_expense)
-            route.startsWith(AppScreens.ADD_PAYMENT.route) -> context.getString(R.string.title_new_payment)
-            route.startsWith(AppScreens.SETTINGS.route) -> context.getString(R.string.title_settings)
-            route.startsWith(AppScreens.ARCHIVE.route) -> context.getString(R.string.title_archive)
-            route.startsWith(AppScreens.TRIP_OVERVIEW.route) -> context.getString(R.string.title_overview)
+            route.startsWith(AppScreens.TRIPS.route) -> resources.getString(R.string.title_trips)
+            route.startsWith(AppScreens.ADD_EXPENSE.route) -> resources.getString(R.string.title_new_expense)
+            route.startsWith(AppScreens.ADD_PAYMENT.route) -> resources.getString(R.string.title_new_payment)
+            route.startsWith(AppScreens.SETTINGS.route) -> resources.getString(R.string.title_settings)
+            route.startsWith(AppScreens.ARCHIVE.route) -> resources.getString(R.string.title_archive)
+            route.startsWith(AppScreens.TRIP_OVERVIEW.route) -> resources.getString(R.string.title_overview)
 
             route.startsWith(AppScreens.ADD_TRIP.route) -> {
-                if (tripId == null || tripId == 0L) context.getString(R.string.title_new_trip)
-                else context.getString(R.string.title_edit_trip)
+                if (tripId == null || tripId == 0L) resources.getString(R.string.title_new_trip)
+                else resources.getString(R.string.title_edit_trip)
             }
 
             route.startsWith(AppScreens.TRIP_DETAILS.route) -> {
                 val prefixRes = R.string.title_trip_details
                 val suffixRes = selectedTabItem.titleRes
-                "${context.getString(prefixRes)}: ${context.getString(suffixRes)}"
+                "${resources.getString(prefixRes)}: ${resources.getString(suffixRes)}"
             }
 
             else -> throw IllegalStateException("Unknown route: $route")

@@ -2,9 +2,7 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.google.services)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
@@ -23,7 +21,7 @@ val currencyFreaksApiKey = localProperties.getProperty("CURRENCY_FREAKS_API_KEY"
 
 android {
     namespace = "com.anabars.tripsplit"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.anabars.tripsplit"
@@ -52,9 +50,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures {
         buildConfig = true
         compose = true
@@ -79,7 +74,6 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(libs.androidx.foundation)
 
     // material icons
     implementation(libs.androidx.material.icons.extended)
@@ -96,12 +90,7 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.coroutines.play.services)
     testImplementation(libs.kotlinx.coroutines.test)
-
-    // Firebase
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -114,8 +103,7 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose.v120)
-    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)

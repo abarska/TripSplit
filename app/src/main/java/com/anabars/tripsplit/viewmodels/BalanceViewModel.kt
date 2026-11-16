@@ -8,14 +8,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
-import com.anabars.tripsplit.data.room.model.BalancesAndCurrencies
+import com.anabars.tripsplit.data.room.entity.TripCurrency
+import com.anabars.tripsplit.data.room.model.BalanceWithNameAndStatus
 import com.anabars.tripsplit.repository.BalanceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.stateIn
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -30,39 +34,36 @@ class BalanceViewModel @Inject constructor(
     val tripId: Long = savedStateHandle.get<Long>("tripId")
         ?: throw IllegalStateException("Trip ID is required for BalanceViewModel")
 
-    private val _uiState = MutableStateFlow(
-        BalancesAndCurrencies(emptyList(), emptyList())
-    )
-    val uiState: StateFlow<BalancesAndCurrencies> = _uiState
-
-    init {
-        loadBalances()
-    }
-
-    fun loadBalances() {
-        viewModelScope.launch {
-            val homeCurrency = dataStore.data
-                .map { prefs ->
-                    prefs[stringPreferencesKey(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY)]
-                        ?: TripSplitConstants.BASE_CURRENCY
-                }
-                .first()
-
-            val homeRate = exchangeRateDao.getExchangeRateForCurrency(homeCurrency).rate
-
-            balanceRepository.getBalancesAndCurrencies(tripId)
-                .map { balancesAndCurrencies ->
-                    val updatedBalances =
-                        balancesAndCurrencies.balances.map { balance ->
-                            balance.copy(
-                                amount = balance.amount.multiply(BigDecimal(homeRate)),
-                                amountCurrency = homeCurrency
-                            )
-                        }
-                    balancesAndCurrencies.copy(balances = updatedBalances)
-                }.collect { transformed ->
-                    _uiState.value = transformed
-                }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val homeCurrencyAndRate = dataStore.data
+        .map { prefs ->
+            prefs[stringPreferencesKey(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY)]
+                ?: TripSplitConstants.BASE_CURRENCY
         }
-    }
+        .distinctUntilChanged()
+        .flatMapLatest { code ->
+            exchangeRateDao.getRateFlowForCurrency(code).map { rate -> code to rate }
+        }
+
+    val uiState: StateFlow<BalanceUiState> = combine(
+        balanceRepository.getBalancesAndCurrencies(tripId),
+        homeCurrencyAndRate
+    ) { balancesAndCurrencies, (homeCurrency, homeRate) ->
+        val multiplier = homeRate?.let { BigDecimal(it) }
+        BalanceUiState(
+            balances = multiplier?.let { m ->
+                balancesAndCurrencies.balances.map { balance ->
+                    balance.copy(amount = balance.amount.multiply(m), amountCurrency = homeCurrency)
+                }
+            }.orEmpty(),
+            currencies = balancesAndCurrencies.currencies,
+            ratesAvailable = multiplier != null
+        )
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, BalanceUiState())
 }
+
+data class BalanceUiState(
+    val balances: List<BalanceWithNameAndStatus> = emptyList(),
+    val currencies: List<TripCurrency> = emptyList(),
+    val ratesAvailable: Boolean = true
+)

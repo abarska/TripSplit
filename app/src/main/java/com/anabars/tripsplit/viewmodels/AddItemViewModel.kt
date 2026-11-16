@@ -10,6 +10,7 @@ import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.repository.TripItemRepository
+import com.anabars.tripsplit.repository.TripItemResult
 import com.anabars.tripsplit.ui.model.AddItemUiEffect
 import com.anabars.tripsplit.ui.model.AmountCurrencyState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
@@ -62,6 +63,9 @@ class AddItemViewModel @Inject constructor(
 
     private val _uiEffect = MutableSharedFlow<AddItemUiEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
+
+    // guards against a second Save tap while a save is in progress
+    private var isSaving = false
 
     init {
         viewModelScope.launch {
@@ -136,35 +140,41 @@ class AddItemViewModel @Inject constructor(
     }
 
     private fun saveItem() {
+        if (isSaving) return
+        isSaving = true
         viewModelScope.launch {
-            if (!validateItem()) return@launch
+            val result = if (validateItem()) save() else null
+            // stay locked after a successful save until navigation; otherwise allow a retry
+            isSaving = result == TripItemResult.Success
+            result?.let { handleSaveResult(it) }
+        }
+    }
 
-            when (useCase) {
-                UseCase.EXPENSE -> {
-                    val expense = TripExpense.fromUiState(
-                        amountCurrencyState = _amountCurrencyState.value,
-                        payerParticipantsState = _payerParticipantsState.value,
-                        tripId = tripId
-                    )
-                    val participants = _payerParticipantsState.value.selectedParticipants
-                    tripItemRepository.saveExpenseWithParticipants(expense, participants)
-                    viewModelScope.launch {
-                        _uiEffect.emit(AddItemUiEffect.NavigateBack(false))
-                    }
-                }
+    private suspend fun save(): TripItemResult =
+        when (useCase) {
+            UseCase.EXPENSE -> tripItemRepository.saveExpenseWithParticipants(
+                expense = TripExpense.fromUiState(
+                    amountCurrencyState = _amountCurrencyState.value,
+                    payerParticipantsState = _payerParticipantsState.value,
+                    tripId = tripId
+                ),
+                participants = _payerParticipantsState.value.selectedParticipants
+            )
 
-                UseCase.PAYMENT -> {
-                    val payment = TripPayment.fromUiState(
-                        amountCurrencyState = _amountCurrencyState.value,
-                        payerParticipantsState = _payerParticipantsState.value,
-                        tripId = tripId
-                    )
-                    tripItemRepository.savePayment(payment)
-                    viewModelScope.launch {
-                        _uiEffect.emit(AddItemUiEffect.NavigateBack(false))
-                    }
-                }
-            }
+            UseCase.PAYMENT -> tripItemRepository.savePayment(
+                TripPayment.fromUiState(
+                    amountCurrencyState = _amountCurrencyState.value,
+                    payerParticipantsState = _payerParticipantsState.value,
+                    tripId = tripId
+                )
+            )
+        }
+
+    private suspend fun handleSaveResult(result: TripItemResult) {
+        when (result) {
+            TripItemResult.Success -> _uiEffect.emit(AddItemUiEffect.NavigateBack(false))
+            TripItemResult.MissingExchangeRate ->
+                _uiEffect.emit(AddItemUiEffect.ShowSnackBar(R.string.error_save_exchange_rates_unavailable))
         }
     }
 

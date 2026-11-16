@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -68,7 +69,10 @@ private fun MainScreenWithDrawer() {
     LaunchedEffect(Unit) {
         sharedViewModel.uiEffect.collectLatest { effect ->
             when (effect) {
-                is ShowSnackBar -> snackbarHostState.showSnackbar(context.getString(effect.resId))
+                is ShowSnackBar -> snackbarHostState.showSnackbar(
+                    message = context.getString(effect.resId),
+                    duration = SnackbarDuration.Long
+                )
                 is FabClicked -> {} // already handled via FAB
             }
         }

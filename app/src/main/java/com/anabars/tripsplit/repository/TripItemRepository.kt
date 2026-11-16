@@ -2,7 +2,6 @@ package com.anabars.tripsplit.repository
 
 import androidx.room.withTransaction
 import com.anabars.tripsplit.BalanceCalculator
-import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.data.room.TripSplitDatabase
 import com.anabars.tripsplit.data.room.dao.BalanceDao
 import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
@@ -17,9 +16,7 @@ import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.data.room.model.ExpenseWithParticipants
 import com.anabars.tripsplit.ui.model.BalanceDelta
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TripItemRepository @Inject constructor(
@@ -47,37 +44,35 @@ class TripItemRepository @Inject constructor(
     fun getActiveParticipantsByTripId(tripId: Long): Flow<List<TripParticipant>> =
         tripParticipantDao.getActiveParticipantsByTripId(tripId)
 
-    suspend fun savePayment(payment: TripPayment) {
-        // calculate deltas for updating per participant balance
-        val exchangeRate = getExchangeRateForCurrency(payment.currency)
-        val deltas = withContext(Dispatchers.Default) {
-            BalanceCalculator.calculateDeltasForPayment(
+    suspend fun savePayment(payment: TripPayment): TripItemResult =
+        db.withTransaction {
+            // calculate deltas for updating per participant balance
+            val exchangeRate = exchangeRateDao.getRateForCurrency(payment.currency)
+                ?: return@withTransaction TripItemResult.MissingExchangeRate
+            val deltas = BalanceCalculator.calculateDeltasForPayment(
                 payment,
                 exchangeRate,
                 payment.fromUserId,
                 payment.toUserId
             )
-        }
 
-        // save payment and deltas in a single transaction
-        db.withTransaction {
+            // save payment and deltas
             tripPaymentDao.savePayment(payment)
             saveBalanceDeltas(deltas)
+            TripItemResult.Success
         }
-    }
 
     suspend fun saveExpenseWithParticipants(
         expense: TripExpense,
         participants: Set<TripParticipant>
-    ) {
-        // calculate deltas for updating per participant balance
-        val exchangeRate = getExchangeRateForCurrency(expense.currency)
-        val deltas = withContext(Dispatchers.Default) {
-            BalanceCalculator.calculateDeltasForExpense(expense, exchangeRate, participants)
-        }
-
-        // save expense, cross refs and deltas in a single transaction
+    ): TripItemResult =
         db.withTransaction {
+            // calculate deltas for updating per participant balance
+            val exchangeRate = exchangeRateDao.getRateForCurrency(expense.currency)
+                ?: return@withTransaction TripItemResult.MissingExchangeRate
+            val deltas = BalanceCalculator.calculateDeltasForExpense(expense, exchangeRate, participants)
+
+            // save expense, cross refs and deltas
             val expenseId = tripExpensesDao.saveExpense(expense)
 
             val crossRefs = participants.map {
@@ -85,21 +80,21 @@ class TripItemRepository @Inject constructor(
             }
             tripExpensesDao.saveCrossRefs(crossRefs)
             saveBalanceDeltas(deltas)
+            TripItemResult.Success
         }
-    }
 
-    suspend fun deleteExpenseById(expenseId: Long) {
+    suspend fun deleteExpenseById(expenseId: Long): TripItemResult =
         db.withTransaction {
             // calculate deltas for this expense
             val expenseWithParticipants = tripExpensesDao.getExpenseWithParticipantsById(expenseId)
-                ?: return@withTransaction
-            val deltas = withContext(Dispatchers.Default) {
-                BalanceCalculator.calculateDeltasForExpense(
-                    expense = expenseWithParticipants.expense,
-                    exchangeRate = getExchangeRateForCurrency(expenseWithParticipants.expense.currency),
-                    participants = expenseWithParticipants.participants.toSet()
-                )
-            }
+                ?: return@withTransaction TripItemResult.Success
+            val exchangeRate = exchangeRateDao.getRateForCurrency(expenseWithParticipants.expense.currency)
+                ?: return@withTransaction TripItemResult.MissingExchangeRate
+            val deltas = BalanceCalculator.calculateDeltasForExpense(
+                expense = expenseWithParticipants.expense,
+                exchangeRate = exchangeRate,
+                participants = expenseWithParticipants.participants.toSet()
+            )
 
             // invert deltas and update balances
             val inverted = deltas.map { it.copy(deltaUsd = it.deltaUsd.negate()) }
@@ -107,22 +102,22 @@ class TripItemRepository @Inject constructor(
 
             // delete expense and cross-refs
             tripExpensesDao.deleteExpenseWithCrossRefs(expenseId)
+            TripItemResult.Success
         }
-    }
 
-    suspend fun deletePaymentById(paymentId: Long) {
+    suspend fun deletePaymentById(paymentId: Long): TripItemResult =
         db.withTransaction {
             // calculate deltas for this payment
             val payment = tripPaymentDao.getPaymentById(paymentId)
-                ?: return@withTransaction
-            val deltas = withContext(Dispatchers.Default) {
-                BalanceCalculator.calculateDeltasForPayment(
-                    payment = payment,
-                    exchangeRate = getExchangeRateForCurrency(payment.currency),
-                    fromUserId = payment.fromUserId,
-                    toUserId = payment.toUserId
-                )
-            }
+                ?: return@withTransaction TripItemResult.Success
+            val exchangeRate = exchangeRateDao.getRateForCurrency(payment.currency)
+                ?: return@withTransaction TripItemResult.MissingExchangeRate
+            val deltas = BalanceCalculator.calculateDeltasForPayment(
+                payment = payment,
+                exchangeRate = exchangeRate,
+                fromUserId = payment.fromUserId,
+                toUserId = payment.toUserId
+            )
 
             // invert deltas and update balances
             val inverted = deltas.map { it.copy(deltaUsd = it.deltaUsd.negate()) }
@@ -130,12 +125,8 @@ class TripItemRepository @Inject constructor(
 
             // delete payment
             tripPaymentDao.deletePaymentById(paymentId)
+            TripItemResult.Success
         }
-    }
-
-    private suspend fun getExchangeRateForCurrency(currency: String): Double =
-        if (currency == TripSplitConstants.BASE_CURRENCY) 1.0
-        else exchangeRateDao.getExchangeRateForCurrency(currency).rate
 
     private suspend fun saveBalanceDeltas(deltas: List<BalanceDelta>) {
         deltas.forEach { delta ->

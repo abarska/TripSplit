@@ -21,7 +21,7 @@
 
 ## 4. Derived balances
 
-- [ ] 4.1 Replace `BalanceDao` with the derived query from design §5, which returns `participantId`, `name`, `status` and `balanceMinor` for every participant, and adapt `BalanceRepository`. Verify with an instrumented in-memory Room test of the spec's "Delete after rate and weight changes" scenario: A −15.00, B 0.00 and C +15.00, summing to zero. Also test "Payment settles a debt", and that a removed participant still appears with their balance
+- [x] 4.1 Replace `BalanceDao` with the derived query from design §5, which returns `participantId`, `name`, `status` and `balanceMinor` for every participant, and adapt `BalanceRepository`. Verify with an instrumented in-memory Room test of the spec's "Delete after rate and weight changes" scenario: A −15.00, B 0.00 and C +15.00, summing to zero. Also test "Payment settles a debt", and that a removed participant still appears with their balance
 
 ## 5. Trip default currency
 

@@ -2,10 +2,11 @@ package com.anabars.tripsplit.viewmodels
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.preferencesOf
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.SavedStateHandle
 import com.anabars.tripsplit.common.TripSplitConstants
+import com.anabars.tripsplit.data.preferences.CurrencyPreference
 import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
 import com.anabars.tripsplit.data.room.entity.ExchangeRate
 import com.anabars.tripsplit.data.room.entity.ParticipantStatus
@@ -40,13 +41,11 @@ class BalanceViewModelTest {
     private val dataStore: DataStore<Preferences> = mock()
     private val rates = MutableStateFlow<List<ExchangeRate>>(emptyList())
 
-    private val balance = BalanceWithNameAndStatus("A", ParticipantStatus.ACTIVE, BigDecimal("10"))
+    private val balance = BalanceWithNameAndStatus("A", ParticipantStatus.ACTIVE, BigDecimal("10.00"), "EUR")
 
     @Before
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        whenever(balanceRepository.getBalancesAndCurrencies(1L))
-            .thenReturn(flowOf(BalancesAndCurrencies(listOf(balance), emptyList())))
         whenever(exchangeRateDao.getRateFlow(any())).thenAnswer { invocation ->
             val code = invocation.getArgument<String>(0)
             rates.map { list -> list.firstOrNull { it.currencyCode == code }?.rate }
@@ -60,65 +59,116 @@ class BalanceViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun prefsWith(homeCurrency: String?): Preferences =
-        if (homeCurrency == null) preferencesOf()
-        else preferencesOf(stringPreferencesKey(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY) to homeCurrency)
+    private fun prefsWith(homeCurrency: String): Preferences =
+        preferencesOf(stringPreferencesKey(TripSplitConstants.PREF_KEY_LOCAL_CURRENCY) to homeCurrency)
 
-    private fun createViewModel(homeCurrency: String?): BalanceViewModel =
-        createViewModel(flowOf(prefsWith(homeCurrency)))
+    private fun createViewModel(
+        homeCurrency: String,
+        tripCurrency: String = "EUR"
+    ): BalanceViewModel = createViewModel(flowOf(prefsWith(homeCurrency)), tripCurrency)
 
-    private fun createViewModel(prefs: Flow<Preferences>): BalanceViewModel {
+    private fun createViewModel(prefs: Flow<Preferences>, tripCurrency: String = "EUR"): BalanceViewModel {
+        whenever(balanceRepository.getBalancesAndCurrencies(1L)).thenReturn(
+            flowOf(
+                BalancesAndCurrencies(
+                    listOf(balance.copy(amountCurrency = tripCurrency)), emptyList(), tripCurrency
+                )
+            )
+        )
         whenever(dataStore.data).thenReturn(prefs)
-        return BalanceViewModel(balanceRepository, exchangeRateDao, dataStore, SavedStateHandle(mapOf("tripId" to 1L)))
+        return BalanceViewModel(
+            balanceRepository, exchangeRateDao, CurrencyPreference(dataStore),
+            SavedStateHandle(mapOf("tripId" to 1L))
+        )
     }
 
     @Test
-    fun `missing home rate shows rates unavailable without crashing`() = runTest {
+    fun `open balances before first sync shows trip currency without approximate values`() = runTest {
         val vm = createViewModel("UAH")
 
-        assertThat(vm.uiState.value.ratesAvailable).isFalse()
-        assertThat(vm.uiState.value.balances).isEmpty()
-    }
-
-    @Test
-    fun `rate arriving later makes converted balances appear`() = runTest {
-        val vm = createViewModel("UAH")
-        assertThat(vm.uiState.value.ratesAvailable).isFalse()
-
-        rates.value = listOf(ExchangeRate("UAH", "USD", BigDecimal("40")))
-
-        assertThat(vm.uiState.value.ratesAvailable).isTrue()
         val shown = vm.uiState.value.balances.single()
-        assertThat(shown.amount).isEqualTo(BigDecimal("400"))
-        assertThat(shown.amountCurrency).isEqualTo("UAH")
+        assertThat(shown.amount).isEqualTo(BigDecimal("10.00"))
+        assertThat(shown.amountCurrency).isEqualTo("EUR")
+        assertThat(shown.approxAmount).isNull()
+        assertThat(shown.approxCurrency).isNull()
     }
 
     @Test
-    fun `USD home currency shows balances with an empty rate table`() = runTest {
+    fun `rates arriving later make approximate values appear`() = runTest {
+        val vm = createViewModel("UAH")
+        assertThat(vm.uiState.value.balances.single().approxAmount).isNull()
+
+        rates.value = listOf(
+            ExchangeRate("EUR", "USD", BigDecimal("0.5")),
+            ExchangeRate("UAH", "USD", BigDecimal("40"))
+        )
+
+        val shown = vm.uiState.value.balances.single()
+        assertThat(shown.amount).isEqualTo(BigDecimal("10.00"))
+        assertThat(shown.approxAmount).isEqualTo(BigDecimal("800.00"))
+        assertThat(shown.approxCurrency).isEqualTo("UAH")
+    }
+
+    @Test
+    fun `only the home rate missing hides approximate values`() = runTest {
+        rates.value = listOf(ExchangeRate("EUR", "USD", BigDecimal("0.5")))
+
+        val vm = createViewModel("UAH")
+
+        assertThat(vm.uiState.value.balances.single().approxAmount).isNull()
+    }
+
+    @Test
+    fun `USD home currency with a missing trip rate shows no approximate values`() = runTest {
         val vm = createViewModel("USD")
 
-        assertThat(vm.uiState.value.ratesAvailable).isTrue()
-        assertThat(vm.uiState.value.balances.single().amount).isEqualTo(BigDecimal("10"))
+        val shown = vm.uiState.value.balances.single()
+        assertThat(shown.amount).isEqualTo(BigDecimal("10.00"))
+        assertThat(shown.approxAmount).isNull()
     }
 
     @Test
-    fun `absent home currency preference defaults to USD`() = runTest {
-        val vm = createViewModel(null)
+    fun `home currency equal to trip currency shows trip currency only`() = runTest {
+        val vm = createViewModel("UAH", tripCurrency = "UAH")
 
-        assertThat(vm.uiState.value.ratesAvailable).isTrue()
+        val shown = vm.uiState.value.balances.single()
+        assertThat(shown.amountCurrency).isEqualTo("UAH")
+        assertThat(shown.approxAmount).isNull()
     }
 
     @Test
-    fun `changing home currency preference updates converted balances`() = runTest {
-        val prefs = MutableStateFlow(prefsWith("USD"))
-        rates.value = listOf(ExchangeRate("UAH", "USD", BigDecimal("40")))
+    fun `rate sync changes only the approximate value`() = runTest {
+        rates.value = listOf(
+            ExchangeRate("EUR", "USD", BigDecimal("0.5")),
+            ExchangeRate("UAH", "USD", BigDecimal("40"))
+        )
+        val vm = createViewModel("UAH")
+        assertThat(vm.uiState.value.balances.single().approxAmount).isEqualTo(BigDecimal("800.00"))
+
+        rates.value = listOf(
+            ExchangeRate("EUR", "USD", BigDecimal("0.5")),
+            ExchangeRate("UAH", "USD", BigDecimal("50"))
+        )
+
+        val shown = vm.uiState.value.balances.single()
+        assertThat(shown.amount).isEqualTo(BigDecimal("10.00"))
+        assertThat(shown.approxAmount).isEqualTo(BigDecimal("1000.00"))
+    }
+
+    @Test
+    fun `changing home currency preference updates approximate values`() = runTest {
+        rates.value = listOf(
+            ExchangeRate("EUR", "USD", BigDecimal("0.5")),
+            ExchangeRate("UAH", "USD", BigDecimal("40"))
+        )
+        val prefs = MutableStateFlow(prefsWith("EUR"))
         val vm = createViewModel(prefs)
-        assertThat(vm.uiState.value.balances.single().amountCurrency).isEqualTo("USD")
+        assertThat(vm.uiState.value.balances.single().approxAmount).isNull()
 
         prefs.value = prefsWith("UAH")
 
         val shown = vm.uiState.value.balances.single()
-        assertThat(shown.amount).isEqualTo(BigDecimal("400"))
-        assertThat(shown.amountCurrency).isEqualTo("UAH")
+        assertThat(shown.approxAmount).isEqualTo(BigDecimal("800.00"))
+        assertThat(shown.approxCurrency).isEqualTo("UAH")
     }
 }

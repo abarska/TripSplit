@@ -14,7 +14,6 @@ import javax.inject.Inject
 class BalanceRepository @Inject constructor(
     private val balanceDao: BalanceDao, private val currencyDao: TripCurrencyDao
 ) {
-    // TODO(drift-free-balances 7.1): expose balanceMinor and the trip currency to the ViewModel directly
     fun getBalancesAndCurrencies(tripId: Long): Flow<BalancesAndCurrencies> = combine(
         balanceDao.getBalances(tripId),
         balanceDao.getTripCurrency(tripId).filterNotNull(),
@@ -30,7 +29,8 @@ class BalanceRepository @Inject constructor(
                     amountCurrency = tripCurrency
                 )
             },
-            currencies = currencies
+            currencies = currencies,
+            tripCurrency = tripCurrency
         )
     }
 }

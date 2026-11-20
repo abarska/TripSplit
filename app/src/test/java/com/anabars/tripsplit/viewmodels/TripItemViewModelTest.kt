@@ -27,6 +27,7 @@ class TripItemViewModelTest {
         whenever(repository.getExpensesWithParticipantsByTrip(1L)).thenReturn(flowOf(emptyList()))
         whenever(repository.getPaymentsByTripId(1L)).thenReturn(flowOf(emptyList()))
         whenever(repository.getParticipantsByTripId(1L)).thenReturn(flowOf(emptyList()))
+        whenever(repository.getTripDefaultCurrencyFlow(1L)).thenReturn(flowOf("EUR"))
     }
 
     @After

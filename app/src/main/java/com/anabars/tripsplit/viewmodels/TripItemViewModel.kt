@@ -79,6 +79,14 @@ class TripItemViewModel @Inject constructor(
                 initialValue = emptyList()
             )
 
+    val tripCurrency: StateFlow<String?> =
+        tripItemRepository.getTripDefaultCurrencyFlow(tripId)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = null
+            )
+
     private fun deleteExpenseById(expenseId: Long) {
         viewModelScope.launch { tripItemRepository.deleteExpenseById(expenseId) }
     }

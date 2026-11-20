@@ -26,6 +26,7 @@ import java.time.LocalDate
 fun TripExpensesContent(
     result: GroupedResult<LocalDate, ExpenseWithParticipants>,
     tripParticipants: List<TripParticipant>,
+    tripCurrency: String?,
     onDeleteClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -56,6 +57,7 @@ fun TripExpensesContent(
                     expense = expenseWithParticipants.expense,
                     paidFor = expenseWithParticipants.participants,
                     tripParticipants = tripParticipants,
+                    tripCurrency = tripCurrency,
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                     isExpanded = isExpanded,
                     onExpandToggle = {

@@ -12,17 +12,19 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripPayment
 import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.utils.getFakeForeignPayment
 import com.anabars.tripsplit.ui.utils.getFakePayment
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.widgets.TsBaseItemRow
 import com.anabars.tripsplit.ui.widgets.TsBaseVisiblePart
-import com.anabars.tripsplit.utils.formatters.formatAsCurrency
+import com.anabars.tripsplit.utils.MoneyMath
 
 @Composable
 fun TsPaymentItemRow(
     payment: TripPayment,
     fromParticipant: TripParticipant?,
     toParticipant: TripParticipant?,
+    tripCurrency: String?,
     modifier: Modifier = Modifier,
     isExpanded: Boolean = false,
     onExpandToggle: () -> Unit,
@@ -33,9 +35,7 @@ fun TsPaymentItemRow(
         isExpanded = isExpanded,
         onDeleteClick = onDeleteClick
     ) {
-        val pattern = stringResource(R.string.currency_formatting_pattern)
-        // TODO(drift-free-balances 8.1): format with MoneyMath using the currency's fraction digits
-        val amountText = "${payment.currency} ${(payment.amountMinor / 100.0).formatAsCurrency(pattern)}"
+        val amountText = "${payment.currency} ${MoneyMath.format(payment.amountMinor, payment.currency)}"
         TsBaseVisiblePart(
             icon = Icons.AutoMirrored.Outlined.CompareArrows,
             iconContentDescription = stringResource(R.string.payment),
@@ -44,6 +44,15 @@ fun TsPaymentItemRow(
             action = onExpandToggle
         ) {
             TsInfoText(textRes = R.string.payment)
+            if (tripCurrency != null && payment.currency != tripCurrency) {
+                TsInfoText(
+                    text = stringResource(
+                        R.string.item_trip_total,
+                        tripCurrency,
+                        MoneyMath.format(payment.tripAmountMinor, tripCurrency)
+                    )
+                )
+            }
             fromParticipant?.let {
                 TsInfoText(text = "${stringResource(R.string.from)} ${it.name}")
             }
@@ -61,10 +70,24 @@ private fun TsPaymentItemRowPreviewCollapsed() {
         payment = getFakePayment(),
         fromParticipant = getFakeTripParticipants()[0],
         toParticipant = getFakeTripParticipants()[1],
+        tripCurrency = "EUR",
         modifier = Modifier.padding(8.dp),
         isExpanded = false,
         onExpandToggle = {},
         onDeleteClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TsPaymentItemRowPreviewForeignCurrency() {
+    TsPaymentItemRow(
+        payment = getFakeForeignPayment(),
+        fromParticipant = getFakeTripParticipants()[0],
+        toParticipant = getFakeTripParticipants()[1],
+        tripCurrency = "EUR",
+        modifier = Modifier.padding(8.dp),
+        onExpandToggle = {}
     )
 }
 
@@ -75,6 +98,7 @@ private fun TsPaymentItemRowPreviewExpanded() {
         payment = getFakePayment(),
         fromParticipant = getFakeTripParticipants()[1],
         toParticipant = getFakeTripParticipants()[0],
+        tripCurrency = "EUR",
         modifier = Modifier.padding(8.dp),
         isExpanded = true,
         onExpandToggle = {},

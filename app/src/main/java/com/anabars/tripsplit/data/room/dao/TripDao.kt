@@ -42,6 +42,9 @@ interface TripDao {
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :tripId")
     fun getTripDetailsData(tripId: Long): TripDetails?
 
+    @Query("SELECT defaultCurrency FROM ${TripSplitConstants.TRIP_TABLE} WHERE id = :tripId")
+    fun getDefaultCurrencyFlow(tripId: Long): Flow<String?>
+
     @Query("UPDATE ${TripSplitConstants.TRIP_TABLE}  SET status = :status WHERE id = :tripId")
     suspend fun updateTripStatus(tripId: Long, status: TripStatus): Int
 }

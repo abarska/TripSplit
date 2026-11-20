@@ -27,6 +27,7 @@ fun TripPaymentsContent(
     modifier: Modifier = Modifier,
     result: GroupedResult<LocalDate, TripPayment>,
     tripParticipants: List<TripParticipant>,
+    tripCurrency: String?,
     onDeleteClick: (Long) -> Unit
 ) {
     val savedMap: Map<Long, Boolean> =
@@ -55,6 +56,7 @@ fun TripPaymentsContent(
                     payment = payment,
                     fromParticipant = tripParticipants.firstOrNull { it.id == payment.fromUserId },
                     toParticipant = tripParticipants.firstOrNull { it.id == payment.toUserId },
+                    tripCurrency = tripCurrency,
                     modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
                     isExpanded = isExpanded,
                     onExpandToggle = {

@@ -45,6 +45,9 @@ class TripItemRepository @Inject constructor(
     fun getActiveParticipantsByTripId(tripId: Long): Flow<List<TripParticipant>> =
         tripParticipantDao.getActiveParticipantsByTripId(tripId)
 
+    fun getTripDefaultCurrencyFlow(tripId: Long): Flow<String?> =
+        tripDao.getDefaultCurrencyFlow(tripId)
+
     suspend fun getTripDefaultCurrency(tripId: Long): String =
         tripDao.getTripById(tripId).defaultCurrency
 

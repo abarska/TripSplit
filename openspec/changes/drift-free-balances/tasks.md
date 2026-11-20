@@ -40,8 +40,8 @@
 
 ## 8. Item rows and Trip Overview
 
-- [ ] 8.1 Show the original amount and currency in `TsExpenseItemRow` and `TsPaymentItemRow`, plus the frozen trip-currency total when it differs. Update `FakePreviewData`. Verify in the Compose previews and on the device
-- [ ] 8.2 Make `TripOverviewViewModel` sum `tripAmountMinor` per category in the trip currency, and remove the `UnavailableData` and `MissingCurrencies` states and their UI. Verify with a ViewModel unit test, and on the device with an empty rate table (the Overview still shows totals)
+- [x] 8.1 Show the original amount and currency in `TsExpenseItemRow` and `TsPaymentItemRow`, plus the frozen trip-currency total when it differs. Update `FakePreviewData`. Verify in the Compose previews and on the device
+- [x] 8.2 Make `TripOverviewViewModel` sum `tripAmountMinor` per category in the trip currency, and remove the `UnavailableData` and `MissingCurrencies` states and their UI. Verify with a ViewModel unit test, and on the device with an empty rate table (the Overview still shows totals)
 
 ## 9. End-to-end check and docs
 

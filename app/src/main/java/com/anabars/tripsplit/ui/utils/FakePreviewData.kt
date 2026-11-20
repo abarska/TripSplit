@@ -55,6 +55,13 @@ fun getFakeTripExpense() = TripExpense(
     tripId = 0
 )
 
+fun getFakeForeignTripExpense() = getFakeTripExpense().copy(
+    amountMinor = 10000,
+    currency = "USD",
+    rateToTrip = BigDecimal("0.9137"),
+    tripAmountMinor = 9137
+)
+
 fun getFakeAddExpensePayerParticipantsState() = PayerParticipantsState(
     tripParticipants = getFakeTripParticipants(),
     expensePayerId = 1,
@@ -76,12 +83,6 @@ fun getFakeTripWithDetails() = TripDetails(
     currencies = getFakeTripCurrencies()
 )
 
-fun getFakeExpenseCategorizationResultUnavailableData() =
-    ExpenseCategorizationResult.UnavailableData
-
-fun getFakeExpenseCategorizationResultMissingCurrencies() =
-    ExpenseCategorizationResult.MissingCurrencies(getFakeTripCurrencies().map { it.code })
-
 fun getFakeExpenseCategorizationResultInsufficientData() =
     ExpenseCategorizationResult.Success(
         data = getFakePieChartData()
@@ -102,6 +103,13 @@ fun getFakePayment() = TripPayment(
     rateToTrip = BigDecimal.ONE,
     tripAmountMinor = 3000,
     timestamp = System.currentTimeMillis()
+)
+
+fun getFakeForeignPayment() = getFakePayment().copy(
+    amountMinor = 10000,
+    currency = "USD",
+    rateToTrip = BigDecimal("0.9137"),
+    tripAmountMinor = 9137
 )
 
 fun getFakeBalanceWithNameAndStatus(amount: Int) =

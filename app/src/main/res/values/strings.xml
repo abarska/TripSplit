@@ -75,9 +75,7 @@
     <string name="error_missing_payer">Please select payer</string>
     <string name="error_missing_payee">Please select payee</string>
     <string name="error_missing_participants">Please select at least one participant</string>
-    <string name="error_exchange_rates_unavailable">Unable to display data: unavailable exchange rates</string>
     <string name="error_save_exchange_rates_unavailable">Exchange rates are not available yet. Please try again once they are loaded</string>
-    <string name="error_exchange_rates_missing">Unable to display data: missing exchange rates for </string>
 
     // used for dialogs
     <string name="save_changes_dialog_title">Save Changes</string>
@@ -127,6 +125,7 @@
 
     // missing data placeholders
     <string name="balance_participant_removed">removed</string>
+    <string name="item_trip_total">= %1$s %2$s</string>
     <string name="balance_approx_value">≈ %1$s %2$s</string>
     <string name="under_construction">Under Construction</string>
     <string name="placeholder_expenses">Your expenses will be shown here</string>

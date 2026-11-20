@@ -3,11 +3,11 @@ package com.anabars.tripsplit.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anabars.tripsplit.data.room.entity.ExchangeRate
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.model.TripDetails
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.model.ExpenseCategory
+import com.anabars.tripsplit.utils.MoneyMath
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -19,9 +19,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,40 +46,22 @@ class TripOverviewViewModel @Inject constructor(
                 initialValue = emptyList()
             )
 
-    val exchangeRates: StateFlow<List<ExchangeRate>> =
-        tripRepository.getExchangeRatesFlow()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     val expenseCategorizationResult: StateFlow<ExpenseCategorizationResult> =
-        combine(expenses, exchangeRates) { expensesList, ratesList ->
-            Pair(expensesList, ratesList)
+        combine(expenses, tripDetails.filterNotNull()) { expensesList, details ->
+            Pair(expensesList, details.trip.defaultCurrency)
         }
             .debounce(100) // reduce flicker
-            .flatMapLatest { (expensesList, ratesList) ->
+            .flatMapLatest { (expensesList, tripCurrency) ->
                 flow {
                     emit(ExpenseCategorizationResult.Loading)
                     delay(100) // show spinner briefly
-                    val result = if (ratesList.isEmpty()) {
-                        ExpenseCategorizationResult.UnavailableData
-                    } else {
-                        val rateMap = ratesList.associateBy { it.currencyCode }
-                        val missingCurrencies = expensesList
-                            .map { it.currency }
-                            .filter { it !in rateMap }
-                            .distinct()
-                        if (missingCurrencies.isNotEmpty()) {
-                            ExpenseCategorizationResult.MissingCurrencies(missingCurrencies)
-                        } else {
-                            val grouped = expensesList.groupBy { it.category }
-                                .mapValues { (_, expenses) ->
-                                    // TODO(drift-free-balances 8.2): sum tripAmountMinor in the trip currency
-                                    expenses.sumOf { it.tripAmountMinor } / 100.0
-                                }
-                            ExpenseCategorizationResult.Success(grouped)
+                    val digits = MoneyMath.fractionDigits(tripCurrency)
+                    val grouped = expensesList.groupBy { it.category }
+                        .mapValues { (_, expenses) ->
+                            BigDecimal.valueOf(expenses.sumOf { it.tripAmountMinor }, digits).toDouble()
                         }
-                    }
-                    emit(result)
+                    emit(ExpenseCategorizationResult.Success(grouped))
                 }
             }
             .stateIn(
@@ -98,9 +82,6 @@ class TripOverviewViewModel @Inject constructor(
 
 sealed class ExpenseCategorizationResult {
     object Loading : ExpenseCategorizationResult()
-    object UnavailableData : ExpenseCategorizationResult()
-    data class MissingCurrencies(val missingCurrencies: List<String>) :
-        ExpenseCategorizationResult()
     data class Success(val data: Map<ExpenseCategory, Double>) :
         ExpenseCategorizationResult()
 }

@@ -16,6 +16,7 @@ fun TripPaymentsTab(modifier: Modifier = Modifier) {
     val viewModel: TripItemViewModel = hiltViewModel()
     val groupedPaymentsResult by viewModel.groupedPaymentsResult.collectAsState()
     val tripParticipants by viewModel.tripParticipants.collectAsState()
+    val tripCurrency by viewModel.tripCurrency.collectAsState()
 
     TripItemTabContent(
         result = groupedPaymentsResult,
@@ -24,6 +25,7 @@ fun TripPaymentsTab(modifier: Modifier = Modifier) {
             TripPaymentsContent(
                 result = GroupedResult.Success(data),
                 tripParticipants = tripParticipants,
+                tripCurrency = tripCurrency,
                 onDeleteClick = { viewModel.onIntent(DeleteItemIntent.DeletePaymentItem(it)) }
             )
         },

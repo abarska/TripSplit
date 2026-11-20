@@ -10,17 +10,19 @@ import com.anabars.tripsplit.R
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.ui.components.TsInfoText
+import com.anabars.tripsplit.ui.utils.getFakeForeignTripExpense
 import com.anabars.tripsplit.ui.utils.getFakeTripExpense
 import com.anabars.tripsplit.ui.utils.getFakeTripParticipants
 import com.anabars.tripsplit.ui.widgets.TsBaseItemRow
 import com.anabars.tripsplit.ui.widgets.TsBaseVisiblePart
-import com.anabars.tripsplit.utils.formatters.formatAsCurrency
+import com.anabars.tripsplit.utils.MoneyMath
 
 @Composable
 fun TsExpenseItemRow(
     expense: TripExpense,
     paidFor: List<TripParticipant>,
     tripParticipants: List<TripParticipant>,
+    tripCurrency: String?,
     modifier: Modifier = Modifier,
     isExpanded: Boolean = false,
     onExpandToggle: () -> Unit,
@@ -31,9 +33,7 @@ fun TsExpenseItemRow(
         isExpanded = isExpanded,
         onDeleteClick = onDeleteClick
     ) {
-        val pattern = stringResource(R.string.currency_formatting_pattern)
-        // TODO(drift-free-balances 8.1): format with MoneyMath using the currency's fraction digits
-        val amountText = "${expense.currency} ${(expense.amountMinor / 100.0).formatAsCurrency(pattern)}"
+        val amountText = "${expense.currency} ${MoneyMath.format(expense.amountMinor, expense.currency)}"
         TsBaseVisiblePart(
             icon = expense.category.icon,
             iconContentDescription = stringResource(R.string.expense_category_icon),
@@ -42,6 +42,15 @@ fun TsExpenseItemRow(
             action = onExpandToggle
         ) {
             TsInfoText(textRes = expense.category.titleRes)
+            if (tripCurrency != null && expense.currency != tripCurrency) {
+                TsInfoText(
+                    text = stringResource(
+                        R.string.item_trip_total,
+                        tripCurrency,
+                        MoneyMath.format(expense.tripAmountMinor, tripCurrency)
+                    )
+                )
+            }
             val payer = tripParticipants.find { it.id == expense.paidById }
             val paidForText = paidFor.joinToString(", ") { it.name }
             payer?.let {
@@ -59,6 +68,20 @@ private fun TsExpenseItemRowPreviewCollapsed() {
         expense = getFakeTripExpense(),
         paidFor = getFakeTripParticipants(),
         tripParticipants = getFakeTripParticipants(),
+        tripCurrency = "EUR",
+        onExpandToggle = {},
+        modifier = Modifier.padding(8.dp)
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TsExpenseItemRowPreviewForeignCurrency() {
+    TsExpenseItemRow(
+        expense = getFakeForeignTripExpense(),
+        paidFor = getFakeTripParticipants(),
+        tripParticipants = getFakeTripParticipants(),
+        tripCurrency = "EUR",
         onExpandToggle = {},
         modifier = Modifier.padding(8.dp)
     )
@@ -71,6 +94,7 @@ private fun TsExpenseItemRowPreviewExpanded() {
         expense = getFakeTripExpense(),
         paidFor = getFakeTripParticipants(),
         tripParticipants = getFakeTripParticipants(),
+        tripCurrency = "EUR",
         isExpanded = true,
         onExpandToggle = {},
         modifier = Modifier.padding(8.dp)

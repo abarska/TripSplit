@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.anabars.tripsplit.common.TripSplitConstants.TRIP_PAYMENTS_TABLE
 import com.anabars.tripsplit.data.room.entity.TripPayment
 import kotlinx.coroutines.flow.Flow
@@ -22,4 +23,10 @@ interface TripPaymentDao {
 
     @Query("SELECT * FROM $TRIP_PAYMENTS_TABLE WHERE id = :paymentId")
     suspend fun getPaymentById(paymentId: Long): TripPayment?
+
+    @Query("SELECT * FROM $TRIP_PAYMENTS_TABLE WHERE tripId = :tripId")
+    suspend fun getPaymentsByTripIdAsList(tripId: Long): List<TripPayment>
+
+    @Update
+    suspend fun updatePayment(payment: TripPayment)
 }

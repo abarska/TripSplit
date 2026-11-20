@@ -7,6 +7,7 @@ import com.anabars.tripsplit.data.room.dao.TripCurrencyDao
 import com.anabars.tripsplit.data.room.dao.TripDao
 import com.anabars.tripsplit.data.room.dao.TripExpensesDao
 import com.anabars.tripsplit.data.room.dao.TripParticipantDao
+import com.anabars.tripsplit.data.room.dao.TripPaymentDao
 import com.anabars.tripsplit.data.room.entity.CurrencyStatus
 import com.anabars.tripsplit.data.room.entity.ExchangeRate
 import com.anabars.tripsplit.data.room.entity.ParticipantStatus
@@ -16,16 +17,21 @@ import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.entity.TripStatus
 import com.anabars.tripsplit.data.room.model.TripDetails
+import com.anabars.tripsplit.utils.MoneyMath
+import com.anabars.tripsplit.utils.ShareAllocator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.flowOn
+import java.math.BigDecimal
+import java.math.MathContext
 import javax.inject.Inject
 
 class TripRepository @Inject constructor(
     private val db: TripSplitDatabase,
     private val tripDao: TripDao,
     private val tripExpensesDao: TripExpensesDao,
+    private val tripPaymentDao: TripPaymentDao,
     private val participantDao: TripParticipantDao,
     private val exchangeRateDao: ExchangeRateDao,
     private val currencyDao: TripCurrencyDao
@@ -39,7 +45,12 @@ class TripRepository @Inject constructor(
         trip: Trip,
         participants: List<TripParticipant>,
         currencyCodes: List<String>
-    ) = db.withTransaction {
+    ): TripItemResult = db.withTransaction {
+        val switch = if (tripId == null) null else {
+            val oldCurrency = tripDao.getTripById(tripId).defaultCurrency
+            planSwitch(tripId, oldCurrency, trip.defaultCurrency)
+                ?: return@withTransaction TripItemResult.MissingExchangeRate
+        }
         val finalTripId =
             if (tripId == null) {
                 tripDao.insertTrip(trip)
@@ -50,6 +61,54 @@ class TripRepository @Inject constructor(
 
         handleParticipants(tripId = finalTripId, incomingParticipants = participants)
         handleCurrencies(tripId = finalTripId, incomingCurrencyCodes = currencyCodes)
+        if (switch != null && switch.rate != null) {
+            applySwitch(finalTripId, switch.newCurrency, switch.rate)
+        }
+        TripItemResult.Success
+    }
+
+    private class CurrencySwitch(val newCurrency: String, val rate: BigDecimal?)
+
+    /**
+     * Returns the plan for the default currency of the trip, with a null rate when nothing needs converting,
+     * or null when the trip has items and a rate needed for the switch is not stored.
+     */
+    private suspend fun planSwitch(tripId: Long, oldCurrency: String, newCurrency: String): CurrencySwitch? {
+        val noConversion = CurrencySwitch(newCurrency, null)
+        if (oldCurrency == newCurrency) return noConversion
+        if (tripExpensesDao.getExpensesByTripIdAsList(tripId).isEmpty() &&
+            tripPaymentDao.getPaymentsByTripIdAsList(tripId).isEmpty()
+        ) return noConversion
+        val fromUsdRate = exchangeRateDao.getRateForCurrency(oldCurrency) ?: return null
+        val toUsdRate = exchangeRateDao.getRateForCurrency(newCurrency) ?: return null
+        return CurrencySwitch(newCurrency, MoneyMath.crossRate(fromUsdRate, toUsdRate))
+    }
+
+    /** Recomputes every item from its original amount, so cents never compound across repeated switches. */
+    private suspend fun applySwitch(tripId: Long, newCurrency: String, switchRate: BigDecimal) {
+        fun newRate(currency: String, rateToTrip: BigDecimal) =
+            if (currency == newCurrency) BigDecimal.ONE
+            else rateToTrip.multiply(switchRate, MathContext.DECIMAL128)
+
+        for (expense in tripExpensesDao.getExpensesByTripIdAsList(tripId)) {
+            val rate = newRate(expense.currency, expense.rateToTrip)
+            val total = MoneyMath.convert(expense.amountMinor, expense.currency, newCurrency, rate)
+            val oldShares = tripExpensesDao.getSharesByExpenseId(expense.id)
+            val newShares = ShareAllocator.allocate(
+                total = total,
+                weights = oldShares.associate { it.participantId to it.weight },
+                payerId = expense.paidById
+            )
+            tripExpensesDao.updateExpense(expense.copy(rateToTrip = rate, tripAmountMinor = total))
+            tripExpensesDao.saveShares(
+                oldShares.map { it.copy(shareMinor = newShares.getValue(it.participantId)) }
+            )
+        }
+        for (payment in tripPaymentDao.getPaymentsByTripIdAsList(tripId)) {
+            val rate = newRate(payment.currency, payment.rateToTrip)
+            val total = MoneyMath.convert(payment.amountMinor, payment.currency, newCurrency, rate)
+            tripPaymentDao.updatePayment(payment.copy(rateToTrip = rate, tripAmountMinor = total))
+        }
     }
 
     private suspend fun handleCurrencies(

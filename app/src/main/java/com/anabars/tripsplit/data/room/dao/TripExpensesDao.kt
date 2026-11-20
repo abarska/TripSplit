@@ -5,6 +5,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
+import com.anabars.tripsplit.common.TripSplitConstants.EXPENSE_SHARES_TABLE
 import com.anabars.tripsplit.common.TripSplitConstants.TRIP_EXPENSES_TABLE
 import com.anabars.tripsplit.data.room.entity.ExpenseShare
 import com.anabars.tripsplit.data.room.entity.TripExpense
@@ -30,6 +32,16 @@ interface TripExpensesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveShares(shares: List<ExpenseShare>)
+
+    @Query("SELECT * FROM $TRIP_EXPENSES_TABLE WHERE tripId = :tripId")
+    suspend fun getExpensesByTripIdAsList(tripId: Long): List<TripExpense>
+
+    @Query("SELECT * FROM $EXPENSE_SHARES_TABLE WHERE expenseId = :expenseId")
+    suspend fun getSharesByExpenseId(expenseId: Long): List<ExpenseShare>
+
+    // an in-place update, because replacing the row would cascade-delete its shares
+    @Update
+    suspend fun updateExpense(expense: TripExpense)
 
     @Query("DELETE FROM $TRIP_EXPENSES_TABLE WHERE id = :expenseId")
     suspend fun deleteExpenseById(expenseId: Long)

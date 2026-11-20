@@ -17,7 +17,7 @@
 
 - [x] 3.1 Rewrite `TripItemRepository.saveExpense` and `savePayment` (design §4): load the trip currency, freeze `rateToTrip` and `tripAmountMinor`, snapshot the weights, allocate the shares, and return `MissingExchangeRate` before any write when a needed rate is absent. Verify with `TripItemRepositoryTest` cases for each scenario in the modified "Saving requires an available exchange rate" requirement and for "Foreign-currency expense" and "Expense in the trip currency"
 - [x] 3.2 Make `deleteExpenseById` and `deletePaymentById` delete the rows only, with no rate lookup, and remove `MissingExchangeRate` handling from the delete path in `TripItemViewModel`. Verify with a repository test that a delete with an empty rate table succeeds
-- [ ] 3.3 Update `ExpenseWithParticipants` to relate through `ExpenseShare`, and add `@Transaction` to `getExpenseWithParticipantsById`. Verify that the Expenses tab still lists the sharers on the device
+- [x] 3.3 Update `ExpenseWithParticipants` to relate through `ExpenseShare`, and add `@Transaction` to `getExpenseWithParticipantsById`. Verify that the Expenses tab still lists the sharers on the device
 
 ## 4. Derived balances
 

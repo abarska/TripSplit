@@ -32,3 +32,5 @@ Balances are kept as running USD totals. Every save adds a delta, and every dele
 - **Tests:** `BalanceCalculatorTest` is rewritten, and new tests cover allocation, currency switching, the balance query and the ViewModels.
 - **Data:** every existing local trip is lost on upgrade. This is acceptable because the app is unreleased.
 - **Known-issues list:** this resolves items 3, 4 and 7, and partly 11, 15 and 21 (see the auto-memory list).
+
+some stupid text here

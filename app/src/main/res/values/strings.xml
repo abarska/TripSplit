@@ -75,6 +75,8 @@
     <string name="error_missing_payee">Please select payee</string>
     <string name="error_missing_participants">Please select at least one participant</string>
     <string name="error_exchange_rates_unavailable">Unable to display data: unavailable exchange rates</string>
+    <string name="error_save_exchange_rates_unavailable">Exchange rates are not available yet. Please try again once they are loaded</string>
+    <string name="error_delete_exchange_rates_unavailable">Exchange rates are not available, so this item cannot be deleted yet. Please try again once they are loaded</string>
     <string name="error_exchange_rates_missing">Unable to display data: missing exchange rates for </string>
 
     // used for dialogs

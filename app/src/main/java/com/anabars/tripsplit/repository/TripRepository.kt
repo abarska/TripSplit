@@ -1,6 +1,7 @@
 package com.anabars.tripsplit.repository
 
-import androidx.room.Transaction
+import androidx.room.withTransaction
+import com.anabars.tripsplit.data.room.TripSplitDatabase
 import com.anabars.tripsplit.data.room.dao.ExchangeRateDao
 import com.anabars.tripsplit.data.room.dao.TripCurrencyDao
 import com.anabars.tripsplit.data.room.dao.TripDao
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class TripRepository @Inject constructor(
+    private val db: TripSplitDatabase,
     private val tripDao: TripDao,
     private val tripExpensesDao: TripExpensesDao,
     private val participantDao: TripParticipantDao,
@@ -32,13 +34,12 @@ class TripRepository @Inject constructor(
     fun getTripsWithStatuses(statuses: List<TripStatus>) =
         tripDao.getTripsWithStatuses(statuses).flowOn(Dispatchers.IO).conflate()
 
-    @Transaction
     suspend fun saveTrip(
         tripId: Long?,
         trip: Trip,
         participants: List<TripParticipant>,
         currencyCodes: List<String>
-    ) {
+    ) = db.withTransaction {
         val finalTripId =
             if (tripId == null) {
                 tripDao.insertTrip(trip)

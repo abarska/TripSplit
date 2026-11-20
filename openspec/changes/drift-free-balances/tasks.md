@@ -25,7 +25,7 @@
 
 ## 5. Trip default currency
 
-- [ ] 5.1 Rewrite `TripRepository.saveTrip` to use `db.withTransaction` instead of the ineffective `@Transaction`, and persist `defaultCurrency`. Verify with repository unit tests that the default currency is saved and that a failure partway through the save writes nothing
+- [x] 5.1 Rewrite `TripRepository.saveTrip` to use `db.withTransaction` instead of the ineffective `@Transaction`, and persist `defaultCurrency`. Verify with repository unit tests that the default currency is saved and that a failure partway through the save writes nothing
 - [ ] 5.2 Implement the currency switch (design §6) inside `saveTrip`, returning `MissingExchangeRate` with nothing written when either rate is missing. Verify with unit tests of the spec scenarios "Switch with mixed items" (77.66, 20.00 and 255.00 GBP), "Shares and balances follow the switch", "Switching back keeps items entered in the trip currency exact", "Switch without a rate" and "Switch on an empty trip"
 - [ ] 5.3 Update `AddTripViewModel` and the Add Trip UI: add a default marker to the currency chips, preselect the home currency for a new trip, block removing the default currency, and show the "rates not available" snackbar when the switch is refused. Verify with ViewModel unit tests, and on the device by creating a trip, making EUR the default, and confirming that EUR can't be removed
 

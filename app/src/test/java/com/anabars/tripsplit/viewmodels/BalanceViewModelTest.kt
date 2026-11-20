@@ -85,7 +85,7 @@ class BalanceViewModelTest {
         val vm = createViewModel("UAH")
         assertThat(vm.uiState.value.ratesAvailable).isFalse()
 
-        rates.value = listOf(ExchangeRate("UAH", "USD", 40.0))
+        rates.value = listOf(ExchangeRate("UAH", "USD", BigDecimal("40")))
 
         assertThat(vm.uiState.value.ratesAvailable).isTrue()
         val shown = vm.uiState.value.balances.single()
@@ -111,7 +111,7 @@ class BalanceViewModelTest {
     @Test
     fun `changing home currency preference updates converted balances`() = runTest {
         val prefs = MutableStateFlow(prefsWith("USD"))
-        rates.value = listOf(ExchangeRate("UAH", "USD", 40.0))
+        rates.value = listOf(ExchangeRate("UAH", "USD", BigDecimal("40")))
         val vm = createViewModel(prefs)
         assertThat(vm.uiState.value.balances.single().amountCurrency).isEqualTo("USD")
 

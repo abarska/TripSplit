@@ -28,6 +28,7 @@ import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.INVALID_AM
 import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.MISSING_PARTICIPANTS
 import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.MISSING_PAYEE
 import com.anabars.tripsplit.viewmodels.AddItemViewModel.AddItemError.MISSING_PAYER
+import com.anabars.tripsplit.utils.MoneyMath
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +38,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -150,8 +153,47 @@ class AddItemViewModel @Inject constructor(
         }
     }
 
-    private suspend fun save(): TripItemResult =
-        TODO("drift-free-balances 3.1/6.1: parse the amount to minor units and save through the repository")
+    // rateToTrip and tripAmountMinor are placeholders: the repository freezes the real values on save
+    private suspend fun save(): TripItemResult {
+        val amountCurrency = _amountCurrencyState.value
+        val payerParticipants = _payerParticipantsState.value
+        val currency = amountCurrency.expenseCurrencyCode
+        val amountMinor = MoneyMath.parse(amountCurrency.expenseAmount, currency)
+            ?: error("Amount is validated before saving")
+        val timestamp = amountCurrency.selectedDate
+            .atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val payerId = payerParticipants.expensePayerId
+            ?: error("Payer is validated before saving")
+
+        return when (useCase) {
+            UseCase.EXPENSE -> tripItemRepository.saveExpenseWithParticipants(
+                expense = TripExpense(
+                    paidById = payerId,
+                    amountMinor = amountMinor,
+                    currency = currency,
+                    rateToTrip = BigDecimal.ONE,
+                    tripAmountMinor = amountMinor,
+                    category = amountCurrency.selectedCategory,
+                    timestamp = timestamp,
+                    tripId = tripId
+                ),
+                participants = payerParticipants.selectedParticipants
+            )
+
+            UseCase.PAYMENT -> tripItemRepository.savePayment(
+                TripPayment(
+                    tripId = tripId,
+                    fromUserId = payerId,
+                    toUserId = payerParticipants.selectedParticipants.first().id,
+                    amountMinor = amountMinor,
+                    currency = currency,
+                    rateToTrip = BigDecimal.ONE,
+                    tripAmountMinor = amountMinor,
+                    timestamp = timestamp
+                )
+            )
+        }
+    }
 
     private suspend fun handleSaveResult(result: TripItemResult) {
         when (result) {
@@ -171,11 +213,12 @@ class AddItemViewModel @Inject constructor(
     }
 
     private fun getError(): AddItemError? {
-        val amount = _amountCurrencyState.value.expenseAmount.toDoubleOrNull()
+        val amountCurrency = _amountCurrencyState.value
+        val amount = MoneyMath.parse(amountCurrency.expenseAmount, amountCurrency.expenseCurrencyCode)
         val payer = _payerParticipantsState.value.expensePayerId
         val payees = _payerParticipantsState.value.selectedParticipants
         return when {
-            amount == null || amount <= 0.0 -> INVALID_AMOUNT
+            amount == null -> INVALID_AMOUNT
             payer == null -> MISSING_PAYER
             payees.isEmpty() -> if (useCase == UseCase.EXPENSE) MISSING_PARTICIPANTS else MISSING_PAYEE
             else -> null

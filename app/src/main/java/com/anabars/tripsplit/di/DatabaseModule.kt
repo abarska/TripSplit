@@ -29,7 +29,7 @@ object DatabaseModule {
             context,
             TripSplitDatabase::class.java,
             TripSplitConstants.TRIP_SPLIT_DATABASE
-        ).fallbackToDestructiveMigration(false).build()
+        ).fallbackToDestructiveMigrationFrom(dropAllTables = true, 1).build()
 
     @Provides
     @Singleton

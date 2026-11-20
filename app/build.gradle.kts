@@ -11,6 +11,10 @@ hilt {
     enableAggregatingTask = false
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {

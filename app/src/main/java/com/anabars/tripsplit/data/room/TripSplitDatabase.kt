@@ -30,8 +30,8 @@ import com.anabars.tripsplit.data.room.entity.TripPayment
         TripPayment::class,
         ExchangeRate::class,
         ExpenseShare::class],
-    version = 1,
-    exportSchema = false
+    version = 2,
+    exportSchema = true
 )
 @TypeConverters(DateConverter::class, ExpenseCategoryConverter::class, BigDecimalConverter::class)
 abstract class TripSplitDatabase : RoomDatabase() {

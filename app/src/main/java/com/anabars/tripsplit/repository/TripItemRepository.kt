@@ -93,9 +93,9 @@ class TripItemRepository @Inject constructor(
         return FrozenAmount(rate, MoneyMath.convert(amountMinor, currency, tripCurrency, rate))
     }
 
-    suspend fun deleteExpenseById(expenseId: Long): TripItemResult =
-        TODO("drift-free-balances 3.2: delete the expense rows only")
+    /** Deletes the expense; its shares go with it by cascade. Needs no exchange rate. */
+    suspend fun deleteExpenseById(expenseId: Long) = tripExpensesDao.deleteExpenseById(expenseId)
 
-    suspend fun deletePaymentById(paymentId: Long): TripItemResult =
-        TODO("drift-free-balances 3.2: delete the payment row only")
+    /** Deletes the payment. Needs no exchange rate. */
+    suspend fun deletePaymentById(paymentId: Long) = tripPaymentDao.deletePaymentById(paymentId)
 }

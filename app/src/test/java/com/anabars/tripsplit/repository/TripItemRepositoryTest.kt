@@ -205,4 +205,22 @@ class TripItemRepositoryTest {
         assertThat(saved.rateToTrip).isEqualTo(BigDecimal("0.9137"))
         assertThat(saved.tripAmountMinor).isEqualTo(9137L)
     }
+
+    @Test
+    fun `deleting an expense with an empty rate table deletes the row without a rate lookup`() = runTest {
+        repository.deleteExpenseById(1L)
+
+        verify(tripExpensesDao).deleteExpenseById(1L)
+        verify(exchangeRateDao, never()).getExchangeRateForCurrency(any())
+        verify(exchangeRateDao, never()).getRateForCurrency(any())
+    }
+
+    @Test
+    fun `deleting a payment with an empty rate table deletes the row without a rate lookup`() = runTest {
+        repository.deletePaymentById(1L)
+
+        verify(tripPaymentDao).deletePaymentById(1L)
+        verify(exchangeRateDao, never()).getExchangeRateForCurrency(any())
+        verify(exchangeRateDao, never()).getRateForCurrency(any())
+    }
 }

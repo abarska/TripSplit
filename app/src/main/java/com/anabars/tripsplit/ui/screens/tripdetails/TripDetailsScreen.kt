@@ -7,27 +7,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.anabars.tripsplit.ui.model.TabItem
 import com.anabars.tripsplit.ui.screens.tripdetails.tripbalancestab.TripBalancesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.tripexpensestab.TripExpensesTab
 import com.anabars.tripsplit.ui.screens.tripdetails.trippaymentstab.TripPaymentsTab
-import com.anabars.tripsplit.viewmodels.TripItemViewModel
 
 @Composable
 fun TripDetailsScreen(
     selectedTabItem: TabItem,
     onTabChanged: (TabItem) -> Unit,
-    onShowSnackbar: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
-    val viewModel: TripItemViewModel = hiltViewModel()
     val allTabs = remember { TabItem.allTabs() }
-
-    LaunchedEffect(Unit) {
-        viewModel.snackbarEffect.collect { onShowSnackbar(it) }
-    }
 
     val pagerState = rememberPagerState(
         initialPage = allTabs.indexOf(selectedTabItem).coerceAtLeast(0),

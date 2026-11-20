@@ -127,8 +127,7 @@ fun AppNavGraph(
 
             TripDetailsScreen(
                 selectedTabItem = sharedUiState.selectedTabItem,
-                onTabChanged = { sharedViewModel.onEvent(SetTabItem(it)) },
-                onShowSnackbar = onShowSnackbar
+                onTabChanged = { sharedViewModel.onEvent(SetTabItem(it)) }
             )
         }
 

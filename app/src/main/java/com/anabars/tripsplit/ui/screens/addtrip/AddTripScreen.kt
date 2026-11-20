@@ -25,6 +25,7 @@ import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddDefaultParticip
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.AddParticipantClicked
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.CurrencyAdded
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.CurrencyDeleted
+import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DefaultCurrencyChanged
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DismissAddParticipantDialog
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DismissCurrencyDialog
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.DuplicateNameDialogConfirmed
@@ -38,6 +39,7 @@ import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.TripNameChanged
 import com.anabars.tripsplit.ui.screens.addtrip.AddTripIntent.TripStatusChanged
 import com.anabars.tripsplit.viewmodels.AddTripViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddTripScreen(
@@ -58,6 +60,7 @@ fun AddTripScreen(
     LaunchedEffect(Unit) {
         viewModel.onIntent(AddDefaultParticipant(defaultParticipantName))
         updateUpButtonAction { viewModel.onIntent(AddTripIntent.BackPressed) }
+        launch { viewModel.showSnackbar.collect { onShowSnackbar(it) } }
         viewModel.navigateBackWithWarning.collectLatest { showWarning ->
             if (showWarning) onShowSnackbar(R.string.changes_discarded_warning)
             navController.popBackStack()
@@ -116,6 +119,7 @@ fun AddTripScreen(
                 onDeleteParticipant = { viewModel.onIntent(ParticipantDeleted(it)) },
                 onAddCurrencyButtonClick = { viewModel.onIntent(AddCurrencyClicked) },
                 onDeleteCurrency = { viewModel.onIntent(CurrencyDeleted(it)) },
+                onDefaultCurrencyChanged = { viewModel.onIntent(DefaultCurrencyChanged(it)) },
                 onSaveTrip = { viewModel.onIntent(SaveTripClicked) }
             )
             if (isPortrait) AddTripPortraitContent(uiState = uiState, actions = actions)

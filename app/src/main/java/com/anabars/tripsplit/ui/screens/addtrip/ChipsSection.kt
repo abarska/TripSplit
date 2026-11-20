@@ -34,6 +34,7 @@ fun <T> ChipsSection(
     itemLabel: (T) -> String,
     modifier: Modifier = Modifier,
     onItemClick: (T) -> Unit = {},
+    isDeletable: (T) -> Boolean = { it != items.first() },
 ) {
     Column(
         modifier = modifier
@@ -55,7 +56,7 @@ fun <T> ChipsSection(
                         modifier = Modifier.padding(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        if (items.first() != value) {
+                        if (isDeletable(value)) {
                             TsItemRowActionButton(button)
                         }
                         TsInfoText(text = itemLabel(value), fontSize = TsFontSize.MEDIUM)

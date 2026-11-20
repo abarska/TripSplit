@@ -73,7 +73,9 @@ fun AddTripLandscapeContent(
                 items = uiState.tripCurrencyCodes,
                 onAddItemButtonClick = actions.onAddCurrencyButtonClick,
                 onDeleteItemButtonClick = actions.onDeleteCurrency,
-                itemLabel = { it }
+                onItemClick = actions.onDefaultCurrencyChanged,
+                isDeletable = { it != uiState.defaultCurrency },
+                itemLabel = { if (it == uiState.defaultCurrency) "★ $it" else it }
             )
         }
 

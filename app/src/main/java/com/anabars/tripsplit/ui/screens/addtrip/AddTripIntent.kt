@@ -13,6 +13,7 @@ sealed class AddTripIntent {
     data class AddDefaultParticipant(val name: String) : AddTripIntent()
     data class CurrencyAdded(val currency: String) : AddTripIntent()
     data class CurrencyDeleted(val code: String) : AddTripIntent()
+    data class DefaultCurrencyChanged(val code: String) : AddTripIntent()
     data object AddCurrencyClicked : AddTripIntent()
     data object DismissCurrencyDialog : AddTripIntent()
     data object DuplicateNameDialogConfirmed : AddTripIntent()

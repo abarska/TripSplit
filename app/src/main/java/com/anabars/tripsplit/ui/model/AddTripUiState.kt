@@ -15,7 +15,8 @@ data class AddTripUiState(
     val newParticipantMultiplicator: Int = 1,
     val updatedParticipantIndex: Int = -1,
     val availableCurrencies: List<String> = emptyList(),
-    val tripCurrencyCodes: List<String> = emptyList()
+    val tripCurrencyCodes: List<String> = emptyList(),
+    val defaultCurrency: String = ""
 ) {
     val isEditParticipant: Boolean
         get() = updatedParticipantIndex >= 0

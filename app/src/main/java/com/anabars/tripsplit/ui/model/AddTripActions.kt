@@ -11,5 +11,6 @@ data class AddTripActions(
     val onDeleteParticipant: (TripParticipant) -> Unit = {},
     val onAddCurrencyButtonClick: () -> Unit = {},
     val onDeleteCurrency: (String) -> Unit = {},
+    val onDefaultCurrencyChanged: (String) -> Unit = {},
     val onSaveTrip: () -> Unit = {}
 )

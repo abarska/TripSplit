@@ -9,6 +9,7 @@ import com.anabars.tripsplit.data.preferences.CurrencyPreference
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 import com.anabars.tripsplit.data.room.model.TripDetails
+import com.anabars.tripsplit.repository.TripItemResult
 import com.anabars.tripsplit.repository.TripRepository
 import com.anabars.tripsplit.ui.dialogs.ActiveDialog
 import com.anabars.tripsplit.ui.model.AddTripUiState
@@ -45,6 +46,9 @@ class AddTripViewModel @Inject constructor(
     private val _navigateBackWithWarning = MutableSharedFlow<Boolean>()
     val navigateBackWithWarning = _navigateBackWithWarning.asSharedFlow()
 
+    private val _showSnackbar = MutableSharedFlow<Int>()
+    val showSnackbar = _showSnackbar.asSharedFlow()
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             loadTripDetailsIfEditing()
@@ -76,6 +80,9 @@ class AddTripViewModel @Inject constructor(
                 it.copy(tripCurrencyCodes = it.tripCurrencyCodes + localCurrencyCode)
             }
         }
+        if (tripId == null && localCurrencyCode.isNotBlank()) {
+            _uiState.update { it.copy(defaultCurrency = localCurrencyCode) }
+        }
     }
 
     private fun populateState() {
@@ -85,7 +92,8 @@ class AddTripViewModel @Inject constructor(
                     tripName = data.trip.title,
                     tripStatus = data.trip.status,
                     tripParticipants = data.activeParticipants,
-                    tripCurrencyCodes = data.activeCurrencies.map { it.code }
+                    tripCurrencyCodes = data.activeCurrencies.map { it.code },
+                    defaultCurrency = data.trip.defaultCurrency
                 )
             }
         }
@@ -99,13 +107,20 @@ class AddTripViewModel @Inject constructor(
 
     private fun saveTrip(tripName: String) {
         viewModelScope.launch {
-            val trip = Trip(title = tripName, status = _uiState.value.tripStatus)
-            tripRepository.saveTrip(
-                tripId,
-                trip,
-                _uiState.value.tripParticipants,
-                _uiState.value.tripCurrencyCodes
+            val state = _uiState.value
+            val defaultCurrency = state.defaultCurrency.takeIf { it in state.tripCurrencyCodes }
+                ?: state.tripCurrencyCodes.firstOrNull()
+                ?: TripSplitConstants.BASE_CURRENCY
+            val trip = Trip(
+                title = tripName,
+                status = state.tripStatus,
+                defaultCurrency = defaultCurrency
             )
+            when (tripRepository.saveTrip(tripId, trip, state.tripParticipants, state.tripCurrencyCodes)) {
+                TripItemResult.Success -> _navigateBackWithWarning.emit(false)
+                TripItemResult.MissingExchangeRate ->
+                    _showSnackbar.emit(R.string.error_save_exchange_rates_unavailable)
+            }
         }
     }
 
@@ -163,7 +178,16 @@ class AddTripViewModel @Inject constructor(
             }
 
             is CurrencyDeleted -> {
-                _uiState.update { it.copy(tripCurrencyCodes = it.tripCurrencyCodes - intent.code) }
+                _uiState.update {
+                    if (intent.code == it.defaultCurrency) it
+                    else it.copy(tripCurrencyCodes = it.tripCurrencyCodes - intent.code)
+                }
+            }
+
+            is DefaultCurrencyChanged -> {
+                _uiState.update {
+                    if (hasCurrency(intent.code)) it.copy(defaultCurrency = intent.code) else it
+                }
             }
 
             is AddCurrencyClicked -> {
@@ -190,9 +214,6 @@ class AddTripViewModel @Inject constructor(
                 val tripNameTrimmed = _uiState.value.tripName.trim()
                 if (tripNameTrimmed.isNotEmpty()) {
                     saveTrip(tripName = tripNameTrimmed)
-                    viewModelScope.launch {
-                        _navigateBackWithWarning.emit(false)
-                    }
                 } else {
                     _uiState.update {
                         it.copy(
@@ -264,6 +285,7 @@ class AddTripViewModel @Inject constructor(
         return tripId != null &&
                 (_uiState.value.tripName != tripDetails?.trip?.title ||
                         _uiState.value.tripStatus != tripDetails?.trip?.status ||
+                        _uiState.value.defaultCurrency != tripDetails?.trip?.defaultCurrency ||
                         _uiState.value.tripParticipants != tripDetails?.activeParticipants ||
                         _uiState.value.tripCurrencyCodes != tripDetails?.activeCurrencies?.map { it.code })
     }

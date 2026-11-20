@@ -53,7 +53,7 @@ fun AddTripScreen(
         viewModel.onIntent(AddTripIntent.BackPressed)
     }
 
-    val defaultParticipantName = stringResource(R.string.you)
+    val defaultParticipantName = stringResource(R.string.self)
 
     LaunchedEffect(Unit) {
         viewModel.onIntent(AddDefaultParticipant(defaultParticipantName))

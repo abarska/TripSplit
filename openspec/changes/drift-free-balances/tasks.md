@@ -10,7 +10,7 @@
 ## 2. Money math and share allocation
 
 - [x] 2.1 Add `MoneyMath` (`fractionDigits`, `parse`, `format`, `crossRate`, `convert`) as in design §2. Verify with unit tests: EUR has 2 digits, JPY 0 and KWD 3. `parse("12.345", EUR)` is rejected, while `parse("12.34", EUR)` gives 1234. 100.00 USD at 0.9137 gives 9137 EUR minor units. A same-currency `convert` is the identity. Halves round to even
-- [ ] 2.2 Add `ShareAllocator.allocate` as in design §3. Verify with unit tests covering every spec scenario in the "Expense split is snapshotted and exact" and "Leftover minor units go to a defined participant" requirements, plus a property-style test that the shares always sum to the total over randomized totals and weights
+- [x] 2.2 Add `ShareAllocator.allocate` as in design §3. Verify with unit tests covering every spec scenario in the "Expense split is snapshotted and exact" and "Leftover minor units go to a defined participant" requirements, plus a property-style test that the shares always sum to the total over randomized totals and weights
 - [ ] 2.3 Delete `BalanceCalculator`, `BalanceDelta` and `BalanceCalculatorTest`. Verify that `./gradlew :app:testDebugUnitTest` passes
 
 ## 3. Recording expenses and payments

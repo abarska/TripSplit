@@ -126,6 +126,8 @@
     <string name="archived">Archived</string>
 
     // missing data placeholders
+    <string name="balance_participant_removed">removed</string>
+    <string name="balance_approx_value">≈ %1$s %2$s</string>
     <string name="under_construction">Under Construction</string>
     <string name="placeholder_expenses">Your expenses will be shown here</string>
     <string name="placeholder_payments">Your payments will be shown here</string>

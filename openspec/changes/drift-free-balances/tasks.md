@@ -36,7 +36,7 @@
 ## 7. Balances tab
 
 - [x] 7.1 Rework `BalanceViewModel` to show trip-currency balances (always available) plus an approximate home-currency value, using `CurrencyPreference` for the home currency and `BigDecimal` rates. Values are hidden when a rate is missing and appear when it arrives. Verify with unit tests for each scenario in the modified "Balances display tolerates a missing home-currency rate" requirement and in "Balances are shown in the trip currency with an approximate home-currency value"
-- [ ] 7.2 Update `TsBalanceItem` and `TripBalancesTab` to show the trip-currency value, the "≈ home" value and a "removed" label. Verify on the device in airplane mode on a fresh install (EUR balances shown without approximate values, no crash) and after a sync (approximate values appear)
+- [x] 7.2 Update `TsBalanceItem` and `TripBalancesTab` to show the trip-currency value, the "≈ home" value and a "removed" label. Verify on the device in airplane mode on a fresh install (EUR balances shown without approximate values, no crash) and after a sync (approximate values appear)
 
 ## 8. Item rows and Trip Overview
 

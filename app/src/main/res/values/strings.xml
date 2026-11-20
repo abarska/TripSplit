@@ -95,7 +95,7 @@
     <string name="payments_tab">Payments</string>
     <string name="balances_tab">Balances</string>
 
-    <string name="you">Self</string>
+    <string name="you">You</string>
     <string name="participants">Participants</string>
     <string name="currencies">Currencies</string>
     <string name="status">Status</string>

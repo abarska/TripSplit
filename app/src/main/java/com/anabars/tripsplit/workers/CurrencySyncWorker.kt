@@ -13,7 +13,6 @@ import com.anabars.tripsplit.data.room.entity.ExchangeRate
 import com.anabars.tripsplit.utils.validCurrencyCodes
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.math.BigDecimal
 
 @HiltWorker
 class CurrencySyncWorker @AssistedInject constructor(
@@ -33,20 +32,24 @@ class CurrencySyncWorker @AssistedInject constructor(
             saveRatesToDatabase(response)
             Result.success()
         } catch (e: Exception) {
-            Log.d("marysya", "error trying to fetch exchange rates: e = $e")
+            Log.d("CurrencySyncWorker", "error trying to fetch exchange rates: e = $e")
             Result.retry()
         }
     }
 
     private suspend fun saveRatesToDatabase(response: CurrencyResponse) {
-        val entities = response.rates.map { (currency, rate) ->
-            ExchangeRate(
-                currencyCode = currency,
-                baseCurrency = response.base,
-                rate = rate.toBigDecimalOrNull() ?: BigDecimal.ZERO, // TODO(1.3): skip unparseable or non-positive rates
-                date = response.date
-            )
-        }
-        exchangeRateDao.replaceAll(entities)
+        exchangeRateDao.replaceAll(response.toExchangeRates())
     }
 }
+
+// entries that don't parse to a positive value are skipped
+internal fun CurrencyResponse.toExchangeRates(): List<ExchangeRate> =
+    rates.mapNotNull { (currency, rate) ->
+        val parsed = rate.toBigDecimalOrNull()?.takeIf { it.signum() > 0 } ?: return@mapNotNull null
+        ExchangeRate(
+            currencyCode = currency,
+            baseCurrency = base,
+            rate = parsed,
+            date = date
+        )
+    }

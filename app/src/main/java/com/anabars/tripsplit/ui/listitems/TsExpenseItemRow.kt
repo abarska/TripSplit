@@ -32,7 +32,8 @@ fun TsExpenseItemRow(
         onDeleteClick = onDeleteClick
     ) {
         val pattern = stringResource(R.string.currency_formatting_pattern)
-        val amountText = "${expense.currency} ${expense.amount.formatAsCurrency(pattern)}"
+        // TODO(drift-free-balances 8.1): format with MoneyMath using the currency's fraction digits
+        val amountText = "${expense.currency} ${(expense.amountMinor / 100.0).formatAsCurrency(pattern)}"
         TsBaseVisiblePart(
             icon = expense.category.icon,
             iconContentDescription = stringResource(R.string.expense_category_icon),

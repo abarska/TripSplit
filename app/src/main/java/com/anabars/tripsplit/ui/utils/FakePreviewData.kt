@@ -9,7 +9,6 @@ import com.anabars.tripsplit.data.room.model.BalanceWithNameAndStatus
 import com.anabars.tripsplit.data.room.model.TripDetails
 import com.anabars.tripsplit.ui.model.AddTripUiState
 import com.anabars.tripsplit.ui.model.AmountCurrencyState
-import com.anabars.tripsplit.ui.model.BalanceDelta
 import com.anabars.tripsplit.ui.model.ExpenseCategory
 import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.viewmodels.ExpenseCategorizationResult
@@ -47,8 +46,10 @@ fun getFakePayerParticipantsState() = PayerParticipantsState(
 
 fun getFakeTripExpense() = TripExpense(
     paidById = 1,
-    amount = 50.0,
+    amountMinor = 5000,
     currency = "EUR",
+    rateToTrip = BigDecimal.ONE,
+    tripAmountMinor = 5000,
     category = ExpenseCategory.Accommodation,
     timestamp = System.currentTimeMillis(),
     tripId = 0
@@ -96,8 +97,10 @@ fun getFakePayment() = TripPayment(
     tripId = 2L,
     fromUserId = 1L,
     toUserId = 2L,
-    amount = 30.00,
+    amountMinor = 3000,
     currency = "EUR",
+    rateToTrip = BigDecimal.ONE,
+    tripAmountMinor = 3000,
     timestamp = System.currentTimeMillis()
 )
 
@@ -107,15 +110,3 @@ fun getFakeBalanceWithNameAndStatus(amount: Int) =
         participantStatus = getFakeTripParticipants().first().status,
         amount = BigDecimal(amount)
     )
-
-fun getFakeBalanceDeltas() = listOf(
-    BalanceDelta(
-        tripId = 1,
-        participantId = 1L,
-        deltaUsd = BigDecimal(10.0)
-    ), BalanceDelta(
-        tripId = 1,
-        participantId = 2L,
-        deltaUsd = BigDecimal(-10.0)
-    )
-)

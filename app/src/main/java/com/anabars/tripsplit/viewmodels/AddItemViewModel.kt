@@ -151,24 +151,7 @@ class AddItemViewModel @Inject constructor(
     }
 
     private suspend fun save(): TripItemResult =
-        when (useCase) {
-            UseCase.EXPENSE -> tripItemRepository.saveExpenseWithParticipants(
-                expense = TripExpense.fromUiState(
-                    amountCurrencyState = _amountCurrencyState.value,
-                    payerParticipantsState = _payerParticipantsState.value,
-                    tripId = tripId
-                ),
-                participants = _payerParticipantsState.value.selectedParticipants
-            )
-
-            UseCase.PAYMENT -> tripItemRepository.savePayment(
-                TripPayment.fromUiState(
-                    amountCurrencyState = _amountCurrencyState.value,
-                    payerParticipantsState = _payerParticipantsState.value,
-                    tripId = tripId
-                )
-            )
-        }
+        TODO("drift-free-balances 3.1/6.1: parse the amount to minor units and save through the repository")
 
     private suspend fun handleSaveResult(result: TripItemResult) {
         when (result) {

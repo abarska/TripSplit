@@ -14,8 +14,7 @@ import com.anabars.tripsplit.data.room.dao.TripExpensesDao
 import com.anabars.tripsplit.data.room.dao.TripParticipantDao
 import com.anabars.tripsplit.data.room.dao.TripPaymentDao
 import com.anabars.tripsplit.data.room.entity.ExchangeRate
-import com.anabars.tripsplit.data.room.entity.ExpenseParticipantCrossRef
-import com.anabars.tripsplit.data.room.entity.ParticipantBalance
+import com.anabars.tripsplit.data.room.entity.ExpenseShare
 import com.anabars.tripsplit.data.room.entity.Trip
 import com.anabars.tripsplit.data.room.entity.TripCurrency
 import com.anabars.tripsplit.data.room.entity.TripExpense
@@ -29,9 +28,8 @@ import com.anabars.tripsplit.data.room.entity.TripPayment
         TripCurrency::class,
         TripExpense::class,
         TripPayment::class,
-        ParticipantBalance::class,
         ExchangeRate::class,
-        ExpenseParticipantCrossRef::class],
+        ExpenseShare::class],
     version = 1,
     exportSchema = false
 )

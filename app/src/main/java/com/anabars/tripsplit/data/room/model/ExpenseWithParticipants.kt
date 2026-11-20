@@ -3,7 +3,7 @@ package com.anabars.tripsplit.data.room.model
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.anabars.tripsplit.data.room.entity.ExpenseParticipantCrossRef
+import com.anabars.tripsplit.data.room.entity.ExpenseShare
 import com.anabars.tripsplit.data.room.entity.TripExpense
 import com.anabars.tripsplit.data.room.entity.TripParticipant
 
@@ -13,7 +13,7 @@ data class ExpenseWithParticipants(
         parentColumn = "id",
         entityColumn = "id",
         associateBy = Junction(
-            value = ExpenseParticipantCrossRef::class,
+            value = ExpenseShare::class,
             parentColumn = "expenseId",
             entityColumn = "participantId"
         )

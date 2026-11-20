@@ -13,6 +13,7 @@ import com.anabars.tripsplit.data.room.entity.ExchangeRate
 import com.anabars.tripsplit.utils.validCurrencyCodes
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.math.BigDecimal
 
 @HiltWorker
 class CurrencySyncWorker @AssistedInject constructor(
@@ -42,7 +43,7 @@ class CurrencySyncWorker @AssistedInject constructor(
             ExchangeRate(
                 currencyCode = currency,
                 baseCurrency = response.base,
-                rate = rate.toDoubleOrNull() ?: 0.0,
+                rate = rate.toBigDecimalOrNull() ?: BigDecimal.ZERO, // TODO(1.3): skip unparseable or non-positive rates
                 date = response.date
             )
         }

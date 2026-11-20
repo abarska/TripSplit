@@ -14,7 +14,8 @@ data class Trip(
     @ColumnInfo val title: String = "",
     @ColumnInfo val tag: String = Tag.OTHER.name,
     @ColumnInfo val status: TripStatus = TripStatus.PLANNED,
-    @ColumnInfo val createdAt: Date = Date()
+    @ColumnInfo val createdAt: Date = Date(),
+    @ColumnInfo val defaultCurrency: String = TripSplitConstants.BASE_CURRENCY
 )
 
 enum class TripStatus(val sortOrder: Int, @StringRes val labelRes: Int) {

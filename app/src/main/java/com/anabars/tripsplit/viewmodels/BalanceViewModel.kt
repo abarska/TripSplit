@@ -49,7 +49,7 @@ class BalanceViewModel @Inject constructor(
         balanceRepository.getBalancesAndCurrencies(tripId),
         homeCurrencyAndRate
     ) { balancesAndCurrencies, (homeCurrency, homeRate) ->
-        val multiplier = homeRate?.let { BigDecimal(it) }
+        val multiplier = homeRate
         BalanceUiState(
             balances = multiplier?.let { m ->
                 balancesAndCurrencies.balances.map { balance ->

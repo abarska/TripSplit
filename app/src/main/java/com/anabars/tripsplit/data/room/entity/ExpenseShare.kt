@@ -2,10 +2,11 @@ package com.anabars.tripsplit.data.room.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.anabars.tripsplit.common.TripSplitConstants.CROSS_TABLE_EXPENSE_PARTICIPANT
+import androidx.room.Index
+import com.anabars.tripsplit.common.TripSplitConstants.EXPENSE_SHARES_TABLE
 
 @Entity(
-    tableName = CROSS_TABLE_EXPENSE_PARTICIPANT,
+    tableName = EXPENSE_SHARES_TABLE,
     primaryKeys = ["expenseId", "participantId"],
     foreignKeys = [
         ForeignKey(
@@ -18,11 +19,14 @@ import com.anabars.tripsplit.common.TripSplitConstants.CROSS_TABLE_EXPENSE_PARTI
             entity = TripParticipant::class,
             parentColumns = ["id"],
             childColumns = ["participantId"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.NO_ACTION
         )
-    ]
+    ],
+    indices = [Index("participantId")]
 )
-data class ExpenseParticipantCrossRef(
+data class ExpenseShare(
     val expenseId: Long,
-    val participantId: Long
+    val participantId: Long,
+    val weight: Int,
+    val shareMinor: Long
 )

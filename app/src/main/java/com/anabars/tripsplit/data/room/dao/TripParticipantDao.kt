@@ -1,7 +1,6 @@
 package com.anabars.tripsplit.data.room.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -21,12 +20,6 @@ interface TripParticipantDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveParticipant(participant: TripParticipant)
-
-    @Delete
-    suspend fun deleteParticipant(participant: TripParticipant)
-
-    @Query("DELETE FROM ${TripSplitConstants.TRIP_PARTICIPANTS_TABLE} WHERE tripId = :tripId")
-    suspend fun deleteParticipantsByTripId(tripId: Long)
 
     @Query("SELECT * FROM ${TripSplitConstants.TRIP_PARTICIPANTS_TABLE} WHERE tripId = :tripId")
     suspend fun getParticipantsByTripIdAsList(tripId: Long): List<TripParticipant>

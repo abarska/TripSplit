@@ -12,10 +12,9 @@ object TripSplitConstants {
     const val TRIP_PARTICIPANTS_TABLE = "trip_participants_table"
     const val TRIP_CURRENCIES_TABLE = "trip_currencies_table"
     const val TRIP_EXPENSES_TABLE = "trip_expenses_table"
-    const val PARTICIPANT_BALANCES_TABLE = "participant_balances_table"
     const val TRIP_PAYMENTS_TABLE = "trip_payments_table"
     const val EXCHANGE_RATE_TABLE = "exchange_rate_table"
-    const val CROSS_TABLE_EXPENSE_PARTICIPANT= "cross_table_expense_participant"
+    const val EXPENSE_SHARES_TABLE = "expense_shares_table"
 
     // workers
     const val CURRENCY_SYNC_IMMEDIATE_WORK_NAME = "immediate_currency_sync"

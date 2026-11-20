@@ -9,7 +9,7 @@ import com.anabars.tripsplit.common.TripSplitConstants
 import com.anabars.tripsplit.ui.model.AmountCurrencyState
 import com.anabars.tripsplit.ui.model.PayerParticipantsState
 import com.anabars.tripsplit.ui.model.ExpenseCategory
-import java.time.ZoneId
+import java.math.BigDecimal
 
 @Entity(
     tableName = TripSplitConstants.TRIP_EXPENSES_TABLE,
@@ -24,36 +24,19 @@ import java.time.ZoneId
             entity = TripParticipant::class,
             parentColumns = ["id"],
             childColumns = ["paidById"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.NO_ACTION
         )
     ],
-    indices = [Index("tripId", "paidById")]
+    indices = [Index("tripId"), Index("paidById")]
 )
 data class TripExpense(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     @ColumnInfo val paidById: Long,
-    @ColumnInfo val amount: Double = 0.0,
+    @ColumnInfo val amountMinor: Long,
     @ColumnInfo val currency: String,
+    @ColumnInfo val rateToTrip: BigDecimal,
+    @ColumnInfo val tripAmountMinor: Long,
     @ColumnInfo val category: ExpenseCategory = ExpenseCategory.Miscellaneous,
     @ColumnInfo val timestamp: Long = System.currentTimeMillis(),
     @ColumnInfo val tripId: Long
-) {
-    companion object {
-        fun fromUiState(
-            amountCurrencyState: AmountCurrencyState,
-            payerParticipantsState: PayerParticipantsState,
-            tripId: Long
-        ): TripExpense {
-            val timestamp = amountCurrencyState.selectedDate
-                .atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-            return TripExpense(
-                paidById = payerParticipantsState.expensePayerId!!, // non null after validation
-                amount = amountCurrencyState.expenseAmount.toDoubleOrNull() ?: 0.0,
-                currency = amountCurrencyState.expenseCurrencyCode,
-                category = amountCurrencyState.selectedCategory,
-                timestamp = timestamp,
-                tripId = tripId
-            )
-        }
-    }
-}
+)

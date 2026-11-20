@@ -34,7 +34,8 @@ fun TsPaymentItemRow(
         onDeleteClick = onDeleteClick
     ) {
         val pattern = stringResource(R.string.currency_formatting_pattern)
-        val amountText = "${payment.currency} ${payment.amount.formatAsCurrency(pattern)}"
+        // TODO(drift-free-balances 8.1): format with MoneyMath using the currency's fraction digits
+        val amountText = "${payment.currency} ${(payment.amountMinor / 100.0).formatAsCurrency(pattern)}"
         TsBaseVisiblePart(
             icon = Icons.AutoMirrored.Outlined.CompareArrows,
             iconContentDescription = stringResource(R.string.payment),

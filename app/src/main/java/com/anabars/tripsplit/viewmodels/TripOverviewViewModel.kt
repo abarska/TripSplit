@@ -71,10 +71,8 @@ class TripOverviewViewModel @Inject constructor(
                         } else {
                             val grouped = expensesList.groupBy { it.category }
                                 .mapValues { (_, expenses) ->
-                                    expenses.sumOf { expense ->
-                                        val rate = rateMap[expense.currency]!!.rate
-                                        expense.amount / rate
-                                    }
+                                    // TODO(drift-free-balances 8.2): sum tripAmountMinor in the trip currency
+                                    expenses.sumOf { it.tripAmountMinor } / 100.0
                                 }
                             ExpenseCategorizationResult.Success(grouped)
                         }

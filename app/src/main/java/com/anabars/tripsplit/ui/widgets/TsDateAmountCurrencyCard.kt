@@ -4,11 +4,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.anabars.tripsplit.R
 import com.anabars.tripsplit.ui.components.DateInputSection
 import com.anabars.tripsplit.ui.components.TsContentCard
 import com.anabars.tripsplit.ui.components.TsExpenseAmountInput
@@ -58,6 +62,13 @@ fun TsDateAmountCurrencyCard(
                 currencyPrefix = amountCurrencyState.expenseCurrencyCode,
                 onValueChange = onExpenseAmountChanged
             )
+            amountCurrencyState.maxDecimals?.let {
+                Text(
+                    text = stringResource(R.string.error_amount_too_many_decimals, it),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
             TsCurrenciesRadioGroup(
                 currencies = amountCurrencyState.tripCurrencies,
                 expenseCurrencyCode = amountCurrencyState.expenseCurrencyCode,

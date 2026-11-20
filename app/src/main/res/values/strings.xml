@@ -71,6 +71,7 @@
     // used for error messages
     <string name="error_mandatory_field">This field is mandatory</string>
     <string name="error_amount_invalid">Please enter a valid, positive amount</string>
+    <string name="error_amount_too_many_decimals">This currency allows at most %1$d decimal places</string>
     <string name="error_missing_payer">Please select payer</string>
     <string name="error_missing_payee">Please select payee</string>
     <string name="error_missing_participants">Please select at least one participant</string>

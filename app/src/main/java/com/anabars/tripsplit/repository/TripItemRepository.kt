@@ -45,6 +45,9 @@ class TripItemRepository @Inject constructor(
     fun getActiveParticipantsByTripId(tripId: Long): Flow<List<TripParticipant>> =
         tripParticipantDao.getActiveParticipantsByTripId(tripId)
 
+    suspend fun getTripDefaultCurrency(tripId: Long): String =
+        tripDao.getTripById(tripId).defaultCurrency
+
     /** Freezes the rate to the trip currency and saves the payment; [payment]'s rateToTrip and tripAmountMinor are ignored. */
     suspend fun savePayment(payment: TripPayment): TripItemResult = db.withTransaction {
         val frozen = freeze(payment.tripId, payment.currency, payment.amountMinor)

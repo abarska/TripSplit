@@ -31,7 +31,7 @@
 
 ## 6. Add Expense / Add Payment
 
-- [ ] 6.1 Preselect the trip's `defaultCurrency` in `AddItemViewModel`. Parse the amount with `MoneyMath.parse` and show a validation error for too many decimals. Offer all participants, including removed ones, as payment payer and payee, and only active participants for expenses. Verify with ViewModel unit tests for the preselection, the "Too many decimals entered" scenario and the participant lists
+- [x] 6.1 Preselect the trip's `defaultCurrency` in `AddItemViewModel`. Parse the amount with `MoneyMath.parse` and show a validation error for too many decimals. Offer all participants, including removed ones, as payment payer and payee, and only active participants for expenses. Verify with ViewModel unit tests for the preselection, the "Too many decimals entered" scenario and the participant lists
 
 ## 7. Balances tab
 

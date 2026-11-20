@@ -73,20 +73,22 @@ class AddItemViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                val participants =
-                    tripItemRepository.getActiveParticipantsByTripId(tripId).first()
+                // payments are also offered to removed participants, so they can still settle up
+                val participants = when (useCase) {
+                    UseCase.EXPENSE -> tripItemRepository.getActiveParticipantsByTripId(tripId)
+                    UseCase.PAYMENT -> tripItemRepository.getParticipantsByTripId(tripId)
+                }.first()
                 val currencies = tripItemRepository.getActiveCurrenciesByTripId(tripId).first()
 
                 val initialSelectedParticipants =
                     if (useCase == UseCase.EXPENSE) participants.toSet()
                     else emptySet()
-                val initialCurrencyCode = currencies.firstOrNull()?.code
+                val initialCurrencyCode = tripItemRepository.getTripDefaultCurrency(tripId)
 
                 _amountCurrencyState.update { currentState ->
                     currentState.copy(
                         tripCurrencies = currencies,
                         expenseCurrencyCode = initialCurrencyCode
-                            ?: currentState.expenseCurrencyCode
                     )
                 }
 
@@ -126,12 +128,12 @@ class AddItemViewModel @Inject constructor(
 
     private fun updateAmount(amount: String) {
         _amountCurrencyState.update {
-            it.copy(expenseAmount = amount, isError = false)
+            it.copy(expenseAmount = amount, isError = false, maxDecimals = null)
         }
     }
 
     private fun updateCurrencyCode(code: String) =
-        _amountCurrencyState.update { it.copy(expenseCurrencyCode = code) }
+        _amountCurrencyState.update { it.copy(expenseCurrencyCode = code, maxDecimals = null) }
 
     private fun updatePayerId(id: Long) =
         _payerParticipantsState.update { it.copy(expensePayerId = id) }
@@ -225,10 +227,20 @@ class AddItemViewModel @Inject constructor(
         }
     }
 
+    private fun hasTooManyDecimals(input: String, code: String): Boolean {
+        val value = input.trim().toBigDecimalOrNull() ?: return false
+        return value.signum() > 0 && value.stripTrailingZeros().scale() > MoneyMath.fractionDigits(code)
+    }
+
     private fun highlightCardWithError(error: AddItemError) {
         when (error) {
-            INVALID_AMOUNT ->
-                _amountCurrencyState.update { it.copy(isError = true) }
+            INVALID_AMOUNT -> _amountCurrencyState.update {
+                it.copy(
+                    isError = true,
+                    maxDecimals = MoneyMath.fractionDigits(it.expenseCurrencyCode)
+                        .takeIf { _ -> hasTooManyDecimals(it.expenseAmount, it.expenseCurrencyCode) }
+                )
+            }
 
             MISSING_PAYER, MISSING_PARTICIPANTS, MISSING_PAYEE ->
                 _payerParticipantsState.update { it.copy(isError = true) }

@@ -10,7 +10,9 @@ data class AmountCurrencyState(
     val tripCurrencies: List<TripCurrency> = emptyList(),
     val expenseAmount: String = "",
     val expenseCurrencyCode: String = "",
-    val isError: Boolean = false
+    val isError: Boolean = false,
+    // set when the amount has more decimals than the currency allows
+    val maxDecimals: Int? = null
 )
 
 data class PayerParticipantsState (

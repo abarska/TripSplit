@@ -39,6 +39,7 @@ class AddTripViewModel @Inject constructor(
 
     private val tripId: Long? = savedStateHandle.get<Long>("tripId")
     private var tripDetails: TripDetails? = null
+    private var isSaving = false
 
     private val _uiState = MutableStateFlow(AddTripUiState())
     val uiState: StateFlow<AddTripUiState> = _uiState.asStateFlow()
@@ -106,6 +107,9 @@ class AddTripViewModel @Inject constructor(
         _uiState.value.tripCurrencyCodes.contains(code)
 
     private fun saveTrip(tripName: String) {
+        // Stays set after a successful save so taps before navigation completes can't insert a duplicate.
+        if (isSaving) return
+        isSaving = true
         viewModelScope.launch {
             val state = _uiState.value
             val defaultCurrency = state.defaultCurrency.takeIf { it in state.tripCurrencyCodes }
@@ -118,8 +122,10 @@ class AddTripViewModel @Inject constructor(
             )
             when (tripRepository.saveTrip(tripId, trip, state.tripParticipants, state.tripCurrencyCodes)) {
                 TripItemResult.Success -> _navigateBackWithWarning.emit(false)
-                TripItemResult.MissingExchangeRate ->
+                TripItemResult.MissingExchangeRate -> {
+                    isSaving = false
                     _showSnackbar.emit(R.string.error_save_exchange_rates_unavailable)
+                }
             }
         }
     }
@@ -170,8 +176,13 @@ class AddTripViewModel @Inject constructor(
                     val updatedCodes =
                         if (code.isNotBlank() && !hasCurrency(code)) state.tripCurrencyCodes + code
                         else state.tripCurrencyCodes
+                    // Without a home currency, the first added currency becomes the protected default.
+                    val default =
+                        if (state.defaultCurrency in updatedCodes) state.defaultCurrency
+                        else updatedCodes.firstOrNull() ?: state.defaultCurrency
                     state.copy(
                         tripCurrencyCodes = updatedCodes,
+                        defaultCurrency = default,
                         activeDialog = ActiveDialog.NONE
                     )
                 }

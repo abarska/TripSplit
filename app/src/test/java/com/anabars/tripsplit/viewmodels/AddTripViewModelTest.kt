@@ -145,6 +145,45 @@ class AddTripViewModelTest {
     }
 
     @Test
+    fun `tapping save twice saves the new trip once`() = runTest {
+        whenever(repository.saveTrip(anyOrNull(), any(), any(), any())).thenReturn(TripItemResult.Success)
+        val vm = newTripViewModel()
+        vm.onIntent(AddTripIntent.TripNameChanged("Rome"))
+
+        vm.onIntent(AddTripIntent.SaveTripClicked)
+        vm.onIntent(AddTripIntent.SaveTripClicked)
+
+        org.mockito.kotlin.verify(repository, org.mockito.kotlin.times(1))
+            .saveTrip(anyOrNull(), any(), any(), any())
+    }
+
+    @Test
+    fun `save can be retried after a refused currency switch`() = runTest {
+        whenever(repository.saveTrip(any(), any(), any(), any()))
+            .thenReturn(TripItemResult.MissingExchangeRate)
+        val vm = editTripViewModel(defaultCurrency = "UAH")
+
+        vm.onIntent(AddTripIntent.SaveTripClicked)
+        vm.onIntent(AddTripIntent.SaveTripClicked)
+
+        org.mockito.kotlin.verify(repository, org.mockito.kotlin.times(2))
+            .saveTrip(any(), any(), any(), any())
+    }
+
+    @Test
+    fun `without a home currency the first added currency becomes the protected default`() = runTest {
+        whenever(currencyPreference.getCurrencyFlow(any())).thenReturn(flowOf(""))
+        val vm = AddTripViewModel(SavedStateHandle(), repository, currencyPreference)
+        vm.uiState.first { it.availableCurrencies.isNotEmpty() }
+
+        vm.onIntent(AddTripIntent.CurrencyAdded("EUR"))
+        vm.onIntent(AddTripIntent.CurrencyDeleted("EUR"))
+
+        assertThat(vm.uiState.value.defaultCurrency).isEqualTo("EUR")
+        assertThat(vm.uiState.value.tripCurrencyCodes).containsExactly("EUR")
+    }
+
+    @Test
     fun `successful save navigates back without warning`() = runTest {
         whenever(repository.saveTrip(any(), any(), any(), any())).thenReturn(TripItemResult.Success)
         val vm = editTripViewModel(defaultCurrency = "UAH")

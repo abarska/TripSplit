@@ -17,7 +17,7 @@ class BalanceRepository @Inject constructor(
     fun getBalancesAndCurrencies(tripId: Long): Flow<BalancesAndCurrencies> = combine(
         balanceDao.getBalances(tripId),
         balanceDao.getTripCurrency(tripId).filterNotNull(),
-        currencyDao.getCurrenciesByTripIdAsFlow(tripId)
+        currencyDao.getActiveCurrenciesByTripId(tripId)
     ) { rows, tripCurrency, currencies ->
         val digits = MoneyMath.fractionDigits(tripCurrency)
         BalancesAndCurrencies(

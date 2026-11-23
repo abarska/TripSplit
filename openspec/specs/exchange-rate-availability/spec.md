@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Defines how the app behaves when an exchange rate needed to convert an amount to USD is not available, so that a missing rate never crashes the app or corrupts stored balances.
+Defines how the app behaves when an exchange rate needed to convert an amount to the trip currency, or to show an approximate home-currency value, is not available, so that a missing rate never crashes the app or corrupts stored balances.
 
 ## Requirements
 

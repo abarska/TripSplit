@@ -45,8 +45,8 @@
 
 ## 9. End-to-end check and docs
 
-- [ ] 9.1 On the Galaxy A05s, in one trip: add a USD expense in an EUR trip, wait for or force a rate sync, change a multiplicator, delete the expense, and confirm that the balances return exactly to their previous values and sum to zero. Then switch the trip to GBP and back to EUR, and confirm that the EUR-entered items show their exact original amounts
-- [ ] 9.2 Update `openspec/current-state.md`: sections 3 and 5, mark items 7.3, 7.4 and 7.7 as resolved and 7.11 as partly resolved, and update section 6 for the new tests. Update the Purpose of `openspec/specs/exchange-rate-availability/spec.md` so that it no longer says amounts are converted "to USD". Verify that both match the implemented behaviour
+- [x] 9.1 On the Galaxy A05s, in one trip: add a USD expense in an EUR trip, wait for or force a rate sync, change a multiplicator, delete the expense, and confirm that the balances return exactly to their previous values and sum to zero. Then switch the trip to GBP and back to EUR, and confirm that the EUR-entered items show their exact original amounts
+- [x] 9.2 Update `openspec/current-state.md`: sections 3 and 5, mark items 7.3, 7.4 and 7.7 as resolved and 7.11 as partly resolved, and update section 6 for the new tests. Update the Purpose of `openspec/specs/exchange-rate-availability/spec.md` so that it no longer says amounts are converted "to USD". Verify that both match the implemented behaviour
 
 ## Workflow follow-up
 

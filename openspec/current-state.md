@@ -13,7 +13,7 @@ A single-module, offline-first Android app (Kotlin, Jetpack Compose, Material 3)
 | UI | Compose BOM 2026.09.00, Material 3, Navigation Compose 2.10.2, Google Fonts |
 | Architecture | MVVM with a partial MVI style (`onIntent`, `UiState`, `UiEffect`). ViewModels talk to repositories, repositories talk to DAOs |
 | DI | Hilt 2.60.1, `androidx.hilt` 1.4.0 (`hilt-work`, `hilt-lifecycle-viewmodel-compose`) |
-| Persistence | Room 2.8.5 (DB v1, `exportSchema=false`, `fallbackToDestructiveMigration(false)`), DataStore Preferences 1.2.1 |
+| Persistence | Room 2.8.5 (DB v2, `exportSchema=true` with schemas in `app/schemas`, `fallbackToDestructiveMigrationFrom(dropAllTables = true, 1)`), DataStore Preferences 1.2.1 |
 | Network | Retrofit 3.0.0 + Moshi 1.15.2 to CurrencyFreaks (`v2.0/rates/latest`) |
 | Background | WorkManager 2.12.0 (custom `Configuration.Provider` with `HiltWorkerFactory`) |
 | Build | AGP 9.4.1 (built-in Kotlin), Kotlin 2.4.21, KSP 2.3.12, Gradle 9.8.1, version catalog, core-library desugaring |
@@ -21,18 +21,17 @@ A single-module, offline-first Android app (Kotlin, Jetpack Compose, Material 3)
 
 **Build prerequisites (not in the repo):** `CURRENCY_FREAKS_API_KEY` in `local.properties`, because the Gradle build fails if it is missing. `google-services.json` is no longer required (Firebase was removed). The `INTERNET` permission is now declared explicitly in the manifest, because it used to be merged in from Firebase and Play Services.
 
-## 3. Domain model (Room, 8 tables)
+## 3. Domain model (Room, 8 tables, DB v2)
 
-- **Trip**: `id`, `title`, `tag` (string, default `OTHER`), `status` (PLANNED, STARTED, FINISHED, ARCHIVED), `createdAt`.
+- **Trip**: `id`, `title`, `tag` (string, default `OTHER`), `status` (PLANNED, STARTED, FINISHED, ARCHIVED), `createdAt`, `defaultCurrency` (the trip currency, one of the trip's active currencies).
 - **TripParticipant**: `name`, `status` (ACTIVE or INACTIVE), `multiplicator` (int, default 1, a share weight), `tripId`. Participants are soft-deleted (made INACTIVE) so that history stays valid.
-- **TripCurrency**: `code`, `tripId`, `status` (ACTIVE or INACTIVE), also soft-deleted.
-- **TripExpense**: `paidById`, `amount` (Double), `currency`, `category` (Transportation, Accommodation, Food, Activities, Miscellaneous), `timestamp`, `tripId`.
-- **ExpenseParticipantCrossRef**: many-to-many link recording who an expense was split between.
-- **TripPayment**: a settlement transfer. `fromUserId`, `toUserId` (exactly one payee), `amount`, `currency`, `timestamp`.
-- **ParticipantBalance**: `(tripId, participantId)` as the primary key, with a running `amountUsd` (BigDecimal). It is **denormalised and updated incrementally**, not derived from expenses.
-- **ExchangeRate**: `currencyCode` as the primary key, with `rate` relative to USD, the `baseCurrency` and a date. It is global, not per trip. The whole table is replaced on each sync.
+- **TripCurrency**: `code`, `tripId`, `status` (ACTIVE or INACTIVE), also soft-deleted. The trip's default currency cannot be removed.
+- **TripExpense**: `paidById`, `amountMinor` (Long, in the original currency's minor units), `currency` (original), `rateToTrip` (BigDecimal, frozen at save), `tripAmountMinor` (Long, the frozen total in the trip currency), `category` (Transportation, Accommodation, Food, Activities, Miscellaneous), `timestamp`, `tripId`.
+- **ExpenseShare**: `(expenseId, participantId)` as the primary key, with `weight` (a snapshot of the multiplicator) and `shareMinor` (in the trip currency). The shares of an expense always sum to its `tripAmountMinor`. It replaces `ExpenseParticipantCrossRef`.
+- **TripPayment**: a settlement transfer. `fromUserId`, `toUserId` (exactly one payee), `amountMinor`, `currency`, `rateToTrip`, `tripAmountMinor`, `timestamp`.
+- **ExchangeRate**: `currencyCode` as the primary key, with `rate` (BigDecimal, units per 1 USD), the `baseCurrency` and a date. It is global, not per trip. The whole table is replaced on each sync, and entries that don't parse to a positive rate are skipped.
 
-Removing `Trip.ownerId` changed the schema without bumping the DB version (still v1, no migration), so an install made before this change must be uninstalled first. All foreign keys cascade on delete. Converters exist for `BigDecimal`, `Date` and `ExpenseCategory`.
+`ParticipantBalance` no longer exists: balances are derived (section 5). Foreign keys from a trip to its children, and from `ExpenseShare` to its expense, cascade on delete. Foreign keys to `TripParticipant` are `NO_ACTION` and indexed, so a hard delete of a participant with history fails. Converters exist for `BigDecimal`, `Date` and `ExpenseCategory`. The v1 to v2 step is destructive (an install made before this change loses its data), and every later version needs a real migration.
 
 ## 4. Implemented features
 
@@ -73,18 +72,20 @@ Removing `Trip.ownerId` changed the schema without bumping the DB version (still
 
 ## 5. Balance logic (the core)
 
-- Everything is stored in **USD**. `amountUsd = amount / rate(currency)`, rounded to 2 decimals (HALF_UP) per delta.
-- For an expense, the payer gets `+amount`. Each participant gets `-(amount / Σmultiplicators) × their multiplicator`. Deltas are grouped per participant.
-- For a payment, `from` gets `+amount` and `to` gets `-amount`.
-- Saving an item writes the item, its cross-refs and its balance deltas in one transaction (`db.withTransaction`). Deleting recalculates the deltas and applies their negation.
-- The Balances tab multiplies the USD balances by the home-currency rate for display.
+- Money is `Long` minor units. `MoneyMath` handles `fractionDigits`, `parse` (rejects too many decimals), `format`, `crossRate` and `convert` (`HALF_EVEN`, a single rounding step). No amount goes through `Double`.
+- On save, the item's `rateToTrip` and `tripAmountMinor` are frozen from the stored USD rates (cross rate to the trip currency, `1` when the item is in the trip currency). If a needed rate is missing, the save returns `MissingExchangeRate` before anything is written.
+- `ShareAllocator` splits an expense: each share is `floor(total × weight / Σweights)`, and the leftover minor units go to the payer if they share, otherwise to the sharer with the lowest participant id. Shares and weights are snapshotted in `ExpenseShare`, so later multiplicator changes don't affect them.
+- Balances are **derived**, not stored. One `BalanceDao` query sums the payer's `+tripAmountMinor`, each sharer's `−shareMinor`, and payments (`from` +, `to` −) for every participant, active or removed, and Room re-emits it when the underlying tables change. Balances always sum to zero.
+- Deleting an expense or payment deletes its rows only. It needs no rate, and the balances follow.
+- Changing the trip currency (inside `TripRepository.saveTrip`, in one `db.withTransaction`) recomputes every item's `rateToTrip` and `tripAmountMinor` from its original amount and re-allocates the shares. It is refused with `MissingExchangeRate`, writing nothing, if either rate is missing. Items entered in the new trip currency come out exact.
+- The Balances tab shows the trip-currency value, plus an approximate "≈ home" value when the home currency (from `CurrencyPreference`) differs and both rates are present. Overview sums `tripAmountMinor` per category in the trip currency and doesn't depend on rates.
 
 ## 6. Tests
 
-- `BalanceCalculatorTest` has 4 real tests, covering expense split, multiplicators, payments and exchange-rate conversion.
-- `TripItemRepositoryTest` has mocks and setup but **no test cases**.
-- `ExampleUnitTest` and `ExampleInstrumentedTest` are template stubs.
-- There are no ViewModel, DAO or UI tests.
+- Unit tests (JUnit4): `MoneyMathTest`, `ShareAllocatorTest` (including a randomized sum-to-total test), `CurrencySyncWorkerTest` (rate parsing), `TripItemRepositoryTest`, `TripRepositoryTest` (default currency, atomic save, currency switch scenarios), and ViewModel tests for `AddItemViewModel`, `AddTripViewModel`, `BalanceViewModel`, `TripItemViewModel` and `TripOverviewViewModel`.
+- Instrumented tests (in-memory Room, run on the Galaxy A05s): `BalanceDaoTest` (the "delete after rate and weight changes" scenario, payments, removed participants) and `TripDeletionCascadeTest` (deleting a trip empties every child table).
+- The drift-free scenario (USD expense in an EUR trip, rate sync, multiplicator change, delete, then a switch to GBP and back to EUR) was also verified by hand on the device.
+- `ExampleUnitTest` and `ExampleInstrumentedTest` are still template stubs. There are no DAO tests beyond the two above and no UI tests.
 
 ## 7. Observations, risks and gaps
 
@@ -92,15 +93,15 @@ These are things to be aware of before changing anything.
 
 1. ~~**Firebase is configured but unused.**~~ **Resolved:** the `google-services` plugin, the Firebase dependencies and `Trip.ownerId` were removed in the `update-dependencies` change.
 2. ~~**Crash risk when exchange rates are missing.**~~ **Resolved:** in the `handle-missing-exchange-rates` change, `ExchangeRateDao.getExchangeRateForCurrency` returns `ExchangeRate?`; saving or deleting a non-USD item without a stored rate is refused before any write (typed `MissingExchangeRate` result) and a snackbar explains why. `BalanceViewModel` observes the rate flow and the Balances tab shows `placeholder_no_exchange_rates_available` until rates sync.
-3. **Balance drift.** Balances are incremental and use the **current** exchange rate at save and at delete. Deleting an old expense later reverses a *different* USD amount than was originally added. Changing a participant's multiplicator after expenses exist also makes later reversals inconsistent. There is no "recompute from scratch" path *(inferred)*.
-4. **Rounding.** Per-delta rounding means the shares of an expense may not sum exactly to zero, which can leave cent-level residue *(inferred)*.
+3. ~~**Balance drift.**~~ **Resolved** in the `drift-free-balances` change: balances are derived from frozen per-item rates and share snapshots (section 5). Previously: balances are incremental and use the **current** exchange rate at save and at delete. Deleting an old expense later reverses a *different* USD amount than was originally added. Changing a participant's multiplicator after expenses exist also makes later reversals inconsistent. There is no "recompute from scratch" path *(inferred)*.
+4. ~~**Rounding.**~~ **Resolved** in the `drift-free-balances` change: shares are allocated exactly in minor units and always sum to the item total. Previously: per-delta rounding meant the shares of an expense may not sum exactly to zero, which can leave cent-level residue *(inferred)*.
 5. **No editing of existing expenses or payments.** Only add and delete exist, even though the `UseCase` and route design leaves room for edit. `TripDao.deleteTrip` and `deleteAllTrips` have no UI path. Archiving is available, but unarchiving is only possible by editing the trip status *(inferred)*.
 6. **Editing a trip resets some fields.** `AddTripViewModel.saveTrip` builds a fresh `Trip(title, status)` and does `copy(id=…)`, which discards `tag` and `createdAt`. The tag is also never selectable in the UI.
-7. **Amounts are `Double`** in `TripExpense` and `TripPayment`, while balances use `BigDecimal`.
+7. ~~**Amounts are `Double`** in `TripExpense` and `TripPayment`, while balances use `BigDecimal`.~~ **Resolved** in the `drift-free-balances` change: amounts are `Long` minor units and rates are `BigDecimal`.
 8. **The "who paid" model is single-payer** for both expenses and payments. There is no settle-up suggestion, so the app records payments but does not tell users who owes whom.
 9. ~~**Home-currency balances are not reactive.**~~ **Resolved:** on the `handle-missing-exchange-rates` branch, after the change was archived, `BalanceViewModel` builds its state with `stateIn` from the balances flow and the home-currency preference, and watches that currency's rate through `ExchangeRateDao.getRateFlowForCurrency`. A change in Settings or a rate sync updates an open Balances tab. The fallback is still `BASE_CURRENCY` (USD) when no preference is stored, which differs from the default shown in Settings.
 10. **Hardcoded strings.** There is a leftover debug log tag (`"marysya"`) and an unused `under_construction` string. Some UI strings may be non-localised.
-11. **Release config.** `isMinifyEnabled = false`, Room schema export is off, and there are no migrations. The first schema change will either destroy data or need a migration.
+11. **Release config (partly resolved).** Room schema export is now on (`app/schemas`) and the DB is at v2, but the only upgrade path is the destructive fallback from v1, and every later version needs a real `Migration`. `isMinifyEnabled = false` is unchanged.
 12. **The CurrencyFreaks API key** is compiled into `BuildConfig`, so it ships inside the APK.
 13. **The snackbar collection is duplicated.** Both `MainActivity` and `CollectNavigationEffects` collect `uiEffect`. Each has its own `SnackbarHostState`, and only the one in `MainActivity` is attached to the Scaffold *(inferred)*.
 

@@ -4,12 +4,22 @@
 #
 # Usage: verify.sh [--base <ref>] [--backup <branch>] [--expect-count N]
 #                  [--build-cmd "<cmd>"] [--allow-types "a|b|c"]
+#                  [--expect-outcome auto|success|error]
 #
-#   --base          base of the rewritten range (default: merge-base HEAD main|master|origin/HEAD)
-#   --backup        backup branch (default: newest backup/<current-branch>-* branch)
-#   --expect-count  number of commits the approved plan promised
-#   --build-cmd     run in a temp worktree at every new commit (e.g. "./gradlew assembleDebug")
-#   --allow-types   Conventional Commit types (default: the standard set)
+#   --base            base of the rewritten range (default: merge-base HEAD main|master|origin/HEAD)
+#   --backup          backup branch (default: newest backup/<current-branch>-* branch)
+#   --expect-count    number of commits the approved plan promised
+#   --build-cmd       run in a temp worktree at every new commit (e.g. "./gradlew assembleDebug")
+#   --allow-types     Conventional Commit types (default: the standard set)
+#   --expect-outcome  auto (default): success if the history was rewritten, error if the branch is
+#                     back at the backup or a rebase is stuck. Force "error" to test a failed run:
+#                     it then checks the project was restored to its pre-skill state, and also
+#                     accepts a run that stopped before creating a backup.
+#
+# Success: also prints how long the rewrite took (backup created -> rebase finished, from the
+# reflog; analysis and waiting for plan approval are not included).
+# Error:   checks no rebase/merge is half-done, the tree is clean, no temp worktrees are left,
+# and the branch is at the exact commit the backup points to.
 #
 # Exit code: 0 = no failures (warnings allowed), 1 = at least one failure, 2 = usage/setup error.
 #
@@ -33,9 +43,12 @@
 
 set -u
 
-BASE="" BACKUP="" EXPECT="" BUILD="" TYPES="feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert"
+BASE="" BACKUP="" EXPECT="" BUILD="" OUTCOME="auto" TYPES="feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert"
 while [ $# -gt 0 ]; do
   case "$1" in
+    --expect-outcome)
+      case "$2" in auto|success|error) OUTCOME="$2" ;; *) echo "--expect-outcome must be auto, success or error" >&2; exit 2 ;; esac
+      shift 2 ;;
     --base) BASE="$2"; shift 2 ;;
     --backup) BACKUP="$2"; shift 2 ;;
     --expect-count) EXPECT="$2"; shift 2 ;;
@@ -52,10 +65,26 @@ fail() { FAIL=$((FAIL+1)); printf '  FAIL  %s\n' "$1"; }
 warn() { WARN=$((WARN+1)); printf '  WARN  %s\n' "$1"; }
 info() { printf '  info  %s\n' "$1"; }
 section() { printf '\n%s\n' "$1"; }
+summary() {
+  section "Summary"
+  printf '  %d passed, %d failed, %d warnings\n' "$PASS" "$FAIL" "$WARN"
+  if [ "${MODE:-success}" = success ]; then
+    printf '\nNot automatable (review by hand): are the groupings logical, are messages accurate,\n'
+    printf 'did the user approve the plan before execution, was history shown as before/after.\n'
+  fi
+  [ "$FAIL" -eq 0 ]; exit $?
+}
 
 git rev-parse --git-dir >/dev/null 2>&1 || { echo "not a git repository" >&2; exit 2; }
 
 BRANCH=$(git branch --show-current)
+# During a stuck rebase HEAD is detached: recover the branch being rewritten from the rebase state.
+if [ -z "$BRANCH" ]; then
+  for d in rebase-merge rebase-apply; do
+    f="$(git rev-parse --git-path $d/head-name)"
+    [ -f "$f" ] && BRANCH=$(sed 's#^refs/heads/##' "$f") && break
+  done
+fi
 
 # ---------------------------------------------------------------- setup
 section "Setup"
@@ -79,11 +108,20 @@ BASE=$(git rev-parse "$BASE^{commit}") || exit 2
 if [ -z "$BACKUP" ]; then
   BACKUP=$(git for-each-ref --sort=-creatordate --format='%(refname:short)' "refs/heads/backup/$BRANCH-*" | head -n1)
 fi
-[ -z "$BACKUP" ] && { fail "no backup branch backup/$BRANCH-* found"; echo; echo "cannot continue"; exit 1; }
+NO_BACKUP=0
+if [ -z "$BACKUP" ]; then
+  if [ "$OUTCOME" = error ]; then
+    NO_BACKUP=1
+  else
+    fail "no backup branch backup/$BRANCH-* found (use --expect-outcome error if the skill stopped before creating one)"
+    echo; echo "cannot continue"; exit 1
+  fi
+fi
 
 info "branch: $BRANCH"
 info "base:   $(git log -1 --format='%h %s' "$BASE")"
-info "backup: $BACKUP ($(git rev-parse --short "$BACKUP"))"
+if [ "$NO_BACKUP" -eq 1 ]; then info "backup: none (skill stopped before the backup step)"
+else info "backup: $BACKUP ($(git rev-parse --short "$BACKUP"))"; fi
 
 # ---------------------------------------------------------------- pre/post-flight state
 section "Repository state"
@@ -92,18 +130,63 @@ if [ -e "$RM" ] || [ -e "$RA" ]; then fail "a rebase is still in progress"; else
 
 if [ -z "$(git status --porcelain)" ]; then pass "working tree clean (no leftover split/stash changes)"; else fail "working tree not clean"; git status --short | sed 's/^/          /'; fi
 
+STUCK=""
+for ref in REBASE_HEAD MERGE_HEAD CHERRY_PICK_HEAD REVERT_HEAD; do
+  git rev-parse -q --verify "$ref" >/dev/null 2>&1 && STUCK="$STUCK $ref"
+done
+[ -z "$STUCK" ] && pass "no half-finished merge/cherry-pick/revert" || fail "unfinished operation left behind:$STUCK"
+
+WT_EXTRA=$(git worktree list --porcelain | grep -c '^worktree ')
+[ "$WT_EXTRA" -le 1 ] && pass "no leftover temporary worktrees" || fail "$((WT_EXTRA-1)) extra worktree(s) registered (git worktree list)"
+
+STASHES=$(git stash list | wc -l)
+[ "$STASHES" -eq 0 ] && pass "no stash entries (the skill must not stash silently)" || warn "$STASHES stash entry/entries exist: were they there before the skill ran?"
+
 case "$BRANCH" in
   main|master|develop) fail "current branch is protected ($BRANCH)" ;;
   *) [ "$BRANCH" = "$DEFAULT" ] && fail "current branch is the default branch" || pass "on a feature branch" ;;
 esac
 
 # ---------------------------------------------------------------- backup
-section "Backup"
-git rev-parse --verify --quiet "$BACKUP" >/dev/null && pass "backup branch resolves" || fail "backup branch does not resolve"
-if [ "$(git merge-base "$BACKUP" HEAD)" = "$BASE" ] || git merge-base --is-ancestor "$BASE" "$BACKUP"; then
-  pass "backup is built on the same base"
+if [ "$NO_BACKUP" -eq 0 ]; then
+  section "Backup"
+  git rev-parse --verify --quiet "$BACKUP" >/dev/null && pass "backup branch resolves" || fail "backup branch does not resolve"
+  if [ "$(git merge-base "$BACKUP" HEAD)" = "$BASE" ] || git merge-base --is-ancestor "$BASE" "$BACKUP"; then
+    pass "backup is built on the same base"
+  else
+    fail "backup does not contain the base: wrong backup or base?"
+  fi
+fi
+
+# ---------------------------------------------------------------- which scenario are we verifying?
+section "Outcome"
+if [ "$NO_BACKUP" -eq 1 ]; then
+  MODE=error; info "no backup exists: treating as a run that stopped in pre-flight"
+elif [ -e "$RM" ] || [ -e "$RA" ]; then
+  MODE=error; info "a rebase is stuck: treating as a failed run"
+elif [ "$OUTCOME" != auto ]; then
+  MODE=$OUTCOME; info "forced by --expect-outcome $OUTCOME"
+elif [ "$(git rev-parse HEAD)" = "$(git rev-parse "$BACKUP")" ]; then
+  MODE=error; info "branch is at the backup commit: treating as an aborted/restored run"
 else
-  fail "backup does not contain the base: wrong backup or base?"
+  MODE=success; info "history was rewritten: treating as a successful run"
+fi
+
+# ---------------------------------------------------------------- error scenario: everything restored?
+if [ "$MODE" = error ]; then
+  section "Error scenario: project restored to its pre-skill state"
+  if [ "$NO_BACKUP" -eq 1 ]; then
+    info "no backup to compare with: only checked that nothing is left half-done"
+  else
+    if [ "$(git rev-parse HEAD)" = "$(git rev-parse "$BACKUP")" ]; then
+      pass "branch tip is the exact commit the backup points to"
+    else
+      fail "branch tip differs from the backup: restore with 'git reset --hard $BACKUP'"
+    fi
+    [ "$(git rev-parse 'HEAD^{tree}')" = "$(git rev-parse "$BACKUP^{tree}")" ] && pass "tree identical to backup" || fail "tree differs from backup"
+    pass "backup branch kept as evidence (delete it by hand when done)"
+  fi
+  summary
 fi
 if [ "$(git rev-parse HEAD)" = "$(git rev-parse "$BACKUP")" ]; then
   warn "HEAD equals backup: history was not rewritten (fine only if the plan was 'no change')"
@@ -193,9 +276,16 @@ if [ -n "$BUILD" ]; then
   done
 fi
 
+# ---------------------------------------------------------------- timing
+section "Timing"
+START=$(git reflog show --date=unix --format='%gd' "refs/heads/$BACKUP" 2>/dev/null | tail -n1 | sed -n 's/.*@{\([0-9]*\)}.*/\1/p')
+END=$(git reflog show --date=unix --format='%gd|%gs' HEAD 2>/dev/null | grep -m1 'rebase (finish)' | sed -n 's/^[^@]*@{\([0-9]*\)}.*/\1/p')
+if [ -n "$START" ] && [ -n "$END" ] && [ "$END" -ge "$START" ]; then
+  D=$((END-START))
+  pass "rewrite took $((D/60))m $((D%60))s (backup created -> rebase finished)"
+else
+  warn "could not measure duration: reflog missing, expired or has no 'rebase (finish)' after the backup"
+fi
+
 # ---------------------------------------------------------------- summary
-section "Summary"
-printf '  %d passed, %d failed, %d warnings\n' "$PASS" "$FAIL" "$WARN"
-printf '\nNot automatable (review by hand): are the groupings logical, are messages accurate,\n'
-printf 'did the user approve the plan before execution, was history shown as before/after.\n'
-[ "$FAIL" -eq 0 ]
+summary
